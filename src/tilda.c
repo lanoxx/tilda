@@ -61,16 +61,6 @@ void start_process(char process[])
 	while (!feof (tmp_file))
 	{
 		fgets (tmp_string, 254, tmp_file);
-	    
-		if (strstr (tmp_string, ".xbindkeys") != NULL)
-	    {
-			continue;
-	    }
-		
-		if (strstr (tmp_string, ".devilspie.xml") != NULL)
-	    {
-			continue;
-	    }
 		
 		if (strstr (tmp_string, process) != NULL)
 	    {
