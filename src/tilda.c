@@ -112,7 +112,7 @@ void *wait_for_signal ()
 {
 	FILE *fp;
 	umask(0);
-	mknod("/tmp/tilda", S_IFIFO|0666, 0);
+	mknod ("/tmp/tilda", S_IFIFO|0666, 0);
 	char c[10];
 	int flag;
 	gint w, h;	//, x, y;	
@@ -141,11 +141,18 @@ void *wait_for_signal ()
 		{
 			resize ((GtkWidget *) window, max_width, max_height);
 			gtk_window_move((GtkWindow *) window, 0, 0);
+			
+			gtk_widget_show ((GtkWidget *) window);
+			gtk_window_stick (GTK_WINDOW (window));
+			gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
 		}
 		else if (h == max_height)
-	    	{	resize ((GtkWidget *) window, min_width, min_height);
+	    {	
+			resize ((GtkWidget *) window, min_width, min_height);
 			gtk_window_move((GtkWindow *) window, 0, -min_height);
 			
+		
+			gtk_widget_hide ((GtkWidget *) window);	
 		}
 		
 		if (flag)
@@ -485,7 +492,7 @@ int main(int argc, char **argv)
 	int pid;
 	FILE *fp;
 	char *home_dir;
-	char s_xbindkeys[5], s_devilspie[5];
+	char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 	GtkWidget *hbox, *scrollbar, *widget;
 	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
 	const char *background = NULL;
@@ -603,15 +610,12 @@ int main(int argc, char **argv)
 	fscanf (fp, "max_width=%i\n", &max_width);
 	fscanf (fp, "min_height=%i\n", &min_height);
 	fscanf (fp, "min_width=%i\n", &min_width);	 
+	fscanf (fp, "notaskbar=%s\n", s_notaskbar);
+	fscanf (fp, "above=%s\n", s_above);
+	fscanf (fp, "pinned=%s\n", s_pinned);
 	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-	fscanf (fp, "devilspie=%s\n", s_devilspie);
 	fclose (fp);
-	
-	if ((strcasecmp (s_xbindkeys, "true")) == 0)
-		start_process ("xbindkeys");
-	if ((strcasecmp (s_devilspie, "true")) == 0)
-		start_process ("devilspie &");
-	
+
 	gtk_init(&argc, &argv);
 
 	/* Create a window to hold the scrolling shell, and hook its
@@ -853,8 +857,8 @@ int main(int argc, char **argv)
 	fix_size_settings ();
 
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
-	g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
-	g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
+	//g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
+	//g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
 	
 	if (!scroll)
 	{
@@ -864,6 +868,16 @@ int main(int argc, char **argv)
 	}
 	else
 		gtk_widget_show_all(window);
+		
+	if ((strcasecmp (s_xbindkeys, "true")) == 0)
+		start_process ("xbindkeys");
+	if ((strcasecmp (s_above, "true")) == 0)
+		gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+	if ((strcasecmp (s_pinned, "true")) == 0)
+		gtk_window_stick (GTK_WINDOW (window));
+	if ((strcasecmp (s_notaskbar, "true")) == 0)
+		gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
+		
 	
 	if ((pid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{

@@ -14,7 +14,7 @@
 GtkWidget *dialog;
 char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_key;
-GtkWidget *check_pinned, *check_above, *check_taskbar, *check_xbindkeys, *check_devilspie;
+GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_xbindkeys, *check_devilspie;
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -30,7 +30,7 @@ void use_devilspie ()
 		
 	gtk_widget_set_sensitive (check_pinned, b_sensitive);
 	gtk_widget_set_sensitive (check_above, b_sensitive);
-	gtk_widget_set_sensitive (check_taskbar, b_sensitive);
+	gtk_widget_set_sensitive (check_notaskbar, b_sensitive);
 }
 
 int check_config_file (char config_file[])
@@ -253,7 +253,7 @@ void apply_settings ()
 {
 	FILE *fp;
 	char *home_dir, config_file[80];
-	char s_xbindkeys[5], s_devilspie[5];
+	char s_xbindkeys[5], s_notaskbar[5], s_pinned[5], s_above[5];
 	gboolean pinned, above, taskbar;
 	gchar height[10], width[10], key[20];
 	
@@ -274,10 +274,20 @@ void apply_settings ()
 	else
 		strcpy (s_xbindkeys, "FALSE");
 		
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_devilspie)) == TRUE)
-		strcpy (s_devilspie, "TRUE");
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
+		strcpy (s_notaskbar, "TRUE");
 	else
-		strcpy (s_devilspie, "FALSE");
+		strcpy (s_notaskbar, "FALSE");
+	
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned)) == TRUE)
+		strcpy (s_pinned, "TRUE");
+	else
+		strcpy (s_pinned, "FALSE");
+	
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above)) == TRUE)
+		strcpy (s_above, "TRUE");
+	else
+		strcpy (s_above, "FALSE");
 	
 	if((fp = fopen(config_file, "w")) == NULL) 
 	{
@@ -289,19 +299,21 @@ void apply_settings ()
 		fprintf (fp, "max_height=%s\n", height);
 		fprintf (fp, "max_width=%s\n", width);
 		fprintf (fp, "min_height=%i\n", 1);
-		fprintf (fp, "min_width=%s\n", width);
+		fprintf (fp, "min_width=%s\n", width);	
+		fprintf (fp, "notaskbar=%s\n", s_notaskbar);
+		fprintf (fp, "above=%s\n", s_above);
+		fprintf (fp, "pinned=%s\n", s_pinned);
 		fprintf (fp, "xbindkeys=%s\n", s_xbindkeys);
-		fprintf (fp, "devilspie=%s\n", s_devilspie);
 		fclose (fp);
 	}
 
 	write_key_bindings (wm, key);  
 
-	pinned = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned));
+	/*pinned = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned));
 	above = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above));
-	taskbar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_taskbar));
+	taskbar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar));
 	
-	write_devilspie (pinned, above, taskbar);
+	write_devilspie (pinned, above, taskbar);*/
 }
 
 
@@ -350,7 +362,7 @@ int wizard (int argc, char **argv)
 	char config_file[80];
 	int i; 
 	char max_height[5], max_width[5], min_height[5], min_width[5], key[51], tmp_string[255];
-	char s_xbindkeys[5], s_devilspie[5];
+	char s_xbindkeys[5], s_notaskbar[5], s_above[5], s_pinned[5];
 	int pinned_flag=0, above_flag=0, taskbar_flag=0;
 	char s_temp[5];
 	home_dir = getenv ("HOME");
@@ -361,7 +373,9 @@ int wizard (int argc, char **argv)
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
 		strcpy (s_xbindkeys, "TRUE");
-		strcpy (s_devilspie, "TRUE");
+		strcpy (s_notaskbar, "TRUE");
+		strcpy (s_pinned, "TRUE");
+		strcpy (s_above, "TRUE");
 		strcpy (max_height, "1");
 		strcpy (max_width, "1");
 		strcpy (min_height, "1");
@@ -373,8 +387,10 @@ int wizard (int argc, char **argv)
 		fscanf (fp, "max_width=%s\n", max_width);
 		fscanf (fp, "min_height=%s\n", min_height);
 		fscanf (fp, "min_width=%s\n", min_width);
+		fscanf (fp, "notaskbar=%s\n", s_notaskbar);
+		fscanf (fp, "above=%s\n", s_above);
+		fscanf (fp, "pinned=%s\n", s_pinned);
 		fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-		fscanf (fp, "devilspie=%s\n", s_devilspie);
 		fclose (fp);
 	}
 	
@@ -403,7 +419,7 @@ int wizard (int argc, char **argv)
 	}
 	
 	//read in devilspie settings already set
-	strcpy (config_file, home_dir);
+	/*strcpy (config_file, home_dir);
 	strcat (config_file, "/.devilspie.xml");
 	if ((fp = fopen (config_file, "r")) == NULL)
 	{
@@ -451,7 +467,7 @@ int wizard (int argc, char **argv)
 		key[strlen(key)-1] = '\0';
 		
 		fclose (fp);
-	}
+	}*/
 	
 	menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);
 
@@ -479,33 +495,34 @@ int wizard (int argc, char **argv)
   
   	check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
   	check_above = gtk_check_button_new_with_label ("Always on top");
-  	check_taskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
+  	check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
 	check_xbindkeys = gtk_check_button_new_with_label ("Start xbindkeys on load");
-  	check_devilspie = gtk_check_button_new_with_label ("Use Devil's Pie");
+  	//check_devilspie = gtk_check_button_new_with_label ("Use Devil's Pie");
 	
 	if (strcasecmp (s_xbindkeys, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_xbindkeys), TRUE);
 	
+	/*
 	if (strcasecmp (s_devilspie, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_devilspie), TRUE);
-	
-	if (pinned_flag == 1)
+	*/
+	if (strcasecmp (s_pinned, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_pinned), TRUE);
   
-	if (above_flag == 1)
+	if (strcasecmp (s_above, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_above), TRUE);
 
-	if (taskbar_flag == 1)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_taskbar), TRUE);
+	if (strcasecmp (s_notaskbar, "TRUE") == 0)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_notaskbar), TRUE);
   	
 	
-	use_devilspie ();
+	//use_devilspie ();
   
   	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bcancel), "clicked", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bok), "clicked", GTK_SIGNAL_FUNC (ok), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bapply), "clicked", GTK_SIGNAL_FUNC (apply), NULL); 
-	gtk_signal_connect (GTK_OBJECT (check_devilspie), "clicked", GTK_SIGNAL_FUNC (use_devilspie), NULL); 	
+	//gtk_signal_connect (GTK_OBJECT (check_devilspie), "clicked", GTK_SIGNAL_FUNC (use_devilspie), NULL); 	
 	
 	style = gtk_widget_get_style(dialog);	
 	image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(dialog)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
@@ -559,7 +576,7 @@ int wizard (int argc, char **argv)
 	gtk_box_pack_start(GTK_BOX (vbox2), check_devilspie, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_pinned, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_above, FALSE, FALSE, 4);
-	gtk_box_pack_start(GTK_BOX (vbox2), check_taskbar, FALSE, FALSE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox2), check_notaskbar, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), vbox2, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);	
 		
@@ -577,9 +594,9 @@ int wizard (int argc, char **argv)
 	gtk_widget_show (entry_key);
 	gtk_widget_show (check_pinned);
 	gtk_widget_show (check_above);
-	gtk_widget_show (check_taskbar);
+	gtk_widget_show (check_notaskbar);
 	gtk_widget_show (check_xbindkeys);
-	gtk_widget_show (check_devilspie);
+	//gtk_widget_show (check_devilspie);
 	
 	gtk_widget_show (table);
 	gtk_widget_show (hbox);
