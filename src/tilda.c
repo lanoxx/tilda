@@ -216,7 +216,7 @@ void *wait_for_signal ()
 	free (tmp);
 	
 	strcat (filename, display);
-
+	
 	filename_global = (char *) malloc (sizeof (char) * strlen (filename));
 	strcpy (filename_global, filename);
 

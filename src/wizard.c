@@ -218,6 +218,11 @@ int wizard (int argc, char **argv)
 		fclose (fp);
 	}
 	
+	max_height[strlen (max_height)] = '\0';
+	min_height[strlen (max_height)] = '\0';
+	max_width[strlen (max_width)] = '\0';
+	min_width[strlen (min_width)] = '\0';
+		
 	//read in keybinding settings already set
 	flag=0;
 	strcpy (config_file, home_dir);
