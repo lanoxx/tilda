@@ -101,6 +101,7 @@ void *wait_for_signal ()
 			resize ((GtkWidget *) window, min_width, min_height);
 		}
 		fclose (fp);	
+		sleep (.1);
 	}
 	
 	return NULL;
