@@ -477,9 +477,6 @@ int main(int argc, char **argv)
 	tint.red = tint.green = tint.blue = 0;
 	tint = back;
 	
-	//set up the max and min height and width of the terminal.
-	
-	
 	/* Have to do this early. */
 	if (getenv("VTE_PROFILE_MEMORY")) 
 	{
@@ -511,7 +508,7 @@ int main(int argc, char **argv)
 	argv2[i] = NULL;
 	g_assert(i < (g_list_length(args) + 2));
 
-	gtk_init(&argc, &argv);
+	
 
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
 	 while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
@@ -522,7 +519,7 @@ int main(int argc, char **argv)
 				pull_down ();
 				break;
 			case 'C':
-				wizard (window);
+				if (wizard (argc, argv) == 1) { return 0; }
 				break;
 			default:
 				break;
@@ -535,7 +532,8 @@ int main(int argc, char **argv)
 	
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        wizard (window);
+        if (wizard (argc, argv) == 1)
+			return 0;
 		
 		if((fp = fopen(config_file, "r")) == NULL) 
 		{  	
@@ -551,6 +549,8 @@ int main(int argc, char **argv)
 		fscanf (fp, "min_width=%i\n", &min_width);
 		fclose (fp);
 	}
+
+	gtk_init(&argc, &argv);
 
 	/* Create a window to hold the scrolling shell, and hook its
 	 * delete event to the quit function.. */

@@ -55,7 +55,7 @@ gint ok ()
 	apply_settings ();
 		
 	gtk_widget_destroy (dialog);
-	
+	gtk_main_quit();
 	return (FALSE);
 }
 
@@ -64,10 +64,10 @@ void apply ()
 	apply_settings ();
 }
 
-gint exit_app (GtkWidget *widget, gpointer gdata)
+gint exit_app (GtkWidget *widget, gpointer data)
 {	
-	
-	
+	gtk_widget_destroy (dialog);
+	gtk_main_quit();
 	return (FALSE);
 }
 
@@ -78,7 +78,7 @@ void selected (gpointer window_manager)
 	printf ("%s\n", wm);
 }
 
-int wizard (GtkWidget *window)
+int wizard (int argc, char **argv)
 {
 	GtkWidget *table;
 	GtkWidget *image;
@@ -94,6 +94,7 @@ int wizard (GtkWidget *window)
 	
 	menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);
 
+	gtk_init(&argc, &argv);
 	
 	label_wm = gtk_label_new("Window Manager");
 	label_height = gtk_label_new("Height in Pixels");
@@ -177,6 +178,8 @@ int wizard (GtkWidget *window)
 	gtk_widget_show (hbox);
 	gtk_widget_show (vbox);
 	gtk_widget_show ((GtkWidget *) dialog);
+
+	gtk_main();
 
 	return 0;
 }
