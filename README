@@ -3,10 +3,18 @@
 Though you may need a newer version of vte, or you may not run gentoo so go here to get the vte sources:
 ftp://ftp.gnome.org/pub/GNOME/sources/vte/
 
-2) Edit config.h to your specific needs, should be self explanatory.
+2) create a directory ~/.tilda and add a file config with the following lines
 
-3) gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilde tilde.c
+max_height=500
+max_width=1600
+min_height=1
+min_width=1600
 
-4) ./tilde
+with your desired sizes. min_height cannot be less than 1.
 
-5) ./tilde -T to move the terminal up and down
+
+3) gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/tilda.c
+
+4) ./tilda
+
+5) ./tilda -T to move the terminal up and down

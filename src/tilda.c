@@ -57,7 +57,7 @@ void *wait_for_signal ()
 {
 	FILE *fp;
 	umask(0);
-	mknod("/tmp/qterm", S_IFIFO|0666, 0);
+	mknod("/tmp/tilda", S_IFIFO|0666, 0);
 	gpointer data;
 	char c[10];
 	gint w, h, x, y;	
@@ -66,7 +66,7 @@ void *wait_for_signal ()
 	
 	for (;;)
 	{
-		fp = fopen("/tmp/qterm", "r");
+		fp = fopen("/tmp/tilda", "r");
 		fgets (c, 10, fp);
 		
 		gtk_window_get_size ((GtkWindow *) window, &w, &h);
@@ -512,7 +512,7 @@ int main(int argc, char **argv)
 	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
-	strcat (config_file, "/.tilde/config");
+	strcat (config_file, "/.tilda/config");
 	
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{

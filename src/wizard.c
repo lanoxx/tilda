@@ -18,7 +18,7 @@ void apply_settings ()
 	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
-	strcat (config_file, "/.tilde/config");
+	strcat (config_file, "/.tilda/config");
 	
 	if((fp = fopen(config_file, "w")) == NULL) 
 	{
