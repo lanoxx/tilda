@@ -140,19 +140,20 @@ void *wait_for_signal ()
 		if (h == min_height)
 		{
 			resize ((GtkWidget *) window, max_width, max_height);
-			gtk_window_move((GtkWindow *) window, 0, 0);
-			
 			gtk_widget_show ((GtkWidget *) window);
+			
 			gtk_window_stick (GTK_WINDOW (window));
+			
 			gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
 		}
 		else if (h == max_height)
 	    {	
 			resize ((GtkWidget *) window, min_width, min_height);
-			gtk_window_move((GtkWindow *) window, 0, -min_height);
+			//gtk_window_move((GtkWindow *) window, 0, -min_height);
 			
 		
 			gtk_widget_hide ((GtkWidget *) window);	
+			
 		}
 		
 		if (flag)
@@ -232,12 +233,12 @@ static void destroy_and_quit(GtkWidget *widget, gpointer data)
 
 static void destroy_and_quit_eof(GtkWidget *widget, gpointer data)
 {
-	g_print("Detected EOF.\n");
+	//g_print("Detected EOF.\n");
 }
 
 static void destroy_and_quit_exited(GtkWidget *widget, gpointer data)
 {
-	g_print("Detected child exit.\n");
+	//g_print("Detected child exit.\n");
 	destroy_and_quit(widget, data);
 }
 
@@ -482,7 +483,7 @@ static void take_xconsole_ownership(GtkWidget *widget, gpointer data)
 /*
 static void add_weak_pointer(GObject *object, GtkWidget **target)
 {
-	g_object_add_weak_pointer(object, (gpointer*)target);
+	_weak_pointer(object, (gpointer*)target);
 }
 */
 
@@ -854,11 +855,12 @@ int main(int argc, char **argv)
 	
 	gtk_window_set_decorated ((GtkWindow *) window, FALSE);
 	
+	g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
+	g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
+	
+	gtk_widget_set_size_request ((GtkWidget *) window, 0, 0);
 	fix_size_settings ();
-
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
-	//g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
-	//g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
 	
 	if (!scroll)
 	{
@@ -868,7 +870,7 @@ int main(int argc, char **argv)
 	}
 	else
 		gtk_widget_show_all(window);
-		
+			
 	if ((strcasecmp (s_xbindkeys, "true")) == 0)
 		start_process ("xbindkeys");
 	if ((strcasecmp (s_above, "true")) == 0)
@@ -877,8 +879,7 @@ int main(int argc, char **argv)
 		gtk_window_stick (GTK_WINDOW (window));
 	if ((strcasecmp (s_notaskbar, "true")) == 0)
 		gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
-		
-	
+	 
 	if ((pid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
 		perror ("Fuck that thread!!!");

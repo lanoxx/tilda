@@ -14,196 +14,12 @@
 GtkWidget *dialog;
 char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_key;
-GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_xbindkeys, *check_devilspie;
+GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_xbindkeys;
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
 	gtk_grab_remove (GTK_WIDGET (widget));
 	gtk_widget_destroy (GTK_WIDGET (data));
-}
-
-void use_devilspie ()
-{
-	gboolean b_sensitive;
-	
-	b_sensitive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_devilspie));
-		
-	gtk_widget_set_sensitive (check_pinned, b_sensitive);
-	gtk_widget_set_sensitive (check_above, b_sensitive);
-	gtk_widget_set_sensitive (check_notaskbar, b_sensitive);
-}
-
-int check_config_file (char config_file[])
-{
-	FILE *fp;
-	char tmp_string[255];
-	int result = 0;
-	
-	if ((fp = fopen(config_file, "r")) == NULL)
-	{
-		result = 0;
-	}
-	else
-	{
-		while (!feof (fp))
-		{
-			fgets (tmp_string, 254, fp);
-			if (strstr (tmp_string, "</devilspie>") != NULL)
-				result = 1;
-		}
-		
-		fclose (fp);
-	}
-
-	return result;
-}
-
-void write_devilspie (gboolean pinned, gboolean above, gboolean taskbar)
-{
-	FILE *fp, *tmp_file;
-	char tmp_name[L_tmpnam];
-	char *tmp_filename;
-	char *home_dir, config_file[80];
-	char tmp_string[255];
-	char s_pinned[6], s_above[6], s_taskbar[6];
-	int flag=0;
-	
-	tmp_filename = tmpnam (tmp_name);
-	if ((tmp_file = fopen (tmp_filename, "w")) == NULL)
-	{
-		perror ("fopen tmpfile");
-		exit (1);
-	}
-
-	home_dir = getenv ("HOME");
-	strcpy (config_file, home_dir);
-	strcat (config_file, "/.devilspie.xml");
-	
-	if (!pinned)
-		strcpy (s_pinned, "FALSE");
-	else
-		strcpy (s_pinned, "TRUE");
-	if (!above)
-		strcpy (s_above, "FALSE");
-	else
-		strcpy (s_above, "TRUE");	
-	if (!taskbar)
-		strcpy (s_taskbar, "FALSE");
-	else
-		strcpy (s_taskbar, "TRUE");
-		
-	if(!(check_config_file (config_file))) 
-	{
-		if((fp = fopen(config_file, "w")) == NULL) 
-		{
-			perror("fopen");
-        	exit(1);
-		}
-
-		fprintf (fp, "<?xml version=\"1.0\"?>\n\n<devilspie>\n\n</devilspie>");
-		fclose (fp);
-	}
-	
-	if((fp = fopen(config_file, "r")) == NULL) 
-	{
-		perror("fopen");
-        exit(1);
-	}	
-	
-	
-	while (!feof (fp))
-    {
-		fgets (tmp_string, 254, fp);
-	    fprintf (tmp_file, "%s", tmp_string);
-		if (strstr (tmp_string, "Tilda Flurb") == NULL)
-	    {
-			continue;
-	    }
-	    else
-	    {
-			flag=1;
-
-		    while (!feof (fp))
-		    {
-				if (fgets (tmp_string, 254, fp) == NULL)
-			 		break;
-					
-				if (strstr (tmp_string, "skip_taskbar") != NULL)
-			    {
-				    fprintf (tmp_file, "			<property name=\"skip_tasklist\" value=\"%s\"/>\n", s_taskbar);	        		
-			    }
-			    else if (strstr (tmp_string, "above") != NULL)
-			    {
-				    fprintf (tmp_file, "			<property name=\"above\" value=\"%s\"/>\n", s_above); 	
-			    }
-			    else if (strstr (tmp_string, "pinned") != NULL)
-			    {
-				    fprintf (tmp_file, "				<property name=\"pinned\" value=\"%s\"/>\n", s_pinned);  	
-			    }
-				else
-					fprintf (tmp_file, "%s", tmp_string);
-			}
-		    break;
-		}
-	}
-
-    fclose (fp);
-	fclose (tmp_file);
-	
-    if (flag == 0)
-    {
-		if ((tmp_file = fopen (tmp_filename, "w")) == NULL)
-		{
-			perror ("fopen tmpfile");
-			exit (1);
-		}
-	
-		if((fp = fopen(config_file, "r")) == NULL) 
-		{
-        	perror("fopen");
-		    exit(1);
-	    }
-	    else
-	    {
-			while (!feof (fp))
-			{
-				fgets (tmp_string, 19, fp);
-
-				if (strstr (tmp_string, "</devilspie>") != NULL)
-				{
-					fprintf (tmp_file, "\n<flurb name=\"Tilda Flurb\">\n");
-		      		fprintf (tmp_file, "		<matchers>\n");
-		       	 	fprintf (tmp_file, "			<matcher name=\"DevilsPieMatcherWindowName\">\n");
-					fprintf (tmp_file, "				<property name=\"application name\" value=\"tilda*\"/>\n");
-        			fprintf (tmp_file, "			</matcher>\n");
-          	 	 	fprintf (tmp_file, "		</matchers>\n");
-          		  	fprintf (tmp_file, "		<actions>\n");
-          		  	fprintf (tmp_file, "		<action name=\"DevilsPieActionHide\">\n");
-            		fprintf (tmp_file, "			<property name=\"skip_tasklist\" value=\"%s\"/>\n", s_taskbar);
-	        		fprintf (tmp_file, "		</action>\n");
-        			fprintf (tmp_file, "		<action name=\"DevilsPieActionLayer\">\n");
-        			fprintf (tmp_file, "			<property name=\"above\" value=\"%s\"/>\n", s_above);
-        	    	fprintf (tmp_file, "		</action>\n");
-        	    	fprintf (tmp_file, "			<action name=\"DevilsPieActionSetWorkspace\">\n");
-        	    	fprintf (tmp_file, "				<property name=\"pinned\" value=\"%s\"/>\n", s_pinned);
-        	    	fprintf (tmp_file, "			 </action>\n");
-        	    	fprintf (tmp_file, "		 </actions>\n");
-       			    fprintf (tmp_file, "</flurb>\n");
-					fprintf (tmp_file, "%s", tmp_string);
-					break;
-				}
-				fprintf (tmp_file, "%s", tmp_string);
-			}
-			fclose (tmp_file);
-			fclose (fp);
-	    }
-    }
-	
-	if (rename(tmp_filename, config_file) == -1) 
-	{
-    	perror("rename (2):");
-    	exit(1);
-	}
 }
 
 void popup (char *message, char *b1_message, char *b2_message, void (*func1)(), void (*func2)())
@@ -254,7 +70,6 @@ void apply_settings ()
 	FILE *fp;
 	char *home_dir, config_file[80];
 	char s_xbindkeys[5], s_notaskbar[5], s_pinned[5], s_above[5];
-	gboolean pinned, above, taskbar;
 	gchar height[10], width[10], key[20];
 	
  	strcpy (height, gtk_entry_get_text (GTK_ENTRY (entry_height)));
@@ -363,8 +178,7 @@ int wizard (int argc, char **argv)
 	int i; 
 	char max_height[5], max_width[5], min_height[5], min_width[5], key[51], tmp_string[255];
 	char s_xbindkeys[5], s_notaskbar[5], s_above[5], s_pinned[5];
-	int pinned_flag=0, above_flag=0, taskbar_flag=0;
-	char s_temp[5];
+	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.tilda/config");
@@ -497,15 +311,10 @@ int wizard (int argc, char **argv)
   	check_above = gtk_check_button_new_with_label ("Always on top");
   	check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
 	check_xbindkeys = gtk_check_button_new_with_label ("Start xbindkeys on load");
-  	//check_devilspie = gtk_check_button_new_with_label ("Use Devil's Pie");
-	
+  	
 	if (strcasecmp (s_xbindkeys, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_xbindkeys), TRUE);
 	
-	/*
-	if (strcasecmp (s_devilspie, "TRUE") == 0)
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_devilspie), TRUE);
-	*/
 	if (strcasecmp (s_pinned, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_pinned), TRUE);
   
@@ -522,7 +331,6 @@ int wizard (int argc, char **argv)
 	gtk_signal_connect (GTK_OBJECT (bcancel), "clicked", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bok), "clicked", GTK_SIGNAL_FUNC (ok), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bapply), "clicked", GTK_SIGNAL_FUNC (apply), NULL); 
-	//gtk_signal_connect (GTK_OBJECT (check_devilspie), "clicked", GTK_SIGNAL_FUNC (use_devilspie), NULL); 	
 	
 	style = gtk_widget_get_style(dialog);	
 	image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(dialog)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
@@ -573,7 +381,6 @@ int wizard (int argc, char **argv)
 	gtk_box_pack_start(GTK_BOX (hbox), bapply, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (hbox), bcancel, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_xbindkeys, FALSE, FALSE, 4);
-	gtk_box_pack_start(GTK_BOX (vbox2), check_devilspie, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_pinned, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_above, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox2), check_notaskbar, FALSE, FALSE, 4);
@@ -596,7 +403,6 @@ int wizard (int argc, char **argv)
 	gtk_widget_show (check_above);
 	gtk_widget_show (check_notaskbar);
 	gtk_widget_show (check_xbindkeys);
-	//gtk_widget_show (check_devilspie);
 	
 	gtk_widget_show (table);
 	gtk_widget_show (hbox);
