@@ -15,7 +15,7 @@ void apply_settings ()
 {
 	FILE *fp;
 	char *home_dir, config_file[80];
-	gchar height[10], width[10], key[10];
+	gchar height[10], width[10], key[20];
 	
  	strcpy (height, gtk_entry_get_text (GTK_ENTRY (entry_height)));
 	strcpy (width, gtk_entry_get_text (GTK_ENTRY (entry_width)));
@@ -47,6 +47,8 @@ void apply_settings ()
 	}
 
 	free (home_dir);
+	
+	write_key_bindings (wm, key);  
 }
 
 
@@ -88,9 +90,31 @@ int wizard (int argc, char **argv)
 	GtkWidget *label_wm, *label_height, *label_width, *label_key;
 	GtkWidget *bcancel, *bapply, *bok;
 	gpointer window_manager;
-	gpointer items[] = {"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
-
-	int i;
+	gpointer items[] = {"XBindKeys"};//{"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
+	
+	FILE *fp;
+	char *home_dir;
+	char config_file[80];
+	int i; 
+	char max_height[5], max_width[5], min_height[5], min_width[5];
+	
+	home_dir = getenv ("HOME");
+	strcpy (config_file, home_dir);
+	strcat (config_file, "/.tilda/config");
+	
+	if((fp = fopen(config_file, "r")) == NULL) 
+	{
+        perror("fopen");
+        exit(1);
+    }
+	else
+	{
+		fscanf (fp, "max_height=%s\n", max_height);
+		fscanf (fp, "max_width=%s\n", max_width);
+		fscanf (fp, "min_height=%s\n", min_height);
+		fscanf (fp, "min_width=%s\n", min_width);
+		fclose (fp);
+	}
 	
 	menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);
 
@@ -110,7 +134,6 @@ int wizard (int argc, char **argv)
   	gtk_container_add (GTK_CONTAINER (dialog), vbox);
   	table = gtk_table_new (4, 4, FALSE);
     gtk_container_add (GTK_CONTAINER (dialog), table);
-
   
   	bcancel = gtk_button_new_with_label ("Cancel");
 	bok = gtk_button_new_with_label ("OK");
@@ -128,7 +151,7 @@ int wizard (int argc, char **argv)
 	menu = gtk_menu_new ();
 	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_wm), menu);
 	
-	for (i=0;i<4;i++)
+	for (i=0;i<(sizeof(items)/sizeof(int));i++)
 	{
 		menuitem[i] = gtk_radio_menu_item_new_with_label (NULL, items[i]);
 		gtk_menu_append (GTK_MENU (menu), menuitem[i]);
@@ -139,6 +162,9 @@ int wizard (int argc, char **argv)
 	entry_height = gtk_entry_new ();
 	entry_width = gtk_entry_new ();
 	entry_key = gtk_entry_new ();
+	
+	gtk_entry_set_text (GTK_ENTRY (entry_height), max_height);
+	gtk_entry_set_text (GTK_ENTRY (entry_width), max_width);
 	
 	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
 	gtk_table_set_col_spacings (GTK_TABLE (table),5);

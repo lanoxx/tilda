@@ -544,15 +544,13 @@ int main(int argc, char **argv)
         	exit(1);
 		}
     }
-	else
-	{
-		fscanf (fp, "max_height=%i\n", &max_height);
-		fscanf (fp, "max_width=%i\n", &max_width);
-		fscanf (fp, "min_height=%i\n", &min_height);
-		fscanf (fp, "min_width=%i\n", &min_width);
-		fclose (fp);
-	}
-
+	
+	fscanf (fp, "max_height=%i\n", &max_height);
+	fscanf (fp, "max_width=%i\n", &max_width);
+	fscanf (fp, "min_height=%i\n", &min_height);
+	fscanf (fp, "min_width=%i\n", &min_width);
+	fclose (fp);
+	
 	gtk_init(&argc, &argv);
 
 	/* Create a window to hold the scrolling shell, and hook its
