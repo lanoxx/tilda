@@ -1,5 +1,9 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 char wm[20];
 GtkWidget *entry_height, *entry_width, *entry_key;
@@ -18,12 +22,17 @@ void apply_settings ()
 	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
-	strcat (config_file, "/.tilda/config");
+	strcat (config_file, "/.tilda/");
 	
-	if((fp = fopen(config_file, "w")) == NULL) 
+	mkdir (config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+	
+	strcat (config_file, "config");
+	
+
+	if((fp = fopen(config_file, "wb")) == NULL) 
 	{
-            	perror("fopen");
-                exit(1);
+        perror("fopen");
+		exit(1);
     }
 	else
 	{
@@ -69,10 +78,12 @@ void selected (gpointer window_manager)
 int main (int argc, char **argv)
 {
 	GtkWidget *window;
-	GtkWidget *vbox1, *hbox1;
+	GtkWidget *table;
 	GtkWidget *image;
+	GtkWidget *vbox, *hbox;
 	GtkWidget *menu, *option_wm;
 	GtkWidget **menuitem;
+	GtkWidget *label_wm, *label_height, *label_width, *label_key;
 	GtkWidget *bcancel, *bapply, *bok;
 	gpointer window_manager;
 	gpointer items[] = {"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
@@ -83,7 +94,22 @@ int main (int argc, char **argv)
 
 	gtk_init(&argc, &argv);
 
+	
+	label_wm = gtk_label_new("Window Manager");
+	label_height = gtk_label_new("Height in Pixels");
+	label_width = gtk_label_new("Width in Pixels");
+	label_key = gtk_label_new("Key Binding");
+
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  	
+
+  	vbox = gtk_vbox_new (FALSE, 0);
+	hbox = gtk_hbox_new (FALSE, 0);
+	
+  	gtk_container_add (GTK_CONTAINER (window), vbox);
+  	table = gtk_table_new (4, 4, FALSE);
+    gtk_container_add (GTK_CONTAINER (window), table);
+
   
   	bcancel = gtk_button_new_with_label ("Cancel");
 	bok = gtk_button_new_with_label ("OK");
@@ -96,10 +122,7 @@ int main (int argc, char **argv)
 	
 	
 	image = gtk_image_new_from_file ("wizard.png");
-	
-	vbox1 = gtk_vbox_new (FALSE, 0);
-	hbox1 = gtk_hbox_new (FALSE, 0);
-	
+
 	option_wm = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
 	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_wm), menu);
@@ -116,29 +139,43 @@ int main (int argc, char **argv)
 	entry_width = gtk_entry_new ();
 	entry_key = gtk_entry_new ();
 	
-	gtk_container_add (GTK_CONTAINER (window), vbox1);	
-	gtk_container_add (GTK_CONTAINER (window), hbox1);	
+	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
+	gtk_table_set_col_spacings (GTK_TABLE (table),5);
 	
-	gtk_box_pack_start (GTK_BOX (hbox1), bok, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox1), bapply, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox1), bcancel, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), image, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), option_wm, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), entry_height, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), entry_width, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), entry_key, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 0);
+	gtk_table_attach_defaults (GTK_TABLE (table), label_height, 0, 1, 0, 1);
+	gtk_table_attach_defaults (GTK_TABLE (table), entry_height, 1, 2, 0, 1);
+	
+	gtk_table_attach_defaults (GTK_TABLE (table), label_width, 0, 1, 1, 2);
+	gtk_table_attach_defaults (GTK_TABLE (table), entry_width, 1, 2, 1, 2);
+	
+	gtk_table_attach_defaults (GTK_TABLE (table), label_wm, 0, 1, 2, 3);
+	gtk_table_attach_defaults (GTK_TABLE (table), option_wm, 1, 2, 2, 3);
+	
+	gtk_table_attach_defaults (GTK_TABLE (table), label_key, 0, 1, 3, 4);
+	gtk_table_attach_defaults (GTK_TABLE (table), entry_key, 1, 2, 3, 4);
+	
+	gtk_box_pack_start(GTK_BOX (vbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX (vbox), table, FALSE, FALSE, 4);
+	gtk_box_pack_start(GTK_BOX (hbox), bok, TRUE, TRUE, 4);
+	gtk_box_pack_start(GTK_BOX (hbox), bapply, TRUE, TRUE, 4);
+	gtk_box_pack_start(GTK_BOX (hbox), bcancel, TRUE, TRUE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);	
 	
 	gtk_widget_show (bok);
 	gtk_widget_show (bapply);
 	gtk_widget_show (bcancel);
+	gtk_widget_show (label_wm);
 	gtk_widget_show (option_wm);
+	gtk_widget_show (label_height);
 	gtk_widget_show (entry_height);
+	gtk_widget_show (label_width);
 	gtk_widget_show (entry_width);
+	gtk_widget_show (label_key);	
 	gtk_widget_show (entry_key);
 	gtk_widget_show (image);
-	gtk_widget_show (vbox1);
-	gtk_widget_show (hbox1);
+	gtk_widget_show (table);
+	gtk_widget_show (hbox);
+	gtk_widget_show (vbox);
 	gtk_widget_show ((GtkWidget *) window);
 	
 	gtk_main();
