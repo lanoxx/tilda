@@ -44,6 +44,8 @@ void fix_size_settings ()
 	gtk_window_get_size ((GtkWindow *) window, &max_width, &max_height);
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
 	gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
+	
+	printf ("%i x %i\n", min_width, min_height);
 }
 
 void pull_down ()
@@ -52,17 +54,16 @@ void pull_down ()
 	
 	if((fp = fopen("/tmp/tilda", "w")) == NULL) 
 	{
-    	perror("fopen");
-        exit(1);
-    }
+    		perror("fopen");
+        	exit(1);
+    	}
 
-    fputs("shits", fp);
+    	fputs("shits", fp);
 
-    fclose(fp);
+    	fclose(fp);
 	
 	exit (0);
 }
-
 
 int resize (GtkWidget *window, gint w, gint h)
 {
@@ -78,29 +79,46 @@ void *wait_for_signal ()
 	mknod("/tmp/tilda", S_IFIFO|0666, 0);
 	gpointer data;
 	char c[10];
+	int flag;
 	gint w, h, x, y;	
 	gint pid;
-	gtk_window_move((GtkWindow *) window, 0, -min_height);
+	printf ("move: %i\n", min_height);
+	
+	//gtk_window_move((GtkWindow *) window, 0, -min_height);
+	//resize ((GtkWidget *) window, min_width, min_height);
+	//pull_down ();
+	//gtk_window_get_position ((GtkWindow *) window, &x, &y);
+	
+	//printf ("%i %i\n", x, y);
+	
+	flag = 0;
 	
 	for (;;)
 	{
-		fp = fopen("/tmp/tilda", "r");
-		fgets (c, 10, fp);
-		
+		if (flag)
+		{
+			fp = fopen("/tmp/tilda", "r");
+			fgets (c, 10, fp);
+		}
+	
 		gtk_window_get_size ((GtkWindow *) window, &w, &h);
-	    //gtk_window_get_position ((GtkWindow *) window, &x, &y);
-
+	    	//gtk_window_get_position ((GtkWindow *) window, &x, &y);
+	
 		if (h == min_height)
 		{
 			resize ((GtkWidget *) window, max_width, max_height);
 			gtk_window_move((GtkWindow *) window, 0, 0);
 		}
 		else if (h == max_height)
-	    {	
+	    	{	resize ((GtkWidget *) window, min_width, min_height);
 			gtk_window_move((GtkWindow *) window, 0, -min_height);
-			resize ((GtkWidget *) window, min_width, min_height);
+			
 		}
-		fclose (fp);	
+		
+		if (flag)
+			fclose (fp);
+		else
+			flag=1;	
 		sleep (.1);
 	}
 	
@@ -535,15 +553,15 @@ int main(int argc, char **argv)
 	
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        if (wizard (argc, argv) == 1)
-			return 0;
-		
+        	if (wizard (argc, argv) == 1)
+			exit (0);
+			
 		if((fp = fopen(config_file, "r")) == NULL) 
 		{  	
 			perror("fopen");
-        	exit(1);
+        		exit(1);
 		}
-    }
+   	 }
 	
 	fscanf (fp, "max_height=%i\n", &max_height);
 	fscanf (fp, "max_width=%i\n", &max_width);

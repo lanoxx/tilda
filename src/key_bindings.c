@@ -12,7 +12,9 @@ char* xbindconvert (char key[])
 void redo_wizard (GtkWidget *widget, gpointer data)
 {
 	printf ("Redo Wizard\n");
+	gtk_grab_remove (GTK_WIDGET (widget));
 	gtk_widget_destroy (GTK_WIDGET (data));
+	gtk_main_quit();
 }
 
 void add_anyway (GtkWidget *widget, gpointer data)
@@ -34,9 +36,9 @@ int xbindkeys (char key[])
 	                        
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        perror("fopen");
+        	perror("fopen");
 		exit(1);
-    }
+    	}
 	else
 	{
 		while (!feof (fp))
@@ -51,7 +53,7 @@ int xbindkeys (char key[])
 				else
 				{
 					perror ("already there!!!\n");
-					popup ("Key Already In Use", "Add Anyway", "Redo", redo_wizard, add_anyway);
+					//popup ("Key Already In Use", "Add Anyway", "Redo", redo_wizard, add_anyway);
 					i = 1;
 					break;
 				}
@@ -64,12 +66,12 @@ int xbindkeys (char key[])
 		{
 			if((fp = fopen(config_file, "a")) == NULL) 
 			{
-        		perror("fopen");
+        			perror("fopen");
 				exit(1);
-    		}
+    			}
 			else
 			{
-				fprintf (fp, "\n\"tilda\"\n%s\n", key);
+				fprintf (fp, "\n\"tilda -T\"\n%s\n", key);
 				fclose (fp);
 			}
 		}

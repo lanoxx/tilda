@@ -10,11 +10,131 @@
 GtkWidget *dialog;
 char wm[20];
 GtkWidget *entry_height, *entry_width, *entry_key;
+GtkWidget *check_pinned, *check_above, *check_taskbar;
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
 	gtk_grab_remove (GTK_WIDGET (widget));
 	gtk_widget_destroy (GTK_WIDGET (data));
+}
+
+void write_devilspie (gboolean pinned, gboolean above, gboolean taskbar)
+{
+	FILE *fp, *tmp_file;
+	char *home_dir, config_file[80];
+	char tmp_string[255];
+	char s_pinned[6], s_above[6], s_taskbar[6];
+	int flag=0;
+	
+	tmp_file = tmpfile ();
+
+	home_dir = getenv ("HOME");
+	strcpy (config_file, home_dir);
+	strcat (config_file, "/.devilspie.xml");
+	
+	if (!pinned)
+		strcpy (s_pinned, "FALSE");
+	else
+		strcpy (s_pinned, "TRUE");
+	if (!above)
+		strcpy (s_above, "FALSE");
+	else
+		strcpy (s_above, "TRUE");	
+	if (!taskbar)
+		strcpy (s_taskbar, "FALSE");
+	else
+		strcpy (s_taskbar, "TRUE");
+		
+	if((fp = fopen(config_file, "r")) == NULL) 
+	{
+		if((fp = fopen(config_file, "w+")) == NULL) 
+		{
+			perror("fopen");
+        		exit(1);
+		}
+
+		fprintf (fp, "<?xml version=\"1.0\"?>\n\n<devilspie>\n\n</devilspie>");
+		fclose (fp);
+		if((fp = fopen(config_file, "r")) == NULL) 
+		{
+			perror("fopen");
+        		exit(1);
+		}	
+	}
+	
+	while (!feof (fp))
+      	{
+		fgets (tmp_string, 254, fp);
+	      	if (strstr (tmp_string, "Tilda Flurb") == NULL)
+	      	{
+			continue;
+	      	}
+	      	else
+	      	{
+		      	flag=1;
+
+		      	while (!feof (fp))
+		      	{
+				fgets (tmp_string, 254, fp);
+			      	if (strstr (tmp_string, "skip_taskbar") != NULL)
+			      	{
+				      //edit value=""
+			      	}
+			      	if (strstr (tmp_string, "above") != NULL)
+			      	{
+				      //edit value=""
+			      	}
+			      	if (strstr (tmp_string, "pinned") != NULL)
+			      	{
+				      //edit value=""
+			      	}
+		      	}
+		      	break;
+	      	}
+      	}
+
+      	fclose (fp);
+
+      	if (flag == 0)
+      	{
+		if((fp = fopen(config_file, "r+")) == NULL) 
+	      	{
+        		perror("fopen");
+		    	exit(1);
+	      	}
+	      	else
+	      	{
+			while (!feof (fp))
+		      	{
+				fgets (tmp_string, 19, fp);
+			      	if (strstr (tmp_string, "<devilspie>") != NULL)
+			      	{
+					break;		
+			      	}
+		      	}
+
+		      	fprintf (fp, "\n<flurb name=\"Tilda Flurb\">\n");
+		      	fprintf (fp, "		<matchers>\n");
+                      	fprintf (fp, "			<matcher name=\"DevilsPieMatcherWindowName\">\n");
+		      	fprintf (fp, "				<property name=\"application name\" value=\"tilda*\"/>\n");
+                      	fprintf (fp, "			</matcher>\n");
+                      	fprintf (fp, "		</matchers>\n");
+                      	fprintf (fp, "		<actions>\n");
+                      	fprintf (fp, "		<action name=\"DevilsPieActionHide\">\n");
+                      	fprintf (fp, "			<property name=\"skip_tasklist\" value=\"%s\"/>\n", s_taskbar);
+                      	fprintf (fp, "		</action>\n");
+                      	fprintf (fp, "		<action name=\"DevilsPieActionLayer\">\n");
+                      	fprintf (fp, "			<property name=\"above\" value=\"%s\"/>\n", s_above);
+                      	fprintf (fp, "		</action>\n");
+                      	fprintf (fp, "			<action name=\"DevilsPieActionSetWorkspace\">\n");
+                      	fprintf (fp, "				<property name=\"pinned\" value=\"%s\"/>\n", s_pinned);
+                      	fprintf (fp, "			 </action>\n");
+               	      	fprintf (fp, "		 </actions>\n");
+       		      	fprintf (fp, "</flurb>\n");
+
+		      	fclose (fp);
+	      	}
+      	}
 }
 
 void popup (char *message, char *b1_message, char *b2_message, void (*func1)(), void (*func2)())
@@ -27,7 +147,7 @@ void popup (char *message, char *b1_message, char *b2_message, void (*func1)(), 
 	
 	gtk_signal_connect (GTK_OBJECT (dialog_window), "destroy", GTK_SIGNAL_FUNC (close_dialog),	&dialog_window);
 	
-	gtk_window_set_title (GTK_WINDOW (dialog_window), "I love pop");
+	gtk_window_set_title (GTK_WINDOW (dialog_window), "Tilda Dialog");
 	
 	gtk_container_border_width (GTK_CONTAINER (dialog_window), 5);
 	
@@ -64,6 +184,7 @@ void apply_settings ()
 {
 	FILE *fp;
 	char *home_dir, config_file[80];
+	gboolean pinned, above, taskbar;
 	gchar height[10], width[10], key[20];
 	
  	strcpy (height, gtk_entry_get_text (GTK_ENTRY (entry_height)));
@@ -80,12 +201,12 @@ void apply_settings ()
 	
 	strcat (config_file, "config");
 	
-
+	printf ("hello\n");
 	if((fp = fopen(config_file, "wb")) == NULL) 
 	{
-        perror("fopen");
+        	perror("fopen");
 		exit(1);
-    }
+	}
 	else
 	{
 		fprintf (fp, "max_height=%s\n", height);
@@ -95,9 +216,13 @@ void apply_settings ()
 		fclose (fp);
 	}
 
-	free (home_dir);
-	
 	write_key_bindings (wm, key);  
+
+	pinned = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned));
+	above = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above));
+	taskbar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_taskbar));
+	
+	write_devilspie (pinned, above, taskbar);
 }
 
 
@@ -138,6 +263,7 @@ int wizard (int argc, char **argv)
 	GtkWidget **menuitem;
 	GtkWidget *label_wm, *label_height, *label_width, *label_key;
 	GtkWidget *bcancel, *bapply, *bok;
+	GtkWidget *vbox2;
 	gpointer window_manager;
 	gpointer items[] = {"XBindKeys"};//{"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
 	
@@ -145,23 +271,102 @@ int wizard (int argc, char **argv)
 	char *home_dir;
 	char config_file[80];
 	int i; 
-	char max_height[5], max_width[5], min_height[5], min_width[5];
-	
+	char max_height[5], max_width[5], min_height[5], min_width[5], key[51], tmp_string[255];
+	int pinned_flag=0, above_flag=0, taskbar_flag=0;
+	char s_temp[5];
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.tilda/config");
-	
+
+	//read in height width settings already set
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        perror("fopen");
-        exit(1);
-    }
+		strcpy (max_height, "1");
+		strcpy (max_width, "1");
+		strcpy (min_height, "1");
+		strcpy (min_width , "1");
+    	}
 	else
 	{
 		fscanf (fp, "max_height=%s\n", max_height);
 		fscanf (fp, "max_width=%s\n", max_width);
 		fscanf (fp, "min_height=%s\n", min_height);
 		fscanf (fp, "min_width=%s\n", min_width);
+		fclose (fp);
+	}
+	
+	//read in keybinding settings already set
+	strcpy (config_file, home_dir);
+	strcat (config_file, "/.xbindkeysrc");
+	if ((fp = fopen (config_file, "r")) == NULL)
+	{
+		strcpy (key, " ");
+	}
+	else
+	{
+		while (!feof (fp))
+		{
+			fgets (tmp_string, 254, fp);
+			if (strstr (tmp_string, "tilda -T") != NULL)
+			{
+				fgets (key, 50, fp);
+				break;
+			}
+		}
+		
+		key[strlen(key)] = '\0';
+		
+		fclose (fp);
+	}
+	
+	//read in devilspie settings already set
+	strcpy (config_file, home_dir);
+	strcat (config_file, "/.devilspie.xml");
+	if ((fp = fopen (config_file, "r")) == NULL)
+	{
+		strcpy (key, " ");
+	}
+	else
+	{
+		while (!feof (fp))
+		{
+			fgets (tmp_string, 254, fp);
+			if (strstr (tmp_string, "Tilda Flurb") != NULL)
+			{
+				while (!feof (fp))
+				{
+					fgets (tmp_string, 254, fp);
+					if (strstr (tmp_string, "skip_tasklist") != NULL)
+					{
+						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
+						if (s_temp[0] == 'T')
+							taskbar_flag = 1;
+						else
+							taskbar_flag = 0;
+					}
+					if (strstr (tmp_string, "above") != NULL)
+					{
+						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
+						if (s_temp[0] == 'T')
+							above_flag = 1;
+						else
+							above_flag = 0;
+					}
+					if (strstr (tmp_string, "pinned") != NULL)
+					{
+						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
+						if (s_temp[0] == 'T')
+							pinned_flag = 1;
+						else
+							pinned_flag = 0;
+					}	
+				}
+				break;
+			}
+		}
+		
+		key[strlen(key)-1] = '\0';
+		
 		fclose (fp);
 	}
 	
@@ -174,25 +379,39 @@ int wizard (int argc, char **argv)
 	label_width = gtk_label_new("Width in Pixels");
 	label_key = gtk_label_new("Key Binding");
 
-	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  	
+	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);	
 
   	vbox = gtk_vbox_new (FALSE, 0);
 	hbox = gtk_hbox_new (FALSE, 0);
+	vbox2 = gtk_vbox_new (FALSE, 0);
 	
   	gtk_container_add (GTK_CONTAINER (dialog), vbox);
   	table = gtk_table_new (4, 4, FALSE);
-    gtk_container_add (GTK_CONTAINER (dialog), table);
+   	gtk_container_add (GTK_CONTAINER (dialog), table);
+  	gtk_container_add (GTK_CONTAINER (dialog), vbox2);
   
   	bcancel = gtk_button_new_with_label ("Cancel");
 	bok = gtk_button_new_with_label ("OK");
 	bapply = gtk_button_new_with_label ("Apply");
   
+  	check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
+  	check_above = gtk_check_button_new_with_label ("Always on top");
+  	check_taskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
+	
+	if (pinned_flag == 1)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_pinned), TRUE);
+  
+	if (above_flag == 1)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_above), TRUE);
+
+	if (taskbar_flag == 1)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_taskbar), TRUE);
+  	
+  
   	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bcancel), "clicked", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bok), "clicked", GTK_SIGNAL_FUNC (ok), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bapply), "clicked", GTK_SIGNAL_FUNC (apply), NULL); 
-	
 	
 	image = gtk_image_new_from_file ("src/wizard.png");
 
@@ -208,12 +427,15 @@ int wizard (int argc, char **argv)
 		gtk_signal_connect_object (GTK_OBJECT (menuitem[i]), "activate", GTK_SIGNAL_FUNC (selected), (gpointer) items[i]);
 	}
 	
+	gtk_option_menu_set_history (GTK_OPTION_MENU (option_wm), 0);
+	
 	entry_height = gtk_entry_new ();
 	entry_width = gtk_entry_new ();
 	entry_key = gtk_entry_new ();
 	
 	gtk_entry_set_text (GTK_ENTRY (entry_height), max_height);
 	gtk_entry_set_text (GTK_ENTRY (entry_width), max_width);
+	gtk_entry_set_text (GTK_ENTRY (entry_key), key);
 	
 	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
 	gtk_table_set_col_spacings (GTK_TABLE (table),5);
@@ -235,6 +457,10 @@ int wizard (int argc, char **argv)
 	gtk_box_pack_start(GTK_BOX (hbox), bok, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (hbox), bapply, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (hbox), bcancel, TRUE, TRUE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox2), check_pinned, FALSE, FALSE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox2), check_above, FALSE, FALSE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox2), check_taskbar, FALSE, FALSE, 4);
+	gtk_box_pack_start(GTK_BOX (vbox), vbox2, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);	
 	
 	gtk_widget_show (bok);
@@ -248,9 +474,13 @@ int wizard (int argc, char **argv)
 	gtk_widget_show (entry_width);
 	gtk_widget_show (label_key);	
 	gtk_widget_show (entry_key);
+	gtk_widget_show (check_pinned);
+	gtk_widget_show (check_above);
+	gtk_widget_show (check_taskbar);
 	gtk_widget_show (image);
 	gtk_widget_show (table);
 	gtk_widget_show (hbox);
+	gtk_widget_show (vbox2);
 	gtk_widget_show (vbox);
 	gtk_widget_show ((GtkWidget *) dialog);
 
