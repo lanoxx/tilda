@@ -200,7 +200,7 @@ void write_devilspie (gboolean pinned, gboolean above, gboolean taskbar)
 	
 	if (rename(tmp_filename, config_file) == -1) 
 	{
-    	error("rename (2):");
+    	perror("rename (2):");
     	exit(1);
 	}
 }
