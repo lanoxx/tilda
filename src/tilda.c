@@ -228,8 +228,7 @@ void *wait_for_signal ()
 	signal (SIGABRT, clean_up);
 	signal (SIGKILL, clean_up);
 	signal (SIGABRT, clean_up);
-	signal (9, clean_up);
-	signal (15, clean_up);
+	signal (SIGTERM, clean_up);
 	
 		//gtk_window_move((GtkWindow *) window, 0, -min_height);
 		//resize ((GtkWidget *) window, min_width, min_height);
@@ -1043,8 +1042,7 @@ int main(int argc, char **argv)
 	signal (SIGABRT, clean_up);
 	signal (SIGKILL, clean_up);
 	signal (SIGABRT, clean_up);
-	signal (9, clean_up);
-	signal (15, clean_up);
+	signal (SIGTERM, clean_up);
 	
 	if ((tid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
