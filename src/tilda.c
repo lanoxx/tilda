@@ -41,6 +41,7 @@ char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 char *user, *display;
 char *filename_global;
+int instance;
 
 void clean_up ()
 {
@@ -170,38 +171,6 @@ int resize (GtkWidget *window, gint w, gint h)
 	return 0;
 }	
 
-int getinstance ()
-{
-	char filename[125], *tmp;
-	int i=0;
-
-	strcpy (filename, "/tmp/tilda.");
-	strcat (filename, user);
-
-	tmp = (char *) malloc (sizeof (char) * strlen (filename));
-	strcpy (tmp, filename);
-	sprintf (filename, "%s.%d", tmp, i);
-	
-	strcat (filename, display);
-
-	for (;;)
-	{
-		strcpy (filename, "/tmp/tilda.");
-		strcat (filename, user);
-		sprintf (filename, "%s.%d", tmp, i);
-		strcat (filename, display);
-		
-		if (access (filename, F_OK) == 0)
-			i++;
-		else
-			break;
-	}
-	
-	free (tmp);
-	
-	return i;
-}
-
 void *wait_for_signal ()
 {
 	FILE *fp;	
@@ -215,7 +184,7 @@ void *wait_for_signal ()
 
 	tmp = (char *) malloc (sizeof (char) * strlen (filename));
 	strcpy (tmp, filename);
-	sprintf (filename, "%s.%d", tmp, getinstance ());
+	sprintf (filename, "%s.%d", tmp, instance);
 	free (tmp);
 	
 	strcat (filename, display);
@@ -602,6 +571,35 @@ static void add_weak_pointer(GObject *object, GtkWidget **target)
 }
 */
 
+void getinstance ()
+{
+	char filename[125], *tmp;
+
+	strcpy (filename, "/tmp/tilda.");
+	strcat (filename, user);
+
+	tmp = (char *) malloc (sizeof (char) * strlen (filename));
+	strcpy (tmp, filename);
+	sprintf (filename, "%s.%d", tmp, instance);
+	
+	strcat (filename, display);
+
+	for (;;)
+	{
+		strcpy (filename, "/tmp/tilda.");
+		strcat (filename, user);
+		sprintf (filename, "%s.%d", tmp, instance);
+		strcat (filename, display);
+		
+		if (access (filename, F_OK) == 0)
+			instance++;
+		else
+			break;
+	}
+	
+    free (tmp);
+}	
+
 int main(int argc, char **argv)
 {
 	pthread_t child; 
@@ -609,8 +607,8 @@ int main(int argc, char **argv)
 	FILE *fp;
 	char *home_dir;
 	GtkWidget *hbox, *scrollbar, *widget;
-	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
 	const char *background = NULL, *color = NULL;
+    char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
 	gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
 		 dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
 		 console = FALSE, scroll = FALSE, /*keep = FALSE,*/
@@ -621,8 +619,9 @@ int main(int argc, char **argv)
 	//const char *message = "Launching interactive shell...\r\n";
 	const char *font = NULL;
 	const char *terminal = NULL;
-	const char *command = NULL;
+	const char *command;
 	const char *working_directory = NULL;
+    char env_var[14];
 	char **argv2;
 	int opt;
 	int i, j;
@@ -651,7 +650,8 @@ int main(int argc, char **argv)
 				"-w directory : switch working directory\n"
 				"-c command : run command\n"
 				"-t : set transparent to true\n";
-	back.red = back.green = back.blue = 0xffff;
+    
+    back.red = back.green = back.blue = 0xffff;
 	fore.red = fore.green = fore.blue = 0x0000;
 	highlight.red = highlight.green = highlight.blue = 0xc000;
 	cursor.red = 0xffff;
@@ -660,10 +660,19 @@ int main(int argc, char **argv)
 	tint = back;
 	
 	font = "monospace 9";
-	
 	user = getenv ("USER");
 	display = getenv ("DISPLAY");
-	
+    
+    /* 	
+    set the instance number and place a env in the array of envs to be set when
+    the tilda terminal is created 
+    */
+    getinstance ();
+    i=instance;
+    sprintf (env_var, "TILDA_NUM=%d", instance);
+	env_add[2] = (char *) malloc (sizeof (char) * strlen (env_var));
+    strcpy (env_add[2], env_var);
+    
 	/* Have to do this early. */
 	if (getenv("VTE_PROFILE_MEMORY")) 
 	{
