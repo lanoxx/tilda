@@ -4,8 +4,6 @@
 
 [ ] guy in forum - Give users a way to enter xbindkeys key events. Perhaps a window to compose input events like "xbindkeys --multikey"?
 
-[ ] guy in forum - CVS compile: ./configure --prefix=/usr/local, does not cause the binary to be placed in /usr/local/bin yet?
-
 [ ] guy in forum - Optionally, a dragable bar on the bottom of Tilda to change the height?
 
 [ ] rhencke - Add a configuration option to change background?

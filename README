@@ -8,7 +8,7 @@ http://hocwp.free.fr/xbindkeys/xbindkeys.html
 
 2) unzip and untar the source, change directorys to the tilda dir and run:
 
-./configure
+./configure --prefix=/usr
 make
 make install
 
@@ -17,8 +17,14 @@ installed before, ~/.tilda/config changes all the time.
 
 4) tilda runs tilda later
 
-5) tilda -T to move the terminal up and down, or use the key you set for
-xbindkeys to use. Or set tilda -T to another key using another keybinding software.
+5) tilda -T N to move the terminal up and down, or use the key you set 
+for xbindkeys to use, N is the number correspoding to the tilda running. 
+As you start each tilda they increase. So the first tilda running is 
+tilda -T 0. When you add keys to the keybinding entry box in the config 
+wizrad simply put a comma between the different buttons for different 
+tildas, ie F1, F2, F3 will map for tilda -T 0, tilda -T 1 and tilda -T 
+2 respectfully. Or set tilda -T N to another key using another 
+keybinding software.
 
 6) tilda -h to see the rest of the command line options. If you want a transparent bg
 and you want a white font do the follow "tilda -t -b black" this will set the

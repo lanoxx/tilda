@@ -348,8 +348,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 	uninstall uninstall-am uninstall-binPROGRAMS uninstall-info-am
 
 
-export bindir=/usr/bin
-
 tilda: $(wildcard src/*.[ch])
 	gcc -g -Wall -pthread `pkg-config --cflags --libs gtk+-2.0 vte` -otilda src/key_bindings.c src/wizard.c src/tilda.c
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
