@@ -185,8 +185,8 @@ int wizard (int argc, char **argv)
 	FILE *fp;
 	char *home_dir;
 	char config_file[80];
-	int i; 
-	char max_height[5], max_width[5], min_height[5], min_width[5], key[51], tmp_string[255];
+	int i, flag; 
+	char max_height[5], max_width[5], min_height[5], min_width[5], tmp[51], key[255], tmp_string[255];
 	char s_xbindkeys[5], s_notaskbar[5], s_above[5], s_pinned[5];
 	
 	home_dir = getenv ("HOME");
@@ -219,25 +219,33 @@ int wizard (int argc, char **argv)
 	}
 	
 	//read in keybinding settings already set
+	flag=0;
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.xbindkeysrc");
 	if ((fp = fopen (config_file, "r")) == NULL)
 	{
-		strcpy (key, " ");
+		strcpy (key, "");
 	}
 	else
 	{
-		while (!feof (fp))
+		fgets (tmp_string, 254, fp);
+		do
 		{
-			fgets (tmp_string, 254, fp);
 			if (strstr (tmp_string, "tilda -T") != NULL)
 			{
-				fgets (key, 50, fp);
-				break;
+				fgets (tmp, 50, fp);	
+				tmp[strlen (tmp)-1] = '\0';
+					
+				if (flag == 0)
+				{
+					strcpy (key, tmp);
+					flag++;
+				}
+				else
+					sprintf (key, "%s, %s", key, tmp);
 			}
-		}
-		
-		key[strlen(key)-1] = '\0';
+			fgets (tmp_string, 254, fp);
+		} while (!feof (fp));
 		
 		fclose (fp);
 	}
@@ -249,7 +257,7 @@ int wizard (int argc, char **argv)
 	label_wm = gtk_label_new("Key Bindings For:");
 	label_height = gtk_label_new("Height in Pixels");
 	label_width = gtk_label_new("Width in Pixels");
-	label_key = gtk_label_new("Key Binding");
+	label_key = gtk_label_new("Key Bindings");
 
 	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);	
 	gtk_widget_show ((GtkWidget *) dialog);

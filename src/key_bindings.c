@@ -43,15 +43,45 @@ void add_anyway (GtkWidget *widget, gpointer data)
 
 void xbindkeys (char key[])
 {
-	FILE *fp;
+	FILE *fp, *tmp;
+   	char tmpname[] = "/tmp/tildaXXXXXX";
+	int  tmpdesc;
 	char *home_dir, config_file[80];
-	char tmp_string[20];
-	int i=0;
+	char tmp_string[101];
+	int key_num, total=0, done=0, i=0;
+	
+	tmpdesc = mkstemp(tmpname);
+	
+	if (tmpdesc != -1) 
+   	{
+     	/* Managed to get a file ?
+	 	Associate a FILE* with the descriptor
+     	 */
+   		if ((tmp = fdopen(tmpdesc, "w")) == NULL ) 
+		{
+			/* Failed to associate FILE* */
+			perror("fdopen tmpdesc");
+	 		exit(1);
+		}
+   	}
+   	else 
+	{
+    	/* Failed to create a temporary file */
+      	perror("mkstemp(tmpname)");
+      	exit(1);
+   	}
 	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.xbindkeysrc");
                    
+	for (i=0;i<strlen(key);i++)
+	{
+		if (key[i] == ',')
+			total++;
+	}
+	i=0;
+				   
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
 		if((fp = fopen(config_file, "w")) == NULL) 
@@ -60,45 +90,62 @@ void xbindkeys (char key[])
         	exit(1);
 		}
 
-		fprintf (fp, "\n\"tilda -T\"\n%s\n", key);
+		fprintf (fp, "\n\"tilda -T 0\"\n%s\n", key);
 		fclose (fp);
     }
 	else
-	{
-		while (!feof (fp))
+	{			
+		fgets (tmp_string, 100, fp);
+		do
 		{
-			fgets (tmp_string, 19, fp);
-			if (strchr (tmp_string, '#') == NULL)
+			if (strstr (tmp_string, "tilda -T") != NULL)
 			{
-				if (strstr (tmp_string, key) == NULL)
+				sscanf (tmp_string, "\"tilda -T %d\"", &key_num);
+				fprintf (tmp, "%s", tmp_string);
+				fgets (tmp_string, 100, fp);
+				
+				while (i<key_num)
 				{
-					continue;
+					if (*key == ',')
+						i++;
+					key++;
 				}
-				else
+				
+				while (*key != ',' && *key != '\0')
 				{
-					//perror ("already there!!!\n");
-					//popup ("Key Already In Use", "Add Anyway", "Redo", redo_wizard, add_anyway);
-					i = 1;
-					break;
+					fprintf (tmp, "%c", *key);
+					key++;
 				}
+				
+				fprintf (tmp, "\n");
+				done++;
+			}	
+			else 
+				fprintf (tmp, "%s", tmp_string);
+			
+			fgets (tmp_string, 100, fp);
+		}while (!feof (fp));
+
+		for (;done<=total;done++)
+		{
+			fprintf (tmp, "\n\"tilda -T %d\"\n", done);
+			while (i<done)
+			{
+				if (*key == ',')
+					i++;
+				key++;
 			}
-		}
+			
+			while (*key != ',' && *key != '\0')
+			{
+				fprintf (tmp, "%c", *key);
+				key++;
+			}
+		}		
 		
 		fclose (fp);
-		
-		if (i != 1)
-		{
-			if((fp = fopen(config_file, "a")) == NULL) 
-			{
-        		perror("fopen");
-				exit(1);
-    		}
-			else
-			{
-				fprintf (fp, "\n\"tilda -T\"\n%s\n", key);
-				fclose (fp);
-			}
-		}
+		fclose (tmp);
+		rename (tmpname, config_file);
 	}
 }
 
