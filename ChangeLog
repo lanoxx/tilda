@@ -1,3 +1,8 @@
+New in Tilda-0.05:
+Added env var TILDA_NUM which is set to the current tilda num to move it up and
+down
+added better clean up support
+
 New in Tilda-0.03:
 Fixed bugs of not completely leaving the screen on some window managers. 
 Added many command line options.

@@ -29,3 +29,10 @@ keybinding software.
 6) tilda -h to see the rest of the command line options. If you want a transparent bg
 and you want a white font do the follow "tilda -t -b black" this will set the
 forground color to white and the terminal transparent.
+
+
+ADDED ENV VAR TILDA_NUM SO YOU CAN DO:
+
+tilda -T $TILDA_NUM
+
+inside tilda, maybe set alias exit to that ;) thanks David Escott

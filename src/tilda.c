@@ -600,11 +600,13 @@ void getinstance ()
         	if (fgets(buf, BUFSIZ, ptr) != NULL)
         		instance++;
         	else
+            {
+            	pclose (ptr);
             	break;
-        }
+            }
+            pclose (ptr);
+        } 
     }
-    
-    pclose (ptr);
 }   
 
 void cleantmp()
@@ -642,10 +644,11 @@ void cleantmp()
 		    		strcat(cmd, filename);
 		    		remove(cmd);    
 				}
+                pclose (ptr2);
 	    	}
        	} 
     }
- 
+    
     pclose(ptr);
 }
 
