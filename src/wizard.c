@@ -120,7 +120,7 @@ int wizard (int argc, char **argv)
 
 	gtk_init(&argc, &argv);
 	
-	label_wm = gtk_label_new("Window Manager");
+	label_wm = gtk_label_new("Key Bindings For:");
 	label_height = gtk_label_new("Height in Pixels");
 	label_width = gtk_label_new("Width in Pixels");
 	label_key = gtk_label_new("Key Binding");
