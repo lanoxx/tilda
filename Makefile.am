@@ -1,4 +1,3 @@
-export bindir=/usr/bin
 
 bin_PROGRAMS = tilda
 
