@@ -113,18 +113,16 @@ void *wait_for_signal ()
 	FILE *fp;
 	umask(0);
 	mknod("/tmp/tilda", S_IFIFO|0666, 0);
-	gpointer data;
 	char c[10];
 	int flag;
-	gint w, h, x, y;	
-	gint pid;
+	gint w, h;	//, x, y;	
 	
-	//gtk_window_move((GtkWindow *) window, 0, -min_height);
-	//resize ((GtkWidget *) window, min_width, min_height);
-	//pull_down ();
-	//gtk_window_get_position ((GtkWindow *) window, &x, &y);
+		//gtk_window_move((GtkWindow *) window, 0, -min_height);
+		//resize ((GtkWidget *) window, min_width, min_height);
+		//pull_down ();
+		//gtk_window_get_position ((GtkWindow *) window, &x, &y);
 	
-	//printf ("%i %i\n", x, y);
+		//printf ("%i %i\n", x, y);
 	
 	flag = 0;
 	
@@ -474,10 +472,12 @@ static void take_xconsole_ownership(GtkWidget *widget, gpointer data)
 				     G_OBJECT(widget));
 }
 
+/*
 static void add_weak_pointer(GObject *object, GtkWidget **target)
 {
 	g_object_add_weak_pointer(object, (gpointer*)target);
 }
+*/
 
 int main(int argc, char **argv)
 {
@@ -491,12 +491,12 @@ int main(int argc, char **argv)
 	const char *background = NULL;
 	gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
 		 dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
-		 console = FALSE, scroll = FALSE, keep = FALSE,
+		 console = FALSE, scroll = FALSE, /*keep = FALSE,*/
 		 icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
 		 cursor_set = FALSE;
-	VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
+	//VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
 	long lines = 100;
-	const char *message = "Launching interactive shell...\r\n";
+	//const char *message = "Launching interactive shell...\r\n";
 	const char *font = NULL;
 	const char *terminal = NULL;
 	const char *command = NULL;
@@ -506,7 +506,7 @@ int main(int argc, char **argv)
 	int i, j;
 	GList *args = NULL;
 	GdkColor fore, back, tint, highlight, cursor;
-	const char *usage = "Usage: %s "
+	/*const char *usage = "Usage: %s "
 			    "[ [-B image] | [-T] ] "
 			    "[-C] "
 			    "[-D] "
@@ -523,7 +523,7 @@ int main(int argc, char **argv)
 			    "[-n] "
 			    "[-r] "
 			    "[-s] "
-			    "[-t terminaltype]\n";
+			    "[-t terminaltype]\n";*/
 	back.red = back.green = back.blue = 0xffff;
 	fore.red = fore.green = fore.blue = 0x0000;
 	highlight.red = highlight.green = highlight.blue = 0xc000;
@@ -567,7 +567,7 @@ int main(int argc, char **argv)
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
 	while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
 	 {
-     	gboolean bail = FALSE;
+     	//gboolean bail = FALSE;
         switch (opt) {
 			case 'T':
 				pull_down ();
@@ -865,7 +865,7 @@ int main(int argc, char **argv)
 	else
 		gtk_widget_show_all(window);
 	
-	if (pid = pthread_create (&child, NULL, &wait_for_signal, NULL) != 0)
+	if ((pid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
 		perror ("Fuck that thread!!!");
 	}

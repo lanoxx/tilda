@@ -344,7 +344,6 @@ int wizard (int argc, char **argv)
 	GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
 	GtkStyle   *style;
-	gpointer window_manager;
 	gpointer items[] = {"XBindKeys"};//{"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
 	
 	FILE *fp;

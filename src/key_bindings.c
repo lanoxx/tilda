@@ -25,11 +25,11 @@ void add_anyway (GtkWidget *widget, gpointer data)
 	gtk_widget_destroy (GTK_WIDGET (data));
 }
 
-int xbindkeys (char key[])
+void xbindkeys (char key[])
 {
 	FILE *fp;
-	char *home_dir, config_file[80], command[80];
-	char tmp, tmp_string[20];
+	char *home_dir, config_file[80];
+	char tmp_string[20];
 	int i=0;
 	
 	home_dir = getenv ("HOME");
