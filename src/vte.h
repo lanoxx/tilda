@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2001,2002,2003 Red Hat, Inc.
- *
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,7 +17,7 @@
 #ifndef vte_vte_h_included
 #define vte_vte_h_included
 
-#ident "$Id: vte.h,v 1.1 2004/12/11 20:45:20 kungfooguru Exp $"
+#ident "$Id: vte.h,v 1.2 2005/01/14 18:12:17 kungfooguru Exp $"
 
 #include <sys/types.h>
 #include <stdio.h>

@@ -65,41 +65,46 @@ void start_process(char process[])
    /* Get a filedescriptor for a temporary file */
    tmpdesc = mkstemp(tmpname);
    
-   if (tmpdesc != -1) {
-      /* Managed to get a file ?
-	 Associate a FILE* with the descriptor
-      */
-      if ((tmpfile = fdopen(tmpdesc, "w+")) == NULL ) {
-	 /* Failed to associate FILE* */
-	 perror("fdopen tmpdesc");
-	 exit(1);
-      }
-   } else {
-      /* Failed to create a temporary file */
-      perror("mkstemp(tmpname)");
-      exit(1);
-   }
+	if (tmpdesc != -1) 
+   	{
+     	/* Managed to get a file ?
+	 	Associate a FILE* with the descriptor
+     	 */
+   		if ((tmpfile = fdopen(tmpdesc, "w+")) == NULL ) 
+		{
+			/* Failed to associate FILE* */
+			perror("fdopen tmpdesc");
+	 		exit(1);
+		}
+   	}
+   	else 
+	{
+    	/* Failed to create a temporary file */
+      	perror("mkstemp(tmpname)");
+      	exit(1);
+   	}
 
-   strcpy(command, "ps aux > ");
-   strcat(command, tmpname);
+   	strcpy(command, "ps aux > ");
+   	strcat(command, tmpname);
 
-   system(command);
+   	system(command);
 
-   while (!feof(tmpfile)) {
-      fgets(tmp_string, 254, tmpfile);
+	while (!feof(tmpfile)) 
+	{
+    	fgets(tmp_string, 254, tmpfile);
 
-      if (strstr(tmp_string, process) != NULL) {
-	 goto LABEL;
-      }
-   }
+      	if (strstr(tmp_string, process) != NULL) 
+		{	
+	 		goto LABEL;
+      	}
+   	}
 
-   system(process);
+	system(process);
 
- LABEL:
+LABEL:
 
-   fclose(tmpfile);
-   remove(tmpname);
-   
+   	fclose(tmpfile);
+   	remove(tmpname);
 }
 
 void fix_size_settings ()
@@ -658,7 +663,7 @@ int main(int argc, char **argv)
 	
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        	if (wizard (argc, argv) == 1)
+        if (wizard (argc, argv) == 1)
 			exit (0);
 			
 		if((fp = fopen(config_file, "r")) == NULL) 
