@@ -521,6 +521,8 @@ int main(int argc, char **argv)
 			    "[-f font] "
 			    "[-h] "
 			    "[-s] "
+				"[-w directory] "
+			    "[-c command] "
 			    "[-t]\n\n"
 				"-B image : set background image\n"
 				"-T : pull downt he terminal if already running\n"
@@ -529,6 +531,8 @@ int main(int argc, char **argv)
 				"-f font : set the font to the following string, ie \"helvetica 11\"\n"
 				"-h : show this message\n"
 				"-s : use scrollbar\n"
+				"-w directory : switch working directory\n"
+				"-c command : run command\n"
 				"-t : set transparent to true\n";
 	back.red = back.green = back.blue = 0xffff;
 	fore.red = fore.green = fore.blue = 0x0000;
@@ -590,21 +594,30 @@ int main(int argc, char **argv)
 			case 's':
 				scroll = TRUE;
 				break;
+			case 'c':
+            	command = optarg;
+				break;
 			case 't':
 				transparent = TRUE;
 				break;
 			case 'f':
             	font = optarg;
                 break;
+			case 'w':
+            	working_directory = optarg;
+                break;
 			case 'h':
              	g_print(usage, argv[0]);
                 exit(1);
+				break;
 			case '-':
             	bail = TRUE;
                 break;
 			default:
 				break;
 		}
+		if (bail) 
+        	break;
 	}
 	
 	home_dir = getenv ("HOME");
@@ -766,7 +779,7 @@ int main(int argc, char **argv)
     }
 	else
 	{
-		font = "helvetica 11";
+		font = "helvetica 9";
 		vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
 		//vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
 	}

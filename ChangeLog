@@ -1,3 +1,11 @@
+New in Tilda-0.03:
+Fixed bugs of not completely leaving the screen on some window managers. 
+Added many command line options.
+Removed the need for devilspie!!!
+Changed the configuration wizard and the ~/.tilda/config file, be sure to run
+tilda -C if you are moving from .02 or before to .03.
+
+
 New features in Tilda-0.02:
 Fixed bugs, hopefully, in writing to configuration files. 
 Added options in configuration wizard for devilspie and 
