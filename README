@@ -1,0 +1,12 @@
+1) emerge x11-libs/vte
+
+Though you may need a newer version of vte, or you may not run gentoo so go here to get the vte sources:
+ftp://ftp.gnome.org/pub/GNOME/sources/vte/
+
+2) Edit config.h to your specific needs, should be self explanatory.
+
+3) gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilde tilde.c
+
+4) ./tilde
+
+5) ./tilde -T to move the terminal up and down
