@@ -11,6 +11,55 @@ GtkWidget *dialog;
 char wm[20];
 GtkWidget *entry_height, *entry_width, *entry_key;
 
+void close_dialog (GtkWidget *widget, gpointer data)
+{
+	gtk_grab_remove (GTK_WIDGET (widget));
+	gtk_widget_destroy (GTK_WIDGET (data));
+}
+
+void popup (char *message, char *b1_message, char *b2_message, void (*func1)(), void (*func2)())
+{
+	GtkWidget *label;
+	GtkWidget *b1, *b2;
+	GtkWidget *dialog_window;
+	
+	dialog_window = gtk_dialog_new ();
+	
+	gtk_signal_connect (GTK_OBJECT (dialog_window), "destroy", GTK_SIGNAL_FUNC (close_dialog),	&dialog_window);
+	
+	gtk_window_set_title (GTK_WINDOW (dialog_window), "I love pop");
+	
+	gtk_container_border_width (GTK_CONTAINER (dialog_window), 5);
+	
+	label = gtk_label_new (message);
+	
+	gtk_misc_set_padding (GTK_MISC (label), 10, 10);
+	
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), label, TRUE, TRUE, 0);
+	
+	gtk_widget_show (label);
+	
+	b1 = gtk_button_new_with_label (b1_message);
+	b2 = gtk_button_new_with_label (b2_message);
+	
+	gtk_signal_connect (GTK_OBJECT (b1), "clicked", GTK_SIGNAL_FUNC (func1), dialog_window);
+	gtk_signal_connect (GTK_OBJECT (b2), "clicked", GTK_SIGNAL_FUNC (func2), dialog_window);
+	
+	GTK_WIDGET_SET_FLAGS (b2, GTK_CAN_DEFAULT);
+	
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->action_area), b1, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->action_area), b2, TRUE, TRUE, 0);
+	
+	gtk_widget_grab_default (b2);
+	
+	gtk_widget_show (b1);
+	gtk_widget_show (b2);
+	
+	gtk_widget_show (dialog_window);
+	
+	gtk_grab_add (dialog_window);
+}
+
 void apply_settings ()
 {
 	FILE *fp;

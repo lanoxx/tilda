@@ -9,6 +9,18 @@ char* xbindconvert (char key[])
 	return key;
 }
 
+void redo_wizard (GtkWidget *widget, gpointer data)
+{
+	printf ("Redo Wizard\n");
+	gtk_widget_destroy (GTK_WIDGET (data));
+}
+
+void add_anyway (GtkWidget *widget, gpointer data)
+{
+	printf ("Add Anyway\n");
+	gtk_widget_destroy (GTK_WIDGET (data));
+}
+
 int xbindkeys (char key[])
 {
 	FILE *fp;
@@ -39,6 +51,7 @@ int xbindkeys (char key[])
 				else
 				{
 					perror ("already there!!!\n");
+					popup ("Key Already In Use", "Add Anyway", "Redo", redo_wizard, add_anyway);
 					i = 1;
 					break;
 				}
@@ -153,7 +166,7 @@ int xfce (char key[])
 
 int write_key_bindings (char wm[], char key[])
 {
-	if (strcasecmp (wm, "fluxbox") == 0)
+	if (strcasecmp (wm, "xbindkeys") == 0)
 	{
 		xbindkeys (xbindconvert (key));
 	}
