@@ -16,7 +16,6 @@ char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_key;
 GtkWidget *check_pinned, *check_above, *check_taskbar, *check_xbindkeys, *check_devilspie;
 
-
 void close_dialog (GtkWidget *widget, gpointer data)
 {
 	gtk_grab_remove (GTK_WIDGET (widget));
@@ -466,6 +465,7 @@ int wizard (int argc, char **argv)
 	label_key = gtk_label_new("Key Binding");
 
 	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);	
+	gtk_widget_show ((GtkWidget *) dialog);
 
   	vbox = gtk_vbox_new (FALSE, 0);
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -511,8 +511,8 @@ int wizard (int argc, char **argv)
 	gtk_signal_connect (GTK_OBJECT (check_devilspie), "clicked", GTK_SIGNAL_FUNC (use_devilspie), NULL); 	
 	
 	style = gtk_widget_get_style(dialog);	
-	image_pix = gdk_pixmap_create_from_xpm_d (dialog->window, &image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **) wizard_xpm);
-    image =  gtk_pixmap_new (image_pix, image_pix_mask);
+	image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(dialog)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
+    image = gtk_pixmap_new (image_pix, image_pix_mask);
 	gdk_pixmap_unref (image_pix);
     gdk_pixmap_unref (image_pix_mask);
 	
@@ -565,7 +565,8 @@ int wizard (int argc, char **argv)
 	gtk_box_pack_start(GTK_BOX (vbox2), check_taskbar, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), vbox2, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);	
-	
+		
+	gtk_widget_show (image);	
 	gtk_widget_show (bok);
 	gtk_widget_show (bapply);
 	gtk_widget_show (bcancel);
@@ -582,12 +583,11 @@ int wizard (int argc, char **argv)
 	gtk_widget_show (check_taskbar);
 	gtk_widget_show (check_xbindkeys);
 	gtk_widget_show (check_devilspie);
-	gtk_widget_show (image);
+	
 	gtk_widget_show (table);
 	gtk_widget_show (hbox);
 	gtk_widget_show (vbox2);
 	gtk_widget_show (vbox);
-	gtk_widget_show ((GtkWidget *) dialog);
 
 	gtk_main();
 

@@ -1,7 +1,6 @@
 /* Whether we have Xft2 */
 #define HAVE_XFT2 1
 
-/* XPM */
 static char *wizard_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "434 66 76 1",
