@@ -1,7 +1,6 @@
 export bindir=/usr/bin
 
-bin_PROGRAMS = tilde
+bin_PROGRAMS = tilda
 
-tilde: src/tilde.c
-	gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilde src/tilde.c
-
+tilda: src/tilda.c
+	gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/tilda.c
