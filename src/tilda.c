@@ -1,4 +1,3 @@
-
 /*
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by
@@ -15,8 +14,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "config.h"
-
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -31,12 +28,15 @@
 #include <fontconfig/fontconfig.h>
 #endif
 #include "vte.h"
+#include "config.h"
+#include "tilda.h"
 
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
 GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
+char config_file[80];
 
 void fix_size_settings ()
 {
@@ -45,6 +45,24 @@ void fix_size_settings ()
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
 	gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
 }
+
+void pull_down ()
+{
+	FILE *fp;
+	
+	if((fp = fopen("/tmp/tilda", "w")) == NULL) 
+	{
+    	perror("fopen");
+        exit(1);
+    }
+
+    fputs("shits", fp);
+
+    fclose(fp);
+	
+	exit (0);
+}
+
 
 int resize (GtkWidget *window, gint w, gint h)
 {
@@ -152,10 +170,12 @@ static void destroy_and_quit(GtkWidget *widget, gpointer data)
 	gtk_widget_destroy(GTK_WIDGET(data));
 	gtk_main_quit();
 }
+
 static void destroy_and_quit_eof(GtkWidget *widget, gpointer data)
 {
 	g_print("Detected EOF.\n");
 }
+
 static void destroy_and_quit_exited(GtkWidget *widget, gpointer data)
 {
 	g_print("Detected child exit.\n");
@@ -410,7 +430,7 @@ int main(int argc, char **argv)
 {
 	pthread_t child; 
 	FILE *fp;
-	char *home_dir, config_file[80];
+	char *home_dir;
 	GtkWidget *hbox, *scrollbar, *widget;
 	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
 	const char *background = NULL;
@@ -491,33 +511,37 @@ int main(int argc, char **argv)
 	argv2[i] = NULL;
 	g_assert(i < (g_list_length(args) + 2));
 
+	gtk_init(&argc, &argv);
 
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-	if (argc > 0)
-	{
-		if ((opt = getopt(argc, argv, "T")) == 'T')
-		{
-			if((fp = fopen("/tmp/tilda", "w")) == NULL) 
-			{
-            	perror("fopen");
-                exit(1);
-        	}
-
-        	fputs("shits", fp);
-
-        	fclose(fp);
-	        return 0;
+	 while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
+	 {
+     	gboolean bail = FALSE;
+        switch (opt) {
+			case 'T':
+				pull_down ();
+				break;
+			case 'C':
+				wizard (window);
+				break;
+			default:
+				break;
 		}
 	}
-	
+
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.tilda/config");
 	
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-            	perror("fopen");
-                exit(1);
+        wizard (window);
+		
+		if((fp = fopen(config_file, "r")) == NULL) 
+		{  	
+			perror("fopen");
+        	exit(1);
+		}
     }
 	else
 	{
@@ -527,8 +551,6 @@ int main(int argc, char **argv)
 		fscanf (fp, "min_width=%i\n", &min_width);
 		fclose (fp);
 	}
-
-	gtk_init(&argc, &argv);
 
 	/* Create a window to hold the scrolling shell, and hook its
 	 * delete event to the quit function.. */

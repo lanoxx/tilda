@@ -5,6 +5,9 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#include "tilda.h"
+
+GtkWidget *dialog;
 char wm[20];
 GtkWidget *entry_height, *entry_width, *entry_key;
 
@@ -51,7 +54,7 @@ gint ok ()
 {
 	apply_settings ();
 		
-	gtk_main_quit ();
+	gtk_widget_destroy (dialog);
 	
 	return (FALSE);
 }
@@ -62,8 +65,8 @@ void apply ()
 }
 
 gint exit_app (GtkWidget *widget, gpointer gdata)
-{
-	gtk_main_quit ();
+{	
+	
 	
 	return (FALSE);
 }
@@ -75,9 +78,8 @@ void selected (gpointer window_manager)
 	printf ("%s\n", wm);
 }
 
-int main (int argc, char **argv)
+int wizard (GtkWidget *window)
 {
-	GtkWidget *window;
 	GtkWidget *table;
 	GtkWidget *image;
 	GtkWidget *vbox, *hbox;
@@ -92,36 +94,34 @@ int main (int argc, char **argv)
 	
 	menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);
 
-	gtk_init(&argc, &argv);
-
 	
 	label_wm = gtk_label_new("Window Manager");
 	label_height = gtk_label_new("Height in Pixels");
 	label_width = gtk_label_new("Width in Pixels");
 	label_key = gtk_label_new("Key Binding");
 
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   	
 
   	vbox = gtk_vbox_new (FALSE, 0);
 	hbox = gtk_hbox_new (FALSE, 0);
 	
-  	gtk_container_add (GTK_CONTAINER (window), vbox);
+  	gtk_container_add (GTK_CONTAINER (dialog), vbox);
   	table = gtk_table_new (4, 4, FALSE);
-    gtk_container_add (GTK_CONTAINER (window), table);
+    gtk_container_add (GTK_CONTAINER (dialog), table);
 
   
   	bcancel = gtk_button_new_with_label ("Cancel");
 	bok = gtk_button_new_with_label ("OK");
 	bapply = gtk_button_new_with_label ("Apply");
   
-  	gtk_signal_connect (GTK_OBJECT (window), "delete_event", GTK_SIGNAL_FUNC (exit_app), NULL); 
+  	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bcancel), "clicked", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bok), "clicked", GTK_SIGNAL_FUNC (ok), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bapply), "clicked", GTK_SIGNAL_FUNC (apply), NULL); 
 	
 	
-	image = gtk_image_new_from_file ("wizard.png");
+	image = gtk_image_new_from_file ("src/wizard.png");
 
 	option_wm = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
@@ -176,9 +176,7 @@ int main (int argc, char **argv)
 	gtk_widget_show (table);
 	gtk_widget_show (hbox);
 	gtk_widget_show (vbox);
-	gtk_widget_show ((GtkWidget *) window);
-	
-	gtk_main();
+	gtk_widget_show ((GtkWidget *) dialog);
 
 	return 0;
 }

@@ -95,9 +95,9 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
 DIST_SOURCES = tilda.c
-DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
-	Makefile.in NEWS aclocal.m4 configure configure.ac depcomp \
-	install-sh missing mkinstalldirs
+DIST_COMMON = README AUTHORS ChangeLog Makefile.am Makefile.in NEWS \
+	aclocal.m4 configure configure.ac install-sh missing \
+	mkinstalldirs
 SOURCES = tilda.c
 
 all: all-am
@@ -351,7 +351,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 export bindir=/usr/bin
 
 tilda: src/tilda.c
-	gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/tilda.c
+	gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/wizard.c src/tilda.c
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -482,13 +482,13 @@ s,@PACKAGE@,,;t t
 s,@VERSION@,,;t t
 s,@EXEEXT@,,;t t
 s,@OBJEXT@,o,;t t
-s,@ACLOCAL@,${SHELL} /home/tristan/Devel/tilde/missing --run aclocal,;t t
-s,@AUTOCONF@,${SHELL} /home/tristan/Devel/tilde/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /home/tristan/Devel/tilde/missing --run automake,;t t
-s,@AUTOHEADER@,${SHELL} /home/tristan/Devel/tilde/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /home/tristan/Devel/tilde/missing --run makeinfo,;t t
-s,@AMTAR@,${SHELL} /home/tristan/Devel/tilde/missing --run tar,;t t
-s,@install_sh@,/home/tristan/Devel/tilde/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /home/tristan/Devel/tilda/missing --run aclocal,;t t
+s,@AUTOCONF@,${SHELL} /home/tristan/Devel/tilda/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /home/tristan/Devel/tilda/missing --run automake,;t t
+s,@AUTOHEADER@,${SHELL} /home/tristan/Devel/tilda/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo,;t t
+s,@AMTAR@,${SHELL} /home/tristan/Devel/tilda/missing --run tar,;t t
+s,@install_sh@,/home/tristan/Devel/tilda/install-sh,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
 s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t
@@ -503,7 +503,7 @@ s,@CPPFLAGS@,,;t t
 s,@ac_ct_CC@,gcc,;t t
 s,@am__include@,include,;t t
 s,@am__quote@,,;t t
-s,@CCDEPMODE@,depmode=gcc3,;t t
+s,@CCDEPMODE@,depmode=none,;t t
 s,@LIBOBJS@,,;t t
 s,@LTLIBOBJS@,,;t t
 CEOF
