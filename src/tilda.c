@@ -681,6 +681,7 @@ int main(int argc, char **argv)
 	fscanf (fp, "above=%s\n", s_above);
 	fscanf (fp, "pinned=%s\n", s_pinned);
 	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
+    fscanf (fp, "scrollback=%i\n", &lines);
 	fclose (fp);
 
 	gtk_init(&argc, &argv);
