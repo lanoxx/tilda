@@ -132,10 +132,11 @@ void fix_size_settings ()
 
 void pull_down (char *instance)
 {
-    FILE *fp;
+	char buf[BUFSIZ];
+    FILE *fp, *ptr;
     char filename[125], *tmp;
     
-    strcpy (filename, "/tmp/tilda.");
+    strcpy (filename, "ls /tmp/tilda.");
     strcat (filename, user);
 
     if (instance == NULL)
@@ -146,20 +147,27 @@ void pull_down (char *instance)
     
     tmp = (char *) malloc (sizeof (char) * strlen (filename));
     strcpy (tmp, filename);
-    sprintf (filename, "%s.%s", tmp, instance);
+    sprintf (filename, "%s.*.%s", tmp, instance);
     strcat (filename, display);
     
-    if (access (filename, F_OK) == 0)
+    if ((ptr = popen(filename, "r")) != NULL)
     {
-        if((fp = fopen(filename, "w")) == NULL) 
+        if (fgets(buf, BUFSIZ, ptr) != NULL)
         {
-                perror("fopen");
+        	buf[strlen(buf)-1]='\0';
+        	printf ("%s\n", buf);
+            
+        	if((fp = fopen(buf, "w")) == NULL) 
+        	{
+        	    perror("fopen");
                 exit(1);
-        }
+        	}
     
-        fputs("shits", fp);
-
-        fclose(fp);
+        	fputs("shits", fp);
+        	
+            fclose(fp);
+    	}
+        fclose (ptr);   
     }
     
     exit (0);
@@ -574,36 +582,34 @@ static void add_weak_pointer(GObject *object, GtkWidget **target)
 
 void getinstance ()
 {
-    char filename[125], *tmp;
-
-    strcpy (filename, "/tmp/tilda.");
-    strcat (filename, user);
-
-    tmp = (char *) malloc (sizeof (char) * strlen (filename));
-    strcpy (tmp, filename);
-    sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
+	char buf[BUFSIZ];
+    char filename[BUFSIZ], tmp[100];
+	FILE *ptr;
     
-    strcat (filename, display);
-
+    instance = 0;
+    
     for (;;)
     {
-        strcpy (filename, "/tmp/tilda.");
-        strcat (filename, user);
-        sprintf (filename, "%s.%d", tmp, instance);
+        strcpy (tmp, "ls /tmp/tilda.");
+        strcat (tmp, user);
+        sprintf (filename, "%s.*.%d", tmp, instance);
         strcat (filename, display);
         
-        if (access (filename, F_OK) == 0)
-            instance++;
-        else
-            break;
+        if ((ptr = popen(filename, "r")) != NULL)
+        {
+        	if (fgets(buf, BUFSIZ, ptr) != NULL)
+        		instance++;
+        	else
+            	break;
+        }
     }
     
-    free (tmp);
+    pclose (ptr);
 }   
 
 void cleantmp()
 {
-    char cmd[125], *tmp;
+    char cmd[125];
     char buf[BUFSIZ], filename[BUFSIZ];
     int length, i;
     FILE *ptr, *ptr2;
@@ -616,36 +622,31 @@ void cleantmp()
     
     if ((ptr = popen(cmd, "r")) != NULL)
     {
-       
-       while (fgets(buf, BUFSIZ, ptr) != NULL)
-       {
-            
-	    strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
-	    filename[strlen(buf+length-1)] = '\0';
-	    strcpy(buf, strstr(buf+length-1, ".")+1);
-	    length = strstr(buf, ".") - (char*)&buf;
- 	    buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
-	    strcpy(cmd,"ps x | grep ");
-	    strcat(cmd,buf);
+    	while (fgets(buf, BUFSIZ, ptr) != NULL)
+    	{
+    		strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
+	    	filename[strlen(buf+length-1)] = '\0';
+	    	strcpy(buf, strstr(buf+length-1, ".")+1);
+	    	length = strstr(buf, ".") - (char*)&buf;
+ 	    	buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
+	    	strcpy(cmd,"ps x | grep ");
+	    	strcat(cmd,buf);
 	    
-	    if ((ptr2 = popen(cmd, "r")) != NULL)
-	    {
-	        for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
+	    	if ((ptr2 = popen(cmd, "r")) != NULL)
+	    	{
+	        	for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
 	    
-	        if (i <= 2)
-		{
-		    strcpy(cmd, "/tmp/tilda.");
-		    strcat(cmd, filename);
-		    remove(cmd);    
-		}
-	    }
-       } 
+	        	if (i <= 2)
+				{
+		    		strcpy(cmd, "/tmp/tilda.");
+		    		strcat(cmd, filename);
+		    		remove(cmd);    
+				}
+	    	}
+       	} 
     }
  
- 
     pclose(ptr);
-    
-    free (tmp);
 }
 
 int main(int argc, char **argv)
@@ -710,17 +711,6 @@ int main(int argc, char **argv)
     font = "monospace 9";
     user = getenv ("USER");
     display = getenv ("DISPLAY");
-    
-    /*  
-    set the instance number and place a env in the array of envs to be set when
-    the tilda terminal is created 
-    */
-    cleantmp();
-    getinstance ();
-    i=instance;
-    sprintf (env_var, "TILDA_NUM=%d", instance);
-    env_add[2] = (char *) malloc (sizeof (char) * strlen (env_var));
-    strcpy (env_add[2], env_var);
     
     /* Have to do this early. */
     if (getenv("VTE_PROFILE_MEMORY")) 
@@ -802,6 +792,17 @@ int main(int argc, char **argv)
         if (bail) 
             break;
     }
+    
+     /*  
+    set the instance number and place a env in the array of envs to be set when
+    the tilda terminal is created 
+    */
+    cleantmp();
+    getinstance ();
+    i=instance;
+    sprintf (env_var, "TILDA_NUM=%d", instance);
+    env_add[2] = (char *) malloc (sizeof (char) * strlen (env_var));
+    strcpy (env_add[2], env_var);
     
     home_dir = getenv ("HOME");
     strcpy (config_file, home_dir);
