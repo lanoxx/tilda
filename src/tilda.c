@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <signal.h>
 #ifdef HAVE_XFT2
 #include <fontconfig/fontconfig.h>
 #endif

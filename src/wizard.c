@@ -5,6 +5,9 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+/* strstr() and friends */
+#include <string.h>
+
 #include "tilda.h"
 
 GtkWidget *dialog;
