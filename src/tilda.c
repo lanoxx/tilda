@@ -497,7 +497,7 @@ int main(int argc, char **argv)
 	{
 		if ((opt = getopt(argc, argv, "T")) == 'T')
 		{
-			if((fp = fopen("/tmp/qterm", "w")) == NULL) 
+			if((fp = fopen("/tmp/tilda", "w")) == NULL) 
 			{
             	perror("fopen");
                 exit(1);
