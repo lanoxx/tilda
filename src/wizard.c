@@ -123,12 +123,6 @@ void apply_settings ()
 	}
 
 	write_key_bindings (wm, key);  
-
-	/*pinned = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned));
-	above = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above));
-	taskbar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar));
-	
-	write_devilspie (pinned, above, taskbar);*/
 }
 
 
@@ -227,61 +221,10 @@ int wizard (int argc, char **argv)
 			}
 		}
 		
-		key[strlen(key)] = '\0';
-		
-		fclose (fp);
-	}
-	
-	//read in devilspie settings already set
-	/*strcpy (config_file, home_dir);
-	strcat (config_file, "/.devilspie.xml");
-	if ((fp = fopen (config_file, "r")) == NULL)
-	{
-		strcpy (key, " ");
-	}
-	else
-	{
-		while (!feof (fp))
-		{
-			fgets (tmp_string, 254, fp);
-			if (strstr (tmp_string, "Tilda Flurb") != NULL)
-			{
-				while (!feof (fp))
-				{
-					fgets (tmp_string, 254, fp);
-					if (strstr (tmp_string, "skip_tasklist") != NULL)
-					{
-						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
-						if (s_temp[0] == 'T')
-							taskbar_flag = 1;
-						else
-							taskbar_flag = 0;
-					}
-					if (strstr (tmp_string, "above") != NULL)
-					{
-						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
-						if (s_temp[0] == 'T')
-							above_flag = 1;
-						else
-							above_flag = 0;
-					}
-					if (strstr (tmp_string, "pinned") != NULL)
-					{
-						sscanf (tmp_string, "%s %s value=\"%s", tmp_string, tmp_string, s_temp);
-						if (s_temp[0] == 'T')
-							pinned_flag = 1;
-						else
-							pinned_flag = 0;
-					}	
-				}
-				break;
-			}
-		}
-		
 		key[strlen(key)-1] = '\0';
 		
 		fclose (fp);
-	}*/
+	}
 	
 	menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);
 
@@ -323,10 +266,7 @@ int wizard (int argc, char **argv)
 
 	if (strcasecmp (s_notaskbar, "TRUE") == 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_notaskbar), TRUE);
-  	
-	
-	//use_devilspie ();
-  
+
   	gtk_signal_connect (GTK_OBJECT (dialog), "delete_event", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bcancel), "clicked", GTK_SIGNAL_FUNC (exit_app), NULL); 
 	gtk_signal_connect (GTK_OBJECT (bok), "clicked", GTK_SIGNAL_FUNC (ok), NULL); 
