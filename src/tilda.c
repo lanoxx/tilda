@@ -38,6 +38,7 @@
 GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
 char config_file[80];
+char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 
 void start_process(char process[])
 { 
@@ -142,18 +143,17 @@ void *wait_for_signal ()
 			resize ((GtkWidget *) window, max_width, max_height);
 			gtk_widget_show ((GtkWidget *) window);
 			
-			gtk_window_stick (GTK_WINDOW (window));
-			
-			gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+			if ((strcasecmp (s_pinned, "true")) == 0)
+				gtk_window_stick (GTK_WINDOW (window));
+			if ((strcasecmp (s_above, "true")) == 0)
+				gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
 		}
 		else if (h == max_height)
 	    {	
 			resize ((GtkWidget *) window, min_width, min_height);
-			//gtk_window_move((GtkWindow *) window, 0, -min_height);
-			
+				//gtk_window_move((GtkWindow *) window, 0, -min_height);
 		
-			gtk_widget_hide ((GtkWidget *) window);	
-			
+			gtk_widget_hide ((GtkWidget *) window);		
 		}
 		
 		if (flag)
@@ -493,7 +493,6 @@ int main(int argc, char **argv)
 	int pid;
 	FILE *fp;
 	char *home_dir;
-	char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 	GtkWidget *hbox, *scrollbar, *widget;
 	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
 	const char *background = NULL;
