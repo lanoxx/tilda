@@ -482,13 +482,13 @@ s,@PACKAGE@,,;t t
 s,@VERSION@,,;t t
 s,@EXEEXT@,,;t t
 s,@OBJEXT@,o,;t t
-s,@ACLOCAL@,${SHELL} /home/tristan/Devel/tilda/missing --run aclocal,;t t
-s,@AUTOCONF@,${SHELL} /home/tristan/Devel/tilda/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /home/tristan/Devel/tilda/missing --run automake,;t t
-s,@AUTOHEADER@,${SHELL} /home/tristan/Devel/tilda/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo,;t t
-s,@AMTAR@,${SHELL} /home/tristan/Devel/tilda/missing --run tar,;t t
-s,@install_sh@,/home/tristan/Devel/tilda/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /home/tristan/tilda/missing --run aclocal,;t t
+s,@AUTOCONF@,${SHELL} /home/tristan/tilda/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /home/tristan/tilda/missing --run automake,;t t
+s,@AUTOHEADER@,${SHELL} /home/tristan/tilda/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /home/tristan/tilda/missing --run makeinfo,;t t
+s,@AMTAR@,${SHELL} /home/tristan/tilda/missing --run tar,;t t
+s,@install_sh@,/home/tristan/tilda/install-sh,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
 s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t

@@ -450,6 +450,7 @@ int main(int argc, char **argv)
 	int pid;
 	FILE *fp;
 	char *home_dir;
+	char s_xbindkeys[5], s_devilspie[5];
 	GtkWidget *hbox, *scrollbar, *widget;
 	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
 	const char *background = NULL;
@@ -562,7 +563,9 @@ int main(int argc, char **argv)
         		exit(1);
 		}
    	 }
-	
+	 
+	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
+	fscanf (fp, "devilspie=%s\n", s_devilspie);
 	fscanf (fp, "max_height=%i\n", &max_height);
 	fscanf (fp, "max_width=%i\n", &max_width);
 	fscanf (fp, "min_height=%i\n", &min_height);

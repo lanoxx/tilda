@@ -14,7 +14,7 @@ hostname = ibook
 uname -m = ppc
 uname -r = 2.6.9-gentoo-r9
 uname -s = Linux
-uname -v = #1 Fri Dec 24 08:19:49 CST 2004
+uname -v = #3 Mon Dec 27 06:42:13 CST 2004
 
 /usr/bin/uname -p = 750FX
 /bin/uname -X     = unknown
@@ -33,6 +33,8 @@ PATH: /usr/local/bin
 PATH: /opt/bin
 PATH: /usr/powerpc-unknown-linux-gnu/gcc-bin/3.4
 PATH: /usr/X11R6/bin
+PATH: /opt/ibm-jdk-bin-1.4.2/bin
+PATH: /opt/ibm-jdk-bin-1.4.2/jre/bin
 
 
 ## ----------- ##
@@ -178,14 +180,14 @@ am_cv_CC_dependencies_compiler_type=none
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/tristan/Devel/tilda/missing --run aclocal'
+ACLOCAL='${SHELL} /home/tristan/tilda/missing --run aclocal'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
-AMTAR='${SHELL} /home/tristan/Devel/tilda/missing --run tar'
-AUTOCONF='${SHELL} /home/tristan/Devel/tilda/missing --run autoconf'
-AUTOHEADER='${SHELL} /home/tristan/Devel/tilda/missing --run autoheader'
-AUTOMAKE='${SHELL} /home/tristan/Devel/tilda/missing --run automake'
+AMTAR='${SHELL} /home/tristan/tilda/missing --run tar'
+AUTOCONF='${SHELL} /home/tristan/tilda/missing --run autoconf'
+AUTOHEADER='${SHELL} /home/tristan/tilda/missing --run autoheader'
+AUTOMAKE='${SHELL} /home/tristan/tilda/missing --run automake'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=none'
@@ -205,7 +207,7 @@ LDFLAGS=''
 LIBOBJS=''
 LIBS=''
 LTLIBOBJS=''
-MAKEINFO='${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo'
+MAKEINFO='${SHELL} /home/tristan/tilda/missing --run makeinfo'
 OBJEXT='o'
 PACKAGE=''
 PACKAGE_BUGREPORT='sloutri@iit.edu'
@@ -227,7 +229,7 @@ exec_prefix='${prefix}'
 host_alias=''
 includedir='${prefix}/include'
 infodir='${prefix}/info'
-install_sh='/home/tristan/Devel/tilda/install-sh'
+install_sh='/home/tristan/tilda/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localstatedir='${prefix}/var'
