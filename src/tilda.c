@@ -40,6 +40,21 @@ gint max_width, max_height, min_width, min_height;
 char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 
+//char *tmp_dir = getenv ("TMPDIR");
+char *user, *display;
+char *filename_global;
+
+void clean_up ()
+{
+	if (filename_global != NULL)
+	{
+		remove (filename_global);
+		free (filename_global);
+	}
+	
+	exit (0);
+}
+
 void start_process(char process[]) 
 {
    /* This really should be rewritten to use fork()/exec()
@@ -115,19 +130,28 @@ void fix_size_settings ()
 	gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
 }
 
-void pull_down ()
+void pull_down (char *instance)
 {
 	FILE *fp;
+	char filename[125], *tmp;
 	
-	if((fp = fopen("/tmp/tilda", "w")) == NULL) 
+	strcpy (filename, "/tmp/tilda.");
+	strcat (filename, user);
+
+	tmp = (char *) malloc (sizeof (char) * strlen (filename));
+	strcpy (tmp, filename);
+	sprintf (filename, "%s.%s.", tmp, instance);
+	strcat (filename, display);
+	
+	if((fp = fopen(filename, "w")) == NULL) 
 	{
     		perror("fopen");
         	exit(1);
-    	}
+    }
 
-    	fputs("shits", fp);
+    fputs("shits", fp);
 
-    	fclose(fp);
+    fclose(fp);
 	
 	exit (0);
 }
@@ -139,14 +163,69 @@ int resize (GtkWidget *window, gint w, gint h)
 	return 0;
 }	
 
+int getinstance ()
+{
+	char filename[125], *tmp;
+	int i=0;
+
+	strcpy (filename, "/tmp/tilda.");
+	strcat (filename, user);
+
+	tmp = (char *) malloc (sizeof (char) * strlen (filename));
+	strcpy (tmp, filename);
+	sprintf (filename, "%s.%d.", tmp, i);
+	
+	strcat (filename, display);
+
+	for (;;)
+	{
+		strcpy (filename, "/tmp/tilda.");
+		strcat (filename, user);
+		sprintf (filename, "%s.%d.", tmp, i);
+		strcat (filename, display);
+		
+		if (access (filename, F_OK) == 0)
+			i++;
+		else
+			break;
+	}
+	
+	free (tmp);
+	
+	return i;
+}
+
 void *wait_for_signal ()
 {
-	FILE *fp;
-	umask(0);
-	mknod ("/tmp/tilda", S_IFIFO|0666, 0);
+	FILE *fp;	
+	char filename[125], *tmp;
 	char c[10];
 	int flag;
 	gint w, h;	//, x, y;	
+	
+	strcpy (filename, "/tmp/tilda.");
+	strcat (filename, user);
+
+	tmp = (char *) malloc (sizeof (char) * strlen (filename));
+	strcpy (tmp, filename);
+	sprintf (filename, "%s.%d.", tmp, getinstance ());
+	free (tmp);
+	
+	strcat (filename, display);
+
+	filename_global = (char *) malloc (sizeof (char) * strlen (filename));
+	strcpy (filename_global, filename);
+
+	umask(0);
+	mknod (filename, S_IFIFO|0666, 0);
+	
+	signal (SIGINT, clean_up);
+	signal (SIGQUIT, clean_up);
+	signal (SIGABRT, clean_up);
+	signal (SIGKILL, clean_up);
+	signal (SIGABRT, clean_up);
+	signal (9, clean_up);
+	signal (15, clean_up);
 	
 		//gtk_window_move((GtkWindow *) window, 0, -min_height);
 		//resize ((GtkWidget *) window, min_width, min_height);
@@ -161,7 +240,7 @@ void *wait_for_signal ()
 	{
 		if (flag)
 		{
-			fp = fopen("/tmp/tilda", "r");
+			fp = fopen(filename, "r");
 			fgets (c, 10, fp);
 		}
 	
@@ -576,6 +655,9 @@ int main(int argc, char **argv)
 	
 	font = "monospace 9";
 	
+	user = getenv ("USER");
+	display = getenv ("DISPLAY");
+	
 	/* Have to do this early. */
 	if (getenv("VTE_PROFILE_MEMORY")) 
 	{
@@ -609,7 +691,7 @@ int main(int argc, char **argv)
 
 
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-	while ((opt = getopt(argc, argv, "B:CDT2ab:c:df:ghkn:stw:-")) != -1) 
+	while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:stw:-")) != -1) 
 	 {
      	gboolean bail = FALSE;
         switch (opt) {
@@ -620,7 +702,7 @@ int main(int argc, char **argv)
 				color = optarg;
 				break;	
 			case 'T':
-				pull_down ();
+				pull_down (optarg);
 				break;
 			case 'C':
 				if (wizard (argc, argv) == 1) { return 0; }
@@ -681,7 +763,7 @@ int main(int argc, char **argv)
 	fscanf (fp, "above=%s\n", s_above);
 	fscanf (fp, "pinned=%s\n", s_pinned);
 	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-    fscanf (fp, "scrollback=%i\n", &lines);
+    fscanf (fp, "scrollback=%ld\n", &lines);
 	fclose (fp);
 
 	gtk_init(&argc, &argv);
@@ -952,6 +1034,14 @@ int main(int argc, char **argv)
 	
 	gtk_window_move((GtkWindow *) window, 0, 0);
 	
+	signal (SIGINT, clean_up);
+	signal (SIGQUIT, clean_up);
+	signal (SIGABRT, clean_up);
+	signal (SIGKILL, clean_up);
+	signal (SIGABRT, clean_up);
+	signal (9, clean_up);
+	signal (15, clean_up);
+	
 	if ((tid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
 		perror ("Fuck that thread!!!");
@@ -962,6 +1052,9 @@ int main(int argc, char **argv)
 	pthread_cancel(child);
 
 	pthread_join (child, NULL);    	
+	
+	remove (filename_global);
+	free (filename_global);
 
 	return 0;
 }
