@@ -520,7 +520,7 @@ static void add_weak_pointer(GObject *object, GtkWidget **target)
 int main(int argc, char **argv)
 {
 	pthread_t child; 
-	int pid;
+	int tid;
 	FILE *fp;
 	char *home_dir;
 	GtkWidget *hbox, *scrollbar, *widget;
@@ -951,14 +951,14 @@ int main(int argc, char **argv)
 	
 	gtk_window_move((GtkWindow *) window, 0, 0);
 	
-	if ((pid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
+	if ((tid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
 		perror ("Fuck that thread!!!");
 	}
 	
 	gtk_main();
 
-	kill (pid, 9);
+	pthread_cancel(child);
 
 	pthread_join (child, NULL);    	
 
