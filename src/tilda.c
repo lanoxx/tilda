@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <pthread.h>
@@ -184,7 +185,7 @@ void *wait_for_signal ()
 
     tmp = (char *) malloc (sizeof (char) * strlen (filename));
     strcpy (tmp, filename);
-    sprintf (filename, "%s.%d", tmp, instance);
+    sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
     free (tmp);
     
     strcat (filename, display);
@@ -580,7 +581,7 @@ void getinstance ()
 
     tmp = (char *) malloc (sizeof (char) * strlen (filename));
     strcpy (tmp, filename);
-    sprintf (filename, "%s.%d", tmp, instance);
+    sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
     
     strcat (filename, display);
 
@@ -599,6 +600,53 @@ void getinstance ()
     
     free (tmp);
 }   
+
+void cleantmp()
+{
+    char cmd[125], *tmp;
+    char buf[BUFSIZ], filename[BUFSIZ];
+    int length, i;
+    FILE *ptr, *ptr2;
+
+    strcpy (cmd, "ls /tmp/tilda.");
+    strcat (cmd, user);
+    length = strlen(cmd)-(strlen("ls /tmp/")+1);
+    
+    strcat (cmd, "*");
+    
+    if ((ptr = popen(cmd, "r")) != NULL)
+    {
+       
+       while (fgets(buf, BUFSIZ, ptr) != NULL)
+       {
+            
+	    strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
+	    filename[strlen(buf+length-1)] = '\0';
+	    strcpy(buf, strstr(buf+length-1, ".")+1);
+	    length = strstr(buf, ".") - (char*)&buf;
+ 	    buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
+	    strcpy(cmd,"ps x | grep ");
+	    strcat(cmd,buf);
+	    
+	    if ((ptr2 = popen(cmd, "r")) != NULL)
+	    {
+	        for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
+	    
+	        if (i <= 2)
+		{
+		    strcpy(cmd, "/tmp/tilda.");
+		    strcat(cmd, filename);
+		    remove(cmd);    
+		}
+	    }
+       } 
+    }
+ 
+ 
+    pclose(ptr);
+    
+    free (tmp);
+}
 
 int main(int argc, char **argv)
 {
@@ -667,6 +715,7 @@ int main(int argc, char **argv)
     set the instance number and place a env in the array of envs to be set when
     the tilda terminal is created 
     */
+    cleantmp();
     getinstance ();
     i=instance;
     sprintf (env_var, "TILDA_NUM=%d", instance);
