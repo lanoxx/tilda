@@ -147,15 +147,18 @@ void pull_down (char *instance)
 	sprintf (filename, "%s.%s", tmp, instance);
 	strcat (filename, display);
 	
-	if((fp = fopen(filename, "w")) == NULL) 
+	if (access (filename, F_OK) == 0)
 	{
-    		perror("fopen");
-        	exit(1);
-    }
+		if((fp = fopen(filename, "w")) == NULL) 
+		{
+    			perror("fopen");
+        		exit(1);
+    	}
+    
+		fputs("shits", fp);
 
-    fputs("shits", fp);
-
-    fclose(fp);
+    	fclose(fp);
+	}
 	
 	exit (0);
 }
