@@ -335,12 +335,11 @@ int wizard (int argc, char **argv)
 {
 	GtkWidget *table;
 	GtkWidget *image;
-	GtkWidget *vbox, *hbox;
+	GtkWidget *vbox, *hbox, *vbox2;
 	GtkWidget *menu, *option_wm;
 	GtkWidget **menuitem;
 	GtkWidget *label_wm, *label_height, *label_width, *label_key;
 	GtkWidget *bcancel, *bapply, *bok;
-	GtkWidget *vbox2;
 	GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
 	GtkStyle   *style;
@@ -466,15 +465,14 @@ int wizard (int argc, char **argv)
 	dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);	
 	gtk_widget_show ((GtkWidget *) dialog);
 
-  	vbox = gtk_vbox_new (FALSE, 0);
-	hbox = gtk_hbox_new (FALSE, 0);
-	vbox2 = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_vbox_new (FALSE, 4);
+	hbox = gtk_hbox_new (FALSE, 4);
+	vbox2 = gtk_vbox_new (FALSE, 4);
 	
-  	gtk_container_add (GTK_CONTAINER (dialog), vbox);
-  	table = gtk_table_new (4, 4, FALSE);
-   	gtk_container_add (GTK_CONTAINER (dialog), table);
-  	gtk_container_add (GTK_CONTAINER (dialog), vbox2);
-  
+	table = gtk_table_new (4, 4, FALSE);
+	
+	gtk_container_add (GTK_CONTAINER (dialog), vbox);
+	
   	bcancel = gtk_button_new_with_label ("Cancel");
 	bok = gtk_button_new_with_label ("OK");
 	bapply = gtk_button_new_with_label ("Apply");
@@ -551,8 +549,8 @@ int wizard (int argc, char **argv)
 	
 	gtk_table_attach_defaults (GTK_TABLE (table), label_key, 0, 1, 3, 4);
 	gtk_table_attach_defaults (GTK_TABLE (table), entry_key, 1, 2, 3, 4);
-	
-	gtk_box_pack_start(GTK_BOX (vbox), image, FALSE, FALSE, 0);
+
+	gtk_box_pack_start(GTK_BOX (vbox), image, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (vbox), table, FALSE, FALSE, 4);
 	gtk_box_pack_start(GTK_BOX (hbox), bok, TRUE, TRUE, 4);
 	gtk_box_pack_start(GTK_BOX (hbox), bapply, TRUE, TRUE, 4);
