@@ -40,41 +40,66 @@ gint max_width, max_height, min_width, min_height;
 char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 
-void start_process(char process[])
-{ 
-	FILE *tmp_file;
-	char tmp_name[L_tmpnam];
-	char *tmp_filename;
-	char tmp_string[255];
-	char command[25];
+void start_process(char process[]) 
+{
+   /* This really should be rewritten to use fork()/exec()
+      and it should ideally have a way of communicating with
+      "process" in preferably a socket or something.
+      As far as I can tell we only ever use it to start
+      xbindkeys - should consider either talkin to the developers
+      of xbindkeys and find a way to talk to it or simply not
+      start xbindkeys on our own.
 
-	tmp_filename = tmpnam (tmp_name);
-	if ((tmp_file = fopen (tmp_filename, "w+")) == NULL)
-	{
-		perror ("fopen tmpfile");
-		exit (1);
-	}
-	
-	strcpy (command, "ps aux > ");
-	strcat (command, tmp_filename);
-	
-	system (command);
-	
-	while (!feof (tmp_file))
-	{
-		fgets (tmp_string, 254, tmp_file);
-		
-		if (strstr (tmp_string, process) != NULL)
-	    {
-			goto LABEL;
-	    }
-	}
-	
-	system (process);
+      Uses mkstemp() instead of tmpname(), tmpname() is
+      insecure and open to race conditions and security
+      problems - mkstemp() isn't quite as standard as it should
+      be, but at least available on linux systems
+   */
+   
+   FILE *tmpfile;
+   char tmpname[] = "/tmp/tildaXXXXXX";
+   int  tmpdesc;
+   char tmp_string[256];
+   char command[128];
 
-LABEL:
-	fclose (tmp_file);
-	remove (tmp_filename);
+   /* Get a filedescriptor for a temporary file */
+   tmpdesc = mkstemp(tmpname);
+   
+   if (tmpdesc != -1) {
+      /* Managed to get a file ?
+	 Associate a FILE* with the descriptor
+      */
+      if ((tmpfile = fdopen(tmpdesc, "w+")) == NULL ) {
+	 /* Failed to associate FILE* */
+	 perror("fdopen tmpdesc");
+	 exit(1);
+      }
+   } else {
+      /* Failed to create a temporary file */
+      perror("mkstemp(tmpname)");
+      exit(1);
+   }
+
+   strcpy(command, "ps aux > ");
+   strcat(command, tmpname);
+
+   system(command);
+
+   while (!feof(tmpfile)) {
+      fgets(tmp_string, 254, tmpfile);
+
+      if (strstr(tmp_string, process) != NULL) {
+	 goto LABEL;
+      }
+   }
+
+   system(process);
+
+ LABEL:
+
+   fclose(tmpfile);
+   remove(tmpname);
+   
 }
 
 void fix_size_settings ()
