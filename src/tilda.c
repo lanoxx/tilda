@@ -500,8 +500,8 @@ int main(int argc, char **argv)
 		 dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
 		 console = FALSE, scroll = FALSE, /*keep = FALSE,*/
 		 icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
-		 cursor_set = FALSE;
-	//VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
+		 cursor_set = FALSE, use_antialias = FALSE;
+	VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
 	long lines = 100;
 	//const char *message = "Launching interactive shell...\r\n";
 	const char *font = NULL;
@@ -519,6 +519,7 @@ int main(int argc, char **argv)
 				"[-C]"
 			    "[-b [white][black] ]"
 			    "[-f font] "
+				"[-a]"
 			    "[-h] "
 			    "[-s] "
 				"[-w directory] "
@@ -528,7 +529,8 @@ int main(int argc, char **argv)
 				"-T : pull downt he terminal if already running\n"
 				"-C : bring up tilda configuration wizard\n"
 				"-b [white][black] : set the background color either white or black\n"
-				"-f font : set the font to the following string, ie \"helvetica 11\"\n"
+				"-f font : set the font to the following string, ie \"monospace 11\"\n"
+				"-a : use antialias fonts\n"
 				"-h : show this message\n"
 				"-s : use scrollbar\n"
 				"-w directory : switch working directory\n"
@@ -541,6 +543,8 @@ int main(int argc, char **argv)
 	cursor.green = cursor.blue = 0x8000;
 	tint.red = tint.green = tint.blue = 0;
 	tint = back;
+	
+	font = "monospace 9";
 	
 	/* Have to do this early. */
 	if (getenv("VTE_PROFILE_MEMORY")) 
@@ -606,6 +610,9 @@ int main(int argc, char **argv)
 			case 'w':
             	working_directory = optarg;
                 break;
+			case 'a':
+            	use_antialias = TRUE;
+                break;	
 			case 'h':
              	g_print(usage, argv[0]);
                 exit(1);
@@ -773,16 +780,12 @@ int main(int argc, char **argv)
 	{
 		vte_terminal_set_emulation(VTE_TERMINAL(widget), terminal);
 	}
-	if (font != NULL) 
-	{
-                vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
-    }
+
+	if (use_antialias)
+		vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
 	else
-	{
-		font = "helvetica 9";
 		vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
-		//vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
-	}
+	
 
 	/* Match "abcdefg". */
 	vte_terminal_match_add(VTE_TERMINAL(widget), "abcdefg");
@@ -849,11 +852,6 @@ int main(int argc, char **argv)
 						  command, NULL, env_add,
 						  working_directory,
 						  TRUE, TRUE, TRUE);
-			if (command == NULL) 
-			{
-				vte_terminal_feed_child(VTE_TERMINAL(widget),
-							"pwd\n", -1);
-			}
 		} else 
 		{
 			long i;
