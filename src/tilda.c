@@ -38,14 +38,59 @@ GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
 char config_file[80];
 
+void start_process(char process[])
+{ 
+	FILE *tmp_file;
+	char tmp_name[L_tmpnam];
+	char *tmp_filename;
+	char tmp_string[255];
+	char command[25];
+
+	tmp_filename = tmpnam (tmp_name);
+	if ((tmp_file = fopen (tmp_filename, "w+")) == NULL)
+	{
+		perror ("fopen tmpfile");
+		exit (1);
+	}
+	
+	strcpy (command, "ps aux > ");
+	strcat (command, tmp_filename);
+	
+	system (command);
+	
+	while (!feof (tmp_file))
+	{
+		fgets (tmp_string, 254, tmp_file);
+	    
+		if (strstr (tmp_string, ".xbindkeys") != NULL)
+	    {
+			continue;
+	    }
+		
+		if (strstr (tmp_string, ".devilspie.xml") != NULL)
+	    {
+			continue;
+	    }
+		
+		if (strstr (tmp_string, process) != NULL)
+	    {
+			goto LABEL;
+	    }
+	}
+	
+	system (process);
+
+LABEL:
+	fclose (tmp_file);
+	remove (tmp_filename);
+}
+
 void fix_size_settings ()
 {
 	gtk_window_resize ((GtkWindow *) window, max_width, max_height);
 	gtk_window_get_size ((GtkWindow *) window, &max_width, &max_height);
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
 	gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
-	
-	printf ("%i x %i\n", min_width, min_height);
 }
 
 void pull_down ()
@@ -82,7 +127,6 @@ void *wait_for_signal ()
 	int flag;
 	gint w, h, x, y;	
 	gint pid;
-	printf ("move: %i\n", min_height);
 	
 	//gtk_window_move((GtkWindow *) window, 0, -min_height);
 	//resize ((GtkWidget *) window, min_width, min_height);
@@ -571,6 +615,11 @@ int main(int argc, char **argv)
 	fscanf (fp, "min_height=%i\n", &min_height);
 	fscanf (fp, "min_width=%i\n", &min_width);
 	fclose (fp);
+	
+	if ((strcasecmp (s_xbindkeys, "true")) == 0)
+		start_process ("xbindkeys");
+	if ((strcasecmp (s_devilspie, "true")) == 0)
+		start_process ("devilspie");
 	
 	gtk_init(&argc, &argv);
 
