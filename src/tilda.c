@@ -39,8 +39,6 @@ GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
 char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
-
-//char *tmp_dir = getenv ("TMPDIR");
 char *user, *display;
 char *filename_global;
 
@@ -138,9 +136,15 @@ void pull_down (char *instance)
 	strcpy (filename, "/tmp/tilda.");
 	strcat (filename, user);
 
+	if (instance == NULL)
+	{
+		instance = (char *) malloc (sizeof (char));
+		strcpy (instance, "0");
+	}
+	
 	tmp = (char *) malloc (sizeof (char) * strlen (filename));
 	strcpy (tmp, filename);
-	sprintf (filename, "%s.%s.", tmp, instance);
+	sprintf (filename, "%s.%s", tmp, instance);
 	strcat (filename, display);
 	
 	if((fp = fopen(filename, "w")) == NULL) 
@@ -173,7 +177,7 @@ int getinstance ()
 
 	tmp = (char *) malloc (sizeof (char) * strlen (filename));
 	strcpy (tmp, filename);
-	sprintf (filename, "%s.%d.", tmp, i);
+	sprintf (filename, "%s.%d", tmp, i);
 	
 	strcat (filename, display);
 
@@ -181,7 +185,7 @@ int getinstance ()
 	{
 		strcpy (filename, "/tmp/tilda.");
 		strcat (filename, user);
-		sprintf (filename, "%s.%d.", tmp, i);
+		sprintf (filename, "%s.%d", tmp, i);
 		strcat (filename, display);
 		
 		if (access (filename, F_OK) == 0)
@@ -208,7 +212,7 @@ void *wait_for_signal ()
 
 	tmp = (char *) malloc (sizeof (char) * strlen (filename));
 	strcpy (tmp, filename);
-	sprintf (filename, "%s.%d.", tmp, getinstance ());
+	sprintf (filename, "%s.%d", tmp, getinstance ());
 	free (tmp);
 	
 	strcat (filename, display);
@@ -624,7 +628,7 @@ int main(int argc, char **argv)
 	GdkColor fore, back, tint, highlight, cursor;
 	const char *usage = "Usage: %s "
 			    "[-B image]"
-				"[-T]"
+				"[-T N]"
 				"[-C]"
 			    "[-b [white][black] ]"
 			    "[-f font] "
@@ -635,7 +639,7 @@ int main(int argc, char **argv)
 			    "[-c command] "
 			    "[-t]\n\n"
 				"-B image : set background image\n"
-				"-T : pull downt he terminal if already running\n"
+				"-T N: pull down terminal N if already running\n"
 				"-C : bring up tilda configuration wizard\n"
 				"-b [white][black] : set the background color either white or black\n"
 				"-f font : set the font to the following string, ie \"monospace 11\"\n"
