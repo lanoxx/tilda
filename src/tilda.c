@@ -184,8 +184,7 @@ static void destroy_and_quit_exited(GtkWidget *widget, gpointer data)
 
 static void status_line_changed(GtkWidget *widget, gpointer data)
 {
-	g_print("Status = `%s'.\n",
-		vte_terminal_get_status_line(VTE_TERMINAL(widget)));
+	g_print("Status = `%s'.\n",	vte_terminal_get_status_line(VTE_TERMINAL(widget)));
 }
 
 static int button_pressed(GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -429,6 +428,7 @@ static void add_weak_pointer(GObject *object, GtkWidget **target)
 int main(int argc, char **argv)
 {
 	pthread_t child; 
+	int pid;
 	FILE *fp;
 	char *home_dir;
 	GtkWidget *hbox, *scrollbar, *widget;
@@ -508,10 +508,9 @@ int main(int argc, char **argv)
 	argv2[i] = NULL;
 	g_assert(i < (g_list_length(args) + 2));
 
-	
 
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-	 while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
+	while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
 	 {
      	gboolean bail = FALSE;
         switch (opt) {
@@ -521,11 +520,14 @@ int main(int argc, char **argv)
 			case 'C':
 				if (wizard (argc, argv) == 1) { return 0; }
 				break;
+			case 's':
+				scroll = TRUE;
+				break;
 			default:
 				break;
 		}
 	}
-
+	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.tilda/config");
@@ -791,17 +793,26 @@ int main(int argc, char **argv)
 	fix_size_settings ();
 
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
+	g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
+	g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
 	
-	gtk_widget_show ((GtkWidget *) widget);
-	gtk_widget_show ((GtkWidget *) hbox);
-	gtk_widget_show ((GtkWidget *) window);
-
-	if (pthread_create (&child, NULL, &wait_for_signal, NULL) != 0)
+	if (!scroll)
+	{
+		gtk_widget_show ((GtkWidget *) widget);
+		gtk_widget_show ((GtkWidget *) hbox);
+		gtk_widget_show ((GtkWidget *) window);
+	}
+	else
+		gtk_widget_show_all(window);
+	
+	if (pid = pthread_create (&child, NULL, &wait_for_signal, NULL) != 0)
 	{
 		perror ("Fuck that thread!!!");
 	}
 	
 	gtk_main();
+
+	kill (pid, 9);
 
 	pthread_join (child, NULL);    	
 
