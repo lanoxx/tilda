@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <stdlib.h>
 
 #include "tilda.h"
@@ -12,7 +13,7 @@ char* xbindconvert (char key[])
 
 void redo_wizard (GtkWidget *widget, gpointer data)
 {
-	printf ("Redo Wizard\n");
+	//printf ("Redo Wizard\n");
 	gtk_grab_remove (GTK_WIDGET (widget));
 	gtk_widget_destroy (GTK_WIDGET (data));
 	gtk_main_quit();
@@ -20,7 +21,7 @@ void redo_wizard (GtkWidget *widget, gpointer data)
 
 void add_anyway (GtkWidget *widget, gpointer data)
 {
-	printf ("Add Anyway\n");
+	//printf ("Add Anyway\n");
 	gtk_widget_destroy (GTK_WIDGET (data));
 }
 
@@ -34,12 +35,18 @@ int xbindkeys (char key[])
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.xbindkeysrc");
-	                        
+                   
 	if((fp = fopen(config_file, "r")) == NULL) 
 	{
-        	perror("fopen");
-		exit(1);
-    	}
+		if((fp = fopen(config_file, "w")) == NULL) 
+		{
+			perror("fopen");
+        	exit(1);
+		}
+
+		fprintf (fp, "\n\"tilda -T\"\n%s\n", key);
+		fclose (fp);
+    }
 	else
 	{
 		while (!feof (fp))
@@ -53,7 +60,7 @@ int xbindkeys (char key[])
 				}
 				else
 				{
-					perror ("already there!!!\n");
+					//perror ("already there!!!\n");
 					//popup ("Key Already In Use", "Add Anyway", "Redo", redo_wizard, add_anyway);
 					i = 1;
 					break;
@@ -67,9 +74,9 @@ int xbindkeys (char key[])
 		{
 			if((fp = fopen(config_file, "a")) == NULL) 
 			{
-        			perror("fopen");
+        		perror("fopen");
 				exit(1);
-    			}
+    		}
 			else
 			{
 				fprintf (fp, "\n\"tilda -T\"\n%s\n", key);
@@ -141,7 +148,6 @@ int fluxbox (char key[])
 	}
 	
 	strcpy (command, getcwd (command, 80));
-	printf ("%s\n", command);
 	
 	if((fp = fopen(config_file, "a")) == NULL) 
 	{
@@ -193,7 +199,6 @@ int write_key_bindings (char wm[], char key[])
 	{
 		gnome (key);
 	}
-
 	
 	return 0;
 }

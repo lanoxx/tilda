@@ -598,19 +598,19 @@ int main(int argc, char **argv)
         		exit(1);
 		}
    	 }
-	 
-	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-	fscanf (fp, "devilspie=%s\n", s_devilspie);
+
 	fscanf (fp, "max_height=%i\n", &max_height);
 	fscanf (fp, "max_width=%i\n", &max_width);
 	fscanf (fp, "min_height=%i\n", &min_height);
-	fscanf (fp, "min_width=%i\n", &min_width);
+	fscanf (fp, "min_width=%i\n", &min_width);	 
+	fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
+	fscanf (fp, "devilspie=%s\n", s_devilspie);
 	fclose (fp);
 	
 	if ((strcasecmp (s_xbindkeys, "true")) == 0)
 		start_process ("xbindkeys");
 	if ((strcasecmp (s_devilspie, "true")) == 0)
-		start_process ("devilspie");
+		start_process ("devilspie &");
 	
 	gtk_init(&argc, &argv);
 

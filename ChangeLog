@@ -1,0 +1,5 @@
+New features in Tilda-0.02:
+Fixed bugs, hopefully, in writing to configuration files. 
+Added options in configuration wizard for devilspie and 
+xbindkeys. Also, tilda can start devilspie and xbindkeys 
+on start of tilda.

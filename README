@@ -1,20 +1,22 @@
-1) emerge x11-libs/vte
+email questions/comments to sloutri@iit.edu
 
-Though you may need a newer version of vte, or you may not run gentoo so go here to get the vte sources:
+1) Here is the software you'll need installed besides tilda:
+
 ftp://ftp.gnome.org/pub/GNOME/sources/vte/
 
-2) create a directory ~/.tilda and add a file config with the following lines
+http://hocwp.free.fr/xbindkeys/xbindkeys.html
 
-max_height=500
-max_width=1600
-min_height=1
-min_width=1600
+http://www.burtonini.com/blog/computers/devilspie
 
-with your desired sizes. min_height cannot be less than 1.
+2) unzip and untar the source, change directorys to the tilda dir and run:
 
+./configure
+make
+make install
 
-3) gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/tilda.c
+3) Run tilda -C to bring up the configuration wizard.
 
-4) ./tilda
+4) tilda runs tilda later
 
-5) ./tilda -T to move the terminal up and down
+5) tilda -T to move the terminal up and down, or use the key you set for
+xbindkeys to use. Or set tilda -T to another key using another keybinding software.

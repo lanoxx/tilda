@@ -350,8 +350,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 
 export bindir=/usr/bin
 
-tilda: src/tilda.c
-	gcc `pkg-config --cflags --libs gtk+-2.0` -lpthread -lvte -otilda src/key_bindings.c src/wizard.c src/tilda.c
+tilda: $(wildcard src/*.[ch])
+	gcc -Wall -pthread `pkg-config --cflags --libs gtk+-2.0 vte` -otilda src/key_bindings.c src/wizard.c src/tilda.c
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -9,11 +9,13 @@
 #include <string.h>
 
 #include "tilda.h"
+#include "config.h"
 
 GtkWidget *dialog;
-char wm[20];
+char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_key;
 GtkWidget *check_pinned, *check_above, *check_taskbar, *check_xbindkeys, *check_devilspie;
+
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -260,8 +262,6 @@ void apply_settings ()
 	strcpy (width, gtk_entry_get_text (GTK_ENTRY (entry_width)));
 	strcpy (key, gtk_entry_get_text (GTK_ENTRY (entry_key)));
 	
-	printf ("%s\n", height);
-	
 	home_dir = getenv ("HOME");
 	strcpy (config_file, home_dir);
 	strcat (config_file, "/.tilda/");
@@ -287,12 +287,12 @@ void apply_settings ()
 	}
 	else
 	{
-		fprintf (fp, "xbindkeys=%s\n", s_xbindkeys);
-		fprintf (fp, "devilspie=%s\n", s_devilspie);
 		fprintf (fp, "max_height=%s\n", height);
 		fprintf (fp, "max_width=%s\n", width);
 		fprintf (fp, "min_height=%i\n", 1);
 		fprintf (fp, "min_width=%s\n", width);
+		fprintf (fp, "xbindkeys=%s\n", s_xbindkeys);
+		fprintf (fp, "devilspie=%s\n", s_devilspie);
 		fclose (fp);
 	}
 
@@ -330,8 +330,6 @@ gint exit_app (GtkWidget *widget, gpointer data)
 void selected (gpointer window_manager)
 {
 	strcpy (wm, window_manager);
-	
-	printf ("%s\n", wm);
 }
 
 int wizard (int argc, char **argv)
@@ -344,6 +342,9 @@ int wizard (int argc, char **argv)
 	GtkWidget *label_wm, *label_height, *label_width, *label_key;
 	GtkWidget *bcancel, *bapply, *bok;
 	GtkWidget *vbox2;
+	GdkPixmap *image_pix;
+    GdkBitmap *image_pix_mask;
+	GtkStyle   *style;
 	gpointer window_manager;
 	gpointer items[] = {"XBindKeys"};//{"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
 	
@@ -371,12 +372,12 @@ int wizard (int argc, char **argv)
     	}
 	else
 	{
-		fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-		fscanf (fp, "devilspie=%s\n", s_devilspie);
 		fscanf (fp, "max_height=%s\n", max_height);
 		fscanf (fp, "max_width=%s\n", max_width);
 		fscanf (fp, "min_height=%s\n", min_height);
 		fscanf (fp, "min_width=%s\n", min_width);
+		fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
+		fscanf (fp, "devilspie=%s\n", s_devilspie);
 		fclose (fp);
 	}
 	
@@ -509,8 +510,12 @@ int wizard (int argc, char **argv)
 	gtk_signal_connect (GTK_OBJECT (bapply), "clicked", GTK_SIGNAL_FUNC (apply), NULL); 
 	gtk_signal_connect (GTK_OBJECT (check_devilspie), "clicked", GTK_SIGNAL_FUNC (use_devilspie), NULL); 	
 	
-	image = gtk_image_new_from_file ("src/wizard.png");
-
+	style = gtk_widget_get_style(dialog);	
+	image_pix = gdk_pixmap_create_from_xpm_d (dialog->window, &image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **) wizard_xpm);
+    image =  gtk_pixmap_new (image_pix, image_pix_mask);
+	gdk_pixmap_unref (image_pix);
+    gdk_pixmap_unref (image_pix_mask);
+	
 	option_wm = gtk_option_menu_new ();
 	menu = gtk_menu_new ();
 	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_wm), menu);
