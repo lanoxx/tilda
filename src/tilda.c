@@ -142,7 +142,7 @@ void *wait_for_signal ()
 		{
 			resize ((GtkWidget *) window, max_width, max_height);
 			gtk_widget_show ((GtkWidget *) window);
-			
+			gtk_window_move((GtkWindow *) window, 0, 0);
 			if ((strcasecmp (s_pinned, "true")) == 0)
 				gtk_window_stick (GTK_WINDOW (window));
 			if ((strcasecmp (s_above, "true")) == 0)
@@ -495,7 +495,7 @@ int main(int argc, char **argv)
 	char *home_dir;
 	GtkWidget *hbox, *scrollbar, *widget;
 	char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL};
-	const char *background = NULL;
+	const char *background = NULL, *color = NULL;
 	gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
 		 dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
 		 console = FALSE, scroll = FALSE, /*keep = FALSE,*/
@@ -513,24 +513,23 @@ int main(int argc, char **argv)
 	int i, j;
 	GList *args = NULL;
 	GdkColor fore, back, tint, highlight, cursor;
-	/*const char *usage = "Usage: %s "
-			    "[ [-B image] | [-T] ] "
-			    "[-C] "
-			    "[-D] "
-			    "[-2] "
-			    "[-a] "
-			    "[-b] "
-			    "[-c command] "
-			    "[-d] "
+	const char *usage = "Usage: %s "
+			    "[-B image]"
+				"[-T]"
+				"[-C]"
+			    "[-b [white][black] ]"
 			    "[-f font] "
-			    "[-g] "
 			    "[-h] "
-			    "[-i] "
-			    "[-k] "
-			    "[-n] "
-			    "[-r] "
 			    "[-s] "
-			    "[-t terminaltype]\n";*/
+			    "[-t]\n\n"
+				"-B image : set background image\n"
+				"-T : pull downt he terminal if already running\n"
+				"-C : bring up tilda configuration wizard\n"
+				"-b [white][black] : set the background color either white or black\n"
+				"-f font : set the font to the following string, ie \"helvetica 11\"\n"
+				"-h : show this message\n"
+				"-s : use scrollbar\n"
+				"-t : set transparent to true\n";
 	back.red = back.green = back.blue = 0xffff;
 	fore.red = fore.green = fore.blue = 0x0000;
 	highlight.red = highlight.green = highlight.blue = 0xc000;
@@ -572,10 +571,16 @@ int main(int argc, char **argv)
 
 
 	/*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-	while ((opt = getopt(argc, argv, "B:CDT2abc:df:ghkn:st:w:-")) != -1) 
+	while ((opt = getopt(argc, argv, "B:CDT2ab:c:df:ghkn:stw:-")) != -1) 
 	 {
-     	//gboolean bail = FALSE;
+     	gboolean bail = FALSE;
         switch (opt) {
+			case 'B':
+             	background = optarg;
+                break;
+			case 'b':
+				color = optarg;
+				break;	
 			case 'T':
 				pull_down ();
 				break;
@@ -585,6 +590,18 @@ int main(int argc, char **argv)
 			case 's':
 				scroll = TRUE;
 				break;
+			case 't':
+				transparent = TRUE;
+				break;
+			case 'f':
+            	font = optarg;
+                break;
+			case 'h':
+             	g_print(usage, argv[0]);
+                exit(1);
+			case '-':
+            	bail = TRUE;
+                break;
 			default:
 				break;
 		}
@@ -700,7 +717,7 @@ int main(int argc, char **argv)
 	/* Create the scrollbar for the widget. */
 	scrollbar = gtk_vscrollbar_new((VTE_TERMINAL(widget))->adjustment);
 	gtk_box_pack_start(GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);
-	
+		
 	/* Set some defaults. */
 	vte_terminal_set_audible_bell(VTE_TERMINAL(widget), audible);
 	vte_terminal_set_visible_bell(VTE_TERMINAL(widget), !audible);
@@ -710,6 +727,7 @@ int main(int argc, char **argv)
 	vte_terminal_set_scroll_on_keystroke(VTE_TERMINAL(widget), TRUE);
 	vte_terminal_set_scrollback_lines(VTE_TERMINAL(widget), lines);
 	vte_terminal_set_mouse_autohide(VTE_TERMINAL(widget), TRUE);
+
 	if (background != NULL) 
 	{
 		vte_terminal_set_background_image_file(VTE_TERMINAL(widget),
@@ -720,8 +738,15 @@ int main(int argc, char **argv)
 		vte_terminal_set_background_transparent(VTE_TERMINAL(widget),
 							TRUE);
 	}
+	if ((color!=NULL) && (strcasecmp (color, "black") == 0))
+	{
+		back.red = back.green = back.blue = 0x0000;
+		fore.red = fore.green = fore.blue = 0xffff;
+	}
+
 	vte_terminal_set_background_tint_color(VTE_TERMINAL(widget), &tint);
 	vte_terminal_set_colors(VTE_TERMINAL(widget), &fore, &back, NULL, 0);
+	
 	if (highlight_set) 
 	{
 		vte_terminal_set_color_highlight(VTE_TERMINAL(widget),
@@ -735,13 +760,16 @@ int main(int argc, char **argv)
 	{
 		vte_terminal_set_emulation(VTE_TERMINAL(widget), terminal);
 	}
-
-	/* Set the default font. */
-	if (font == NULL) 
+	if (font != NULL) 
 	{
-		font = "helvetica 15";
+                vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
+    }
+	else
+	{
+		font = "helvetica 11";
+		vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
+		//vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
 	}
-	//vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
 
 	/* Match "abcdefg". */
 	vte_terminal_match_add(VTE_TERMINAL(widget), "abcdefg");
@@ -857,6 +885,7 @@ int main(int argc, char **argv)
 	g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
 	g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
 	
+	
 	gtk_widget_set_size_request ((GtkWidget *) window, 0, 0);
 	fix_size_settings ();
 	gtk_window_resize ((GtkWindow *) window, min_width, min_height);
@@ -878,7 +907,9 @@ int main(int argc, char **argv)
 		gtk_window_stick (GTK_WINDOW (window));
 	if ((strcasecmp (s_notaskbar, "true")) == 0)
 		gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
-	 
+	
+	gtk_window_move((GtkWindow *) window, 0, 0);
+	
 	if ((pid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
 	{
 		perror ("Fuck that thread!!!");
