@@ -58,10 +58,11 @@ gint max_width, max_height, min_width, min_height;
 char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 char *user, *display;
-char *filename_global;
-int  filename_global_size;
-int  instance;
+char *filename_global;      /* stores the name of the socket used for accessing this instance */
+int  filename_global_size;  /* stores the size of filename_global */
+int  instance;              /* stores this instance's number */
 
+/* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () {
     if (filename_global != NULL) 
     {
@@ -145,6 +146,7 @@ void fix_size_settings ()
     gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
 }
 
+/* Pulls "down" a running tilda instance */
 void pull_down (char *instance)
 {
     char buf[BUFSIZ];
@@ -152,6 +154,7 @@ void pull_down (char *instance)
     char filename[125], *tmp;
     int  tmp_size;
     
+    /* generate socket name into 'filename' */
     strlcpy (filename, "ls /tmp/tilda.", sizeof(filename));
     strlcat (filename, user, sizeof(filename));
     
@@ -166,28 +169,34 @@ void pull_down (char *instance)
     strlcpy (tmp, filename, tmp_size);
     sprintf (filename, "%s.*.%s", tmp, instance); 
     strlcat (filename, display, sizeof(filename));
-    
-    if ((ptr = popen (filename, "r")) != NULL)
+    /* finished generating socket name */    
+
+    if ((ptr = popen (filename, "r")) != NULL) /* open 'filename' into ptr for reading */
     {
-        if (fgets (buf, BUFSIZ, ptr) != NULL)
+        if (fgets (buf, BUFSIZ, ptr) != NULL)  /* get the name of this instance's socket */
         {
             buf[strlen (buf)-1] = '\0';
-            printf ("%s\n", buf);
             
-            if ((fp = fopen (buf, "w")) == NULL) 
+            #ifdef DEBUG
+            printf ("%s\n", buf);
+            #endif
+
+            if ((fp = fopen (buf, "w")) == NULL) /* open this instance's socket */
             {
                 perror ("fopen");
                 exit (1);
             }
-    
+            
+            /* write the 'pulldown' command into the socket.
+             * NOTE: the value of the command doesn't matter at all */
             fputs ("shits", fp);
             
             fclose (fp);
         }
-        fclose (ptr);   
+        fclose (ptr);
     }
     
-    exit (0);
+    exit (0); /* pull the terminal down */
 }
 
 void *wait_for_signal ()
@@ -729,7 +738,10 @@ int main(int argc, char **argv)
             /* Launch a shell. */
             if (command == NULL)
             {
+                #ifdef DEBUG
                 puts("had to fix 'command'");
+                #endif
+
                 command = getenv("SHELL"); /* possible buffer overflow? */
             }
 
