@@ -151,7 +151,7 @@ void pull_down (char *instance)
 {
     char buf[BUFSIZ];
     FILE *fp, *ptr;
-    char filename[125], *tmp;
+    char filename[128], *tmp;
     int  tmp_size;
     
     /* generate socket name into 'filename' */
@@ -202,7 +202,7 @@ void pull_down (char *instance)
 void *wait_for_signal ()
 {
     FILE *fp;   
-    char filename[125], *tmp;
+    char filename[128], *tmp;
     int  tmp_size;
     char c[10];
     int  flag;
@@ -259,7 +259,7 @@ void *wait_for_signal ()
         {
             resize ((GtkWidget *) window, max_width, max_height);
             gtk_widget_show ((GtkWidget *) window);
-            gtk_window_move((GtkWindow *) window, 0, 0);
+            gtk_window_move ((GtkWindow *) window, 0, 0);
 
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
@@ -301,9 +301,9 @@ void getinstance ()
         sprintf (filename, "%s.*.%d", tmp, instance);
         strlcat (filename, display, sizeof(filename));
         
-        if ((ptr = popen(filename, "r")) != NULL)
+        if ((ptr = popen (filename, "r")) != NULL)
         {
-            if (fgets(buf, BUFSIZ, ptr) != NULL)
+            if (fgets (buf, BUFSIZ, ptr) != NULL)
                 instance++;
             else
             {
@@ -315,53 +315,53 @@ void getinstance ()
     }
 }   
 
-void cleantmp()
+void cleantmp ()
 {
-    char cmd[125];
+    char cmd[128];
     char buf[BUFSIZ], filename[BUFSIZ];
-    int length, i;
+    int  length, i;
     FILE *ptr, *ptr2;
 
     strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
     strlcat (cmd, user, sizeof(cmd));
-    length = strlen(cmd)-(strlen("ls /tmp/")+1);
+    length = strlen (cmd)-(strlen ("ls /tmp/") + 1);
     
     strlcat (cmd, "*", sizeof(cmd));
     
-    if ((ptr = popen(cmd, "r")) != NULL)
+    if ((ptr = popen (cmd, "r")) != NULL)
     {
-        while (fgets(buf, BUFSIZ, ptr) != NULL)
+        while (fgets (buf, BUFSIZ, ptr) != NULL)
         {
-            strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
-            filename[strlen(buf+length-1)] = '\0';
-            strlcpy(buf, strstr(buf+length-1, ".")+1, sizeof(buf));
-            length = strstr(buf, ".") - (char*)&buf;
-            buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
-            strlcpy(cmd,"ps x | grep ", sizeof(cmd));
-            strlcat(cmd,buf, sizeof(cmd));
+            strncpy (filename, buf + length - 1, strlen (buf + length - 1) - 1);
+            filename[strlen (buf + length - 1)] = '\0';
+            strlcpy (buf, strstr (buf + length - 1, ".") + 1, sizeof(buf));
+            length = strstr (buf, ".") - (char*)&buf;
+            buf[(int)(strstr (buf, ".") - (char*)&buf)] = '\0';
+            strlcpy (cmd,"ps x | grep ", sizeof(cmd));
+            strlcat (cmd,buf, sizeof(cmd));
         
-            if ((ptr2 = popen(cmd, "r")) != NULL)
+            if ((ptr2 = popen (cmd, "r")) != NULL)
             {
-                for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
+                for (i = 0; fgets (buf, BUFSIZ, ptr2) != NULL; i++);
         
                 if (i <= 2)
                 {
-                    strlcpy(cmd, "/tmp/tilda.", sizeof(cmd));
-                    strlcat(cmd, filename, sizeof(cmd));
-                    remove(cmd);    
+                    strlcpy (cmd, "/tmp/tilda.", sizeof(cmd));
+                    strlcat (cmd, filename, sizeof(cmd));
+                    remove (cmd);    
                 }
                 pclose (ptr2);
             }
         } 
     }
     
-    pclose(ptr);
+    pclose (ptr);
 }
 
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 {
     pthread_t child; 
-    int tid;
+    int  tid;
     FILE *fp;
     char *home_dir;
     GtkWidget *hbox, *scrollbar, *widget;
@@ -382,8 +382,8 @@ int main(int argc, char **argv)
     const char *working_directory = NULL;
     char env_var[14];
     char **argv2;
-    int opt;
-    int i, j;
+    int  opt;
+    int  i, j;
     GList *args = NULL;
     GdkColor fore, back, tint, highlight, cursor;
     const char *usage = "Usage: %s "
@@ -423,20 +423,20 @@ int main(int argc, char **argv)
     display = getenv ("DISPLAY");
     
     /* Have to do this early. */
-    if (getenv("VTE_PROFILE_MEMORY")) 
+    if (getenv ("VTE_PROFILE_MEMORY")) 
     {
-        if (atol(getenv("VTE_PROFILE_MEMORY")) != 0) 
+        if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0) 
         {
-            g_mem_set_vtable(glib_mem_profiler_table);
+            g_mem_set_vtable (glib_mem_profiler_table);
         }
     }
 
     /* Pull out long options for GTK+. */
     for (i = j = 1; i < argc; i++) 
     {
-        if (g_ascii_strncasecmp("--", argv[i], 2) == 0) 
+        if (g_ascii_strncasecmp ("--", argv[i], 2) == 0) 
         {
-            args = g_list_append(args, argv[i]);
+            args = g_list_append (args, argv[i]);
             for (j = i; j < argc; j++) {
                 argv[j] = argv[j + 1];
             }
@@ -444,14 +444,15 @@ int main(int argc, char **argv)
             i--;
         }
     }
-    argv2 = g_malloc0(sizeof(char*) * (g_list_length(args) + 2));
+    
+    argv2 = g_malloc0 (sizeof(char*) * (g_list_length (args) + 2));
     argv2[0] = argv[0];
-    for (i = 1; i <= g_list_length(args); i++) 
+    for (i = 1; i <= g_list_length (args); i++) 
     {
-        argv2[i] = (char*) g_list_nth(args, i - 1);
+        argv2[i] = (char*) g_list_nth (args, i - 1);
     }
     argv2[i] = NULL;
-    g_assert(i < (g_list_length(args) + 2));
+    g_assert (i < (g_list_length (args) + 2));
 
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
@@ -505,7 +506,7 @@ int main(int argc, char **argv)
     
      /* set the instance number and place a env in the array of envs 
       * to be set when the tilda terminal is created */
-    cleantmp();
+    cleantmp ();
     getinstance ();
     i=instance;
     sprintf (env_var, "TILDA_NUM=%d", instance);
@@ -518,17 +519,17 @@ int main(int argc, char **argv)
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
     
-    if((fp = fopen(config_file, "r")) == NULL) 
+    if ((fp = fopen (config_file, "r")) == NULL) 
     {
         if (wizard (argc, argv) == 1)
             exit (0);
             
-        if((fp = fopen(config_file, "r")) == NULL) 
+        if ((fp = fopen(config_file, "r")) == NULL) 
         {   
             perror("fopen");
-                exit(1);
+            exit(1);
         }
-     }
+    }
 
     fscanf (fp, "max_height=%i\n", &max_height);
     fscanf (fp, "max_width=%i\n", &max_width);
@@ -541,194 +542,153 @@ int main(int argc, char **argv)
     fscanf (fp, "scrollback=%ld\n", &lines);
     fclose (fp);
 
-    gtk_init(&argc, &argv);
+    gtk_init (&argc, &argv);
 
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_container_set_resize_mode(GTK_CONTAINER(window),
-                      GTK_RESIZE_IMMEDIATE);
-    g_signal_connect(G_OBJECT(window), "delete_event",
-             GTK_SIGNAL_FUNC(deleted_and_quit), window);
+    gtk_container_set_resize_mode (GTK_CONTAINER(window), GTK_RESIZE_IMMEDIATE);
+    g_signal_connect (G_OBJECT(window), "delete_event",
+                      GTK_SIGNAL_FUNC(deleted_and_quit), window);
 
     /* Create a box to hold everything. */
-    hbox = gtk_hbox_new(0, FALSE);
-    gtk_container_add(GTK_CONTAINER(window), hbox);
+    hbox = gtk_hbox_new (0, FALSE);
+    gtk_container_add (GTK_CONTAINER(window), hbox);
 
     /* Create the terminal widget and add it to the scrolling shell. */
-    widget = vte_terminal_new();
+    widget = vte_terminal_new ();
+    
     if (!dbuffer) 
     {
-        gtk_widget_set_double_buffered(widget, dbuffer);
+        gtk_widget_set_double_buffered (widget, dbuffer);
     }
-    gtk_box_pack_start(GTK_BOX(hbox), widget, TRUE, TRUE, 0);
+    
+    gtk_box_pack_start (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 
     /* Connect to the "char_size_changed" signal to set geometry hints
      * whenever the font used by the terminal is changed. */
     if (geometry) 
     {
-        char_size_changed(widget, 0, 0, window);
-        g_signal_connect(G_OBJECT(widget), "char-size-changed",
-                 G_CALLBACK(char_size_changed), window);
+        char_size_changed (widget, 0, 0, window);
+        g_signal_connect (G_OBJECT(widget), "char-size-changed",
+                          G_CALLBACK(char_size_changed), window);
     }
 
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
-    g_signal_connect(G_OBJECT(widget), "window-title-changed",
-             G_CALLBACK(window_title_changed), window);
+    g_signal_connect (G_OBJECT(widget), "window-title-changed",
+                      G_CALLBACK(window_title_changed), window);
     if (icon_title) 
     {
-        g_signal_connect(G_OBJECT(widget), "icon-title-changed",
-                 G_CALLBACK(icon_title_changed), window);
+        g_signal_connect (G_OBJECT(widget), "icon-title-changed",
+                          G_CALLBACK(icon_title_changed), window);
     }
 
     /* Connect to the "eof" signal to quit when the session ends. */
-    g_signal_connect(G_OBJECT(widget), "eof",
-             G_CALLBACK(destroy_and_quit_eof), window);
-    g_signal_connect(G_OBJECT(widget), "child-exited",
-             G_CALLBACK(destroy_and_quit_exited), window);
+    g_signal_connect (G_OBJECT(widget), "eof",
+                      G_CALLBACK(destroy_and_quit_eof), window);
+    g_signal_connect (G_OBJECT(widget), "child-exited",
+                      G_CALLBACK(destroy_and_quit_exited), window);
 
     /* Connect to the "status-line-changed" signal. */
-    g_signal_connect(G_OBJECT(widget), "status-line-changed",
-             G_CALLBACK(status_line_changed), widget);
+    g_signal_connect (G_OBJECT(widget), "status-line-changed",
+                      G_CALLBACK(status_line_changed), widget);
 
     /* Connect to the "button-press" event. */
-    g_signal_connect(G_OBJECT(widget), "button-press-event",
-             G_CALLBACK(button_pressed), widget);
+    g_signal_connect (G_OBJECT(widget), "button-press-event",
+                      G_CALLBACK(button_pressed), widget);
 
     /* Connect to application request signals. */
-    g_signal_connect(G_OBJECT(widget), "iconify-window",
-             G_CALLBACK(iconify_window), window);
-    g_signal_connect(G_OBJECT(widget), "deiconify-window",
-             G_CALLBACK(deiconify_window), window);
-    g_signal_connect(G_OBJECT(widget), "raise-window",
-             G_CALLBACK(raise_window), window);
-    g_signal_connect(G_OBJECT(widget), "lower-window",
-             G_CALLBACK(lower_window), window);
-    g_signal_connect(G_OBJECT(widget), "maximize-window",
-             G_CALLBACK(maximize_window), window);
-    g_signal_connect(G_OBJECT(widget), "restore-window",
-             G_CALLBACK(restore_window), window);
-    g_signal_connect(G_OBJECT(widget), "refresh-window",
-             G_CALLBACK(refresh_window), window);
-    g_signal_connect(G_OBJECT(widget), "resize-window",
-             G_CALLBACK(resize_window), window);
-    g_signal_connect(G_OBJECT(widget), "move-window",
-             G_CALLBACK(move_window), window);
+    g_signal_connect (G_OBJECT(widget), "iconify-window",
+                      G_CALLBACK(iconify_window), window);
+    g_signal_connect (G_OBJECT(widget), "deiconify-window",
+                      G_CALLBACK(deiconify_window), window);
+    g_signal_connect (G_OBJECT(widget), "raise-window",
+                      G_CALLBACK(raise_window), window);
+    g_signal_connect (G_OBJECT(widget), "lower-window",
+                      G_CALLBACK(lower_window), window);
+    g_signal_connect (G_OBJECT(widget), "maximize-window",
+                      G_CALLBACK(maximize_window), window);
+    g_signal_connect (G_OBJECT(widget), "restore-window",
+                      G_CALLBACK(restore_window), window);
+    g_signal_connect (G_OBJECT(widget), "refresh-window",
+                      G_CALLBACK(refresh_window), window);
+    g_signal_connect (G_OBJECT(widget), "resize-window",
+                      G_CALLBACK(resize_window), window);
+    g_signal_connect (G_OBJECT(widget), "move-window",
+                      G_CALLBACK(move_window), window);
 
     /* Connect to font tweakage. */
-    g_signal_connect(G_OBJECT(widget), "increase-font-size",
-             G_CALLBACK(increase_font_size), window);
-    g_signal_connect(G_OBJECT(widget), "decrease-font-size",
-             G_CALLBACK(decrease_font_size), window);
+    g_signal_connect (G_OBJECT(widget), "increase-font-size",
+                      G_CALLBACK(increase_font_size), window);
+    g_signal_connect (G_OBJECT(widget), "decrease-font-size",
+                      G_CALLBACK(decrease_font_size), window);
 
     /* Create the scrollbar for the widget. */
-    scrollbar = gtk_vscrollbar_new((VTE_TERMINAL(widget))->adjustment);
-    gtk_box_pack_start(GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);
+    scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(widget))->adjustment);
+    gtk_box_pack_start (GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);
         
     /* Set some defaults. */
-    vte_terminal_set_audible_bell(VTE_TERMINAL(widget), audible);
-    vte_terminal_set_visible_bell(VTE_TERMINAL(widget), !audible);
-    vte_terminal_set_cursor_blinks(VTE_TERMINAL(widget), blink);
-    vte_terminal_set_scroll_background(VTE_TERMINAL(widget), scroll);
-    vte_terminal_set_scroll_on_output(VTE_TERMINAL(widget), FALSE);
-    vte_terminal_set_scroll_on_keystroke(VTE_TERMINAL(widget), TRUE);
-    vte_terminal_set_scrollback_lines(VTE_TERMINAL(widget), lines);
-    vte_terminal_set_mouse_autohide(VTE_TERMINAL(widget), TRUE);
+    vte_terminal_set_audible_bell (VTE_TERMINAL(widget), audible);
+    vte_terminal_set_visible_bell (VTE_TERMINAL(widget), !audible);
+    vte_terminal_set_cursor_blinks (VTE_TERMINAL(widget), blink);
+    vte_terminal_set_scroll_background (VTE_TERMINAL(widget), scroll);
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(widget), FALSE);
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(widget), TRUE);
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(widget), lines);
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);
 
     if (background != NULL) 
     {
-        vte_terminal_set_background_image_file(VTE_TERMINAL(widget),
-                               background);
+        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), background);
     }
+    
     if (transparent) 
     {
-        vte_terminal_set_background_transparent(VTE_TERMINAL(widget),
-                            TRUE);
+        vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
     }
+    
     if ((color!=NULL) && (strcasecmp (color, "black") == 0))
     {
         back.red = back.green = back.blue = 0x0000;
         fore.red = fore.green = fore.blue = 0xffff;
     }
 
-    vte_terminal_set_background_tint_color(VTE_TERMINAL(widget), &tint);
-    vte_terminal_set_colors(VTE_TERMINAL(widget), &fore, &back, NULL, 0);
+    vte_terminal_set_background_tint_color (VTE_TERMINAL(widget), &tint);
+    vte_terminal_set_colors (VTE_TERMINAL(widget), &fore, &back, NULL, 0);
     
     if (highlight_set) 
     {
-        vte_terminal_set_color_highlight(VTE_TERMINAL(widget),
-                         &highlight);
+        vte_terminal_set_color_highlight (VTE_TERMINAL(widget), &highlight);
     }
+    
     if (cursor_set) 
     {
-        vte_terminal_set_color_cursor(VTE_TERMINAL(widget), &cursor);
+        vte_terminal_set_color_cursor (VTE_TERMINAL(widget), &cursor);
     }
+    
     if (terminal != NULL) 
     {
-        vte_terminal_set_emulation(VTE_TERMINAL(widget), terminal);
+        vte_terminal_set_emulation (VTE_TERMINAL(widget), terminal);
     }
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full(VTE_TERMINAL(widget), font, antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), font, antialias);
     else
-        vte_terminal_set_font_from_string(VTE_TERMINAL(widget), font);
+        vte_terminal_set_font_from_string (VTE_TERMINAL(widget), font);
     
 
     /* Match "abcdefg". */
-    vte_terminal_match_add(VTE_TERMINAL(widget), "abcdefg");
+    vte_terminal_match_add (VTE_TERMINAL(widget), "abcdefg");
+    
     if (dingus) 
     {
-        i = vte_terminal_match_add(VTE_TERMINAL(widget), DINGUS1);
-        vte_terminal_match_set_cursor_type(VTE_TERMINAL(widget),
-                           i, GDK_GUMBY);
-        i = vte_terminal_match_add(VTE_TERMINAL(widget), DINGUS2);
-        vte_terminal_match_set_cursor_type(VTE_TERMINAL(widget),
-                           i, GDK_HAND1);
-    }
-
-    if (console) 
-    {
-        /* Open a "console" connection. */
-        int consolefd = -1, yes = 1, watch;
-        GIOChannel *channel;
-        consolefd = open("/dev/console", O_RDONLY | O_NOCTTY);
-        if (consolefd != -1) 
-        {
-            /* Assume failure. */
-            console = FALSE;
-#ifdef TIOCCONS
-            if (ioctl(consolefd, TIOCCONS, &yes) != -1) 
-            {
-                /* Set up a listener. */
-                channel = g_io_channel_unix_new(consolefd);
-                watch = g_io_add_watch(channel,
-                               G_IO_IN,
-                               read_and_feed,
-                               widget);
-                g_signal_connect(G_OBJECT(widget),
-                         "eof",
-                         G_CALLBACK(disconnect_watch),
-                         GINT_TO_POINTER(watch));
-                g_signal_connect(G_OBJECT(widget),
-                         "child-exited",
-                         G_CALLBACK(disconnect_watch),
-                         GINT_TO_POINTER(watch));
-                g_signal_connect(G_OBJECT(widget),
-                         "realize",
-                         G_CALLBACK(take_xconsole_ownership),
-                         NULL);
-                /* Record success. */
-                console = TRUE;
-            }
-#endif
-        } else 
-        {
-            /* Bail back to normal mode. */
-            g_warning("Could not open console.\n");
-            close(consolefd);
-            console = FALSE;
-        }
+        i = vte_terminal_match_add (VTE_TERMINAL(widget), DINGUS1);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget),
+                                            i, GDK_GUMBY);
+        i = vte_terminal_match_add(VTE_TERMINAL (widget), DINGUS2);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget),
+                                            i, GDK_HAND1);
     }
 
     if (!console) 
@@ -739,59 +699,23 @@ int main(int argc, char **argv)
             if (command == NULL)
             {
                 #ifdef DEBUG
-                puts("had to fix 'command'");
+                puts ("had to fix 'command'");
                 #endif
 
-                command = getenv("SHELL"); /* possible buffer overflow? */
+                command = getenv ("SHELL"); /* possible buffer overflow? */
             }
 
-            vte_terminal_fork_command(VTE_TERMINAL(widget),
-                          command, NULL, env_add,
-                          working_directory,
-                          TRUE, TRUE, TRUE);
-        } else 
-        {
-            long i;
-            i = vte_terminal_forkpty(VTE_TERMINAL(widget),
-                         env_add, working_directory,
-                         TRUE, TRUE, TRUE);
-            switch (i) {
-            case -1:
-                /* abnormal */
-                g_warning("Error in vte_terminal_forkpty(): %s",
-                      strerror(errno));
-                break;
-            case 0:
-                /* child */
-                for (i = 0; ; i++) 
-                {
-                    switch (i % 3) 
-                    {
-                    case 0:
-                    case 1:
-                        fprintf(stdout, "%ld\n", i);
-                        break;
-                    case 2:
-                        fprintf(stderr, "%ld\n", i);
-                        break;
-                    }
-                    sleep(1);
-                }
-                _exit(0);
-                break;
-            default:
-                g_print("Child PID is %ld (mine is %ld).\n",
-                    (long) i, (long) getpid());
-                /* normal */
-                break;
-            }
+            vte_terminal_fork_command (VTE_TERMINAL(widget),
+                                       command, NULL, env_add,
+                                       working_directory,
+                                       TRUE, TRUE, TRUE);
         }
     }
     
     gtk_window_set_decorated ((GtkWindow *) window, FALSE);
     
-    g_object_add_weak_pointer(G_OBJECT(widget), (gpointer*)&widget);
-    g_object_add_weak_pointer(G_OBJECT(window), (gpointer*)&window);
+    g_object_add_weak_pointer (G_OBJECT(widget), (gpointer*)&widget);
+    g_object_add_weak_pointer (G_OBJECT(window), (gpointer*)&window);
     
     
     gtk_widget_set_size_request ((GtkWidget *) window, 0, 0);
@@ -805,18 +729,21 @@ int main(int argc, char **argv)
         gtk_widget_show ((GtkWidget *) window);
     }
     else
-        gtk_widget_show_all(window);
+        gtk_widget_show_all (window);
 
     if ((strcasecmp (s_xbindkeys, "true")) == 0)
         start_process ("xbindkeys");
+    
     if ((strcasecmp (s_above, "true")) == 0)
         gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+    
     if ((strcasecmp (s_pinned, "true")) == 0)
         gtk_window_stick (GTK_WINDOW (window));
+    
     if ((strcasecmp (s_notaskbar, "true")) == 0)
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
     
-    gtk_window_move((GtkWindow *) window, 0, 0);
+    gtk_window_move ((GtkWindow *) window, 0, 0);
     
     signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);
@@ -832,9 +759,9 @@ int main(int argc, char **argv)
 
     gtk_main();
 
-    pthread_cancel(child);
+    pthread_cancel (child);
 
-    pthread_join (child, NULL);     
+    pthread_join (child, NULL);
     
     remove (filename_global);
     free (filename_global);
