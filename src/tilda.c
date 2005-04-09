@@ -26,15 +26,32 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <signal.h>
+
 #ifdef HAVE_XFT2
 #include <fontconfig/fontconfig.h>
 #endif
+
 #include "vte.h"
 #include "config.h"
 #include "tilda.h"
 
+/* source file containing most of the callback functions used */
+#include "callback_func.c"
+
+/* These are from OpenBSD. They are safe string handling functions.
+ * The source was: ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcat.c
+ *                 ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcpy.c
+ *
+ * Here is a little guide on usage: http://www.courtesan.com/todd/papers/strlcpy.html
+ * 
+ * In short, the syntax is just like strncpy() and strncat().
+ */
+#include "strlcpy.c"
+#include "strlcat.c"
+
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
+
 
 GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
@@ -42,11 +59,11 @@ char config_file[80];
 char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 char *user, *display;
 char *filename_global;
-int instance;
+int  filename_global_size;
+int  instance;
 
-void clean_up ()
-{
-    if (filename_global != NULL)
+void clean_up () {
+    if (filename_global != NULL) 
     {
         remove (filename_global);
         free (filename_global);
@@ -55,71 +72,69 @@ void clean_up ()
     exit (0);
 }
 
-void start_process(char process[]) 
-{
-   /* This really should be rewritten to use fork()/exec()
-      and it should ideally have a way of communicating with
-      "process" in preferably a socket or something.
-      As far as I can tell we only ever use it to start
-      xbindkeys - should consider either talkin to the developers
-      of xbindkeys and find a way to talk to it or simply not
-      start xbindkeys on our own.
+void start_process (char process[]) {
+    /* This really should be rewritten to use fork()/exec()
+       and it should ideally have a way of communicating with
+       "process" in preferably a socket or something.
+       As far as I can tell we only ever use it to start
+       xbindkeys - should consider either talkin to the developers
+       of xbindkeys and find a way to talk to it or simply not
+       start xbindkeys on our own.
 
-      Uses mkstemp() instead of tmpname(), tmpname() is
-      insecure and open to race conditions and security
-      problems - mkstemp() isn't quite as standard as it should
-      be, but at least available on linux systems
-   */
+       Uses mkstemp() instead of tmpname(), tmpname() is
+       insecure and open to race conditions and security
+       problems - mkstemp() isn't quite as standard as it should
+       be, but at least available on linux systems
+    */
    
-   FILE *tmpfile;
-   char tmpname[] = "/tmp/tildaXXXXXX";
-   int  tmpdesc;
-   char tmp_string[256];
-   char command[128];
+    FILE *tmpfile;
+    char tmpname[] = "/tmp/tildaXXXXXX";
+    int  tmpdesc;
+    char tmp_string[256];
+    char command[128];
 
-   /* Get a filedescriptor for a temporary file */
-   tmpdesc = mkstemp(tmpname);
+    /* Get a filedescriptor for a temporary file */
+    tmpdesc = mkstemp (tmpname);
    
     if (tmpdesc != -1) 
     {
-        /* Managed to get a file ?
-        Associate a FILE* with the descriptor
-         */
-        if ((tmpfile = fdopen(tmpdesc, "w+")) == NULL ) 
+    /* Managed to get a file ?
+       Associate a FILE* with the descriptor */
+        if ((tmpfile = fdopen (tmpdesc, "w+")) == NULL) 
         {
             /* Failed to associate FILE* */
-            perror("fdopen tmpdesc");
-            exit(1);
+            perror ("fdopen tmpdesc");
+            exit (1);
         }
     }
     else 
     {
         /* Failed to create a temporary file */
-        perror("mkstemp(tmpname)");
-        exit(1);
+        perror ("mkstemp(tmpname)");
+        exit (1);
     }
+    
+    strlcpy (command, "ps aux > ", sizeof(command));
+    strlcat (command, tmpname, sizeof(command));
 
-    strcpy(command, "ps aux > ");
-    strcat(command, tmpname);
+    system (command);
 
-    system(command);
-
-    while (!feof(tmpfile)) 
+    while (!feof (tmpfile)) 
     {
-        fgets(tmp_string, 254, tmpfile);
+        puts("pre1"); fgets (tmp_string, sizeof(tmp_string), tmpfile); puts("post1");
 
-        if (strstr(tmp_string, process) != NULL) 
+        if (strstr (tmp_string, process) != NULL) 
         {   
             goto LABEL;
         }
     }
 
-    system(process);
+    system (process);
 
 LABEL:
 
-    fclose(tmpfile);
-    remove(tmpname);
+    fclose (tmpfile);
+    remove (tmpname);
 }
 
 void fix_size_settings ()
@@ -132,76 +147,74 @@ void fix_size_settings ()
 
 void pull_down (char *instance)
 {
-	char buf[BUFSIZ];
+    char buf[BUFSIZ];
     FILE *fp, *ptr;
     char filename[125], *tmp;
+    int  tmp_size;
     
-    strcpy (filename, "ls /tmp/tilda.");
-    strcat (filename, user);
+    strlcpy (filename, "ls /tmp/tilda.", sizeof(filename));
+    strlcat (filename, user, sizeof(filename));
 
     if (instance == NULL)
     {
         instance = (char *) malloc (sizeof (char));
-        strcpy (instance, "0");
+        strlcpy (instance, "0", sizeof(instance));
     }
     
-    tmp = (char *) malloc (sizeof (char) * strlen (filename));
-    strcpy (tmp, filename);
-    sprintf (filename, "%s.*.%s", tmp, instance);
-    strcat (filename, display);
+    tmp_size = sizeof(char) * strlen (filename);
+    tmp = (char *) malloc (tmp_size);
+    strlcpy (tmp, filename, tmp_size);
+    sprintf (filename, "%s.*.%s", tmp, instance); 
+    strlcat (filename, display, sizeof(filename));
     
-    if ((ptr = popen(filename, "r")) != NULL)
+    if ((ptr = popen (filename, "r")) != NULL)
     {
-        if (fgets(buf, BUFSIZ, ptr) != NULL)
+        if (fgets (buf, BUFSIZ, ptr) != NULL)
         {
-        	buf[strlen(buf)-1]='\0';
-        	printf ("%s\n", buf);
+            buf[strlen (buf)-1] = '\0';
+            printf ("%s\n", buf);
             
-        	if((fp = fopen(buf, "w")) == NULL) 
-        	{
-        	    perror("fopen");
-                exit(1);
-        	}
+            if ((fp = fopen (buf, "w")) == NULL) 
+            {
+                perror ("fopen");
+                exit (1);
+            }
     
-        	fputs("shits", fp);
-        	
-            fclose(fp);
-    	}
+            fputs ("shits", fp);
+            
+            fclose (fp);
+        }
         fclose (ptr);   
     }
     
     exit (0);
 }
 
-int resize (GtkWidget *window, gint w, gint h)
-{
-    gtk_window_resize ((GtkWindow *) window, w, h);
-    
-    return 0;
-}   
-
 void *wait_for_signal ()
 {
     FILE *fp;   
     char filename[125], *tmp;
+    int  tmp_size;
     char c[10];
-    int flag;
+    int  flag;
     gint w, h;  //, x, y;   
     
-    strcpy (filename, "/tmp/tilda.");
-    strcat (filename, user);
+    strlcpy (filename, "/tmp/tilda.", sizeof(filename));
+    strlcat (filename, user, sizeof(filename));
 
-    tmp = (char *) malloc (sizeof (char) * strlen (filename));
-    strcpy (tmp, filename);
+    tmp_size = sizeof(char) * strlen (filename);
+    tmp = (char *) malloc (tmp_size);
+    strlcpy (tmp, filename, tmp_size);
     sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
     free (tmp);
     
-    strcat (filename, display);
+    strlcat (filename, display, sizeof(filename));
     
-    filename_global = (char *) malloc (sizeof (char) * strlen (filename));
-    strcpy (filename_global, filename);
+    filename_global_size = sizeof(char) * strlen (filename);
+    filename_global = (char *) malloc (filename_global_size);
+    strlcpy (filename_global, filename, filename_global_size);
 
-    umask(0);
+    umask (0);
     mknod (filename, S_IFIFO|0666, 0);
     
     signal (SIGINT, clean_up);
@@ -211,12 +224,14 @@ void *wait_for_signal ()
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
     
-        //gtk_window_move((GtkWindow *) window, 0, -min_height);
-        //resize ((GtkWidget *) window, min_width, min_height);
-        //pull_down ();
-        //gtk_window_get_position ((GtkWindow *) window, &x, &y);
+    /* still needed?
+    gtk_window_move((GtkWindow *) window, 0, -min_height);
+    resize ((GtkWidget *) window, min_width, min_height);
+    pull_down ();
+    gtk_window_get_position ((GtkWindow *) window, &x, &y);
     
-        //printf ("%i %i\n", x, y);
+    printf ("%i %i\n", x, y);
+    */
     
     flag = 0;
     
@@ -224,27 +239,29 @@ void *wait_for_signal ()
     {
         if (flag)
         {
-            fp = fopen(filename, "r");
-            fgets (c, 10, fp);
+            fp = fopen (filename, "r"); printf("filename is: %s\n", filename);
+            puts("pre2"); fgets (c, 10, fp); puts("post2");
         }
     
         gtk_window_get_size ((GtkWindow *) window, &w, &h);
-            //gtk_window_get_position ((GtkWindow *) window, &x, &y);
+        /* gtk_window_get_position ((GtkWindow *) window, &x, &y); */
     
         if (h == min_height)
         {
             resize ((GtkWidget *) window, max_width, max_height);
             gtk_widget_show ((GtkWidget *) window);
             gtk_window_move((GtkWindow *) window, 0, 0);
+
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
+
             if ((strcasecmp (s_above, "true")) == 0)
                 gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
         }
         else if (h == max_height)
         {   
             resize ((GtkWidget *) window, min_width, min_height);
-                //gtk_window_move((GtkWindow *) window, 0, -min_height);
+            /* gtk_window_move((GtkWindow *) window, 0, -min_height); */
         
             gtk_widget_hide ((GtkWidget *) window);     
         }
@@ -253,356 +270,36 @@ void *wait_for_signal ()
             fclose (fp);
         else
             flag=1; 
+
         sleep (.1);
     }
     
     return NULL;
 }
 
-static void window_title_changed(GtkWidget *widget, gpointer win)
-{
-    GtkWindow *window;
-
-    g_return_if_fail(VTE_TERMINAL(widget));
-    g_return_if_fail(GTK_IS_WINDOW(win));
-    g_return_if_fail(VTE_TERMINAL(widget)->window_title != NULL);
-    window = GTK_WINDOW(win);
-
-    gtk_window_set_title(window, VTE_TERMINAL(widget)->window_title);
-}
-
-static void icon_title_changed(GtkWidget *widget, gpointer win)
-{
-    GtkWindow *window;
-
-    g_return_if_fail(VTE_TERMINAL(widget));
-    g_return_if_fail(GTK_IS_WINDOW(win));
-    g_return_if_fail(VTE_TERMINAL(widget)->icon_title != NULL);
-    window = GTK_WINDOW(win);
-
-    g_message("Icon title changed to \"%s\".\n",
-          VTE_TERMINAL(widget)->icon_title);
-}
-
-static void char_size_changed(GtkWidget *widget, guint width, guint height, gpointer data)
-{
-    VteTerminal *terminal;
-    GtkWindow *window;
-    GdkGeometry geometry;
-    int xpad, ypad;
-
-    g_return_if_fail(GTK_IS_WINDOW(data));
-    g_return_if_fail(VTE_IS_TERMINAL(widget));
-
-    terminal = VTE_TERMINAL(widget);
-    window = GTK_WINDOW(data);
-
-    vte_terminal_get_padding(terminal, &xpad, &ypad);
-
-    geometry.width_inc = terminal->char_width;
-    geometry.height_inc = terminal->char_height;
-    geometry.base_width = xpad;
-    geometry.base_height = ypad;
-    geometry.min_width = xpad + terminal->char_width * 2;
-    geometry.min_height = ypad + terminal->char_height * 2;
-
-    gtk_window_set_geometry_hints(window, widget, &geometry,
-                      GDK_HINT_RESIZE_INC |
-                      GDK_HINT_BASE_SIZE |
-                      GDK_HINT_MIN_SIZE);
-}
-
-static void deleted_and_quit(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-    gtk_widget_destroy(GTK_WIDGET(data));
-    gtk_main_quit();
-}
-
-static void destroy_and_quit(GtkWidget *widget, gpointer data)
-{
-    gtk_widget_destroy(GTK_WIDGET(data));
-    gtk_main_quit();
-}
-
-static void destroy_and_quit_eof(GtkWidget *widget, gpointer data)
-{
-    //g_print("Detected EOF.\n");
-}
-
-static void destroy_and_quit_exited(GtkWidget *widget, gpointer data)
-{
-    //g_print("Detected child exit.\n");
-    destroy_and_quit(widget, data);
-}
-
-static void status_line_changed(GtkWidget *widget, gpointer data)
-{
-    g_print("Status = `%s'.\n", vte_terminal_get_status_line(VTE_TERMINAL(widget)));
-}
-
-static int button_pressed(GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-    VteTerminal *terminal;
-    char *match;
-    int tag;
-    gint xpad, ypad;
-    switch (event->button) {
-    case 3:
-        terminal = VTE_TERMINAL(widget);
-        vte_terminal_get_padding(terminal, &xpad, &ypad);
-        match = vte_terminal_match_check(terminal,
-                         (event->x - ypad) /
-                         terminal->char_width,
-                         (event->y - ypad) /
-                         terminal->char_height,
-                         &tag);
-        if (match != NULL) {
-            g_print("Matched `%s' (%d).\n", match, tag);
-            g_free(match);
-            if (GPOINTER_TO_INT(data) != 0) {
-                vte_terminal_match_remove(terminal, tag);
-            }
-        }
-        break;
-    case 1:
-    case 2:
-    default:
-        break;
-    }
-    return FALSE;
-}
-
-static void iconify_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_iconify((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void deiconify_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_deiconify((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void raise_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_raise((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void lower_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_lower((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void maximize_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_maximize((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void restore_window(GtkWidget *widget, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_unmaximize((GTK_WIDGET(data))->window);
-        }
-    }
-}
-
-static void
-refresh_window(GtkWidget *widget, gpointer data)
-{
-    GdkRectangle rect;
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            rect.x = rect.y = 0;
-            rect.width = (GTK_WIDGET(data))->allocation.width;
-            rect.height = (GTK_WIDGET(data))->allocation.height;
-            gdk_window_invalidate_rect((GTK_WIDGET(data))->window,
-                           &rect, TRUE);
-        }
-    }
-}
-
-static void resize_window(GtkWidget *widget, guint width, guint height, gpointer data)
-{
-    VteTerminal *terminal;
-    gint owidth, oheight, xpad, ypad;
-    if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2)) {
-        terminal = VTE_TERMINAL(widget);
-        /* Take into account border overhead. */
-        gtk_window_get_size(GTK_WINDOW(data), &owidth, &oheight);
-        owidth -= terminal->char_width * terminal->column_count;
-        oheight -= terminal->char_height * terminal->row_count;
-        /* Take into account padding, which needn't be re-added. */
-        vte_terminal_get_padding(VTE_TERMINAL(widget), &xpad, &ypad);
-        owidth -= xpad;
-        oheight -= ypad;
-        gtk_window_resize(GTK_WINDOW(data),
-                  width + owidth, height + oheight);
-    }
-}
-
-static void move_window(GtkWidget *widget, guint x, guint y, gpointer data)
-{
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
-            gdk_window_move((GTK_WIDGET(data))->window, x, y);
-        }
-    }
-}
-
-static void adjust_font_size(GtkWidget *widget, gpointer data, gint howmuch)
-{
-    VteTerminal *terminal;
-    PangoFontDescription *desired;
-    gint newsize;
-    gint columns, rows, owidth, oheight;
-
-    /* Read the screen dimensions in cells. */
-    terminal = VTE_TERMINAL(widget);
-    columns = terminal->column_count;
-    rows = terminal->row_count;
-
-    /* Take into account padding and border overhead. */
-    gtk_window_get_size(GTK_WINDOW(data), &owidth, &oheight);
-    owidth -= terminal->char_width * terminal->column_count;
-    oheight -= terminal->char_height * terminal->row_count;
-
-    /* Calculate the new font size. */
-    desired = pango_font_description_copy(vte_terminal_get_font(terminal));
-    newsize = pango_font_description_get_size(desired) / PANGO_SCALE;
-    newsize += howmuch;
-    pango_font_description_set_size(desired,
-                    CLAMP(newsize, 4, 144) * PANGO_SCALE);
-
-    /* Change the font, then resize the window so that we have the same
-     * number of rows and columns. */
-    vte_terminal_set_font(terminal, desired);
-    gtk_window_resize(GTK_WINDOW(data),
-              columns * terminal->char_width + owidth,
-              rows * terminal->char_height + oheight);
-
-    pango_font_description_free(desired);
-}
-
-static void increase_font_size(GtkWidget *widget, gpointer data)
-{
-    adjust_font_size(widget, data, 1);
-}
-
-static void decrease_font_size(GtkWidget *widget, gpointer data)
-{
-    adjust_font_size(widget, data, -1);
-}
-
-static gboolean read_and_feed(GIOChannel *source, GIOCondition condition, gpointer data)
-{
-    char buf[2048];
-    gsize size;
-    GIOStatus status;
-    g_return_val_if_fail(VTE_IS_TERMINAL(data), FALSE);
-    status = g_io_channel_read_chars(source, buf, sizeof(buf),
-                     &size, NULL);
-    if ((status == G_IO_STATUS_NORMAL) && (size > 0)) {
-        vte_terminal_feed(VTE_TERMINAL(data), buf, size);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static void disconnect_watch(GtkWidget *widget, gpointer data)
-{
-    g_source_remove(GPOINTER_TO_INT(data));
-}
-
-static void clipboard_get(GtkClipboard *clipboard, GtkSelectionData *selection_data,
-          guint info, gpointer owner)
-{
-    /* No-op. */
-    return;
-}
-
-static void take_xconsole_ownership(GtkWidget *widget, gpointer data)
-{
-    char *name, hostname[255];
-    GdkAtom atom;
-    GtkClipboard *clipboard;
-    GtkTargetEntry targets[] = {
-        {"UTF8_STRING", 0, 0},
-        {"COMPOUND_TEXT", 0, 0},
-        {"TEXT", 0, 0},
-        {"STRING", 0, 0},
-    };
-
-    memset(hostname, '\0', sizeof(hostname));
-    gethostname(hostname, sizeof(hostname) - 1);
-
-    name = g_strdup_printf("MIT_CONSOLE_%s", hostname);
-    atom = gdk_atom_intern(name, FALSE);
-#if GTK_CHECK_VERSION(2,2,0)
-    clipboard = gtk_clipboard_get_for_display(gtk_widget_get_display(widget),
-                          atom);
-#else
-    clipboard = gtk_clipboard_get(atom);
-#endif
-    g_free(name);
-
-    gtk_clipboard_set_with_owner(clipboard,
-                     targets,
-                     G_N_ELEMENTS(targets),
-                     clipboard_get,
-                     (GtkClipboardClearFunc)gtk_main_quit,
-                     G_OBJECT(widget));
-}
-
-/*
-static void add_weak_pointer(GObject *object, GtkWidget **target)
-{
-    _weak_pointer(object, (gpointer*)target);
-}
-*/
-
 void getinstance ()
 {
-	char buf[BUFSIZ];
+    char buf[BUFSIZ];
     char filename[BUFSIZ], tmp[100];
-	FILE *ptr;
+    FILE *ptr;
     
     instance = 0;
     
     for (;;)
     {
-        strcpy (tmp, "ls /tmp/tilda.");
-        strcat (tmp, user);
+        strlcpy (tmp, "ls /tmp/tilda.", sizeof(tmp));
+        strlcat (tmp, user, sizeof(tmp));
         sprintf (filename, "%s.*.%d", tmp, instance);
-        strcat (filename, display);
+        strlcat (filename, display, sizeof(filename));
         
         if ((ptr = popen(filename, "r")) != NULL)
         {
-        	if (fgets(buf, BUFSIZ, ptr) != NULL)
-        		instance++;
-        	else
+            if (fgets(buf, BUFSIZ, ptr) != NULL)
+                instance++;
+            else
             {
-            	pclose (ptr);
-            	break;
+                pclose (ptr);
+                break;
             }
             pclose (ptr);
         } 
@@ -616,37 +313,37 @@ void cleantmp()
     int length, i;
     FILE *ptr, *ptr2;
 
-    strcpy (cmd, "ls /tmp/tilda.");
-    strcat (cmd, user);
+    strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
+    strlcat (cmd, user, sizeof(cmd));
     length = strlen(cmd)-(strlen("ls /tmp/")+1);
     
-    strcat (cmd, "*");
+    strlcat (cmd, "*", sizeof(cmd));
     
     if ((ptr = popen(cmd, "r")) != NULL)
     {
-    	while (fgets(buf, BUFSIZ, ptr) != NULL)
-    	{
-    		strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
-	    	filename[strlen(buf+length-1)] = '\0';
-	    	strcpy(buf, strstr(buf+length-1, ".")+1);
-	    	length = strstr(buf, ".") - (char*)&buf;
- 	    	buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
-	    	strcpy(cmd,"ps x | grep ");
-	    	strcat(cmd,buf);
-	    
-	    	if ((ptr2 = popen(cmd, "r")) != NULL)
-	    	{
-	        	for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
-	    
-	        	if (i <= 2)
-				{
-		    		strcpy(cmd, "/tmp/tilda.");
-		    		strcat(cmd, filename);
-		    		remove(cmd);    
-				}
+        while (fgets(buf, BUFSIZ, ptr) != NULL)
+        {
+            strncpy(filename, buf+length-1, strlen(buf+length-1)-1);
+            filename[strlen(buf+length-1)] = '\0';
+            strlcpy(buf, strstr(buf+length-1, ".")+1, sizeof(buf));
+            length = strstr(buf, ".") - (char*)&buf;
+            buf[(int)(strstr(buf, ".") - (char*)&buf)] = '\0';
+            strlcpy(cmd,"ps x | grep ", sizeof(cmd));
+            strlcat(cmd,buf, sizeof(cmd));
+        
+            if ((ptr2 = popen(cmd, "r")) != NULL)
+            {
+                for (i = 0; fgets(buf, BUFSIZ, ptr2) != NULL; i++);
+        
+                if (i <= 2)
+                {
+                    strlcpy(cmd, "/tmp/tilda.", sizeof(cmd));
+                    strlcat(cmd, filename, sizeof(cmd));
+                    remove(cmd);    
+                }
                 pclose (ptr2);
-	    	}
-       	} 
+            }
+        } 
     }
     
     pclose(ptr);
@@ -661,6 +358,7 @@ int main(int argc, char **argv)
     GtkWidget *hbox, *scrollbar, *widget;
     const char *background = NULL, *color = NULL;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
+    int  env_add2_size;
     gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
          dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
          console = FALSE, scroll = FALSE, /*keep = FALSE,*/
@@ -668,10 +366,10 @@ int main(int argc, char **argv)
          cursor_set = FALSE, use_antialias = FALSE;
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     long lines = 100;
-    //const char *message = "Launching interactive shell...\r\n";
+    /* const char *message = "Launching interactive shell...\r\n"; */
     const char *font = NULL;
     const char *terminal = NULL;
-    const char *command;
+    const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
     char **argv2;
@@ -796,20 +494,20 @@ int main(int argc, char **argv)
             break;
     }
     
-     /*  
-    set the instance number and place a env in the array of envs to be set when
-    the tilda terminal is created 
-    */
+     /* set the instance number and place a env in the array of envs 
+      * to be set when the tilda terminal is created */
     cleantmp();
     getinstance ();
     i=instance;
     sprintf (env_var, "TILDA_NUM=%d", instance);
-    env_add[2] = (char *) malloc (sizeof (char) * strlen (env_var));
-    strcpy (env_add[2], env_var);
+
+    env_add2_size = sizeof(char) * strlen (env_var);
+    env_add[2] = (char *) malloc (env_add2_size);
+    strlcpy (env_add[2], env_var, env_add2_size);
     
     home_dir = getenv ("HOME");
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.tilda/config");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.tilda/config", sizeof(config_file));
     
     if((fp = fopen(config_file, "r")) == NULL) 
     {
@@ -1029,6 +727,12 @@ int main(int argc, char **argv)
         if (shell) 
         {
             /* Launch a shell. */
+            if (command == NULL)
+            {
+                command = getenv("SHELL"); /* possible buffer overflow? */
+            }
+
+            printf("command is: %s|\n", command);
             vte_terminal_fork_command(VTE_TERMINAL(widget),
                           command, NULL, env_add,
                           working_directory,
@@ -1090,7 +794,7 @@ int main(int argc, char **argv)
     }
     else
         gtk_widget_show_all(window);
-            
+
     if ((strcasecmp (s_xbindkeys, "true")) == 0)
         start_process ("xbindkeys");
     if ((strcasecmp (s_above, "true")) == 0)
@@ -1113,7 +817,7 @@ int main(int argc, char **argv)
     {
         perror ("Fuck that thread!!!");
     }
-    
+
     gtk_main();
 
     pthread_cancel(child);
@@ -1125,3 +829,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
