@@ -121,7 +121,7 @@ void start_process (char process[]) {
 
     while (!feof (tmpfile)) 
     {
-        puts("pre1"); fgets (tmp_string, sizeof(tmp_string), tmpfile); puts("post1");
+        fgets (tmp_string, sizeof(tmp_string), tmpfile);
 
         if (strstr (tmp_string, process) != NULL) 
         {   
@@ -154,14 +154,14 @@ void pull_down (char *instance)
     
     strlcpy (filename, "ls /tmp/tilda.", sizeof(filename));
     strlcat (filename, user, sizeof(filename));
-
+    
     if (instance == NULL)
     {
         instance = (char *) malloc (sizeof (char));
-        strlcpy (instance, "0", sizeof(instance));
+        strlcpy (instance, "0", sizeof(char));
     }
     
-    tmp_size = sizeof(char) * strlen (filename);
+    tmp_size = (sizeof(char) * strlen (filename)) + 1;
     tmp = (char *) malloc (tmp_size);
     strlcpy (tmp, filename, tmp_size);
     sprintf (filename, "%s.*.%s", tmp, instance); 
@@ -197,12 +197,12 @@ void *wait_for_signal ()
     int  tmp_size;
     char c[10];
     int  flag;
-    gint w, h;  //, x, y;   
+    gint w, h;
     
     strlcpy (filename, "/tmp/tilda.", sizeof(filename));
     strlcat (filename, user, sizeof(filename));
 
-    tmp_size = sizeof(char) * strlen (filename);
+    tmp_size = (sizeof(char) * strlen (filename)) + 1;
     tmp = (char *) malloc (tmp_size);
     strlcpy (tmp, filename, tmp_size);
     sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
@@ -210,20 +210,20 @@ void *wait_for_signal ()
     
     strlcat (filename, display, sizeof(filename));
     
-    filename_global_size = sizeof(char) * strlen (filename);
+    filename_global_size = (sizeof(char) * strlen (filename)) + 1;
     filename_global = (char *) malloc (filename_global_size);
     strlcpy (filename_global, filename, filename_global_size);
 
     umask (0);
     mknod (filename, S_IFIFO|0666, 0);
-    
+
     signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);
     signal (SIGABRT, clean_up);
     signal (SIGKILL, clean_up);
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
-    
+
     /* still needed?
     gtk_window_move((GtkWindow *) window, 0, -min_height);
     resize ((GtkWidget *) window, min_width, min_height);
@@ -239,8 +239,8 @@ void *wait_for_signal ()
     {
         if (flag)
         {
-            fp = fopen (filename, "r"); printf("filename is: %s\n", filename);
-            puts("pre2"); fgets (c, 10, fp); puts("post2");
+            fp = fopen (filename, "r");
+            fgets (c, 10, fp);
         }
     
         gtk_window_get_size ((GtkWindow *) window, &w, &h);
@@ -501,7 +501,7 @@ int main(int argc, char **argv)
     i=instance;
     sprintf (env_var, "TILDA_NUM=%d", instance);
 
-    env_add2_size = sizeof(char) * strlen (env_var);
+    env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
     strlcpy (env_add[2], env_var, env_add2_size);
     
@@ -729,10 +729,10 @@ int main(int argc, char **argv)
             /* Launch a shell. */
             if (command == NULL)
             {
+                puts("had to fix 'command'");
                 command = getenv("SHELL"); /* possible buffer overflow? */
             }
 
-            printf("command is: %s|\n", command);
             vte_terminal_fork_command(VTE_TERMINAL(widget),
                           command, NULL, env_add,
                           working_directory,
