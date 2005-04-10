@@ -52,6 +52,8 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
+#define DEFAULT_LINES 100
+
 
 GtkWidget *window;
 gint max_width, max_height, min_width, min_height;
@@ -374,7 +376,7 @@ int main (int argc, char **argv)
          icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
          cursor_set = FALSE, use_antialias = FALSE;
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    long lines = 100;
+    long lines = DEFAULT_LINES;
     /* const char *message = "Launching interactive shell...\r\n"; */
     const char *font = NULL;
     const char *terminal = NULL;
@@ -397,9 +399,10 @@ int main (int argc, char **argv)
                 "[-s] "
                 "[-w directory] "
                 "[-c command] "
-                "[-t]\n\n"
+                "[-t] "
+                "[-l lines]\n\n"
                 "-B image : set background image\n"
-                "-T N: pull down terminal N if already running\n"
+                "-T N : pull down terminal N if already running\n"
                 "-C : bring up tilda configuration wizard\n"
                 "-b [white][black] : set the background color either white or black\n"
                 "-f font : set the font to the following string, ie \"monospace 11\"\n"
@@ -408,7 +411,8 @@ int main (int argc, char **argv)
                 "-s : use scrollbar\n"
                 "-w directory : switch working directory\n"
                 "-c command : run command\n"
-                "-t : set transparent to true\n";
+                "-t : set transparent to true\n"
+                "-l lines : set scrollback lines\n";
     
     back.red = back.green = back.blue = 0xffff;
     fore.red = fore.green = fore.blue = 0x0000;
@@ -456,7 +460,7 @@ int main (int argc, char **argv)
 
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:stw:-")) != -1) 
+    while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:stwl:-")) != -1) 
      {
         gboolean bail = FALSE;
         switch (opt) {
@@ -493,6 +497,13 @@ int main (int argc, char **argv)
             case 'h':
                 g_print(usage, argv[0]);
                 exit(1);
+                break;
+            case 'l':
+                lines = atoi (optarg);
+
+                if (lines <= 0)
+                    lines = DEFAULT_LINES;
+
                 break;
             case '-':
                 bail = TRUE;
@@ -567,7 +578,7 @@ int main (int argc, char **argv)
 
     /* Connect to the "char_size_changed" signal to set geometry hints
      * whenever the font used by the terminal is changed. */
-    if (geometry) 
+    if (geometry)
     {
         char_size_changed (widget, 0, 0, window);
         g_signal_connect (G_OBJECT(widget), "char-size-changed",
