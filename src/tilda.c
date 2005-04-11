@@ -51,7 +51,6 @@
 
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
-
 #define DEFAULT_LINES 100
 
 
@@ -412,7 +411,7 @@ int main (int argc, char **argv)
                 "-w directory : switch working directory\n"
                 "-c command : run command\n"
                 "-t : set transparent to true\n"
-                "-l lines : set scrollback lines\n";
+                "-l lines : set number of scrollback lines\n";
     
     back.red = back.green = back.blue = 0xffff;
     fore.red = fore.green = fore.blue = 0x0000;
