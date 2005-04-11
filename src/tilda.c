@@ -202,7 +202,7 @@ void pull_down (char *instance)
 
 void *wait_for_signal ()
 {
-    FILE *fp;   
+    FILE *fp = NULL;   
     char filename[128], *tmp;
     int  tmp_size;
     char c[10];
@@ -250,7 +250,14 @@ void *wait_for_signal ()
         if (flag)
         {
             fp = fopen (filename, "r");
-            fgets (c, 10, fp);
+
+            if (fp != NULL)
+                fgets (c, 10, fp);
+            else
+            {
+                printf("Failed to open: %s\n", filename);
+                exit(1);
+            }
         }
     
         gtk_window_get_size ((GtkWindow *) window, &w, &h);
@@ -277,9 +284,12 @@ void *wait_for_signal ()
         }
         
         if (flag)
+        {
             fclose (fp);
+            fp = NULL;
+        }
         else
-            flag=1; 
+            flag = 1; 
 
         sleep (.1);
     }
