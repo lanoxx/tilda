@@ -64,7 +64,8 @@ int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
 
 /* Removes the temporary file socket used to communicate with a running tilda */
-void clean_up () {
+void clean_up () 
+{
     if (filename_global != NULL) 
     {
         remove (filename_global);
@@ -74,7 +75,8 @@ void clean_up () {
     exit (0);
 }
 
-void start_process (char process[]) {
+void start_process (char process[]) 
+{
     /* This really should be rewritten to use fork()/exec()
        and it should ideally have a way of communicating with
        "process" in preferably a socket or something.
@@ -233,15 +235,6 @@ void *wait_for_signal ()
     signal (SIGKILL, clean_up);
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
-
-    /* still needed?
-    gtk_window_move((GtkWindow *) window, 0, -min_height);
-    resize ((GtkWidget *) window, min_width, min_height);
-    pull_down ();
-    gtk_window_get_position ((GtkWindow *) window, &x, &y);
-    
-    printf ("%i %i\n", x, y);
-    */
     
     flag = 0;
     
@@ -776,12 +769,11 @@ int main (int argc, char **argv)
     {
         perror ("Fuck that thread!!!");
     }
-
+    
     gtk_main();
 
     pthread_cancel (child);
-
-    pthread_join (child, NULL);
+	pthread_join (child, NULL);
     
     remove (filename_global);
     free (filename_global);
