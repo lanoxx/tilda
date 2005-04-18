@@ -72,8 +72,8 @@ void xbindkeys (char key[])
     }
     
     home_dir = getenv ("HOME");
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.xbindkeysrc");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.xbindkeysrc", sizeof(config_file));
                    
     for (i=0;i<strlen(key);i++)
     {
@@ -175,8 +175,8 @@ int fluxbox (char key[])
     int i=0;
     
     home_dir = getenv ("HOME");
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.fluxbox/keys");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.fluxbox/keys", sizeof(config_file));
     
     if((fp = fopen(config_file, "r")) == NULL) 
     {
@@ -210,7 +210,7 @@ int fluxbox (char key[])
         fclose (fp);
     }
     
-    strcpy (command, getcwd (command, 80));
+    strlcpy (command, getcwd (command, 80), sizeof(command));
     
     if((fp = fopen(config_file, "a")) == NULL) 
     {

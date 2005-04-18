@@ -262,6 +262,7 @@ static void decrease_font_size (GtkWidget *widget, gpointer data)
     adjust_font_size (widget, data, -1);
 }
 
+/*
 static gboolean read_and_feed (GIOChannel *source, GIOCondition condition, gpointer data)
 {
     char buf[2048];
@@ -276,19 +277,24 @@ static gboolean read_and_feed (GIOChannel *source, GIOCondition condition, gpoin
     }
     return FALSE;
 }
+*/
 
+/*
 static void disconnect_watch (GtkWidget *widget, gpointer data)
 {
     g_source_remove (GPOINTER_TO_INT(data));
 }
+*/
 
+/*
 static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData *selection_data,
           guint info, gpointer owner)
 {
-    /* No-op. */
     return;
 }
+*/
 
+/*
 static void take_xconsole_ownership (GtkWidget *widget, gpointer data)
 {
     char *name, hostname[255];
@@ -321,6 +327,7 @@ static void take_xconsole_ownership (GtkWidget *widget, gpointer data)
                      (GtkClipboardClearFunc)gtk_main_quit,
                      G_OBJECT(widget));
 }
+*/
 
 /*
 static void add_weak_pointer(GObject *object, GtkWidget **target)

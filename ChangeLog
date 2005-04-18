@@ -1,3 +1,8 @@
+Fixed LOTS of buffer overflows. This should also fix some of the GTK problems
+we were having.
+Changed the config file system, it is much less hackish now.
+Changed the way tilda builds a little bit.
+
 New in Tilda-0.05:
 Added env var TILDA_NUM which is set to the current tilda num to move it up and
 down

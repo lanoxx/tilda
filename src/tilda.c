@@ -38,26 +38,11 @@
 /* source file containing most of the callback functions used */
 #include "callback_func.c"
 
-/* These are from OpenBSD. They are safe string handling functions.
- * The source was: ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcat.c
- *                 ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcpy.c
- *
- * Here is a little guide on usage: http://www.courtesan.com/todd/papers/strlcpy.html
- * 
- * In short, the syntax is just like strncpy() and strncat().
- */
-#include "strlcpy.c"
-#include "strlcat.c"
-
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
-#define DEFAULT_LINES 100
-
 
 GtkWidget *window;
-gint max_width, max_height, min_width, min_height;
 char config_file[80];
-char s_xbindkeys[5], s_above[5], s_notaskbar[5], s_pinned[5];
 char *user, *display;
 char *filename_global;      /* stores the name of the socket used for accessing this instance */
 int  filename_global_size;  /* stores the size of filename_global */
@@ -261,12 +246,13 @@ void *wait_for_signal ()
             resize ((GtkWidget *) window, max_width, max_height);
             gtk_widget_show ((GtkWidget *) window);
             gtk_window_move ((GtkWindow *) window, 0, 0);
-
+            
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
 
             if ((strcasecmp (s_above, "true")) == 0)
                 gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+        
         }
         else if (h == max_height)
         {   
@@ -366,7 +352,6 @@ int main (int argc, char **argv)
 {
     pthread_t child; 
     int  tid;
-    FILE *fp;
     char *home_dir;
     GtkWidget *hbox, *scrollbar, *widget;
     const char *background = NULL, *color = NULL;
@@ -378,7 +363,6 @@ int main (int argc, char **argv)
          icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
          cursor_set = FALSE, use_antialias = FALSE;
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    long lines = DEFAULT_LINES;
     /* const char *message = "Launching interactive shell...\r\n"; */
     const char *font = NULL;
     const char *terminal = NULL;
@@ -531,29 +515,12 @@ int main (int argc, char **argv)
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
-    
-    if ((fp = fopen (config_file, "r")) == NULL) 
+   
+    if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
     {
-        if (wizard (argc, argv) == 1)
-            exit (0);
-            
-        if ((fp = fopen(config_file, "r")) == NULL) 
-        {   
-            perror("fopen");
-            exit(1);
-        }
+        puts("There was an error in the config file, terminating");
+        exit(1);
     }
-
-    fscanf (fp, "max_height=%i\n", &max_height);
-    fscanf (fp, "max_width=%i\n", &max_width);
-    fscanf (fp, "min_height=%i\n", &min_height);
-    fscanf (fp, "min_width=%i\n", &min_width);   
-    fscanf (fp, "notaskbar=%s\n", s_notaskbar);
-    fscanf (fp, "above=%s\n", s_above);
-    fscanf (fp, "pinned=%s\n", s_pinned);
-    fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
-    fscanf (fp, "scrollback=%ld\n", &lines);
-    fclose (fp);
 
     gtk_init (&argc, &argv);
 

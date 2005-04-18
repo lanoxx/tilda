@@ -85,40 +85,39 @@ void apply_settings ()
 {
     FILE *fp;
     char *home_dir, config_file[80];
-    char s_xbindkeys[5], s_notaskbar[5], s_pinned[5], s_above[5];
     gchar height[10], width[10], key[20];
     
-    strcpy (height, gtk_entry_get_text (GTK_ENTRY (entry_height)));
-    strcpy (width, gtk_entry_get_text (GTK_ENTRY (entry_width)));
-    strcpy (key, gtk_entry_get_text (GTK_ENTRY (entry_key)));
+    strlcpy (height, gtk_entry_get_text (GTK_ENTRY (entry_height)), sizeof(height));
+    strlcpy (width, gtk_entry_get_text (GTK_ENTRY (entry_width)), sizeof(width));
+    strlcpy (key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(key));
     
     home_dir = getenv ("HOME");
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.tilda/");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.tilda/", sizeof(config_file));
     
     mkdir (config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
     
-    strcat (config_file, "config");
+    strlcat (config_file, "config", sizeof(config_file));
     
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_xbindkeys)) == TRUE)
-        strcpy (s_xbindkeys, "TRUE");
+        strlcpy (s_xbindkeys, "TRUE", sizeof(s_xbindkeys));
     else
-        strcpy (s_xbindkeys, "FALSE");
+        strlcpy (s_xbindkeys, "FALSE", sizeof(s_xbindkeys));
         
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
-        strcpy (s_notaskbar, "TRUE");
+        strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
     else
-        strcpy (s_notaskbar, "FALSE");
+        strlcpy (s_notaskbar, "FALSE", sizeof(s_notaskbar));
     
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned)) == TRUE)
-        strcpy (s_pinned, "TRUE");
+        strlcpy (s_pinned, "TRUE", sizeof(s_pinned));
     else
-        strcpy (s_pinned, "FALSE");
+        strlcpy (s_pinned, "FALSE", sizeof(s_pinned));
     
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above)) == TRUE)
-        strcpy (s_above, "TRUE");
+        strlcpy (s_above, "TRUE", sizeof(s_above));
     else
-        strcpy (s_above, "FALSE");
+        strlcpy (s_above, "FALSE", sizeof(s_above));
     
     if((fp = fopen(config_file, "w")) == NULL) 
     {
@@ -127,14 +126,14 @@ void apply_settings ()
     }
     else
     {
-        fprintf (fp, "max_height=%s\n", height);
-        fprintf (fp, "max_width=%s\n", width);
-        fprintf (fp, "min_height=%i\n", 1);
-        fprintf (fp, "min_width=%s\n", width);  
-        fprintf (fp, "notaskbar=%s\n", s_notaskbar);
-        fprintf (fp, "above=%s\n", s_above);
-        fprintf (fp, "pinned=%s\n", s_pinned);
-        fprintf (fp, "xbindkeys=%s\n", s_xbindkeys);
+        fprintf (fp, "max_height : %s\n", height);
+        fprintf (fp, "max_width : %s\n", width);
+        fprintf (fp, "min_height : %i\n", 1);
+        fprintf (fp, "min_width : %s\n", width);  
+        fprintf (fp, "notaskbar : %s\n", s_notaskbar);
+        fprintf (fp, "above : %s\n", s_above);
+        fprintf (fp, "pinned : %s\n", s_pinned);
+        fprintf (fp, "xbindkeys : %s\n", s_xbindkeys);
         fclose (fp);
     }
 
@@ -165,7 +164,7 @@ gint exit_app (GtkWidget *widget, gpointer data)
 
 void selected (gpointer window_manager)
 {
-    strcpy (wm, window_manager);
+    strlcpy (wm, window_manager, sizeof(wm));
 }
 
 int wizard (int argc, char **argv)
@@ -185,51 +184,47 @@ int wizard (int argc, char **argv)
     FILE *fp;
     char *home_dir;
     char config_file[80];
-    int i, flag; 
-    char max_height[5], max_width[5], min_height[5], min_width[5], tmp[51], key[255], tmp_string[255];
-    char s_xbindkeys[5], s_notaskbar[5], s_above[5], s_pinned[5];
+    int i, flag;
+    char tmp[51], key[255], tmp_string[255];
+    
+    char s_max_height[256];
+    char s_max_width[256];
     
     home_dir = getenv ("HOME");
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.tilda/config");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.tilda/config", sizeof(config_file));
 
     //read in height width settings already set
     if((fp = fopen(config_file, "r")) == NULL) 
     {
-        strcpy (s_xbindkeys, "TRUE");
-        strcpy (s_notaskbar, "TRUE");
-        strcpy (s_pinned, "TRUE");
-        strcpy (s_above, "TRUE");
-        strcpy (max_height, "1");
-        strcpy (max_width, "1");
-        strcpy (min_height, "1");
-        strcpy (min_width , "1");
+        strlcpy (s_xbindkeys, "TRUE", sizeof(s_xbindkeys));
+        strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
+        strlcpy (s_pinned, "TRUE", sizeof(s_pinned));
+        strlcpy (s_above, "TRUE", sizeof(s_above));
+        max_height = 1;
+        max_width = 1;
+        min_height = 1;
+        min_width = 1;
         }
     else
     {
-        fscanf (fp, "max_height=%s\n", max_height);
-        fscanf (fp, "max_width=%s\n", max_width);
-        fscanf (fp, "min_height=%s\n", min_height);
-        fscanf (fp, "min_width=%s\n", min_width);
-        fscanf (fp, "notaskbar=%s\n", s_notaskbar);
-        fscanf (fp, "above=%s\n", s_above);
-        fscanf (fp, "pinned=%s\n", s_pinned);
-        fscanf (fp, "xbindkeys=%s\n", s_xbindkeys);
+        if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
+        {
+            /* This should _NEVER_ happen, but it's here just in case */
+            puts("Error reading config file, terminating");
+            exit(1);
+        }
+
         fclose (fp);
     }
-    
-    max_height[strlen (max_height)] = '\0';
-    min_height[strlen (max_height)] = '\0';
-    max_width[strlen (max_width)] = '\0';
-    min_width[strlen (min_width)] = '\0';
-        
+
     //read in keybinding settings already set
     flag=0;
-    strcpy (config_file, home_dir);
-    strcat (config_file, "/.xbindkeysrc");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.xbindkeysrc", sizeof(config_file));
     if ((fp = fopen (config_file, "r")) == NULL)
     {
-        strcpy (key, "");
+        strlcpy (key, "", sizeof(key));
     }
     else
     {
@@ -243,7 +238,7 @@ int wizard (int argc, char **argv)
                     
                 if (flag == 0)
                 {
-                    strcpy (key, tmp);
+                    strlcpy (key, tmp, sizeof(key));
                     flag++;
                 }
                 else
@@ -325,8 +320,12 @@ int wizard (int argc, char **argv)
     entry_width = gtk_entry_new ();
     entry_key = gtk_entry_new ();
     
-    gtk_entry_set_text (GTK_ENTRY (entry_height), max_height);
-    gtk_entry_set_text (GTK_ENTRY (entry_width), max_width);
+    sprintf (s_max_height, "%d", max_height);
+    gtk_entry_set_text (GTK_ENTRY (entry_height), s_max_height);
+    
+    sprintf (s_max_width, "%d", max_width);
+    gtk_entry_set_text (GTK_ENTRY (entry_width), s_max_width);
+    
     gtk_entry_set_text (GTK_ENTRY (entry_key), key);
     
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
@@ -382,3 +381,4 @@ int wizard (int argc, char **argv)
 
     return 0;
 }
+
