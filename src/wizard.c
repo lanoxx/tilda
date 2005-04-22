@@ -31,6 +31,7 @@ GtkWidget *dialog;
 char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_key;
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_xbindkeys;
+int exit_status = 0;
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -147,7 +148,8 @@ gint ok ()
         
     gtk_widget_destroy (dialog);
     gtk_main_quit();
-    return (FALSE);
+    
+    return (TRUE);
 }
 
 void apply ()
@@ -159,6 +161,9 @@ gint exit_app (GtkWidget *widget, gpointer data)
 {   
     gtk_widget_destroy (dialog);
     gtk_main_quit();
+    
+    exit_status = 1;
+    
     return (FALSE);
 }
 
@@ -379,6 +384,6 @@ int wizard (int argc, char **argv)
 
     gtk_main();
 
-    return 0;
+    return exit_status;
 }
 

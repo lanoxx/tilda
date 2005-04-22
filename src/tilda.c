@@ -460,7 +460,7 @@ int main (int argc, char **argv)
                 pull_down (optarg);
                 break;
             case 'C':
-                if (wizard (argc, argv) == 1) { return 0; }
+                if ((wizard (argc, argv)) == 1) { clean_up(); }
                 break;
             case 's':
                 scroll = TRUE;
