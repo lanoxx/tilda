@@ -47,6 +47,7 @@ char *user, *display;
 char *filename_global;      /* stores the name of the socket used for accessing this instance */
 int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
+float TRANS_LEVEL = .5;
 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
@@ -357,6 +358,7 @@ int main (int argc, char **argv)
     const char *background = NULL, *color = NULL;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
+    float tmp_val;
     gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
          dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
          console = FALSE, scroll = FALSE, /*keep = FALSE,*/
@@ -375,17 +377,17 @@ int main (int argc, char **argv)
     GList *args = NULL;
     GdkColor fore, back, tint, highlight, cursor;
     const char *usage = "Usage: %s "
-                "[-B image]"
-                "[-T N]"
-                "[-C]"
-                "[-b [white][black] ]"
+                "[-B image] "
+                "[-T N] "
+                "[-C] "
+                "[-b [white][black] ] "
                 "[-f font] "
                 "[-a]"
                 "[-h] "
                 "[-s] "
                 "[-w directory] "
                 "[-c command] "
-                "[-t] "
+                "[-t level] "               
                 "[-l lines]\n\n"
                 "-B image : set background image\n"
                 "-T N : pull down terminal N if already running\n"
@@ -397,7 +399,7 @@ int main (int argc, char **argv)
                 "-s : use scrollbar\n"
                 "-w directory : switch working directory\n"
                 "-c command : run command\n"
-                "-t : set transparent to true\n"
+                "-t level: set transparent to true and set the level of transparency to level, 0-100\n"   
                 "-l lines : set number of scrollback lines\n";
     
     back.red = back.green = back.blue = 0xffff;
@@ -446,7 +448,7 @@ int main (int argc, char **argv)
 
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:stwl:-")) != -1) 
+    while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:st:wl:-")) != -1) 
      {
         gboolean bail = FALSE;
         switch (opt) {
@@ -470,6 +472,8 @@ int main (int argc, char **argv)
                 break;
             case 't':
                 transparent = TRUE;
+                tmp_val = atoi (optarg);
+                if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
                 break;
             case 'f':
                 font = optarg;
@@ -625,6 +629,7 @@ int main (int argc, char **argv)
     
     if (transparent) 
     {
+        vte_terminal_set_background_saturation (VTE_TERMINAL (widget), TRANS_LEVEL);
         vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
     }
     
