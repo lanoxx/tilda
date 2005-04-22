@@ -217,6 +217,7 @@ int wizard (int argc, char **argv)
         {
             /* This should _NEVER_ happen, but it's here just in case */
             puts("Error reading config file, terminating");
+            puts("If you created your config file prior to release .06 then you must delete it and start over, sorry :(");
             exit(1);
         }
 
