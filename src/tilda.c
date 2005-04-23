@@ -47,7 +47,9 @@ char *user, *display;
 char *filename_global;      /* stores the name of the socket used for accessing this instance */
 int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
-float TRANS_LEVEL = .5;
+int TRANS_LEVEL = 50;		/* how transparent the window is, percent from 0-100 */
+int pos_x = 0; 				/* x position of tilda on screen */
+int pos_y = 0; 				/* y position of tilda on screen */
 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
@@ -246,7 +248,7 @@ void *wait_for_signal ()
         {
             resize ((GtkWidget *) window, max_width, max_height);
             gtk_widget_show ((GtkWidget *) window);
-            gtk_window_move ((GtkWindow *) window, 0, 0);
+            gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
             
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
@@ -387,7 +389,9 @@ int main (int argc, char **argv)
                 "[-s] "
                 "[-w directory] "
                 "[-c command] "
-                "[-t level] "               
+                "[-t level] "        
+                "[-x position] "
+                "[-y position] "       
                 "[-l lines]\n\n"
                 "-B image : set background image\n"
                 "-T N : pull down terminal N if already running\n"
@@ -400,6 +404,8 @@ int main (int argc, char **argv)
                 "-w directory : switch working directory\n"
                 "-c command : run command\n"
                 "-t level: set transparent to true and set the level of transparency to level, 0-100\n"   
+                "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
+                "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
                 "-l lines : set number of scrollback lines\n";
     
     back.red = back.green = back.blue = 0xffff;
@@ -448,7 +454,7 @@ int main (int argc, char **argv)
 
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "B:CDT:2ab:c:df:ghkn:st:wl:-")) != -1) 
+    while ((opt = getopt(argc, argv, "x:y:B:CDT:2ab:c:df:ghkn:st:wl:-")) != -1) 
      {
         gboolean bail = FALSE;
         switch (opt) {
@@ -497,6 +503,12 @@ int main (int argc, char **argv)
                 break;
             case '-':
                 bail = TRUE;
+                break;
+            case 'x':
+            	pos_x = atoi (optarg);
+                break;
+            case 'y':
+            	pos_y = atoi (optarg);
                 break;
             default:
                 break;
@@ -728,7 +740,7 @@ int main (int argc, char **argv)
     if ((strcasecmp (s_notaskbar, "true")) == 0)
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
     
-    gtk_window_move ((GtkWindow *) window, 0, 0);
+    gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
     
     signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);
