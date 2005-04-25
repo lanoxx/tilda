@@ -505,10 +505,10 @@ int main (int argc, char **argv)
                 bail = TRUE;
                 break;
             case 'x':
-            	pos_x = atoi (optarg);
+                pos_x = atoi (optarg);
                 break;
             case 'y':
-            	pos_y = atoi (optarg);
+                pos_y = atoi (optarg);
                 break;
             default:
                 break;
@@ -757,7 +757,7 @@ int main (int argc, char **argv)
     gtk_main();
 
     pthread_cancel (child);
-	pthread_join (child, NULL);
+    pthread_join (child, NULL);
     
     remove (filename_global);
     free (filename_global);
