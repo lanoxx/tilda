@@ -31,7 +31,8 @@
 #include <fontconfig/fontconfig.h>
 #endif
 
-#include "vte.h"
+/* #include "vte.h" */
+#include <vte/vte.h>
 #include "config.h"
 #include "tilda.h"
 
@@ -47,9 +48,9 @@ char *user, *display;
 char *filename_global;      /* stores the name of the socket used for accessing this instance */
 int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
-int TRANS_LEVEL = 50;		/* how transparent the window is, percent from 0-100 */
-int pos_x = 0; 				/* x position of tilda on screen */
-int pos_y = 0; 				/* y position of tilda on screen */
+int TRANS_LEVEL = 50;       /* how transparent the window is, percent from 0-100 */
+int pos_x = 0;              /* x position of tilda on screen */
+int pos_y = 0;              /* y position of tilda on screen */
 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
