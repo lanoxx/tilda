@@ -53,7 +53,7 @@ long lines = DEFAULT_LINES;
 gchar s_xbindkeys[6], s_above[6], s_notaskbar[6], s_pinned[6];
 gchar s_image[100] = "none", s_background[6] = "white", s_font[25] = "monospace 9";
 gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE";
-int transparency=100, x_pos=0, y_pos=0;
+int transparency=0, x_pos=0, y_pos=0;
 
 const CONFIG tilda_config[] = {
         { CF_INT,       "max_height",   &max_height,    0,                      NULL, 0, NULL },
