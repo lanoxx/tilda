@@ -101,12 +101,12 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_use_image)) == TRUE)
     {
-    	gtk_widget_show (label_image);
+        gtk_widget_show (label_image);
         gtk_widget_show (button_image);
     }
     else
     {
-    	gtk_widget_hide (label_image);
+        gtk_widget_hide (label_image);
         gtk_widget_hide (button_image);
     }
 }
@@ -120,7 +120,7 @@ GtkWidget* appearance ()
     GtkWidget *label_x_pos, *label_y_pos;
     
     char s_max_height[6], s_max_width[6];
-	char s_x_pos[6], s_y_pos[6], s_transparency[4];
+    char s_x_pos[6], s_y_pos[6], s_transparency[4];
     
     table = gtk_table_new (3, 8, FALSE);
     label_height = gtk_label_new ("Height in Pixels:");
@@ -137,7 +137,7 @@ GtkWidget* appearance ()
     entry_y_pos = gtk_entry_new ();
     entry_opacity = gtk_entry_new ();	
     
-	sprintf (s_max_height, "%d", max_height);
+    sprintf (s_max_height, "%d", max_height);
     sprintf (s_max_width, "%d", max_width);
     sprintf (s_x_pos, "%d", x_pos);
     sprintf (s_y_pos, "%d", y_pos); 
@@ -151,39 +151,39 @@ GtkWidget* appearance ()
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
     
     image_chooser = gtk_file_chooser_dialog_new ("Open Background Image File",
-				      GTK_WINDOW (window),
-				      GTK_FILE_CHOOSER_ACTION_OPEN,
-				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-				      NULL);
+                      GTK_WINDOW (window),
+                      GTK_FILE_CHOOSER_ACTION_OPEN,
+                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                      NULL);
     button_image = gtk_file_chooser_button_new_with_dialog (image_chooser);
     
     if (strcmp (s_image, "none") != 0);
-    		       
+    
     radio_white = gtk_radio_button_new_with_label (NULL, "White");
     radio_black = gtk_radio_button_new_with_label(gtk_radio_button_group (GTK_RADIO_BUTTON (radio_white)), "Black");
        
     if (strcasecmp (s_background, "white") == 0)
-    	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_white), TRUE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_white), TRUE);
     else
-    	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_black), TRUE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_black), TRUE);
         
     if (strcasecmp (s_use_image, "TRUE") == 0)
     {
-    	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), TRUE);
-    	gtk_widget_show (label_image);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), TRUE);
+        gtk_widget_show (label_image);
         gtk_widget_show (button_image);
     }
     else
     {
-    	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), FALSE);   
-    	gtk_widget_hide (label_image);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), FALSE);   
+        gtk_widget_hide (label_image);
         gtk_widget_hide (button_image);
     }
     
     gtk_signal_connect (GTK_OBJECT (check_use_image), "clicked", GTK_SIGNAL_FUNC(image_select), label_image);
     
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
+    gtk_table_set_row_spacings (GTK_TABLE (table), 5);
     gtk_table_set_col_spacings (GTK_TABLE (table), 5);
     
     gtk_table_attach (GTK_TABLE (table), label_height, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
@@ -236,7 +236,7 @@ GtkWidget* font ()
     
     table = gtk_table_new (2, 2, FALSE);
 
-	button_font = gtk_font_button_new_with_font (s_font);
+    button_font = gtk_font_button_new_with_font (s_font);
     
     check_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
     
@@ -364,7 +364,7 @@ void apply_settings ()
     strlcpy (s_font, gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)), sizeof (s_font));
     
     if (NULL != (tmp_str = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser))))
-		strlcpy (s_image,  tmp_str, sizeof (s_image));
+        strlcpy (s_image,  tmp_str, sizeof (s_image));
     
     max_height = atoi (gtk_entry_get_text (GTK_ENTRY (entry_height)));
     max_width = atoi (gtk_entry_get_text (GTK_ENTRY (entry_width)));
@@ -412,9 +412,9 @@ void apply_settings ()
         strlcpy (s_scrollbar, "FALSE", sizeof(s_scrollbar));    
     
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio_white)))
-    	strlcpy (s_background, "white", sizeof (s_background));	
+        strlcpy (s_background, "white", sizeof (s_background));	
     else
-    	strlcpy (s_background, "black", sizeof (s_background));
+        strlcpy (s_background, "black", sizeof (s_background));
     
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_use_image)) == TRUE)
         strlcpy (s_use_image, "TRUE", sizeof(s_use_image));
@@ -534,13 +534,13 @@ int wizard (int argc, char **argv)
         fclose (fp);
     }
    
-	gtk_init (&argc, &argv);
+    gtk_init (&argc, &argv);
     
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_widget_show (window);
     
     g_signal_connect (G_OBJECT (window), "delete_event",
-	              G_CALLBACK (exit_app), NULL);
+                  G_CALLBACK (exit_app), NULL);
     
     gtk_container_set_border_width (GTK_CONTAINER (window), 10);
     
@@ -566,30 +566,30 @@ int wizard (int argc, char **argv)
     /* Let's append a bunch of pages to the notebook */
     for (i = 0; i < 4; i++) 
     {
-    	table2 = (*contents[i])();
+        table2 = (*contents[i])();
         
-		gtk_widget_show (table2);	
-		label = gtk_label_new (tabs[i]);
-		gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table2, label);
+        gtk_widget_show (table2);	
+        label = gtk_label_new (tabs[i]);
+        gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table2, label);
     }
-	
+
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
     
     button = gtk_button_new_with_label ("OK");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			      G_CALLBACK (ok), NULL);
+                  G_CALLBACK (ok), NULL);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 0, 1, 2, 3);
     gtk_widget_show (button);
     
     button = gtk_button_new_with_label ("Apply");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			      G_CALLBACK (apply), NULL);
+                  G_CALLBACK (apply), NULL);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 1, 2, 2, 3);
     gtk_widget_show (button);
     
     button = gtk_button_new_with_label ("Cancel");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			      G_CALLBACK (exit_app), NULL);
+                  G_CALLBACK (exit_app), NULL);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 2, 3, 2, 3);
     gtk_widget_show (button);
     
@@ -600,6 +600,6 @@ int wizard (int argc, char **argv)
     
     gtk_main ();
     
-	return exit_status;
+    return exit_status;
 }
 

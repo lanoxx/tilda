@@ -357,6 +357,7 @@ int main (int argc, char **argv)
     pthread_t child; 
     int  tid;
     char *home_dir;
+    FILE *fp;
     GtkWidget *hbox, *scrollbar, *widget;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
@@ -431,7 +432,18 @@ int main (int argc, char **argv)
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
-   
+
+    /* Call the wizard if we cannot read the config file.
+     * This fixes a crash that happened if there was not a config file, and
+     * tilda was not called with "-C" */
+    if ((fp = fopen(config_file, "r")) == NULL)
+    {
+        printf("Unable to open config file, showing the wizard\n");
+        if ((wizard (argc, argv)) == 1) { clean_up(); }
+    }
+    else
+        fclose (fp);
+
     if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
     {
         puts("There was an error in the config file, terminating");
@@ -439,15 +451,15 @@ int main (int argc, char **argv)
     }
     
     if (strcmp (s_use_image, "TRUE") == 0)
-    	bool_use_image = TRUE;
+        bool_use_image = TRUE;
     
     if (strcmp (s_antialias, "TRUE") == 0)
-    	use_antialias = TRUE;
+        use_antialias = TRUE;
     
     if (strcmp (s_scrollbar, "TRUE") == 0)
-    	scroll = TRUE;          
+        scroll = TRUE;          
 
-  	TRANS_LEVEL = (transparency)/100; 
+    TRANS_LEVEL = (transparency)/100; 
     
     /* Pull out long options for GTK+. */
     for (i = j = 1; i < argc; i++) 
@@ -498,7 +510,7 @@ int main (int argc, char **argv)
                 command = optarg;
                 break;
             case 't':
-            	tmp_val = atoi (optarg);
+                tmp_val = atoi (optarg);
                 if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
                 break;
             case 'f':
