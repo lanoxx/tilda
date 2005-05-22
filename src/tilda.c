@@ -48,7 +48,7 @@ char *user, *display;
 char *filename_global;      /* stores the name of the socket used for accessing this instance */
 int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
-int TRANS_LEVEL = 50;       /* how transparent the window is, percent from 0-100 */
+int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
 int pos_x = 0;              /* x position of tilda on screen */
 int pos_y = 0;              /* y position of tilda on screen */
 
@@ -358,18 +358,16 @@ int main (int argc, char **argv)
     int  tid;
     char *home_dir;
     GtkWidget *hbox, *scrollbar, *widget;
-    const char *background = NULL, *color = NULL;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
     float tmp_val;
-    gboolean transparent = FALSE, audible = TRUE, blink = TRUE,
+    gboolean audible = TRUE, blink = TRUE,
          dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
          console = FALSE, scroll = FALSE, /*keep = FALSE,*/
          icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
-         cursor_set = FALSE, use_antialias = FALSE;
+         cursor_set = FALSE, use_antialias = FALSE, bool_use_image = FALSE;
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     /* const char *message = "Launching interactive shell...\r\n"; */
-    const char *font = NULL;
     const char *terminal = NULL;
     const char *command = NULL;
     const char *working_directory = NULL;
@@ -417,7 +415,7 @@ int main (int argc, char **argv)
     tint.red = tint.green = tint.blue = 0;
     tint = back;
     
-    font = "monospace 9";
+    strlcpy (s_font, "monospace 9", sizeof (s_font));
     user = getenv ("USER");
     display = getenv ("DISPLAY");
     
@@ -429,7 +427,28 @@ int main (int argc, char **argv)
             g_mem_set_vtable (glib_mem_profiler_table);
         }
     }
+    
+    home_dir = getenv ("HOME");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.tilda/config", sizeof(config_file));
+   
+    if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
+    {
+        puts("There was an error in the config file, terminating");
+        exit(1);
+    }
+    
+    if (strcmp (s_use_image, "TRUE") == 0)
+    	bool_use_image = TRUE;
+    
+    if (strcmp (s_antialias, "TRUE") == 0)
+    	use_antialias = TRUE;
+    
+    if (strcmp (s_scrollbar, "TRUE") == 0)
+    	scroll = TRUE;          
 
+  	TRANS_LEVEL = (transparency)/100; 
+    
     /* Pull out long options for GTK+. */
     for (i = j = 1; i < argc; i++) 
     {
@@ -460,10 +479,11 @@ int main (int argc, char **argv)
         gboolean bail = FALSE;
         switch (opt) {
             case 'B':
-                background = optarg;
+            	bool_use_image = TRUE;
+                strlcpy (s_image, optarg, sizeof (s_image));
                 break;
             case 'b':
-                color = optarg;
+                strlcpy (s_background, optarg, sizeof (s_background));
                 break;  
             case 'T':
                 pull_down (optarg);
@@ -478,12 +498,11 @@ int main (int argc, char **argv)
                 command = optarg;
                 break;
             case 't':
-                transparent = TRUE;
-                tmp_val = atoi (optarg);
+            	tmp_val = atoi (optarg);
                 if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
                 break;
             case 'f':
-                font = optarg;
+                strlcpy (s_font, optarg, sizeof (s_font));
                 break;
             case 'w':
                 working_directory = optarg;
@@ -506,10 +525,10 @@ int main (int argc, char **argv)
                 bail = TRUE;
                 break;
             case 'x':
-                pos_x = atoi (optarg);
+                x_pos = atoi (optarg);
                 break;
             case 'y':
-                pos_y = atoi (optarg);
+                y_pos = atoi (optarg);
                 break;
             default:
                 break;
@@ -528,16 +547,6 @@ int main (int argc, char **argv)
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
     strlcpy (env_add[2], env_var, env_add2_size);
-    
-    home_dir = getenv ("HOME");
-    strlcpy (config_file, home_dir, sizeof(config_file));
-    strlcat (config_file, "/.tilda/config", sizeof(config_file));
-   
-    if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
-    {
-        puts("There was an error in the config file, terminating");
-        exit(1);
-    }
 
     gtk_init (&argc, &argv);
 
@@ -635,18 +644,18 @@ int main (int argc, char **argv)
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(widget), lines);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);
 
-    if (background != NULL) 
+    if (bool_use_image) 
     {
-        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), background);
+        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), s_image);
     }
     
-    if (transparent) 
+    if (TRANS_LEVEL > 0) 
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (widget), TRANS_LEVEL);
         vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
     }
     
-    if ((color!=NULL) && (strcasecmp (color, "black") == 0))
+    if (strcasecmp (s_background, "black") == 0)
     {
         back.red = back.green = back.blue = 0x0000;
         fore.red = fore.green = fore.blue = 0xffff;
@@ -671,9 +680,9 @@ int main (int argc, char **argv)
     }
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), font, antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), s_font, antialias);
     else
-        vte_terminal_set_font_from_string (VTE_TERMINAL(widget), font);
+        vte_terminal_set_font_from_string (VTE_TERMINAL(widget), s_font);
     
 
     /* Match "abcdefg". */

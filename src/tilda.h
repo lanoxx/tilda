@@ -50,7 +50,10 @@ extern void add_anyway (GtkWidget *widget, gpointer data);
 
 gint max_width, max_height, min_width, min_height;
 long lines = DEFAULT_LINES;
-char s_xbindkeys[6], s_above[6], s_notaskbar[6], s_pinned[6];
+gchar s_xbindkeys[6], s_above[6], s_notaskbar[6], s_pinned[6];
+gchar s_image[100] = "none", s_background[6] = "white", s_font[25] = "monospace 9";
+gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE";
+int transparency=100, x_pos=0, y_pos=0;
 
 const CONFIG tilda_config[] = {
         { CF_INT,       "max_height",   &max_height,    0,                      NULL, 0, NULL },
@@ -61,7 +64,16 @@ const CONFIG tilda_config[] = {
         { CF_STRING,    "above",        s_above,        sizeof(s_above),        NULL, 0, NULL },
         { CF_STRING,    "pinned",       s_pinned,       sizeof(s_pinned),       NULL, 0, NULL },
         { CF_STRING,    "xbindkeys",    s_xbindkeys,    sizeof(s_xbindkeys),    NULL, 0, NULL },
-        { CF_INT,       "scrollback",   &lines,         0,                      NULL, 0, NULL }
+        { CF_INT,       "scrollback",   &lines,         0,                      NULL, 0, NULL },
+        { CF_INT,       "transparency", &transparency,  0,                      NULL, 0, NULL },
+        { CF_INT,       "x_pos",   		&x_pos,         0,                      NULL, 0, NULL },
+        { CF_INT,       "y_pos", 		&y_pos,			0,                      NULL, 0, NULL },
+        { CF_STRING,    "image",        s_image,        sizeof(s_image),        NULL, 0, NULL },
+        { CF_STRING,    "background",   s_background,   sizeof(s_background),   NULL, 0, NULL },
+        { CF_STRING,    "font",         s_font,         sizeof(s_font),         NULL, 0, NULL },
+        { CF_STRING,    "antialias",    s_antialias,    sizeof(s_antialias),    NULL, 0, NULL },
+        { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },               
+        { CF_STRING,    "use_image",    s_use_image,    sizeof(s_use_image),    NULL, 0, NULL } 
 };
 
 #include "wizard.c"
