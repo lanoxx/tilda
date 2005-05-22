@@ -301,7 +301,7 @@ GtkWidget* keybindings ()
                     flag++;
                 }
                 else
-                    sprintf (key, "%s, %s", key, tmp);
+                    sprintf (key, "%s,%s", key, tmp);
             }
             fgets (tmp_string, 254, fp);
         } while (!feof (fp));
