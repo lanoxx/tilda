@@ -265,3 +265,4 @@ int write_key_bindings (char wm[], char key[])
     
     return 0;
 }
+

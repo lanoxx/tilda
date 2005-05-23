@@ -315,13 +315,13 @@ void cleantmp ()
     char buf[BUFSIZ], filename[BUFSIZ];
     int  length, i;
     FILE *ptr, *ptr2;
-	int error_to_null;
+    int error_to_null;
     
     /* Don't know if this is the smartest thing to do but
      * it fixes the problem of always saying there isnt a 
      * file in /tmp
      */
-	if ((error_to_null = open ("/dev/null", O_RDWR)) != -1)
+    if ((error_to_null = open ("/dev/null", O_RDWR)) != -1)
         dup2 (error_to_null, 2);
     
     strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
@@ -358,7 +358,7 @@ void cleantmp ()
     }
     
     if (error_to_null != -1)
-    	close (error_to_null);
+        close (error_to_null);
     
     pclose (ptr);
 }

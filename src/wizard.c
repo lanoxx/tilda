@@ -135,7 +135,7 @@ GtkWidget* appearance ()
     entry_width = gtk_entry_new ();
     entry_x_pos = gtk_entry_new ();
     entry_y_pos = gtk_entry_new ();
-    entry_opacity = gtk_entry_new ();	
+    entry_opacity = gtk_entry_new ();
     
     sprintf (s_max_height, "%d", max_height);
     sprintf (s_max_width, "%d", max_width);
