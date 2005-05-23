@@ -258,7 +258,7 @@ GtkWidget* font ()
 
 void selected (gpointer window_manager)
 {
-    strncpy (wm, window_manager, sizeof(wm));
+    strlcpy (wm, window_manager, sizeof(wm));
 }
 
 GtkWidget* keybindings ()
@@ -520,7 +520,7 @@ int wizard (int argc, char **argv)
         max_width = 1;
         min_height = 1;
         min_width = 1;
-        }
+    }
     else
     {
         if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)

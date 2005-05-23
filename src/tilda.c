@@ -315,7 +315,15 @@ void cleantmp ()
     char buf[BUFSIZ], filename[BUFSIZ];
     int  length, i;
     FILE *ptr, *ptr2;
-
+	int error_to_null;
+    
+    /* Don't know if this is the smartest thing to do but
+     * it fixes the problem of always saying there isnt a 
+     * file in /tmp
+     */
+	if ((error_to_null = open ("/dev/null", O_RDWR)) != -1)
+        dup2 (error_to_null, 2);
+    
     strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
     strlcat (cmd, user, sizeof(cmd));
     length = strlen (cmd)-(strlen ("ls /tmp/") + 1);
@@ -331,12 +339,12 @@ void cleantmp ()
             strlcpy (buf, strstr (buf + length - 1, ".") + 1, sizeof(buf));
             length = strstr (buf, ".") - (char*)&buf;
             buf[(int)(strstr (buf, ".") - (char*)&buf)] = '\0';
-            strlcpy (cmd,"ps x | grep ", sizeof(cmd));
-            strlcat (cmd,buf, sizeof(cmd));
+            strlcpy (cmd, "ps x | grep ", sizeof(cmd));
+            strlcat (cmd, buf, sizeof(cmd));
         
             if ((ptr2 = popen (cmd, "r")) != NULL)
             {
-                for (i = 0; fgets (buf, BUFSIZ, ptr2) != NULL; i++);
+                for (i=0;fgets(buf, BUFSIZ, ptr2)!=NULL;i++);
         
                 if (i <= 2)
                 {
@@ -348,6 +356,9 @@ void cleantmp ()
             }
         } 
     }
+    
+    if (error_to_null != -1)
+    	close (error_to_null);
     
     pclose (ptr);
 }
@@ -364,11 +375,10 @@ int main (int argc, char **argv)
     float tmp_val;
     gboolean audible = TRUE, blink = TRUE,
          dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
-         console = FALSE, scroll = FALSE, /*keep = FALSE,*/
+         console = FALSE, scroll = FALSE,
          icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
          cursor_set = FALSE, use_antialias = FALSE, bool_use_image = FALSE;
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    /* const char *message = "Launching interactive shell...\r\n"; */
     const char *terminal = NULL;
     const char *command = NULL;
     const char *working_directory = NULL;
