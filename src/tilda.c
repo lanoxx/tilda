@@ -514,6 +514,23 @@ int main (int argc, char **argv)
                 break;
             case 'C':
                 if ((wizard (argc, argv)) == 1) { clean_up(); }
+                
+                if (strcmp (s_use_image, "TRUE") == 0)
+   				    bool_use_image = TRUE;
+                else
+                	bool_use_image = FALSE;
+    
+			    if (strcmp (s_antialias, "TRUE") == 0)
+   				    use_antialias = TRUE;
+                else
+                	use_antialias = FALSE;
+    
+			    if (strcmp (s_scrollbar, "TRUE") == 0)
+        			scroll = TRUE;       
+                else
+                	scroll = FALSE;   
+
+			    TRANS_LEVEL = (transparency)/100; 
                 break;
             case 's':
                 scroll = TRUE;
