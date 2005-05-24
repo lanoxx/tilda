@@ -597,7 +597,6 @@ int wizard (int argc, char **argv)
     gtk_widget_show (notebook);
     gtk_widget_show (table);
     
-    
     gtk_main ();
     
     return exit_status;

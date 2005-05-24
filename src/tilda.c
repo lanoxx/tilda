@@ -317,6 +317,12 @@ void cleantmp ()
     FILE *ptr, *ptr2;
     int error_to_null;
     
+    strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
+    strlcat (cmd, user, sizeof(cmd));
+    length = strlen (cmd)-(strlen ("ls /tmp/") + 1);
+    
+    strlcat (cmd, "*", sizeof(cmd));
+    
     /* Don't know if this is the smartest thing to do but
      * it fixes the problem of always saying there isnt a 
      * file in /tmp
@@ -324,11 +330,6 @@ void cleantmp ()
     if ((error_to_null = open ("/dev/null", O_RDWR)) != -1)
         dup2 (error_to_null, 2);
     
-    strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
-    strlcat (cmd, user, sizeof(cmd));
-    length = strlen (cmd)-(strlen ("ls /tmp/") + 1);
-    
-    strlcat (cmd, "*", sizeof(cmd));
     
     if ((ptr = popen (cmd, "r")) != NULL)
     {
@@ -472,14 +473,15 @@ int main (int argc, char **argv)
     TRANS_LEVEL = (transparency)/100; 
     
     /* Pull out long options for GTK+. */
-    for (i = j = 1; i < argc; i++) 
+    for (i=j=1;i<argc;i++) 
     {
         if (g_ascii_strncasecmp ("--", argv[i], 2) == 0) 
         {
             args = g_list_append (args, argv[i]);
-            for (j = i; j < argc; j++) {
+            
+            for (j=i;j<argc;j++) 
                 argv[j] = argv[j + 1];
-            }
+            
             argc--;
             i--;
         }
@@ -487,10 +489,10 @@ int main (int argc, char **argv)
     
     argv2 = g_malloc0 (sizeof(char*) * (g_list_length (args) + 2));
     argv2[0] = argv[0];
-    for (i = 1; i <= g_list_length (args); i++) 
-    {
-        argv2[i] = (char*) g_list_nth (args, i - 1);
-    }
+    
+    for (i=1;i<=g_list_length(args);i++) 
+    	argv2[i] = (char*) g_list_nth (args, i - 1);
+    
     argv2[i] = NULL;
     g_assert (i < (g_list_length (args) + 2));
 
@@ -576,8 +578,7 @@ int main (int argc, char **argv)
      * delete event to the quit function.. */
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_resize_mode (GTK_CONTAINER(window), GTK_RESIZE_IMMEDIATE);
-    g_signal_connect (G_OBJECT(window), "delete_event",
-                      GTK_SIGNAL_FUNC(deleted_and_quit), window);
+    g_signal_connect (G_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC(deleted_and_quit), window);
 
     /* Create a box to hold everything. */
     hbox = gtk_hbox_new (0, FALSE);
@@ -587,9 +588,7 @@ int main (int argc, char **argv)
     widget = vte_terminal_new ();
     
     if (!dbuffer) 
-    {
         gtk_widget_set_double_buffered (widget, dbuffer);
-    }
     
     gtk_box_pack_start (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 
@@ -713,11 +712,9 @@ int main (int argc, char **argv)
     if (dingus) 
     {
         i = vte_terminal_match_add (VTE_TERMINAL(widget), DINGUS1);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget),
-                                            i, GDK_GUMBY);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget), i, GDK_GUMBY);
         i = vte_terminal_match_add(VTE_TERMINAL (widget), DINGUS2);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget),
-                                            i, GDK_HAND1);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget), i, GDK_HAND1);
     }
 
     if (!console) 
@@ -782,9 +779,7 @@ int main (int argc, char **argv)
     signal (SIGTERM, clean_up);
     
     if ((tid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
-    {
         perror ("Fuck that thread!!!");
-    }
     
     gtk_main();
 
