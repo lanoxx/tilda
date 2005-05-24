@@ -1,12 +1,8 @@
-[ ] guy in forum - Customisable colours are a must, faux transperancy a nice treat. Perhaps you could give users an option to copy the terminal style from Gnome Terminal? Both use VTE right?
-
 [ ] guy in forum - It works fine on a single desktop, but multimonitor support would be very much appreciated. In the mean time, perhaps a way to specify the location on the desktop?
 
 [ ] guy in forum - Give users a way to enter xbindkeys key events. Perhaps a window to compose input events like "xbindkeys --multikey"?
 
 [ ] guy in forum - Optionally, a dragable bar on the bottom of Tilda to change the height?
-
-[ ] rhencke - Add a configuration option to change background?
 
 [ ] rhencke - Right-click context menu (copy/paste/options/etc)?
 

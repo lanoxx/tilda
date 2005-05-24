@@ -1,3 +1,12 @@
+New in Tilda-0.06
+New Config Wizard. Still alittle ugly and doesn't auto update, but I am
+saving that for when you can have each tilda instance configured seperatly.
+
+Lots of bug fixes too :). 
+
+
+################################
+
 Fixed LOTS of buffer overflows. This should also fix some of the GTK problems
 we were having.
 Changed the config file system, it is much less hackish now.
