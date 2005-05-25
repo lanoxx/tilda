@@ -226,7 +226,7 @@ void *wait_for_signal ()
     signal (SIGTERM, clean_up);
     
     flag = 0;
-    
+  
     for (;;)
     {
         if (flag)
@@ -244,19 +244,29 @@ void *wait_for_signal ()
     
         gtk_window_get_size ((GtkWindow *) window, &w, &h);
         /* gtk_window_get_position ((GtkWindow *) window, &x, &y); */
-    
+
         if (h == min_height)
-        {
+        {  
             resize ((GtkWidget *) window, max_width, max_height);
-            gtk_widget_show ((GtkWidget *) window);
-            gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
             
+            //gtk_widget_show ((GtkWidget *) window);
+            
+            if (gtk_window_is_active ((GtkWindow *) window) == FALSE)
+            {
+                gtk_window_present ((GtkWindow *) window);
+            }
+            else 
+            	gtk_widget_show ((GtkWidget *) window);
+                
+            gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
+            //gtk_window_present ((GtkWindow *) window);
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
 
             if ((strcasecmp (s_above, "true")) == 0)
                 gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
         
+        	
         }
         else if (h == max_height)
         {   
@@ -769,7 +779,7 @@ int main (int argc, char **argv)
     {
         gtk_widget_show ((GtkWidget *) widget);
         gtk_widget_show ((GtkWidget *) hbox);
-        gtk_widget_show ((GtkWidget *) window);
+        gtk_window_present (GTK_WINDOW (window));
     }
     else
         gtk_widget_show_all (window);
