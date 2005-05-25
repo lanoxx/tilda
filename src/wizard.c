@@ -32,7 +32,7 @@ int exit_status=0;
 char wm[20] = "xbindkeys";
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
 GtkWidget *entry_scrollback, *entry_opacity, *button_image, *image_chooser;
-GtkWidget *check_xbindkeys, *check_antialias, *check_use_image;
+GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focus;
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar;
 GtkWidget *radio_white, *radio_black;
 GtkWidget *button_font;
@@ -50,7 +50,7 @@ GtkWidget* general ()
     GtkWidget *label_scrollback;
     char s_scrollback[20];
     
-    table = gtk_table_new (2, 3, FALSE);
+    table = gtk_table_new (2, 4, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
     gtk_table_set_col_spacings (GTK_TABLE (table), 5);
     
@@ -59,7 +59,8 @@ GtkWidget* general ()
     check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
     check_above = gtk_check_button_new_with_label ("Always on top");
     check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
-    check_scrollbar = gtk_check_button_new_with_label ("Show Scrollbar");
+    check_grab_focus = gtk_check_button_new_with_label ("Grab focus on pull down");
+    check_scrollbar = gtk_check_button_new_with_label ("Show scrollbar");
     
     entry_scrollback = gtk_entry_new ();
     
@@ -75,6 +76,9 @@ GtkWidget* general ()
     if (strcasecmp (s_notaskbar, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_notaskbar), TRUE);
 
+	if (strcasecmp (s_grab_focus, "TRUE") == 0)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_grab_focus), TRUE);
+
     sprintf (s_scrollback, "%ld", lines); 
     gtk_entry_set_text (GTK_ENTRY (entry_scrollback), s_scrollback);
     
@@ -82,11 +86,14 @@ GtkWidget* general ()
     gtk_table_attach (GTK_TABLE (table), check_above, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
-    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_scrollback, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_scrollback, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
+    
+    gtk_widget_show (check_grab_focus);
     gtk_widget_show (check_pinned);
     gtk_widget_show (check_above);
     gtk_widget_show (check_notaskbar);
@@ -421,6 +428,10 @@ void apply_settings ()
     else
         strlcpy (s_use_image, "FALSE", sizeof(s_use_image));    
     
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_grab_focus)) == TRUE)
+        strlcpy (s_grab_focus, "TRUE", sizeof(s_grab_focus));
+    else
+        strlcpy (s_grab_focus, "FALSE", sizeof(s_grab_focus));    
         
     if((fp = fopen(config_file, "w")) == NULL) 
     {
@@ -447,6 +458,7 @@ void apply_settings ()
         fprintf (fp, "y_pos : %i\n", y_pos);
         fprintf (fp, "scrollback : %ld\n", lines);
         fprintf (fp, "use_image : %s\n", s_use_image);
+        fprintf (fp, "grab_focus : %s\n", s_grab_focus);
         
         fclose (fp);
     }

@@ -51,6 +51,7 @@ int  instance;              /* stores this instance's number */
 int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
 int pos_x = 0;              /* x position of tilda on screen */
 int pos_y = 0;              /* y position of tilda on screen */
+gboolean bool_grab_focus;
 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
@@ -248,18 +249,14 @@ void *wait_for_signal ()
         if (h == min_height)
         {  
             resize ((GtkWidget *) window, max_width, max_height);
-            
-            //gtk_widget_show ((GtkWidget *) window);
-            
-            if (gtk_window_is_active ((GtkWindow *) window) == FALSE)
-            {
+
+            if (gtk_window_is_active ((GtkWindow *) window) == FALSE && bool_grab_focus == TRUE)
                 gtk_window_present ((GtkWindow *) window);
-            }
             else 
             	gtk_widget_show ((GtkWidget *) window);
                 
             gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
-            //gtk_window_present ((GtkWindow *) window);
+
             if ((strcasecmp (s_pinned, "true")) == 0)
                 gtk_window_stick (GTK_WINDOW (window));
 
@@ -449,7 +446,7 @@ int main (int argc, char **argv)
             g_mem_set_vtable (glib_mem_profiler_table);
         }
     }
-    
+
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
@@ -471,15 +468,18 @@ int main (int argc, char **argv)
         exit(1);
     }
     
-    if (strcmp (s_use_image, "TRUE") == 0)
+    if (strcasecmp (s_use_image, "TRUE") == 0)
         bool_use_image = TRUE;
     
-    if (strcmp (s_antialias, "TRUE") == 0)
+    if (strcasecmp (s_antialias, "TRUE") == 0)
         use_antialias = TRUE;
     
-    if (strcmp (s_scrollbar, "TRUE") == 0)
-        scroll = TRUE;          
-
+    if (strcasecmp (s_scrollbar, "TRUE") == 0)
+        scroll = TRUE;       
+        
+    if (strcasecmp (s_grab_focus, "TRUE") == 0)
+        bool_grab_focus = TRUE;       
+    
     TRANS_LEVEL = (transparency)/100; 
     
     /* Pull out long options for GTK+. */
@@ -539,7 +539,12 @@ int main (int argc, char **argv)
         			scroll = TRUE;       
                 else
                 	scroll = FALSE;   
-
+                
+                if (strcmp (s_grab_focus, "TRUE") == 0)
+        			bool_grab_focus = TRUE;       
+                else
+                	bool_grab_focus = FALSE;   
+                
 			    TRANS_LEVEL = (transparency)/100; 
                 break;
             case 's':
