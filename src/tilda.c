@@ -386,6 +386,8 @@ int main (int argc, char **argv)
          console = FALSE, scroll = FALSE,
          icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
          cursor_set = FALSE, use_antialias = FALSE, bool_use_image = FALSE;
+    gboolean image_set_clo=FALSE, antialias_set_clo=FALSE,
+    	scroll_set_clo=FALSE; 
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     const char *terminal = NULL;
     const char *command = NULL;
@@ -447,41 +449,6 @@ int main (int argc, char **argv)
         }
     }
 
-    home_dir = getenv ("HOME");
-    strlcpy (config_file, home_dir, sizeof(config_file));
-    strlcat (config_file, "/.tilda/config", sizeof(config_file));
-
-    /* Call the wizard if we cannot read the config file.
-     * This fixes a crash that happened if there was not a config file, and
-     * tilda was not called with "-C" */
-    if ((fp = fopen(config_file, "r")) == NULL)
-    {
-        printf("Unable to open config file, showing the wizard\n");
-        if ((wizard (argc, argv)) == 1) { clean_up(); }
-    }
-    else
-        fclose (fp);
-
-    if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
-    {
-        puts("There was an error in the config file, terminating");
-        exit(1);
-    }
-    
-    if (strcasecmp (s_use_image, "TRUE") == 0)
-        bool_use_image = TRUE;
-    
-    if (strcasecmp (s_antialias, "TRUE") == 0)
-        use_antialias = TRUE;
-    
-    if (strcasecmp (s_scrollbar, "TRUE") == 0)
-        scroll = TRUE;       
-        
-    if (strcasecmp (s_grab_focus, "TRUE") == 0)
-        bool_grab_focus = TRUE;       
-    
-    TRANS_LEVEL = (transparency)/100; 
-    
     /* Pull out long options for GTK+. */
     for (i=j=1;i<argc;i++) 
     {
@@ -513,7 +480,7 @@ int main (int argc, char **argv)
         gboolean bail = FALSE;
         switch (opt) {
             case 'B':
-            	bool_use_image = TRUE;
+            	image_set_clo = TRUE;
                 strlcpy (s_image, optarg, sizeof (s_image));
                 break;
             case 'b':
@@ -524,31 +491,10 @@ int main (int argc, char **argv)
                 break;
             case 'C':
                 if ((wizard (argc, argv)) == 1) { clean_up(); }
-                
-                if (strcmp (s_use_image, "TRUE") == 0)
-   				    bool_use_image = TRUE;
-                else
-                	bool_use_image = FALSE;
-    
-			    if (strcmp (s_antialias, "TRUE") == 0)
-   				    use_antialias = TRUE;
-                else
-                	use_antialias = FALSE;
-    
-			    if (strcmp (s_scrollbar, "TRUE") == 0)
-        			scroll = TRUE;       
-                else
-                	scroll = FALSE;   
-                
-                if (strcmp (s_grab_focus, "TRUE") == 0)
-        			bool_grab_focus = TRUE;       
-                else
-                	bool_grab_focus = FALSE;   
-                
-			    TRANS_LEVEL = (transparency)/100; 
                 break;
             case 's':
-                scroll = TRUE;
+                scroll_set_clo = TRUE;
+                
                 break;
             case 'c':
                 command = optarg;
@@ -564,7 +510,7 @@ int main (int argc, char **argv)
                 working_directory = optarg;
                 break;
             case 'a':
-                use_antialias = TRUE;
+                antialias_set_clo = TRUE;
                 break;  
             case 'h':
                 g_print(usage, argv[0]);
@@ -592,6 +538,49 @@ int main (int argc, char **argv)
         if (bail) 
             break;
     }
+    
+    home_dir = getenv ("HOME");
+    strlcpy (config_file, home_dir, sizeof(config_file));
+    strlcat (config_file, "/.tilda/config", sizeof(config_file));
+
+    /* Call the wizard if we cannot read the config file.
+     * This fixes a crash that happened if there was not a config file, and
+     * tilda was not called with "-C" */
+    if ((fp = fopen(config_file, "r")) == NULL)
+    {
+        printf("Unable to open config file, showing the wizard\n");
+        if ((wizard (argc, argv)) == 1) { clean_up(); }
+    }
+    else
+        fclose (fp);
+
+    if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
+    {
+        puts("There was an error in the config file, terminating");
+        exit(1);
+    }
+    
+    if (strcmp (s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
+   		bool_use_image = TRUE;
+    else
+      	bool_use_image = FALSE;
+    
+    if (strcmp (s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
+   	    use_antialias = TRUE;
+    else
+       	use_antialias = FALSE;
+    
+	if (strcmp (s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
+    	scroll = TRUE;       
+    else
+       	scroll = FALSE;   
+                
+    if (strcmp (s_grab_focus, "TRUE") == 0)
+    	bool_grab_focus = TRUE;       
+    else
+       	bool_grab_focus = FALSE; 
+    
+    TRANS_LEVEL = (transparency)/100; 
     
      /* set the instance number and place a env in the array of envs 
       * to be set when the tilda terminal is created */
