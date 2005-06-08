@@ -49,9 +49,8 @@ char *filename_global;      /* stores the name of the socket used for accessing 
 int  filename_global_size;  /* stores the size of filename_global */
 int  instance;              /* stores this instance's number */
 int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
-int pos_x = 0;              /* x position of tilda on screen */
-int pos_y = 0;              /* y position of tilda on screen */
-gboolean bool_grab_focus;
+
+//gboolean bool_grab_focus;
 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
@@ -65,226 +64,12 @@ void clean_up ()
     exit (0);
 }
 
-void start_process (char process[]) 
-{
-    /* This really should be rewritten to use fork()/exec()
-       and it should ideally have a way of communicating with
-       "process" in preferably a socket or something.
-       As far as I can tell we only ever use it to start
-       xbindkeys - should consider either talkin to the developers
-       of xbindkeys and find a way to talk to it or simply not
-       start xbindkeys on our own.
-
-       Uses mkstemp() instead of tmpname(), tmpname() is
-       insecure and open to race conditions and security
-       problems - mkstemp() isn't quite as standard as it should
-       be, but at least available on linux systems
-    */
-   
-    FILE *tmpfile;
-    char tmpname[] = "/tmp/tildaXXXXXX";
-    int  tmpdesc;
-    char tmp_string[256];
-    char command[128];
-
-    /* Get a filedescriptor for a temporary file */
-    tmpdesc = mkstemp (tmpname);
-   
-    if (tmpdesc != -1) 
-    {
-    /* Managed to get a file ?
-       Associate a FILE* with the descriptor */
-        if ((tmpfile = fdopen (tmpdesc, "w+")) == NULL) 
-        {
-            /* Failed to associate FILE* */
-            perror ("fdopen tmpdesc");
-            exit (1);
-        }
-    }
-    else 
-    {
-        /* Failed to create a temporary file */
-        perror ("mkstemp(tmpname)");
-        exit (1);
-    }
-    
-    strlcpy (command, "ps aux > ", sizeof(command));
-    strlcat (command, tmpname, sizeof(command));
-
-    system (command);
-
-    while (!feof (tmpfile)) 
-    {
-        fgets (tmp_string, sizeof(tmp_string), tmpfile);
-
-        if (strstr (tmp_string, process) != NULL) 
-        {   
-            goto LABEL;
-        }
-    }
-
-    system (process);
-
-LABEL:
-
-    fclose (tmpfile);
-    remove (tmpname);
-}
-
 void fix_size_settings ()
 {
     gtk_window_resize ((GtkWindow *) window, max_width, max_height);
     gtk_window_get_size ((GtkWindow *) window, &max_width, &max_height);
     gtk_window_resize ((GtkWindow *) window, min_width, min_height);
     gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
-}
-
-/* Pulls "down" a running tilda instance */
-void pull_down (char *instance)
-{
-    char buf[BUFSIZ];
-    FILE *fp, *ptr;
-    char filename[128], *tmp;
-    int  tmp_size;
-    
-    /* generate socket name into 'filename' */
-    strlcpy (filename, "ls /tmp/tilda.", sizeof(filename));
-    strlcat (filename, user, sizeof(filename));
-    
-    if (instance == NULL)
-    {
-        instance = (char *) malloc (sizeof (char));
-        strlcpy (instance, "0", sizeof(char));
-    }
-    
-    tmp_size = (sizeof(char) * strlen (filename)) + 1;
-    tmp = (char *) malloc (tmp_size);
-    strlcpy (tmp, filename, tmp_size);
-    sprintf (filename, "%s.*.%s", tmp, instance); 
-    strlcat (filename, display, sizeof(filename));
-    /* finished generating socket name */    
-
-    if ((ptr = popen (filename, "r")) != NULL) /* open 'filename' into ptr for reading */
-    {
-        if (fgets (buf, BUFSIZ, ptr) != NULL)  /* get the name of this instance's socket */
-        {
-            buf[strlen (buf)-1] = '\0';
-            
-            #ifdef DEBUG
-            printf ("%s\n", buf);
-            #endif
-
-            if ((fp = fopen (buf, "w")) == NULL) /* open this instance's socket */
-            {
-                perror ("fopen");
-                exit (1);
-            }
-            
-            /* write the 'pulldown' command into the socket.
-             * NOTE: the value of the command doesn't matter at all */
-            fputs ("shits", fp);
-            
-            fclose (fp);
-        }
-        fclose (ptr);
-    }
-    
-    exit (0); /* pull the terminal down */
-}
-
-void *wait_for_signal ()
-{
-    FILE *fp = NULL;   
-    char filename[128], *tmp;
-    int  tmp_size;
-    char c[10];
-    int  flag;
-    gint w, h;
-    
-    strlcpy (filename, "/tmp/tilda.", sizeof(filename));
-    strlcat (filename, user, sizeof(filename));
-
-    tmp_size = (sizeof(char) * strlen (filename)) + 1;
-    tmp = (char *) malloc (tmp_size);
-    strlcpy (tmp, filename, tmp_size);
-    sprintf (filename, "%s.%d.%d", tmp, getpid(), instance);
-    free (tmp);
-    
-    strlcat (filename, display, sizeof(filename));
-    
-    filename_global_size = (sizeof(char) * strlen (filename)) + 1;
-    filename_global = (char *) malloc (filename_global_size);
-    strlcpy (filename_global, filename, filename_global_size);
-
-    umask (0);
-    mknod (filename, S_IFIFO|0666, 0);
-
-    signal (SIGINT, clean_up);
-    signal (SIGQUIT, clean_up);
-    signal (SIGABRT, clean_up);
-    signal (SIGKILL, clean_up);
-    signal (SIGABRT, clean_up);
-    signal (SIGTERM, clean_up);
-    
-    flag = 0;
-  
-    for (;;)
-    {
-        if (flag)
-        {
-            fp = fopen (filename, "r");
-
-            if (fp != NULL)
-                fgets (c, 10, fp);
-            else
-            {
-                printf("Failed to open: %s\n", filename);
-                exit(1);
-            }
-        }
-    
-        gtk_window_get_size ((GtkWindow *) window, &w, &h);
-        /* gtk_window_get_position ((GtkWindow *) window, &x, &y); */
-
-        if (h == min_height)
-        {  
-            resize ((GtkWidget *) window, max_width, max_height);
-
-            if (gtk_window_is_active ((GtkWindow *) window) == FALSE && bool_grab_focus == TRUE)
-                gtk_window_present ((GtkWindow *) window);
-            else 
-            	gtk_widget_show ((GtkWidget *) window);
-                
-            gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
-
-            if ((strcasecmp (s_pinned, "true")) == 0)
-                gtk_window_stick (GTK_WINDOW (window));
-
-            if ((strcasecmp (s_above, "true")) == 0)
-                gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
-        
-        	
-        }
-        else if (h == max_height)
-        {   
-            resize ((GtkWidget *) window, min_width, min_height);
-            /* gtk_window_move((GtkWindow *) window, 0, -min_height); */
-        
-            gtk_widget_hide ((GtkWidget *) window);     
-        }
-        
-        if (flag)
-        {
-            fclose (fp);
-            fp = NULL;
-        }
-        else
-            flag = 1; 
-
-        sleep (.1);
-    }
-    
-    return NULL;
 }
 
 void getinstance ()
@@ -487,7 +272,7 @@ int main (int argc, char **argv)
                 strlcpy (s_background, optarg, sizeof (s_background));
                 break;  
             case 'T':
-                pull_down (optarg);
+                //pull_down (optarg);
                 break;
             case 'C':
                 if ((wizard (argc, argv)) == 1) { clean_up(); }
@@ -575,10 +360,10 @@ int main (int argc, char **argv)
     else
        	scroll = FALSE;   
                 
-    if (strcmp (s_grab_focus, "TRUE") == 0)
+    /*if (strcmp (s_grab_focus, "TRUE") == 0)
     	bool_grab_focus = TRUE;       
     else
-       	bool_grab_focus = FALSE; 
+       	bool_grab_focus = FALSE; */
     
     TRANS_LEVEL = (transparency)/100; 
     
@@ -778,9 +563,6 @@ int main (int argc, char **argv)
     else
         gtk_widget_show_all (window);
 
-    if ((strcasecmp (s_xbindkeys, "true")) == 0)
-        start_process ("xbindkeys");
-    
     if ((strcasecmp (s_above, "true")) == 0)
         gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
     
@@ -799,7 +581,7 @@ int main (int argc, char **argv)
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
     
-    if ((tid = pthread_create (&child, NULL, &wait_for_signal, NULL)) != 0)
+    if ((tid = pthread_create (&child, NULL, &wait_for_signal, (void *) window)) != 0)
         perror ("Fuck that thread!!!");
     
     gtk_main();

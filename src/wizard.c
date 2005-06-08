@@ -29,7 +29,7 @@
 
 GtkWidget *window;
 int exit_status=0;
-char wm[20] = "xbindkeys";
+
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
 GtkWidget *entry_scrollback, *entry_opacity, *button_image, *image_chooser;
 GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focus;
@@ -86,14 +86,14 @@ GtkWidget* general ()
     gtk_table_attach (GTK_TABLE (table), check_above, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    //gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
-    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), entry_scrollback, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
     
-    gtk_widget_show (check_grab_focus);
+    //gtk_widget_show (check_grab_focus);
     gtk_widget_show (check_pinned);
     gtk_widget_show (check_above);
     gtk_widget_show (check_notaskbar);
@@ -263,100 +263,24 @@ GtkWidget* font ()
     return table;
 }
 
-void selected (gpointer window_manager)
-{
-    strlcpy (wm, window_manager, sizeof(wm));
-}
 
 GtkWidget* keybindings ()
 {
     GtkWidget *table;
-    GtkWidget *label_wm, *label_key;
-    GtkWidget *menu, *option_wm;
-    GtkWidget **menuitem;
-    gpointer items[] = {"XBindKeys"};//{"KDE 3.x", "Fluxbox", "Window Maker", "Other"};
-
-    FILE *fp;
-    char *home_dir;
-    char config_file[80];
-    int i, flag;
-    char tmp[51], key[255], tmp_string[255];
-    
-    home_dir = getenv ("HOME");
-    
-    //read in keybinding settings already set
-    flag=0;
-    strlcpy (config_file, home_dir, sizeof(config_file));
-    strlcat (config_file, "/.xbindkeysrc", sizeof(config_file));
-    if ((fp = fopen (config_file, "r")) == NULL)
-    {
-        strlcpy (key, "", sizeof(key));
-    }
-    else
-    {
-        fgets (tmp_string, 254, fp);
-        do
-        {
-            if (strstr (tmp_string, "tilda -T") != NULL)
-            {
-                fgets (tmp, 50, fp);    
-                tmp[strlen (tmp)-1] = '\0';
-                    
-                if (flag == 0)
-                {
-                    strlcpy (key, tmp, sizeof(key));
-                    flag++;
-                }
-                else
-                    sprintf (key, "%s,%s", key, tmp);
-            }
-            fgets (tmp_string, 254, fp);
-        } while (!feof (fp));
-        
-        fclose (fp);
-    }
-    
+    GtkWidget *label_key;
+   
     table = gtk_table_new (2, 3, FALSE);
-    
-    menuitem = (GtkWidget **) malloc (sizeof (GtkWidget) * 4);   
-    option_wm = gtk_option_menu_new ();
-    menu = gtk_menu_new ();
-    gtk_option_menu_set_menu (GTK_OPTION_MENU (option_wm), menu);
-    
-    for (i=0;i<(sizeof(items)/sizeof(int));i++)
-    {
-        menuitem[i] = gtk_radio_menu_item_new_with_label (NULL, items[i]);
-        gtk_menu_append (GTK_MENU (menu), menuitem[i]);
-        gtk_widget_show (menuitem[i]);
-        gtk_signal_connect_object (GTK_OBJECT (menuitem[i]), "activate", GTK_SIGNAL_FUNC (selected), (gpointer) items[i]);
-    }
-    
-    gtk_option_menu_set_history (GTK_OPTION_MENU (option_wm), 0);
-    
+
     entry_key = gtk_entry_new ();
-    gtk_entry_set_text (GTK_ENTRY (entry_key), key);
+    gtk_entry_set_text (GTK_ENTRY (entry_key), s_key);
     
-    label_wm = gtk_label_new("Key Bindings For:");
     label_key = gtk_label_new("Key Bindings");
-    
-    check_xbindkeys = gtk_check_button_new_with_label ("Start xbindkeys on load");
-    
-    if (strcasecmp (s_xbindkeys, "TRUE") == 0)
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_xbindkeys), TRUE);
-    
-    gtk_table_attach (GTK_TABLE (table), label_wm, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), option_wm, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
-    
+
     gtk_table_attach (GTK_TABLE (table), label_key, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), entry_key, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 3, 3);  
     
-    gtk_table_attach (GTK_TABLE (table), check_xbindkeys, 0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    
-    gtk_widget_show (label_wm);
-    gtk_widget_show (option_wm);
     gtk_widget_show (label_key);    
     gtk_widget_show (entry_key);
-    gtk_widget_show (check_xbindkeys);
     
     return table;
 }
@@ -365,9 +289,8 @@ void apply_settings ()
 {
     FILE *fp;
     char *home_dir, *tmp_str, config_file[80];
-    gchar key[20];
-
-    strlcpy (key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(key));
+    
+    strlcpy (s_key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(s_key));
     strlcpy (s_font, gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)), sizeof (s_font));
     
     if (NULL != (tmp_str = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser))))
@@ -378,7 +301,7 @@ void apply_settings ()
     lines = atoi (gtk_entry_get_text (GTK_ENTRY (entry_scrollback)));
     transparency = atoi (gtk_entry_get_text (GTK_ENTRY (entry_opacity)));
     x_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos)));
-    y_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos)));
+    y_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos))); 
         
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
@@ -387,11 +310,6 @@ void apply_settings ()
     mkdir (config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
     
     strlcat (config_file, "config", sizeof(config_file));
-    
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_xbindkeys)) == TRUE)
-        strlcpy (s_xbindkeys, "TRUE", sizeof(s_xbindkeys));
-    else
-        strlcpy (s_xbindkeys, "FALSE", sizeof(s_xbindkeys));
         
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
         strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
@@ -447,7 +365,6 @@ void apply_settings ()
         fprintf (fp, "notaskbar : %s\n", s_notaskbar);
         fprintf (fp, "above : %s\n", s_above);
         fprintf (fp, "pinned : %s\n", s_pinned);
-        fprintf (fp, "xbindkeys : %s\n", s_xbindkeys);
         fprintf (fp, "image : %s\n", s_image);
         fprintf (fp, "background : %s\n", s_background);
         fprintf (fp, "font : %s\n", s_font);
@@ -459,13 +376,11 @@ void apply_settings ()
         fprintf (fp, "scrollback : %ld\n", lines);
         fprintf (fp, "use_image : %s\n", s_use_image);
         fprintf (fp, "grab_focus : %s\n", s_grab_focus);
+        fprintf (fp, "key : %s\n", s_key);
         
         fclose (fp);
     }
-
-    write_key_bindings (wm, key);  
 }
-
 
 gint ok ()
 {
@@ -524,7 +439,6 @@ int wizard (int argc, char **argv)
     //read in height width settings already set
     if((fp = fopen(config_file, "r")) == NULL) 
     {
-        strlcpy (s_xbindkeys, "TRUE", sizeof(s_xbindkeys));
         strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
         strlcpy (s_pinned, "TRUE", sizeof(s_pinned));
         strlcpy (s_above, "TRUE", sizeof(s_above));

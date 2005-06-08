@@ -47,12 +47,14 @@ extern int write_key_bindings (char wm[], char key[]);
 extern void popup (char *message, char *b1_message, char *b2_message, void (*func1)(),void (*func2)());
 extern void redo_wizard (GtkWidget *widget, gpointer data);
 extern void add_anyway (GtkWidget *widget, gpointer data);
+//extern void *wait_for_signal_2 ();
 
 gint max_width, max_height, min_width, min_height;
 long lines = DEFAULT_LINES;
-gchar s_xbindkeys[6], s_above[6], s_notaskbar[6], s_pinned[6];
+gchar s_above[6], s_notaskbar[6], s_pinned[6];
 gchar s_image[100] = "none", s_background[6] = "white", s_font[64] = "monospace 9";
 gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE", s_grab_focus[6] ="TRUE";
+gchar s_key[50] = "None+F1";
 int transparency=0, x_pos=0, y_pos=0;
 
 const CONFIG tilda_config[] = {
@@ -63,7 +65,6 @@ const CONFIG tilda_config[] = {
         { CF_STRING,    "notaskbar",    s_notaskbar,    sizeof(s_notaskbar),    NULL, 0, NULL },
         { CF_STRING,    "above",        s_above,        sizeof(s_above),        NULL, 0, NULL },
         { CF_STRING,    "pinned",       s_pinned,       sizeof(s_pinned),       NULL, 0, NULL },
-        { CF_STRING,    "xbindkeys",    s_xbindkeys,    sizeof(s_xbindkeys),    NULL, 0, NULL },
         { CF_INT,       "scrollback",   &lines,         0,                      NULL, 0, NULL },
         { CF_INT,       "transparency", &transparency,  0,                      NULL, 0, NULL },
         { CF_INT,       "x_pos",        &x_pos,         0,                      NULL, 0, NULL },
@@ -74,10 +75,11 @@ const CONFIG tilda_config[] = {
         { CF_STRING,    "antialias",    s_antialias,    sizeof(s_antialias),    NULL, 0, NULL },
         { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },               
         { CF_STRING,    "use_image",    s_use_image,    sizeof(s_use_image),    NULL, 0, NULL },
-        { CF_STRING,    "grab_focus", s_grab_focus,   sizeof(s_grab_focus),    NULL, 0, NULL }
+        { CF_STRING,    "grab_focus",   s_grab_focus,   sizeof(s_grab_focus),   NULL, 0, NULL },
+        { CF_STRING,    "key",   		s_key,          sizeof(s_key),          NULL, 0, NULL }
 };
 
 #include "wizard.c"
-#include "key_bindings.c"
+#include "key_grabber.c"
 
 #endif
