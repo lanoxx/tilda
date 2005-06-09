@@ -53,7 +53,7 @@ int  instance;              /* stores this instance's number */
 gint max_width, max_height, min_width, min_height;
 long lines = DEFAULT_LINES;
 gchar s_above[6], s_notaskbar[6], s_pinned[6];
-gchar s_image[100] = "none", s_background[6] = "white", s_font[64] = "monospace 9";
+gchar s_image[100] = "none", s_background[6] = "white", s_font[64] = "monospace 9", s_down[6] = "TRUE";
 gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE", s_grab_focus[6] ="TRUE";
 gchar s_key[50] = "None+F1";
 int transparency=0, x_pos=0, y_pos=0;
@@ -77,7 +77,8 @@ const CONFIG tilda_config[] = {
         { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },               
         { CF_STRING,    "use_image",    s_use_image,    sizeof(s_use_image),    NULL, 0, NULL },
         { CF_STRING,    "grab_focus",   s_grab_focus,   sizeof(s_grab_focus),   NULL, 0, NULL },
-        { CF_STRING,    "key",   		s_key,          sizeof(s_key),          NULL, 0, NULL }
+        { CF_STRING,    "key",   		s_key,          sizeof(s_key),          NULL, 0, NULL },
+        { CF_STRING,    "down",   		s_down,      	sizeof(s_down),		    NULL, 0, NULL }
 };
 
 #include "wizard.c"

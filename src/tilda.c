@@ -157,11 +157,10 @@ void cleantmp ()
 
 int main (int argc, char **argv)
 {
-    pthread_t child; 
-    int  tid;
     char *home_dir;
     FILE *fp;
     GtkWidget *hbox, *scrollbar, *widget;
+    GError *error = NULL;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
     float tmp_val;
@@ -378,6 +377,9 @@ int main (int argc, char **argv)
     env_add[2] = (char *) malloc (env_add2_size);
     strlcpy (env_add[2], env_var, env_add2_size);
 
+	g_thread_init(NULL);
+  	gdk_threads_init();
+    
     gtk_init (&argc, &argv);
 
     /* Create a window to hold the scrolling shell, and hook its
@@ -554,25 +556,11 @@ int main (int argc, char **argv)
     fix_size_settings ();
     gtk_window_resize ((GtkWindow *) window, min_width, min_height);
     
-    if (!scroll)
-    {
-        gtk_widget_show ((GtkWidget *) widget);
-        gtk_widget_show ((GtkWidget *) hbox);
-        gtk_window_present (GTK_WINDOW (window));
-    }
-    else
-        gtk_widget_show_all (window);
-
-    if ((strcasecmp (s_above, "true")) == 0)
-        gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+    gtk_widget_show ((GtkWidget *) widget);
+    gtk_widget_show ((GtkWidget *) hbox);
     
-    if ((strcasecmp (s_pinned, "true")) == 0)
-        gtk_window_stick (GTK_WINDOW (window));
-    
-    if ((strcasecmp (s_notaskbar, "true")) == 0)
-        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
-    
-    gtk_window_move ((GtkWindow *) window, pos_x, pos_y);
+    if (scroll)
+		gtk_widget_show ((GtkWidget *) scrollbar);
     
     signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);
@@ -581,13 +569,12 @@ int main (int argc, char **argv)
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
     
-    if ((tid = pthread_create (&child, NULL, &wait_for_signal, (void *) window)) != 0)
+    if (!g_thread_create ((GThreadFunc) wait_for_signal, (GtkWidget *) window, FALSE, &error))
         perror ("Fuck that thread!!!");
     
+    gdk_threads_enter ();
     gtk_main();
-
-    pthread_cancel (child);
-    pthread_join (child, NULL);
+	gdk_threads_leave ();
     
     printf ("remove %s\n", lock_file);
     remove (lock_file);
