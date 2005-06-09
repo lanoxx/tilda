@@ -45,9 +45,7 @@
 GtkWidget *window;
 char config_file[80];
 char *user, *display;
-char *filename_global;      /* stores the name of the socket used for accessing this instance */
-int  filename_global_size;  /* stores the size of filename_global */
-int  instance;              /* stores this instance's number */
+char lock_file[80];      /* stores the name of the socket used for accessing this instance */
 int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
 
 //gboolean bool_grab_focus;
@@ -55,11 +53,7 @@ int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
 {
-    if (filename_global != NULL) 
-    {
-        remove (filename_global);
-        free (filename_global);
-    }
+    remove (lock_file);
     
     exit (0);
 }
@@ -74,31 +68,36 @@ void fix_size_settings ()
 
 void getinstance ()
 {
-    char buf[BUFSIZ];
-    char filename[BUFSIZ], tmp[100];
-    FILE *ptr;
+    char tmp[80];
+	char *home_dir;
     
     instance = 0;
     
+    home_dir = getenv ("HOME");
+    strlcpy (lock_file, home_dir, sizeof(lock_file));
+    strlcat (lock_file, "/.tilda", sizeof(lock_file));
+    strlcat (lock_file, "/locks/", sizeof(lock_file));
+    
+    mkdir (lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+ 
+    strlcat (lock_file, "lock", sizeof(lock_file));
+    strlcpy (tmp, lock_file, sizeof (tmp));
+    sprintf (tmp, "%s_%i", tmp, instance);
+
     for (;;)
     {
-        strlcpy (tmp, "ls /tmp/tilda.", sizeof(tmp));
-        strlcat (tmp, user, sizeof(tmp));
-        sprintf (filename, "%s.*.%d", tmp, instance);
-        strlcat (filename, display, sizeof(filename));
-        
-        if ((ptr = popen (filename, "r")) != NULL)
+		if (access (tmp, R_OK) == 0)
         {
-            if (fgets (buf, BUFSIZ, ptr) != NULL)
-                instance++;
-            else
-            {
-                pclose (ptr);
-                break;
-            }
-            pclose (ptr);
-        } 
-    }
+            instance++;
+            strlcpy (tmp, lock_file, sizeof (tmp));
+        	sprintf (tmp, "%s_%i", tmp, instance); 
+        }
+        else
+        	break;
+	}
+
+    strlcpy (lock_file, tmp, sizeof (config_file));
+    creat (lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }   
 
 void cleantmp ()
@@ -185,7 +184,7 @@ int main (int argc, char **argv)
     GdkColor fore, back, tint, highlight, cursor;
     const char *usage = "Usage: %s "
                 "[-B image] "
-                "[-T N] "
+                "[-T] "
                 "[-C] "
                 "[-b [white][black] ] "
                 "[-f font] "
@@ -199,7 +198,7 @@ int main (int argc, char **argv)
                 "[-y position] "       
                 "[-l lines]\n\n"
                 "-B image : set background image\n"
-                "-T N : pull down terminal N if already running\n"
+                "-T : pull down terminal\n"
                 "-C : bring up tilda configuration wizard\n"
                 "-b [white][black] : set the background color either white or black\n"
                 "-f font : set the font to the following string, ie \"monospace 11\"\n"
@@ -259,8 +258,15 @@ int main (int argc, char **argv)
     g_assert (i < (g_list_length (args) + 2));
 
 
+	/* set the instance number and place a env in the array of envs 
+    * to be set when the tilda terminal is created */
+    //cleantmp ();
+    getinstance ();
+    i=instance;
+    sprintf (env_var, "TILDA_NUM=%d", instance);
+
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "x:y:B:CDT:2ab:c:df:ghkn:st:wl:-")) != -1) 
+    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:wl:-")) != -1) 
      {
         gboolean bail = FALSE;
         switch (opt) {
@@ -272,7 +278,7 @@ int main (int argc, char **argv)
                 strlcpy (s_background, optarg, sizeof (s_background));
                 break;  
             case 'T':
-                //pull_down (optarg);
+                
                 break;
             case 'C':
                 if ((wizard (argc, argv)) == 1) { clean_up(); }
@@ -322,11 +328,12 @@ int main (int argc, char **argv)
         }
         if (bail) 
             break;
-    }
+    } 
     
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
+	sprintf (config_file, "%s_%i", config_file, instance);
 
     /* Call the wizard if we cannot read the config file.
      * This fixes a crash that happened if there was not a config file, and
@@ -366,13 +373,6 @@ int main (int argc, char **argv)
        	bool_grab_focus = FALSE; */
     
     TRANS_LEVEL = (transparency)/100; 
-    
-     /* set the instance number and place a env in the array of envs 
-      * to be set when the tilda terminal is created */
-    cleantmp ();
-    getinstance ();
-    i=instance;
-    sprintf (env_var, "TILDA_NUM=%d", instance);
 
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
@@ -589,9 +589,8 @@ int main (int argc, char **argv)
     pthread_cancel (child);
     pthread_join (child, NULL);
     
-    remove (filename_global);
-    free (filename_global);
+    printf ("remove %s\n", lock_file);
+    remove (lock_file);
 
     return 0;
 }
-

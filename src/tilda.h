@@ -47,7 +47,8 @@ extern int write_key_bindings (char wm[], char key[]);
 extern void popup (char *message, char *b1_message, char *b2_message, void (*func1)(),void (*func2)());
 extern void redo_wizard (GtkWidget *widget, gpointer data);
 extern void add_anyway (GtkWidget *widget, gpointer data);
-//extern void *wait_for_signal_2 ();
+
+int  instance;              /* stores this instance's number */
 
 gint max_width, max_height, min_width, min_height;
 long lines = DEFAULT_LINES;

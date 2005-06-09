@@ -308,8 +308,9 @@ void apply_settings ()
     strlcat (config_file, "/.tilda/", sizeof(config_file));
     
     mkdir (config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
-    
+ 
     strlcat (config_file, "config", sizeof(config_file));
+    sprintf (config_file, "%s_%i", config_file, instance);
         
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
         strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
@@ -419,6 +420,7 @@ int wizard (int argc, char **argv)
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
     
+    char title[20];
     char *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
     GtkWidget* (*contents[4])();
     
@@ -435,6 +437,7 @@ int wizard (int argc, char **argv)
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
+    sprintf (config_file, "%s_%i", config_file, instance);
 
     //read in height width settings already set
     if((fp = fopen(config_file, "r")) == NULL) 
@@ -465,6 +468,10 @@ int wizard (int argc, char **argv)
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_widget_show (window);
     
+    strlcpy (title, "Tilda", sizeof (title));
+    sprintf (title, "%s %i Config", title, instance);
+    gtk_window_set_title (GTK_WINDOW (window), title);
+          
     g_signal_connect (G_OBJECT (window), "delete_event",
                   G_CALLBACK (exit_app), NULL);
     
