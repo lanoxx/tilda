@@ -50,6 +50,36 @@ int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 
 
 //gboolean bool_grab_focus;
 
+void config_and_update (GtkWidget *widget, gpointer data)
+{
+
+}
+
+gboolean view_onPopupMenu (GtkWidget *widget, GdkEventButton *event)
+{
+	GtkWidget *menu, *item_config, *item_exit;
+    
+	if (event->button == 3)
+	{
+    	menu = gtk_menu_new();
+
+    	item_config = gtk_menu_item_new_with_label("Configure");
+    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_config);
+
+		item_exit = gtk_menu_item_new_with_label("Exit");
+    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_exit);
+
+		gtk_menu_popup((GtkMenu *)(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
+		
+        g_signal_connect_swapped (G_OBJECT (item_config), "activate", GTK_SIGNAL_FUNC(config_and_update), NULL);
+        g_signal_connect_swapped (G_OBJECT (item_exit), "activate", GTK_SIGNAL_FUNC(destroy_and_quit), NULL);
+                              
+    	gtk_widget_show_all(menu);
+   	}          
+   
+    return TRUE;
+}
+
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
 {
@@ -176,7 +206,7 @@ int main (int argc, char **argv)
     const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
-    char **argv2;
+    //char **argv2;
     int  opt;
     int  i, j;
     GList *args = NULL;
@@ -247,14 +277,14 @@ int main (int argc, char **argv)
         }
     }
     
-    argv2 = g_malloc0 (sizeof(char*) * (g_list_length (args) + 2));
+    /*argv2 = g_malloc0 (sizeof(char*) * (g_list_length (args) + 2));
     argv2[0] = argv[0];
     
     for (i=1;i<=g_list_length(args);i++) 
     	argv2[i] = (char*) g_list_nth (args, i - 1);
     
     argv2[i] = NULL;
-    g_assert (i < (g_list_length (args) + 2));
+    g_assert (i < (g_list_length (args) + 2));*/
 
 
 	/* set the instance number and place a env in the array of envs 
@@ -458,7 +488,13 @@ int main (int argc, char **argv)
                       G_CALLBACK(increase_font_size), window);
     g_signal_connect (G_OBJECT(widget), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), window);
-
+	
+    /* Make connection for Popup-menu */
+    g_signal_connect(G_OBJECT(widget),
+                     "button_press_event",
+                     G_CALLBACK(view_onPopupMenu ),
+                     NULL);
+                     
     /* Create the scrollbar for the widget. */
     scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(widget))->adjustment);
     gtk_box_pack_start (GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);
