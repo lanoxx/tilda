@@ -50,36 +50,6 @@ int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 
 
 //gboolean bool_grab_focus;
 
-void config_and_update (GtkWidget *widget, gpointer data)
-{
-
-}
-
-gboolean view_onPopupMenu (GtkWidget *widget, GdkEventButton *event)
-{
-	GtkWidget *menu, *item_config, *item_exit;
-    
-	if (event->button == 3)
-	{
-    	menu = gtk_menu_new();
-
-    	item_config = gtk_menu_item_new_with_label("Configure");
-    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_config);
-
-		item_exit = gtk_menu_item_new_with_label("Exit");
-    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_exit);
-
-		gtk_menu_popup((GtkMenu *)(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
-		
-        g_signal_connect_swapped (G_OBJECT (item_config), "activate", GTK_SIGNAL_FUNC(config_and_update), NULL);
-        g_signal_connect_swapped (G_OBJECT (item_exit), "activate", GTK_SIGNAL_FUNC(destroy_and_quit), NULL);
-                              
-    	gtk_widget_show_all(menu);
-   	}          
-   
-    return TRUE;
-}
-
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up () 
 {
@@ -488,13 +458,7 @@ int main (int argc, char **argv)
                       G_CALLBACK(increase_font_size), window);
     g_signal_connect (G_OBJECT(widget), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), window);
-	
-    /* Make connection for Popup-menu */
-    g_signal_connect(G_OBJECT(widget),
-                     "button_press_event",
-                     G_CALLBACK(view_onPopupMenu ),
-                     NULL);
-                     
+
     /* Create the scrollbar for the widget. */
     scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(widget))->adjustment);
     gtk_box_pack_start (GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);

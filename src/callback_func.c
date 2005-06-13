@@ -89,14 +89,36 @@ static void status_line_changed (GtkWidget *widget, gpointer data)
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
 }
 
+void config_and_update (GtkWidget *widget, gpointer data)
+{
+
+}
+
 static int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
     VteTerminal *terminal;
     char *match;
     int tag;
     gint xpad, ypad;
+    GtkWidget *menu, *item_config, *item_exit;
+    
     switch (event->button) {
     case 3:
+    	menu = gtk_menu_new();
+
+    	item_config = gtk_menu_item_new_with_label("Configure");
+    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_config);
+
+		item_exit = gtk_menu_item_new_with_label("Exit");
+    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_exit);
+
+		gtk_menu_popup((GtkMenu *)(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
+		
+        g_signal_connect_swapped (G_OBJECT (item_config), "activate", GTK_SIGNAL_FUNC(config_and_update), NULL);
+        g_signal_connect_swapped (G_OBJECT (item_exit), "activate", GTK_SIGNAL_FUNC(destroy_and_quit), NULL);
+                              
+    	gtk_widget_show_all(menu);
+        
         terminal = VTE_TERMINAL(widget);
         vte_terminal_get_padding (terminal, &xpad, &ypad);
         match = vte_terminal_match_check (terminal,
