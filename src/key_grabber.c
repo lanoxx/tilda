@@ -173,7 +173,7 @@ void *wait_for_signal ()
                 
             	if (key == grabbed_key) 
                 {
-            		pull (window);
+            		pull ();
                 	break;
             	}
           	default:

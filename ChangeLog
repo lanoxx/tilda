@@ -1,3 +1,11 @@
+New in Tilda-0.7
+New right click menu -- can config tilda while its running, everything but the key bind that is.
+GOT RID OF XBINDKEYS! Tilda now listens for each key press on its own. See the Readme to setup
+a key for the new way of doing things.
+Sorry but no longer can you do 'tilda -T $NUM' or any form.
+I may add it back later with XTestFakeKey if people really want it so just let me know.
+Lots more bug fixes as well of course :).
+
 New in Tilda-0.06
 New Config Wizard. Still alittle ugly and doesn't auto update, but I am
 saving that for when you can have each tilda instance configured seperatly.

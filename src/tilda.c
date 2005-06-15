@@ -387,6 +387,9 @@ int main (int argc, char **argv)
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(widget), lines);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);        
     
+    /* Set everything up and display the widgets. 
+     *  Sending TRUE to let it know we are in main() 
+     */
     load_tilda (TRUE);
 
     /* Match "abcdefg". */

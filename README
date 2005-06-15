@@ -13,18 +13,17 @@ make install
 3) Run tilda -C to bring up the configuration wizard, even if you had tilda
 installed before, ~/.tilda/config changes all the time.
 
-4) tilda runs tilda later
+4) The command 'tilda' runs tilda later
 
 5) Default key F[$instance+1] so if this is first tilda you run, instance=0, press
-F1 to bring tilda up and down.
+F1 to bring tilda up and down. Example key bindings:
+
+	None+grave -- ~
+    None+F1 -- can be any key instead of F1 as well
+    Control+x -- can be any key instead of x as well
+    Alt+x -- can be any key instead of x as well
+    
 
 6) tilda -h to see the rest of the command line options. If you want a transparent bg
 and you want a white font do the follow "tilda -t -b black" this will set the
 forground color to white and the terminal transparent.
-
-
-ADDED ENV VAR TILDA_NUM SO YOU CAN DO:
-
-tilda -T $TILDA_NUM
-
-inside tilda, maybe set alias exit to that ;) thanks David Escott
