@@ -7,12 +7,12 @@ void config_and_update (GtkWidget *widget, gpointer data);
 void menu_quit (GtkWidget *widget, gpointer data);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_Copy.", NULL, copy, 0, "<StockItem>", GTK_STOCK_COPY},
-    { "/_Paste...", NULL, paste, 0, "<StockItem>", GTK_STOCK_PASTE},
+    { "/_Copy", NULL, copy, 0, "<StockItem>", GTK_STOCK_COPY},
+    { "/_Paste", NULL, paste, 0, "<StockItem>", GTK_STOCK_PASTE},
     { "/sep1",     NULL,      NULL,         0, "<Separator>" },
     { "/_Preferences...", NULL, config_and_update, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
     { "/sep1",     NULL,      NULL,         0, "<Separator>" },
-	{ "/_Quit", NULL, menu_quit, 0, "<StockItem>", GTK_STOCK_QUIT } };
+	{ "/_Quit", "<Ctrl>Q", menu_quit, 0, "<StockItem>", GTK_STOCK_QUIT } };
     
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
@@ -139,6 +139,7 @@ void popup_menu ()
     
     gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
                    NULL, NULL, 3, gtk_get_current_event_time());
+                              
    	gtk_widget_show_all(menu); 
 }
 

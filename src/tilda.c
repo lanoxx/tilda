@@ -156,6 +156,8 @@ void cleantmp ()
 
 int main (int argc, char **argv)
 {
+	GtkAccelGroup *accel_group;
+    GClosure *clean;
     char *home_dir;
     FILE *fp;
     GError *error = NULL;
@@ -203,7 +205,7 @@ int main (int argc, char **argv)
                 "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
                 "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
                 "-l lines : set number of scrollback lines\n";
-    
+
     back.red = back.green = back.blue = 0xffff;
     fore.red = fore.green = fore.blue = 0x0000;
     highlight.red = highlight.green = highlight.blue = 0xc000;
@@ -419,6 +421,12 @@ int main (int argc, char **argv)
                       G_CALLBACK(increase_font_size), window);
     g_signal_connect (G_OBJECT(widget), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), window);
+
+	/* Exit on Ctrl-Q */
+    clean = g_cclosure_new (clean_up, NULL, NULL);
+	accel_group = gtk_accel_group_new ();
+    gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
+	gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
 
     /* Create the scrollbar for the widget. */
     scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(widget))->adjustment);
