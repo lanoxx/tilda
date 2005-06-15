@@ -1,6 +1,21 @@
 #ifndef TILDA_CALLBACK_FUNC_C
 #define TILDA_CALLBACK_FUNC_C
 
+void copy (GtkWidget *widget, gpointer data);
+void paste (GtkWidget *widget, gpointer data);
+void config_and_update (GtkWidget *widget, gpointer data);
+void menu_quit (GtkWidget *widget, gpointer data);
+
+static GtkItemFactoryEntry menu_items[] = {
+    { "/_Copy.", NULL, copy, 0, "<StockItem>", GTK_STOCK_COPY},
+    { "/_Paste...", NULL, paste, 0, "<StockItem>", GTK_STOCK_PASTE},
+    { "/sep1",     NULL,      NULL,         0, "<Separator>" },
+    { "/_Preferences...", NULL, config_and_update, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
+    { "/sep1",     NULL,      NULL,         0, "<Separator>" },
+	{ "/_Quit", NULL, menu_quit, 0, "<StockItem>", GTK_STOCK_QUIT } };
+    
+static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
+
 int resize (GtkWidget *window, gint w, gint h)
 {
     gtk_window_resize ((GtkWindow *) window, w, h);
@@ -35,7 +50,7 @@ static void icon_title_changed (GtkWidget *widget, gpointer win)
 
 static void char_size_changed (GtkWidget *widget, guint width, guint height, gpointer data)
 {
-    VteTerminal *terminal;
+    /*VteTerminal *terminal;
     GtkWindow *window;
     GdkGeometry geometry;
     int xpad, ypad;
@@ -58,7 +73,7 @@ static void char_size_changed (GtkWidget *widget, guint width, guint height, gpo
     gtk_window_set_geometry_hints (window, widget, &geometry,
                       GDK_HINT_RESIZE_INC |
                       GDK_HINT_BASE_SIZE |
-                      GDK_HINT_MIN_SIZE);
+                      GDK_HINT_MIN_SIZE);*/
 }
 
 static void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
@@ -89,9 +104,42 @@ static void status_line_changed (GtkWidget *widget, gpointer data)
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
 }
 
+void copy (GtkWidget *w, gpointer data)
+{
+	vte_terminal_copy_clipboard ((VteTerminal *) widget);
+}
+
+void paste (GtkWidget *w, gpointer data)
+{
+	vte_terminal_paste_clipboard ((VteTerminal *) widget);
+}
+
 void config_and_update (GtkWidget *widget, gpointer data)
 {
+	wizard (-1, NULL);
+}
 
+void menu_quit (GtkWidget *widget, gpointer data)
+{
+	gtk_widget_destroy (GTK_WIDGET(window));
+    gtk_main_quit ();
+}
+
+void popup_menu ()
+{	
+    GtkItemFactory *item_factory;
+   	GtkWidget *menu;
+  
+   	item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>",
+                                        NULL);
+   	
+    gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
+   	
+    menu = gtk_item_factory_get_widget (item_factory, "<main>");
+    
+    gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
+                   NULL, NULL, 3, gtk_get_current_event_time());
+   	gtk_widget_show_all(menu); 
 }
 
 static int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -100,24 +148,10 @@ static int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer da
     char *match;
     int tag;
     gint xpad, ypad;
-    GtkWidget *menu, *item_config, *item_exit;
     
     switch (event->button) {
     case 3:
-    	menu = gtk_menu_new();
-
-    	item_config = gtk_menu_item_new_with_label("Configure");
-    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_config);
-
-		item_exit = gtk_menu_item_new_with_label("Exit");
-    	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item_exit);
-
-		gtk_menu_popup((GtkMenu *)(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
-		
-        g_signal_connect_swapped (G_OBJECT (item_config), "activate", GTK_SIGNAL_FUNC(config_and_update), NULL);
-        g_signal_connect_swapped (G_OBJECT (item_exit), "activate", GTK_SIGNAL_FUNC(destroy_and_quit), NULL);
-                              
-    	gtk_widget_show_all(menu);
+        popup_menu ();
         
         terminal = VTE_TERMINAL(widget);
         vte_terminal_get_padding (terminal, &xpad, &ypad);
@@ -267,9 +301,9 @@ static void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
     /* Change the font, then resize the window so that we have the same
      * number of rows and columns. */
     vte_terminal_set_font (terminal, desired);
-    gtk_window_resize (GTK_WINDOW(data),
+    /*gtk_window_resize (GTK_WINDOW(data),
               columns * terminal->char_width + owidth,
-              rows * terminal->char_height + oheight);
+              rows * terminal->char_height + oheight);*/
 
     pango_font_description_free (desired);
 }

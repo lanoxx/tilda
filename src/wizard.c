@@ -27,7 +27,7 @@
 #include "tilda.h"
 #include "config.h"
 
-GtkWidget *window;
+GtkWidget *wizard_window;
 int exit_status=0;
 
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
@@ -36,7 +36,9 @@ GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focu
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar, *check_down;
 GtkWidget *radio_white, *radio_black;
 GtkWidget *button_font;
+gboolean in_main = FALSE;
 
+gboolean load_tilda ();
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -164,7 +166,7 @@ GtkWidget* appearance ()
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
     
     image_chooser = gtk_file_chooser_dialog_new ("Open Background Image File",
-                      GTK_WINDOW (window),
+                      GTK_WINDOW (wizard_window),
                       GTK_FILE_CHOOSER_ACTION_OPEN,
                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -393,14 +395,19 @@ void apply_settings ()
         
         fclose (fp);
     }
+    
+    if (!in_main)
+    	load_tilda (FALSE);
 }
 
 gint ok ()
 {
     apply_settings ();
         
-    gtk_widget_destroy (window);
-    gtk_main_quit();
+    gtk_widget_destroy (wizard_window);
+    
+    if (in_main)
+    	gtk_main_quit();
     
     return (TRUE);
 }
@@ -412,8 +419,10 @@ void apply ()
 
 gint exit_app (GtkWidget *widget, gpointer data)
 {   
-    gtk_widget_destroy (window);
-    gtk_main_quit();
+    gtk_widget_destroy (wizard_window);
+    
+    if (in_main)
+    	gtk_main_quit();
     
     exit_status = 1;
     
@@ -431,9 +440,10 @@ int wizard (int argc, char **argv)
     GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
-    
+    char *argv0 = NULL;
     char title[20];
     char *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
+ 
     GtkWidget* (*contents[4])();
     
     contents[0] = general;
@@ -451,6 +461,10 @@ int wizard (int argc, char **argv)
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
     sprintf (config_file, "%s_%i", config_file, instance);
 
+
+	if (argv != NULL)
+    	argv0 = argv[0];
+
     //read in height width settings already set
     if((fp = fopen(config_file, "r")) == NULL) 
     {
@@ -464,7 +478,7 @@ int wizard (int argc, char **argv)
     }
     else
     {
-        if (read_config_file (argv[0], tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
+        if (read_config_file (argv0, tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
         {
             /* This should _NEVER_ happen, but it's here just in case */
             puts("Error reading config file, terminating");
@@ -475,28 +489,32 @@ int wizard (int argc, char **argv)
         fclose (fp);
     }
    
-    gtk_init (&argc, &argv);
+    if (argc != -1)
+    {
+    	in_main = TRUE;
+    	gtk_init (&argc, &argv);
+    }
     
-    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_widget_show (window);
+    wizard_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_widget_realize (wizard_window);
     
     strlcpy (title, "Tilda", sizeof (title));
     sprintf (title, "%s %i Config", title, instance);
-    gtk_window_set_title (GTK_WINDOW (window), title);
+    gtk_window_set_title (GTK_WINDOW (wizard_window), title);
           
-    g_signal_connect (G_OBJECT (window), "delete_event",
+    g_signal_connect (G_OBJECT (wizard_window), "delete_event",
                   G_CALLBACK (exit_app), NULL);
     
-    gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+    gtk_container_set_border_width (GTK_CONTAINER (wizard_window), 10);
     
     table = gtk_table_new (3, 3, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 10);
     gtk_table_set_col_spacings (GTK_TABLE (table), 10);
     
-    gtk_container_add (GTK_CONTAINER (window), table);
+    gtk_container_add (GTK_CONTAINER (wizard_window), table);
       
-    style = gtk_widget_get_style(window);   
-    image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(window)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
+    style = gtk_widget_get_style(wizard_window);   
+    image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(wizard_window)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
     image = gtk_pixmap_new (image_pix, image_pix_mask);
     gdk_pixmap_unref (image_pix);
     gdk_pixmap_unref (image_pix_mask);
@@ -541,8 +559,10 @@ int wizard (int argc, char **argv)
     gtk_widget_show (image);
     gtk_widget_show (notebook);
     gtk_widget_show (table);
+    gtk_widget_show (wizard_window);
     
-    gtk_main ();
+    if (in_main)
+    	gtk_main ();
     
     return exit_status;
 }

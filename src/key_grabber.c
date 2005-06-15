@@ -25,7 +25,7 @@ KeySym key;
 int pos_x = 0;              /* x position of tilda on screen */
 int pos_y = 0;              /* y position of tilda on screen */
 
-void pull (GtkWidget *window)
+void pull ()
 {
     gint w, h;
     //gint min_h, max_h;
@@ -46,7 +46,7 @@ void pull (GtkWidget *window)
 
     	if ((strcasecmp (s_above, "true")) == 0)
 			gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
-            
+
     	gtk_window_move ((GtkWindow *) window, pos_x, pos_y);      
     	
         /*for (max_h=h;max_h<=max_height;max_h++)
@@ -119,7 +119,7 @@ void key_grab ()
     }
 }
 
-void *wait_for_signal (GtkWidget *window)
+void *wait_for_signal ()
 {
     KeySym key;
     XEvent event;
@@ -133,9 +133,8 @@ void *wait_for_signal (GtkWidget *window)
 
     key_grab ();
     
-    
    	if (strcmp (s_down, "TRUE") == 0)
-    	pull (window);
+    	pull ();
     else
     	gtk_widget_hide (window);
     

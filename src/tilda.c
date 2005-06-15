@@ -42,11 +42,10 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
-GtkWidget *window;
 char config_file[80];
 char *user, *display;
 char lock_file[80];      /* stores the name of the socket used for accessing this instance */
-int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
+
 
 //gboolean bool_grab_focus;
 
@@ -159,20 +158,14 @@ int main (int argc, char **argv)
 {
     char *home_dir;
     FILE *fp;
-    GtkWidget *hbox, *scrollbar, *widget;
     GError *error = NULL;
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
     float tmp_val;
-    gboolean audible = TRUE, blink = TRUE,
-         dingus = FALSE, geometry = TRUE, dbuffer = TRUE,
-         console = FALSE, scroll = FALSE,
-         icon_title = FALSE, shell = TRUE, highlight_set = FALSE,
-         cursor_set = FALSE, use_antialias = FALSE, bool_use_image = FALSE;
-    gboolean image_set_clo=FALSE, antialias_set_clo=FALSE,
-    	scroll_set_clo=FALSE; 
-    VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    const char *terminal = NULL;
+    gboolean audible = TRUE, blink = TRUE, dingus = FALSE, 
+    		  geometry = TRUE, dbuffer = TRUE, console = FALSE, 
+              scroll = FALSE, icon_title = FALSE, shell = TRUE;
+	gboolean image_set_clo=FALSE, antialias_set_clo=FALSE, scroll_set_clo=FALSE; 
     const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
@@ -246,16 +239,6 @@ int main (int argc, char **argv)
             i--;
         }
     }
-    
-    /*argv2 = g_malloc0 (sizeof(char*) * (g_list_length (args) + 2));
-    argv2[0] = argv[0];
-    
-    for (i=1;i<=g_list_length(args);i++) 
-    	argv2[i] = (char*) g_list_nth (args, i - 1);
-    
-    argv2[i] = NULL;
-    g_assert (i < (g_list_length (args) + 2));*/
-
 
 	/* set the instance number and place a env in the array of envs 
     * to be set when the tilda terminal is created */
@@ -291,7 +274,7 @@ int main (int argc, char **argv)
                 break;
             case 't':
                 tmp_val = atoi (optarg);
-                if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
+                ///if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
                 break;
             case 'f':
                 strlcpy (s_font, optarg, sizeof (s_font));
@@ -350,28 +333,6 @@ int main (int argc, char **argv)
         puts("There was an error in the config file, terminating");
         exit(1);
     }
-    
-    if (strcmp (s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
-   		bool_use_image = TRUE;
-    else
-      	bool_use_image = FALSE;
-    
-    if (strcmp (s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
-   	    use_antialias = TRUE;
-    else
-       	use_antialias = FALSE;
-    
-	if (strcmp (s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
-    	scroll = TRUE;       
-    else
-       	scroll = FALSE;   
-                
-    /*if (strcmp (s_grab_focus, "TRUE") == 0)
-    	bool_grab_focus = TRUE;       
-    else
-       	bool_grab_focus = FALSE; */
-    
-    TRANS_LEVEL = (transparency)/100; 
 
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
@@ -471,48 +432,9 @@ int main (int argc, char **argv)
     vte_terminal_set_scroll_on_output (VTE_TERMINAL(widget), FALSE);
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(widget), TRUE);
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(widget), lines);
-    vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);
-
-    if (bool_use_image) 
-    {
-        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), s_image);
-    }
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);        
     
-    if (TRANS_LEVEL > 0) 
-    {
-        vte_terminal_set_background_saturation (VTE_TERMINAL (widget), TRANS_LEVEL);
-        vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
-    }
-    
-    if (strcasecmp (s_background, "black") == 0)
-    {
-        back.red = back.green = back.blue = 0x0000;
-        fore.red = fore.green = fore.blue = 0xffff;
-    }
-
-    vte_terminal_set_background_tint_color (VTE_TERMINAL(widget), &tint);
-    vte_terminal_set_colors (VTE_TERMINAL(widget), &fore, &back, NULL, 0);
-    
-    if (highlight_set) 
-    {
-        vte_terminal_set_color_highlight (VTE_TERMINAL(widget), &highlight);
-    }
-    
-    if (cursor_set) 
-    {
-        vte_terminal_set_color_cursor (VTE_TERMINAL(widget), &cursor);
-    }
-    
-    if (terminal != NULL) 
-    {
-        vte_terminal_set_emulation (VTE_TERMINAL(widget), terminal);
-    }
-
-    if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), s_font, antialias);
-    else
-        vte_terminal_set_font_from_string (VTE_TERMINAL(widget), s_font);
-    
+    load_tilda (TRUE);
 
     /* Match "abcdefg". */
     vte_terminal_match_add (VTE_TERMINAL(widget), "abcdefg");
@@ -550,18 +472,11 @@ int main (int argc, char **argv)
     
     g_object_add_weak_pointer (G_OBJECT(widget), (gpointer*)&widget);
     g_object_add_weak_pointer (G_OBJECT(window), (gpointer*)&window);
-    
-    
+
     gtk_widget_set_size_request ((GtkWidget *) window, 0, 0);
     fix_size_settings ();
     gtk_window_resize ((GtkWindow *) window, min_width, min_height);
-    
-    gtk_widget_show ((GtkWidget *) widget);
-    gtk_widget_show ((GtkWidget *) hbox);
-    
-    if (scroll)
-		gtk_widget_show ((GtkWidget *) scrollbar);
-    
+
     signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);
     signal (SIGABRT, clean_up);
@@ -569,7 +484,7 @@ int main (int argc, char **argv)
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
     
-    if (!g_thread_create ((GThreadFunc) wait_for_signal, (GtkWidget *) window, FALSE, &error))
+    if (!g_thread_create ((GThreadFunc) wait_for_signal, NULL, FALSE, &error))
         perror ("Fuck that thread!!!");
     
     gdk_threads_enter ();

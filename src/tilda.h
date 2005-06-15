@@ -42,6 +42,11 @@
 #define DEFAULT_LINES 100
 #define NUM_ELEM(a)        ((int)(sizeof(a) / sizeof((a)[0])))
 
+GtkWidget *scrollbar;
+GtkWidget *widget;
+GtkWidget *hbox;
+GtkWidget *window;
+ 
 extern int wizard (int argc, char **argv);
 extern int write_key_bindings (char wm[], char key[]);
 extern void popup (char *message, char *b1_message, char *b2_message, void (*func1)(),void (*func2)());
@@ -83,5 +88,6 @@ const CONFIG tilda_config[] = {
 
 #include "wizard.c"
 #include "key_grabber.c"
+#include "load_tilda.c"
 
 #endif
