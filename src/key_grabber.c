@@ -22,13 +22,20 @@ Window last_focused;
 int screen;
 KeySym key;
 
-int pos_x = 0;              /* x position of tilda on screen */
-int pos_y = 0;              /* y position of tilda on screen */
-
 void pull ()
 {
+	gint x, y;
     gint w, h;
     //gint min_h, max_h;
+
+	if (x_pos_arg != -1)
+    	x = x_pos_arg;
+    else
+    	x = x_pos;
+    if (y_pos_arg != -1)
+    	y = y_pos_arg;
+    else 
+    	y = y_pos;
 
 	gtk_window_get_size ((GtkWindow *) window, &w, &h);
 
@@ -47,7 +54,7 @@ void pull ()
     	if ((strcasecmp (s_above, "true")) == 0)
 			gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
 
-    	gtk_window_move ((GtkWindow *) window, pos_x, pos_y);      
+    	gtk_window_move ((GtkWindow *) window, x, y);      
     	
         /*for (max_h=h;max_h<=max_height;max_h++)
         {

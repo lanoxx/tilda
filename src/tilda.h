@@ -55,12 +55,14 @@ extern void add_anyway (GtkWidget *widget, gpointer data);
 void menu_quit ();
 int  instance;              /* stores this instance's number */
 
+double TRANS_LEVEL_arg=-1;
+int x_pos_arg=-1, y_pos_arg=-1;
 gint max_width, max_height, min_width, min_height;
 long lines = DEFAULT_LINES;
 gchar s_above[6], s_notaskbar[6], s_pinned[6];
 gchar s_image[100] = "none", s_background[6] = "white", s_font[64] = "monospace 9", s_down[6] = "TRUE";
 gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE", s_grab_focus[6] ="TRUE";
-gchar s_key[50] = "None+F1";
+gchar s_key[50] = "null";
 int transparency=0, x_pos=0, y_pos=0;
 
 const CONFIG tilda_config[] = {

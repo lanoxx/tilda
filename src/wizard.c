@@ -276,6 +276,9 @@ GtkWidget* keybindings ()
 {
     GtkWidget *table;
     GtkWidget *label_key;
+
+	if (strcasecmp (s_key, "null") == 0)
+    	sprintf (s_key, "None+F%i", instance+1);
    
     table = gtk_table_new (2, 3, FALSE);
 

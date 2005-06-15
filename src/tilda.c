@@ -171,7 +171,6 @@ int main (int argc, char **argv)
     const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
-    //char **argv2;
     int  opt;
     int  i, j;
     GList *args = NULL;
@@ -246,7 +245,6 @@ int main (int argc, char **argv)
     * to be set when the tilda terminal is created */
     //cleantmp ();
     getinstance ();
-    i=instance;
     sprintf (env_var, "TILDA_NUM=%d", instance);
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
@@ -276,7 +274,7 @@ int main (int argc, char **argv)
                 break;
             case 't':
                 tmp_val = atoi (optarg);
-                ///if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL = (tmp_val)/100; }
+                if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL_arg = ((double) tmp_val)/100; }
                 break;
             case 'f':
                 strlcpy (s_font, optarg, sizeof (s_font));
@@ -302,10 +300,10 @@ int main (int argc, char **argv)
                 bail = TRUE;
                 break;
             case 'x':
-                x_pos = atoi (optarg);
+                x_pos_arg = atoi (optarg);
                 break;
             case 'y':
-                y_pos = atoi (optarg);
+                y_pos_arg = atoi (optarg);
                 break;
             default:
                 break;
@@ -335,6 +333,9 @@ int main (int argc, char **argv)
         puts("There was an error in the config file, terminating");
         exit(1);
     }
+
+    if (strcasecmp (s_key, "null") == 0)
+    	sprintf (s_key, "None+F%i", instance+1);
 
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);

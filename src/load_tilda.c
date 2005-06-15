@@ -20,7 +20,8 @@
 
 gboolean load_tilda (gboolean from_main)
 {
-	int TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
+	gint x, y;
+	double TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
 	gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE, 
     		 use_antialias = FALSE, bool_use_image = FALSE;
@@ -35,8 +36,12 @@ gboolean load_tilda (gboolean from_main)
     cursor.green = cursor.blue = 0x8000;
     tint.red = tint.green = tint.blue = 0;
     tint = back;
-        
-    TRANS_LEVEL = (transparency)/100; 
+    
+    if (TRANS_LEVEL_arg == -1)
+	    TRANS_LEVEL = ((double) transparency)/100; 
+    else
+    	TRANS_LEVEL = TRANS_LEVEL_arg;
+    	
 
 	if (strcmp (s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
    		bool_use_image = TRUE;
@@ -54,15 +59,17 @@ gboolean load_tilda (gboolean from_main)
        	scroll = FALSE;   
 	
     if (bool_use_image) 
-    {
-        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), s_image);
-    }
+    	vte_terminal_set_background_image_file (VTE_TERMINAL(widget), s_image);
+    else 
+    	vte_terminal_set_background_image_file (VTE_TERMINAL(widget), NULL);
+    
     
     if (TRANS_LEVEL > 0) 
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (widget), TRANS_LEVEL);
         vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
-    }
+    } else
+    	vte_terminal_set_background_transparent (VTE_TERMINAL(widget), FALSE);
     
     if (strcasecmp (s_background, "black") == 0)
     {
@@ -121,6 +128,16 @@ gboolean load_tilda (gboolean from_main)
     gtk_widget_show (widget);
     gtk_widget_show (hbox);
     
+    if (x_pos_arg != -1)
+    	x = x_pos_arg;
+    else
+    	x = x_pos;
+    if (y_pos_arg != -1)
+    	y = y_pos_arg;
+    else 
+    	y = y_pos;
     
-	return TRUE;
+    gtk_window_move ((GtkWindow *) window, x, y);
+	
+    return TRUE;
 }
