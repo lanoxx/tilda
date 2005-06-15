@@ -99,61 +99,6 @@ void getinstance ()
     creat (lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }   
 
-void cleantmp ()
-{
-    char cmd[128];
-    char buf[BUFSIZ], filename[BUFSIZ];
-    int  length, i;
-    FILE *ptr, *ptr2;
-    int error_to_null;
-    
-    strlcpy (cmd, "ls /tmp/tilda.", sizeof(cmd));
-    strlcat (cmd, user, sizeof(cmd));
-    length = strlen (cmd)-(strlen ("ls /tmp/") + 1);
-    
-    strlcat (cmd, "*", sizeof(cmd));
-    
-    /* Don't know if this is the smartest thing to do but
-     * it fixes the problem of always saying there isnt a 
-     * file in /tmp
-     */
-    if ((error_to_null = open ("/dev/null", O_RDWR)) != -1)
-        dup2 (error_to_null, 2);
-    
-    
-    if ((ptr = popen (cmd, "r")) != NULL)
-    {
-        while (fgets (buf, BUFSIZ, ptr) != NULL)
-        {
-            strncpy (filename, buf + length - 1, strlen (buf + length - 1) - 1);
-            filename[strlen (buf + length - 1)] = '\0';
-            strlcpy (buf, strstr (buf + length - 1, ".") + 1, sizeof(buf));
-            length = strstr (buf, ".") - (char*)&buf;
-            buf[(int)(strstr (buf, ".") - (char*)&buf)] = '\0';
-            strlcpy (cmd, "ps x | grep ", sizeof(cmd));
-            strlcat (cmd, buf, sizeof(cmd));
-        
-            if ((ptr2 = popen (cmd, "r")) != NULL)
-            {
-                for (i=0;fgets(buf, BUFSIZ, ptr2)!=NULL;i++);
-        
-                if (i <= 2)
-                {
-                    strlcpy (cmd, "/tmp/tilda.", sizeof(cmd));
-                    strlcat (cmd, filename, sizeof(cmd));
-                    remove (cmd);    
-                }
-                pclose (ptr2);
-            }
-        } 
-    }
-    
-    if (error_to_null != -1)
-        close (error_to_null);
-    
-    pclose (ptr);
-}
-
 int main (int argc, char **argv)
 {
 	GtkAccelGroup *accel_group;
@@ -166,8 +111,7 @@ int main (int argc, char **argv)
     float tmp_val;
     gboolean audible = TRUE, blink = TRUE, dingus = FALSE, 
     		  geometry = TRUE, dbuffer = TRUE, console = FALSE, 
-              scroll = FALSE, icon_title = FALSE, shell = TRUE;
-	gboolean image_set_clo=FALSE, antialias_set_clo=FALSE, scroll_set_clo=FALSE; 
+              scroll = FALSE, icon_title = FALSE, shell = TRUE; 
     const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
@@ -191,7 +135,7 @@ int main (int argc, char **argv)
                 "[-y position] "       
                 "[-l lines]\n\n"
                 "-B image : set background image\n"
-                "-T : pull down terminal\n"
+                "-T : Sorry this no longer does anything\n"
                 "-C : bring up tilda configuration wizard\n"
                 "-b [white][black] : set the background color either white or black\n"
                 "-f font : set the font to the following string, ie \"monospace 11\"\n"
@@ -243,7 +187,6 @@ int main (int argc, char **argv)
 
 	/* set the instance number and place a env in the array of envs 
     * to be set when the tilda terminal is created */
-    //cleantmp ();
     getinstance ();
     sprintf (env_var, "TILDA_NUM=%d", instance);
 
@@ -260,14 +203,15 @@ int main (int argc, char **argv)
                 strlcpy (s_background, optarg, sizeof (s_background));
                 break;  
             case 'T':
-                
+                printf ("-T no longer does anything :(, tilda no longer uses xbindkeys\n");
+                printf ("If there is a demand I can fix it up so both new and old work.\n");
+                printf ("I see this as extra overhead for no reason however, sorry.\n");
                 break;
             case 'C':
                 if ((wizard (argc, argv)) == 1) { clean_up(); }
                 break;
             case 's':
                 scroll_set_clo = TRUE;
-                
                 break;
             case 'c':
                 command = optarg;
@@ -277,7 +221,7 @@ int main (int argc, char **argv)
                 if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL_arg = ((double) tmp_val)/100; }
                 break;
             case 'f':
-                strlcpy (s_font, optarg, sizeof (s_font));
+                strlcpy (s_font_arg, optarg, sizeof (s_font));
                 break;
             case 'w':
                 working_directory = optarg;

@@ -1,10 +1,27 @@
 /*
-*
-* Some stolen from yeahconsole -- loving that open source :)
-*
-*/
+ * This is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Library General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ */
+ 
+ /*
+ * Some stolen from yeahconsole -- loving that open source :)
+ *
+ */
 
 #include <X11/Xlib.h>
+#include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -128,12 +145,12 @@ void key_grab ()
 
 void *wait_for_signal ()
 {
-    KeySym key;
+    KeySym grabbed_key;
     XEvent event;
 
-    if (!(dpy = XOpenDisplay(NULL))) {
+    if (!(dpy = XOpenDisplay(NULL)))
         fprintf(stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
-    }
+
     
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
@@ -141,17 +158,21 @@ void *wait_for_signal ()
     key_grab ();
     
    	if (strcmp (s_down, "TRUE") == 0)
-    	pull ();
+    	pull (); 
     else
     	gtk_widget_hide (window);
     
-    while (1) {
+    for (;;)
+    {
     	XNextEvent(dpy, &event);
         
-        switch (event.type) {
+        switch (event.type) 
+        {
         	case KeyPress:
-            	key = XKeycodeToKeysym(dpy, event.xkey.keycode, 0);
-            	if (key == key) {
+            	grabbed_key = XKeycodeToKeysym(dpy, event.xkey.keycode, 0);
+                
+            	if (key == grabbed_key) 
+                {
             		pull (window);
                 	break;
             	}

@@ -13,6 +13,7 @@
  * v1.0    ATM  22-Jul-94
  *	Seems to work.
  */
+ 
 #ifndef _READCONF_H
 #define _READCONF_H
 #include <stdio.h>

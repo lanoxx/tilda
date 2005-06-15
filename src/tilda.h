@@ -46,6 +46,7 @@ GtkWidget *scrollbar;
 GtkWidget *widget;
 GtkWidget *hbox;
 GtkWidget *window;
+gboolean image_set_clo=FALSE, antialias_set_clo=FALSE, scroll_set_clo=FALSE;
  
 extern int wizard (int argc, char **argv);
 extern int write_key_bindings (char wm[], char key[]);
@@ -54,6 +55,7 @@ extern void redo_wizard (GtkWidget *widget, gpointer data);
 extern void add_anyway (GtkWidget *widget, gpointer data);
 void menu_quit ();
 int  instance;              /* stores this instance's number */
+gchar s_font_arg[64] = "null";
 
 double TRANS_LEVEL_arg=-1;
 int x_pos_arg=-1, y_pos_arg=-1;

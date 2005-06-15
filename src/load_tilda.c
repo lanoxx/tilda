@@ -25,8 +25,6 @@ gboolean load_tilda (gboolean from_main)
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
 	gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE, 
     		 use_antialias = FALSE, bool_use_image = FALSE;
-    gboolean image_set_clo=FALSE, antialias_set_clo=FALSE,
-    	     scroll_set_clo=FALSE; 
 	GdkColor fore, back, tint, highlight, cursor;
      
     back.red = back.green = back.blue = 0xffff;
@@ -89,6 +87,9 @@ gboolean load_tilda (gboolean from_main)
     {
         vte_terminal_set_color_cursor (VTE_TERMINAL(widget), &cursor);
     }
+    
+    if (strcasecmp (s_font_arg, "null") != 0)
+    	strlcpy (s_font, s_font_arg, sizeof (s_font));
     
     if (use_antialias)
         vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), s_font, antialias);
