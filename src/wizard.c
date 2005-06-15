@@ -39,6 +39,7 @@ GtkWidget *button_font;
 gboolean in_main = FALSE;
 
 gboolean load_tilda ();
+void fix_size_settings ();
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -307,6 +308,8 @@ void apply_settings ()
     if (NULL != (tmp_str = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser))))
         strlcpy (s_image,  tmp_str, sizeof (s_image));
     
+    old_max_height = max_height;
+    old_max_width = max_width;
     max_height = atoi (gtk_entry_get_text (GTK_ENTRY (entry_height)));
     max_width = atoi (gtk_entry_get_text (GTK_ENTRY (entry_width)));
     lines = atoi (gtk_entry_get_text (GTK_ENTRY (entry_scrollback)));
@@ -398,7 +401,7 @@ void apply_settings ()
         
         fclose (fp);
     }
-    
+
     if (!in_main)
     	load_tilda (FALSE);
 }

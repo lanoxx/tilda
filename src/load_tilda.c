@@ -139,6 +139,11 @@ gboolean load_tilda (gboolean from_main)
     	y = y_pos;
     
     gtk_window_move ((GtkWindow *) window, x, y);
+    
+    if (max_height != old_max_height || max_width != old_max_width)
+    {
+    	    gtk_window_resize ((GtkWindow *) window, max_width, max_height);
+    }
 	
     return TRUE;
 }

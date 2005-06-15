@@ -57,14 +57,6 @@ void clean_up ()
     exit (0);
 }
 
-void fix_size_settings ()
-{
-    gtk_window_resize ((GtkWindow *) window, max_width, max_height);
-    gtk_window_get_size ((GtkWindow *) window, &max_width, &max_height);
-    gtk_window_resize ((GtkWindow *) window, min_width, min_height);
-    gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
-}
-
 void getinstance ()
 {
     char tmp[80];

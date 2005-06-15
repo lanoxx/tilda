@@ -32,6 +32,15 @@ static GtkItemFactoryEntry menu_items[] = {
     
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
+
+void fix_size_settings ()
+{
+    gtk_window_resize ((GtkWindow *) window, max_width, max_height);
+    gtk_window_get_size ((GtkWindow *) window, &max_width, &max_height);
+    gtk_window_resize ((GtkWindow *) window, min_width, min_height);
+    gtk_window_get_size ((GtkWindow *) window, &min_width, &min_height);
+}
+
 int resize (GtkWidget *window, gint w, gint h)
 {
     gtk_window_resize ((GtkWindow *) window, w, h);

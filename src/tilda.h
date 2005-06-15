@@ -56,6 +56,7 @@ extern void add_anyway (GtkWidget *widget, gpointer data);
 void menu_quit ();
 int  instance;              /* stores this instance's number */
 gchar s_font_arg[64] = "null";
+gint old_max_height, old_max_width;
 
 double TRANS_LEVEL_arg=-1;
 int x_pos_arg=-1, y_pos_arg=-1;
