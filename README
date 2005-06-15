@@ -23,7 +23,11 @@ F1 to bring tilda up and down. Example key bindings:
     Control+x -- can be any key instead of x as well
     Alt+x -- can be any key instead of x as well
     
+Be sure that xbindkeys is not running! If it grabs the same key as you want Tilda to use.
 
 6) tilda -h to see the rest of the command line options. If you want a transparent bg
 and you want a white font do the follow "tilda -t -b black" this will set the
 forground color to white and the terminal transparent.
+
+7) lock files are stored in ~/.tilda/locks now so keep an eye on that dir if Tilda
+dies in an odd way, seg fault or xkill.
