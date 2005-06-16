@@ -7,13 +7,13 @@
  * readconf.h revision history:
  *
  * v1.1    ATM  15-Feb-96
- *	Reformatted source, converting to ANSI C.  Added "dispose" functions.
+ *  Reformatted source, converting to ANSI C.  Added "dispose" functions.
  *  Made config table an argument (useful for large projects with multiple
  *  config files).
  * v1.0    ATM  22-Jul-94
- *	Seems to work.
+ *  Seems to work.
  */
- 
+
 #ifndef _READCONF_H
 #define _READCONF_H
 #include <stdio.h>
@@ -27,13 +27,13 @@ typedef enum {
 } CF_LINE_KIND;
 
 typedef struct {
-	CF_LINE_KIND kind;		/* what kind of statement this is */
-	char *tag;				/* tag name */
-	void *reference;		/* variable to change or function to call */
-	int size;				/* used by string items only */
-	char *delim;			/* used by multi-items only */
-	int flags;				/* reserved, set to zero */
-	void (*dispose)(void);	/* optional dispose function */
+    CF_LINE_KIND kind;      /* what kind of statement this is */
+    char *tag;              /* tag name */
+    void *reference;        /* variable to change or function to call */
+    int size;               /* used by string items only */
+    char *delim;            /* used by multi-items only */
+    int flags;              /* reserved, set to zero */
+    void (*dispose)(void);  /* optional dispose function */
 } CONFIG;
 
 /*

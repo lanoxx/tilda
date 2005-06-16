@@ -6,13 +6,13 @@
  * Page down a few screens for instructions.  Basically, set up a config
  * description table, then either call:
  *
- *	read_config_file(argv[0], config_tab, config_count, filename);
+ *  read_config_file(argv[0], config_tab, config_count, filename);
  * or
- *	read_config(argv[0], config_tab, config_count, fp);
+ *  read_config(argv[0], config_tab, config_count, fp);
  *
  * To free up any allocated space, call:
  *
- *	dispose_config(argv[0], config_tab, config_count);
+ *  dispose_config(argv[0], config_tab, config_count);
  *
  * Compile with -DSYSV on systems that use <string.h> instead of <strings.h>.
  * If you're missing strcasecmp(), add -DNEED_STRCASECMP.
@@ -21,12 +21,15 @@
  * readconf.c revision history:
  *
  * v1.1    ATM  15-Feb-96
- *	Reformatted source, converting to ANSI C.  Added "dispose" functions.
+ *  Reformatted source, converting to ANSI C.  Added "dispose" functions.
  *  Made config table an argument.  Added cf_forgiving and cf_check_alloc.
  * v1.0    ATM  22-Jul-94
- *	Seems to work.
+ *  Seems to work.
  */
- 
+
+#ifndef TILDA_READCONF_C
+#define TILDA_READCONF_C
+
 #include <stdio.h>
 #ifdef SYSV
 # include <stdlib.h>
@@ -35,7 +38,7 @@
 # include <string.h>
 # include <strings.h>
 #endif
-#include <math.h>	/* for strtod() */
+#include <math.h>   /* for strtod() */
 #include <malloc.h>
 #include <errno.h>
 
@@ -43,17 +46,17 @@
 
 
 #ifndef TRUE
-# define TRUE	1
-# define FALSE	0
+# define TRUE   1
+# define FALSE  0
 #endif /*TRUE*/
 
 /*
  * Tweak these as needed (change values, make them public, etc).
  */
-static int cf_debug = FALSE;		/* print debugging info */
-static int cf_verbose = FALSE;		/* print progress info */
-static int cf_forgiving = FALSE;	/* allow unknown tags? */
-static int cf_check_alloc = TRUE;	/* only malloc onto NULL pointer? */
+static int cf_debug = FALSE;        /* print debugging info */
+static int cf_verbose = FALSE;      /* print progress info */
+static int cf_forgiving = FALSE;    /* allow unknown tags? */
+static int cf_check_alloc = TRUE;   /* only malloc onto NULL pointer? */
 
 /*#define NEED_STRCASECMP*/
 
@@ -61,7 +64,7 @@ static int cf_check_alloc = TRUE;	/* only malloc onto NULL pointer? */
 /*
  * The basic configuration line looks like:
  *
- *	tag_name : value
+ *  tag_name : value
  *
  * Leading and trailing whitespace is removed.  Whitespace before and after
  * the colon is removed.  Blank lines and lines starting with '#' are
@@ -79,89 +82,89 @@ static int cf_check_alloc = TRUE;	/* only malloc onto NULL pointer? */
  *
  * The following classes of configuration statements are supported:
  *
- * CF_BOOLEAN		boolean_value: True
+ * CF_BOOLEAN       boolean_value: True
  *
- *	The corresponding variable is set to 0 if the rhs is "off" or "false",
- *	or 1 if the rhs is "on" or "true".  The values are case-insensitive.
+ *  The corresponding variable is set to 0 if the rhs is "off" or "false",
+ *  or 1 if the rhs is "on" or "true".  The values are case-insensitive.
  *
- * CF_INT		int_value: 12345
+ * CF_INT       int_value: 12345
  *
- *	The corresponding variable is set to the value of the rhs as it's
- *	evaluated by strtol(str, NULL, 0).  So, "0x1234" and "01234" are
- *	treated as hex and octal, respectively.
+ *  The corresponding variable is set to the value of the rhs as it's
+ *  evaluated by strtol(str, NULL, 0).  So, "0x1234" and "01234" are
+ *  treated as hex and octal, respectively.
  *
- * CF_DOUBLE		double_value: 12345.0
+ * CF_DOUBLE        double_value: 12345.0
  *
- *	The corresponding variable is set to the value of the rhs as it's
- *	evaluated by strtod(str, NULL).  If the system is lame, atof(str)
- *	may be used instead.
+ *  The corresponding variable is set to the value of the rhs as it's
+ *  evaluated by strtod(str, NULL).  If the system is lame, atof(str)
+ *  may be used instead.
  *
- * CF_STRING		string_value: The quick brown fox.
+ * CF_STRING        string_value: The quick brown fox.
  *
- *	The value, stripped of leading and trailing whitespace, is copied
- *	with substitutions into the storage space indicated (see below).  The
- *	length of the space should be given in the "size" field.  If "size"
- *	is zero, and "reference" points to a NULL char*, then space will be
- *	allocated with malloc(3).  "size"==0, *"ref"!=NULL generates an error.
+ *  The value, stripped of leading and trailing whitespace, is copied
+ *  with substitutions into the storage space indicated (see below).  The
+ *  length of the space should be given in the "size" field.  If "size"
+ *  is zero, and "reference" points to a NULL char*, then space will be
+ *  allocated with malloc(3).  "size"==0, *"ref"!=NULL generates an error.
  *
- * CF_MULTI_STRING	multi_value: The quick brown fox.
+ * CF_MULTI_STRING  multi_value: The quick brown fox.
  *
- *	The difference between CF_STRING and CF_MULTI_STRING is that the
- *	latter parses the string into separate components, and then passes
- *	them as individual arguments to a subroutine (see below).  The
- *	"delim" field is a pointer to a string with the field delimiters,
- *	usually whitespace ("\t ") or a colon (":").  The "size" field is
- *	not used here.
+ *  The difference between CF_STRING and CF_MULTI_STRING is that the
+ *  latter parses the string into separate components, and then passes
+ *  them as individual arguments to a subroutine (see below).  The
+ *  "delim" field is a pointer to a string with the field delimiters,
+ *  usually whitespace ("\t ") or a colon (":").  The "size" field is
+ *  not used here.
  *
- *	The function called by a CF_MULTI_STRING line takes two arguments,
- *	argc and argv, which are identical in form to the arguments supplied
- *	to main().  The strings are part of a static buffer, and the
- *	argument vector pointers are dynamically allocated space which will
- *	be freed after the procedure call, so the arguments must be copied
- *	if they are to be kept.
+ *  The function called by a CF_MULTI_STRING line takes two arguments,
+ *  argc and argv, which are identical in form to the arguments supplied
+ *  to main().  The strings are part of a static buffer, and the
+ *  argument vector pointers are dynamically allocated space which will
+ *  be freed after the procedure call, so the arguments must be copied
+ *  if they are to be kept.
  *
- * CF_MULTI_LINE	multi_line_start
- *			line1
- *			line2
- *			line3
- *			multi_line_end
+ * CF_MULTI_LINE    multi_line_start
+ *          line1
+ *          line2
+ *          line3
+ *          multi_line_end
  *
- *	When you need a whole collection of free-form lines, use
- *	CF_MULTI_LINE.  Each line is passed verbatim (NO w/s stripping, NO
- *	'\' evaluation, etc) to the specified routine.  An end tag should be
- *	pointed to be the "delim" field; when the parser sees it at the start
- *	of a line it goes on to the next tag.
+ *  When you need a whole collection of free-form lines, use
+ *  CF_MULTI_LINE.  Each line is passed verbatim (NO w/s stripping, NO
+ *  '\' evaluation, etc) to the specified routine.  An end tag should be
+ *  pointed to be the "delim" field; when the parser sees it at the start
+ *  of a line it goes on to the next tag.
  *
- *	The function called by CF_MULTI_LINE takes one argument, the
- *	un-parsed rhs.  This is also in a static buffer, and must be copied.
+ *  The function called by CF_MULTI_LINE takes one argument, the
+ *  un-parsed rhs.  This is also in a static buffer, and must be copied.
  */
 /*
  * The structure defining the config file has five fields:
  *
  * kind
- *	What kind of field this is, e.g. CF_STRING.
+ *  What kind of field this is, e.g. CF_STRING.
  *
  * tag
- *	What tag will be used to identify this item, i.e. what word comes
- *	before the ':'.  Matching of tags is case-insensitive.
+ *  What tag will be used to identify this item, i.e. what word comes
+ *  before the ':'.  Matching of tags is case-insensitive.
  *
  * reference
- *	Variable to change (for BOOLEAN, INT, DOUBLE, and STRING) or function
- *	to call (for MULTI_STRING and MULTI_LINE).  Note that string is
- *	either a (char *) for size != 0 or a (char **) for size == 0.
+ *  Variable to change (for BOOLEAN, INT, DOUBLE, and STRING) or function
+ *  to call (for MULTI_STRING and MULTI_LINE).  Note that string is
+ *  either a (char *) for size != 0 or a (char **) for size == 0.
  *
  * size
- *	Used by STRING to specify the size of a buffer.  If set to zero,
- *	*and* the variable to change is NULL, space will be allocated with
- *	malloc().  This value should be equal to the TOTAL size of the
- *	buffer, i.e. "size" of 16 means 15 characters plus the '\0'.
+ *  Used by STRING to specify the size of a buffer.  If set to zero,
+ *  *and* the variable to change is NULL, space will be allocated with
+ *  malloc().  This value should be equal to the TOTAL size of the
+ *  buffer, i.e. "size" of 16 means 15 characters plus the '\0'.
  *
  * delim
- *	Used by MULTI_STRING to define where the word breaks are, and used
- *	by MULTI_LINE to define where the list ends.
+ *  Used by MULTI_STRING to define where the word breaks are, and used
+ *  by MULTI_LINE to define where the list ends.
  *
  * flags
- *	Currently not used.  See next section for possible uses.
+ *  Currently not used.  See next section for possible uses.
  */
 /*
  * Miscellaneous ideas:
@@ -191,16 +194,16 @@ static int cf_check_alloc = TRUE;	/* only malloc onto NULL pointer? */
  *   another file to deal with, which probably isn't desirable.
  */
 
-#ifdef NEED_STRCASECMP		/* not uncommon for libc to be missing this */
+#ifdef NEED_STRCASECMP      /* not uncommon for libc to be missing this */
 /*
  * Like strcmp(), but case independent.
  */
 int
 strcasecmp(register const char *str1, register const char *str2)
 {
-	while (*str1 && *str2 && toupper(*str1) == toupper(*str2))
-		str1++, str2++;
-	return (*str1 - *str2);
+    while (*str1 && *str2 && toupper(*str1) == toupper(*str2))
+        str1++, str2++;
+    return (*str1 - *str2);
 }
 
 /*
@@ -209,17 +212,17 @@ strcasecmp(register const char *str1, register const char *str2)
 int
 strncasecmp(register const char *str1, register const char *str2, size_t n)
 {
-	while (n && *str1 && *str2 && toupper(*str1) == toupper(*str2))
-		str1++, str2++, n--;
-	if (n)
-		return (*str1 - *str2);
-	else
-		return (0);	/* no mismatch in first n chars */
+    while (n && *str1 && *str2 && toupper(*str1) == toupper(*str2))
+        str1++, str2++, n--;
+    if (n)
+        return (*str1 - *str2);
+    else
+        return (0); /* no mismatch in first n chars */
 }
 #endif /*NEED_STRCASECMP*/
 
 
-typedef int (*CF_INTFUNCPTR)();	/* pointer to function returning int */
+typedef int (*CF_INTFUNCPTR)(); /* pointer to function returning int */
 
 
 /*
@@ -237,30 +240,30 @@ static int eval_string(const CONFIG *configp);
 static int eval_multi_string(const CONFIG *configp);
 static int eval_multi_line(const CONFIG *configp, FILE *fp);
 
-#define CF_MAX_LINE_LEN	1024
+#define CF_MAX_LINE_LEN 1024
 #define CF_MAX_TAG_LEN 32
-#define CF_MAX_MS_TOKEN 128			/* just a sanity check */
+#define CF_MAX_MS_TOKEN 128         /* just a sanity check */
 
 const char *default_argv0 = "<caller unknown>";
 
 /* private definition of isspace(); only tab and space */
-#define cf_isspace(x)	((x) == ' ' || (x) == '\t')
-#define cf_iseol(x)		((x) == '\n' || (x) == '\0')
+#define cf_isspace(x)   ((x) == ' ' || (x) == '\t')
+#define cf_iseol(x)     ((x) == '\n' || (x) == '\0')
 
 /* local buffers */
-static char line_buf[CF_MAX_LINE_LEN+1];		/* used with fgets() */
-static char full_line_buf[CF_MAX_LINE_LEN+1];	/* post-processing version */
-static char tag_buf[CF_MAX_TAG_LEN+1];			/* the tag, in lower case */
+static char line_buf[CF_MAX_LINE_LEN+1];        /* used with fgets() */
+static char full_line_buf[CF_MAX_LINE_LEN+1];   /* post-processing version */
+static char tag_buf[CF_MAX_TAG_LEN+1];          /* the tag, in lower case */
 
-static int line;				/* current line # in input */
+static int line;                /* current line # in input */
 
-static char *cf_err_str = NULL;		/* error message */
+static char *cf_err_str = NULL;     /* error message */
 
 
 /* MULTI_STRING data */
 typedef struct list_t {
-	char *data;
-	struct list_t *next;
+    char *data;
+    struct list_t *next;
 } LIST;
 
 static int ms_argc;
@@ -273,14 +276,14 @@ static LIST *head = NULL, *tail;
 static int
 init_ms(void)
 {
-	if (head != NULL) {
-		fprintf(stderr, "init_ms(): called twice without convert_ms()\n");
-		return (-1);
-	}
-	ms_argc = 0;
-	ms_argv = (char **)NULL;
+    if (head != NULL) {
+        fprintf(stderr, "init_ms(): called twice without convert_ms()\n");
+        return (-1);
+    }
+    ms_argc = 0;
+    ms_argv = (char **)NULL;
 
-	return (0);
+    return (0);
 }
 
 /*
@@ -289,30 +292,30 @@ init_ms(void)
 static int
 add_ms(char *str)
 {
-	LIST *lp;
+    LIST *lp;
 
-	if (ms_argc >= CF_MAX_MS_TOKEN) {
-		cf_err_str = "too many tokens on one line";
-		return (-1);
-	}
-	ms_argc++;
+    if (ms_argc >= CF_MAX_MS_TOKEN) {
+        cf_err_str = "too many tokens on one line";
+        return (-1);
+    }
+    ms_argc++;
 
-	lp = (LIST *)malloc(sizeof(LIST));
-	if (lp == NULL) {
-		fprintf(stderr, "add_ms(): malloc() failed\n");
-		return (-1);
-	}
-	lp->data = str;
-	lp->next = NULL;
+    lp = (LIST *)malloc(sizeof(LIST));
+    if (lp == NULL) {
+        fprintf(stderr, "add_ms(): malloc() failed\n");
+        return (-1);
+    }
+    lp->data = str;
+    lp->next = NULL;
 
-	if (head == NULL) {
-		head = tail = lp;
-	} else {
-		tail->next = lp;
-		tail = lp;
-	}
+    if (head == NULL) {
+        head = tail = lp;
+    } else {
+        tail->next = lp;
+        tail = lp;
+    }
 
-	return (0);
+    return (0);
 }
 
 /*
@@ -321,34 +324,34 @@ add_ms(char *str)
 static int
 convert_ms(void)
 {
-	LIST *lp, *tmplp;
-	int i;
+    LIST *lp, *tmplp;
+    int i;
 
-	/* allocate space for the string vector; freed in eval_multi_string */
-	ms_argv = (char **)malloc(sizeof(char *) * ms_argc);
+    /* allocate space for the string vector; freed in eval_multi_string */
+    ms_argv = (char **)malloc(sizeof(char *) * ms_argc);
 
-	/* copy the pointers from the list to the vector, freeing the list nodes */
-	i = 0;
-	lp = head;
-	while (lp != NULL) {
-		ms_argv[i++] = lp->data;
-		tmplp = lp->next;
-		free(lp);
-		lp = tmplp;
-	}
-	head = tail = NULL;
+    /* copy the pointers from the list to the vector, freeing the list nodes */
+    i = 0;
+    lp = head;
+    while (lp != NULL) {
+        ms_argv[i++] = lp->data;
+        tmplp = lp->next;
+        free(lp);
+        lp = tmplp;
+    }
+    head = tail = NULL;
 
-	/* if the last token got eaten as trailing whitespace, nuke it */
-	if (*(ms_argv[ms_argc-1]) == '\0')
-		ms_argc--;
+    /* if the last token got eaten as trailing whitespace, nuke it */
+    if (*(ms_argv[ms_argc-1]) == '\0')
+        ms_argc--;
 
-	if (cf_debug) {
-		int j;
-		for (j = 0; j < ms_argc; j++)
-			printf("  TOKEN: '%s'\n", ms_argv[j]);
-	}
+    if (cf_debug) {
+        int j;
+        for (j = 0; j < ms_argc; j++)
+            printf("  TOKEN: '%s'\n", ms_argv[j]);
+    }
 
-	return (0);
+    return (0);
 }
 
 
@@ -360,17 +363,17 @@ convert_ms(void)
 static const CONFIG *
 lookup_tag(const CONFIG *config_tab, int config_count, char *tag_name)
 {
-	const CONFIG *conp;
-	int i;
+    const CONFIG *conp;
+    int i;
 
-	for (conp = config_tab, i = 0; i < config_count; i++, conp++) {
-		if (strcasecmp(conp->tag, tag_name) == 0) {
-			if (cf_debug) printf("lookup: '%s' found\n", tag_name);
-			return (conp);
-		}
-	}
-	if (cf_debug) printf("lookup: '%s' NOT FOUND\n", tag_name);
-	return (NULL);
+    for (conp = config_tab, i = 0; i < config_count; i++, conp++) {
+        if (strcasecmp(conp->tag, tag_name) == 0) {
+            if (cf_debug) printf("lookup: '%s' found\n", tag_name);
+            return (conp);
+        }
+    }
+    if (cf_debug) printf("lookup: '%s' NOT FOUND\n", tag_name);
+    return (NULL);
 }
 
 
@@ -383,17 +386,17 @@ lookup_tag(const CONFIG *config_tab, int config_count, char *tag_name)
 static int
 read_line(FILE *fp)
 {
-	if ((fgets(line_buf, CF_MAX_LINE_LEN, fp)) == NULL) {
-		if (ferror(fp)) return (-1);
-		if (feof(fp)) return (1);
-		cf_err_str = "fgets() failed, but I don't know why";
-		return (-1);
-	}
+    if ((fgets(line_buf, CF_MAX_LINE_LEN, fp)) == NULL) {
+        if (ferror(fp)) return (-1);
+        if (feof(fp)) return (1);
+        cf_err_str = "fgets() failed, but I don't know why";
+        return (-1);
+    }
 
-	line++;
+    line++;
 
-	if (cf_debug) printf("LINE(%d): '%s'\n", line, line_buf);
-	return (0);
+    if (cf_debug) printf("LINE(%d): '%s'\n", line, line_buf);
+    return (0);
 }
 
 
@@ -410,276 +413,276 @@ read_line(FILE *fp)
 static int
 get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
 {
-	enum {  R_CHAOS, R_START, R_TAG, R_PRECOLON, R_POSTCOLON,
-		R_RHS, R_RHS_MS, R_DQUOTE, R_BACK, R_DQ_BACK, R_ERROR, R_DONE
-	} state;
-	const CONFIG *configp = NULL;
-	char *inp, *outp, *cp;
-	int val, is_ms = 0;
+    enum {  R_CHAOS, R_START, R_TAG, R_PRECOLON, R_POSTCOLON,
+        R_RHS, R_RHS_MS, R_DQUOTE, R_BACK, R_DQ_BACK, R_ERROR, R_DONE
+    } state;
+    const CONFIG *configp = NULL;
+    char *inp, *outp, *cp;
+    int val, is_ms = 0;
 
-	full_line_buf[0] = '\0';
-	inp = outp = NULL;
-	init_ms();
-	state = R_CHAOS;
+    full_line_buf[0] = '\0';
+    inp = outp = NULL;
+    init_ms();
+    state = R_CHAOS;
 
-	/*
-	 * Welcome to the machine.
-	 */
-	while (state != R_DONE) {
-		switch (state) {
-		case R_CHAOS:				/* in the beginning, there was... */
-			if ((val = read_line(fp)))
-				return (val);			/* bail on error or EOF */
-			inp = line_buf;
-			state = R_START;
-			break;
+    /*
+     * Welcome to the machine.
+     */
+    while (state != R_DONE) {
+        switch (state) {
+        case R_CHAOS:               /* in the beginning, there was... */
+            if ((val = read_line(fp)))
+                return (val);           /* bail on error or EOF */
+            inp = line_buf;
+            state = R_START;
+            break;
 
-		case R_START:				/* skip leading whitespace */
-			if (cf_isspace(*inp)) {		/* WS --> loop */
-				inp++;
-				break;
-			}
-			if (*inp == '#' || cf_iseol(*inp)) {
-				state = R_CHAOS;		/* '#' or blank --> R_CHAOS */
-				break;
-			}
-			state = R_TAG;				/* else --> R_TAG */
-			outp = tag_buf;
-			break;
+        case R_START:               /* skip leading whitespace */
+            if (cf_isspace(*inp)) {     /* WS --> loop */
+                inp++;
+                break;
+            }
+            if (*inp == '#' || cf_iseol(*inp)) {
+                state = R_CHAOS;        /* '#' or blank --> R_CHAOS */
+                break;
+            }
+            state = R_TAG;              /* else --> R_TAG */
+            outp = tag_buf;
+            break;
 
-		case R_TAG:					/* copy tag into tag_buf */
-			/* terminate outp in case we exit */
-			*outp = '\0';
-			if (cf_isspace(*inp)) {		/* WS --> R_PRECOLON */
-				inp++;
-				state = R_PRECOLON;
-				break;
-			}
-			if (*inp == ':') {			/* ':' --> R_POSTCOLON */
-				inp++;
-				state = R_POSTCOLON;
-				break;
-			}
-			/* this happens for MULTI_LINE stuff */
-			if (cf_iseol(*inp)) {		/* EOL --> R_DONE */
-				state = R_DONE;
-				break;
-			}
+        case R_TAG:                 /* copy tag into tag_buf */
+            /* terminate outp in case we exit */
+            *outp = '\0';
+            if (cf_isspace(*inp)) {     /* WS --> R_PRECOLON */
+                inp++;
+                state = R_PRECOLON;
+                break;
+            }
+            if (*inp == ':') {          /* ':' --> R_POSTCOLON */
+                inp++;
+                state = R_POSTCOLON;
+                break;
+            }
+            /* this happens for MULTI_LINE stuff */
+            if (cf_iseol(*inp)) {       /* EOL --> R_DONE */
+                state = R_DONE;
+                break;
+            }
 
-			*outp++ = *inp++;			/* else --> loop */
-			break;
+            *outp++ = *inp++;           /* else --> loop */
+            break;
 
-		case R_PRECOLON:			/* tag done, waiting for colon */
-			if (*inp == ':') {			/* ':' --> R_POSTCOLON */
-				inp++;
-				state = R_POSTCOLON;
-				break;
-			}
-			/* again, MULTI_LINE stuff here */
-			if (cf_iseol(*inp)) {		/* EOL --> R_DONE */
-				state = R_DONE;
-				break;
-			}
-			if (cf_isspace(*inp)) {		/* WS --> loop */
-				inp++;
-				break;
-			}
+        case R_PRECOLON:            /* tag done, waiting for colon */
+            if (*inp == ':') {          /* ':' --> R_POSTCOLON */
+                inp++;
+                state = R_POSTCOLON;
+                break;
+            }
+            /* again, MULTI_LINE stuff here */
+            if (cf_iseol(*inp)) {       /* EOL --> R_DONE */
+                state = R_DONE;
+                break;
+            }
+            if (cf_isspace(*inp)) {     /* WS --> loop */
+                inp++;
+                break;
+            }
 
-			cf_err_str = "invalid lhs - more than one word before colon";
-			state = R_ERROR;
-			break;
+            cf_err_str = "invalid lhs - more than one word before colon";
+            state = R_ERROR;
+            break;
 
-		case R_POSTCOLON:			/* got colon, eat whitespace */
-			if (cf_isspace(*inp)) {		/* WS --> loop */
-				inp++;
-				break;
-			}
-			if (cf_iseol(*inp)) {		/* EOL --> R_ERROR */
-				cf_err_str = "invalid rhs - no data after colon";
-				state = R_ERROR;
-				break;
-			}
+        case R_POSTCOLON:           /* got colon, eat whitespace */
+            if (cf_isspace(*inp)) {     /* WS --> loop */
+                inp++;
+                break;
+            }
+            if (cf_iseol(*inp)) {       /* EOL --> R_ERROR */
+                cf_err_str = "invalid rhs - no data after colon";
+                state = R_ERROR;
+                break;
+            }
 
-			/* figure out if it's a MULTI_STRING or not, since we have to
-			   parse it differently if it is */
-			if ((configp = lookup_tag(config_tab, config_size, tag_buf)) == NULL)
-			{
-				if (cf_forgiving) {
-					return (0);		/* error gets caught later */
-				}
-				cf_err_str = "unknown tag";
-				state = R_ERROR;
-				break;
-			}
-			is_ms = (configp->kind == CF_MULTI_STRING);
-			outp = full_line_buf;
-			if (is_ms)
-				add_ms(outp);
-			state = R_RHS;				/* else --> R_RHS */
-			break;
+            /* figure out if it's a MULTI_STRING or not, since we have to
+               parse it differently if it is */
+            if ((configp = lookup_tag(config_tab, config_size, tag_buf)) == NULL)
+            {
+                if (cf_forgiving) {
+                    return (0);     /* error gets caught later */
+                }
+                cf_err_str = "unknown tag";
+                state = R_ERROR;
+                break;
+            }
+            is_ms = (configp->kind == CF_MULTI_STRING);
+            outp = full_line_buf;
+            if (is_ms)
+                add_ms(outp);
+            state = R_RHS;              /* else --> R_RHS */
+            break;
 
-		case R_RHS:					/* reading right-hand-side now */
-			if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
-				cf_err_str = "invalid rhs - line too long";
-				state = R_ERROR;
-				break;
-			}
-			if (cf_iseol(*inp)) {		/* EOL --> R_DONE */
-				*outp = '\0';
-				state = R_DONE;
-				break;
-			}
-			if (*inp == '\"') {			/* '"' --> R_DQUOTE */
-				inp++;
-				state = R_DQUOTE;
-				break;
-			}
-			if (*inp == '\\') {			/* '\' --> R_BACK */
-				inp++;
-				state = R_BACK;
-				break;
-			}
-			if (is_ms) {
-				/* see if we want to break here */
-				if (strchr(configp->delim, *inp) != NULL) {
-					*outp++ = '\0';
-					inp++;
-					state = R_RHS_MS;
-					break;
-				}
-			}
+        case R_RHS:                 /* reading right-hand-side now */
+            if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
+                cf_err_str = "invalid rhs - line too long";
+                state = R_ERROR;
+                break;
+            }
+            if (cf_iseol(*inp)) {       /* EOL --> R_DONE */
+                *outp = '\0';
+                state = R_DONE;
+                break;
+            }
+            if (*inp == '\"') {         /* '"' --> R_DQUOTE */
+                inp++;
+                state = R_DQUOTE;
+                break;
+            }
+            if (*inp == '\\') {         /* '\' --> R_BACK */
+                inp++;
+                state = R_BACK;
+                break;
+            }
+            if (is_ms) {
+                /* see if we want to break here */
+                if (strchr(configp->delim, *inp) != NULL) {
+                    *outp++ = '\0';
+                    inp++;
+                    state = R_RHS_MS;
+                    break;
+                }
+            }
 
-			*outp++ = *inp++;			/* else --> loop */
-			break;
+            *outp++ = *inp++;           /* else --> loop */
+            break;
 
-		case R_RHS_MS:				/* skipping over delimiter(s) */
-			if (strchr(configp->delim, *inp) == NULL) {
-										/* !DELIM --> RHS */
-				if (add_ms(outp) < 0) {	/* another one coming! */
-					state = R_ERROR;
-					break;
-				}
-				state = R_RHS;
-				break;
-			}
+        case R_RHS_MS:              /* skipping over delimiter(s) */
+            if (strchr(configp->delim, *inp) == NULL) {
+                                        /* !DELIM --> RHS */
+                if (add_ms(outp) < 0) { /* another one coming! */
+                    state = R_ERROR;
+                    break;
+                }
+                state = R_RHS;
+                break;
+            }
 
-			inp++;						/* else --> loop */
-			break;
+            inp++;                      /* else --> loop */
+            break;
 
-		case R_DQUOTE:				/* inside double quotes */
-			if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
-				cf_err_str = "invalid rhs - line too long";
-				state = R_ERROR;
-				break;
-			}
-			if (cf_iseol(*inp)) {		/* EOL --> R_ERROR */
-				cf_err_str = "reached EOL inside double quotes";
-				state = R_ERROR;
-				break;
-			}
-			if (*inp == '\"') {			/* '"' --> R_RHS */
-				inp++;
-				state = R_RHS;
-				break;
-			}
-			if (*inp == '\\') {			/* '\' --> R_DQ_BACK */
-				inp++;
-				state = R_DQ_BACK;
-				break;
-			}
+        case R_DQUOTE:              /* inside double quotes */
+            if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
+                cf_err_str = "invalid rhs - line too long";
+                state = R_ERROR;
+                break;
+            }
+            if (cf_iseol(*inp)) {       /* EOL --> R_ERROR */
+                cf_err_str = "reached EOL inside double quotes";
+                state = R_ERROR;
+                break;
+            }
+            if (*inp == '\"') {         /* '"' --> R_RHS */
+                inp++;
+                state = R_RHS;
+                break;
+            }
+            if (*inp == '\\') {         /* '\' --> R_DQ_BACK */
+                inp++;
+                state = R_DQ_BACK;
+                break;
+            }
 
-			*outp++ = *inp++;			/* else --> loop */
-			break;
+            *outp++ = *inp++;           /* else --> loop */
+            break;
 
-		case R_BACK:				/* escape the next character */
-			if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
-				cf_err_str = "invalid rhs - line too long";
-				state = R_ERROR;
-				break;
-			}
-			if (cf_iseol(*inp)) {		/* EOL --> read next */
-				if ((val = read_line(fp))) {
-					if (val > 0)
-					cf_err_str = "can't escape EOF!";
-					state = R_ERROR;
-					break;
-				}
-				inp = line_buf;
+        case R_BACK:                /* escape the next character */
+            if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
+                cf_err_str = "invalid rhs - line too long";
+                state = R_ERROR;
+                break;
+            }
+            if (cf_iseol(*inp)) {       /* EOL --> read next */
+                if ((val = read_line(fp))) {
+                    if (val > 0)
+                    cf_err_str = "can't escape EOF!";
+                    state = R_ERROR;
+                    break;
+                }
+                inp = line_buf;
 
-				state = R_RHS;
-				break;
-			}
+                state = R_RHS;
+                break;
+            }
 
-			switch (*inp) {
-			case 'n':	*outp++ = '\n'; break;
-			case 't':	*outp++ = '\t'; break;
-			default:	*outp++ = *inp; break;
-			}
-			inp++;
-			state = R_RHS;
-			break;
+            switch (*inp) {
+            case 'n':   *outp++ = '\n'; break;
+            case 't':   *outp++ = '\t'; break;
+            default:    *outp++ = *inp; break;
+            }
+            inp++;
+            state = R_RHS;
+            break;
 
-		case R_DQ_BACK:				/* escape next, inside double quotes */
-			if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
-				cf_err_str = "invalid rhs - line too long";
-				state = R_ERROR;
-				break;
-			}
-			if (cf_iseol(*inp)) {		/* EOL --> read next */
-				if ((val = read_line(fp))) {
-					if (val > 0)
-					cf_err_str = "can't escape EOF!";
-					state = R_ERROR;
-				}
-				inp = line_buf;
+        case R_DQ_BACK:             /* escape next, inside double quotes */
+            if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
+                cf_err_str = "invalid rhs - line too long";
+                state = R_ERROR;
+                break;
+            }
+            if (cf_iseol(*inp)) {       /* EOL --> read next */
+                if ((val = read_line(fp))) {
+                    if (val > 0)
+                    cf_err_str = "can't escape EOF!";
+                    state = R_ERROR;
+                }
+                inp = line_buf;
 
-				state = R_DQUOTE;
-				break;
-			}
+                state = R_DQUOTE;
+                break;
+            }
 
-			switch (*inp) {
-			case 'n':	*outp++ = '\n'; break;
-			case 't':	*outp++ = '\t'; break;
-			default:	*outp++ = *inp; break;
-			}
-			inp++;
-			state = R_DQUOTE;
-			break;
+            switch (*inp) {
+            case 'n':   *outp++ = '\n'; break;
+            case 't':   *outp++ = '\t'; break;
+            default:    *outp++ = *inp; break;
+            }
+            inp++;
+            state = R_DQUOTE;
+            break;
 
-		case R_DONE:					/* we're all done! */
-			/* shouldn't actually get here, caught by while() */
-			break;
+        case R_DONE:                    /* we're all done! */
+            /* shouldn't actually get here, caught by while() */
+            break;
 
-		case R_ERROR:					/* error! */
-			if (cf_debug) printf("--- full_line_buf R_ERROR\n");
-			return (-1);
+        case R_ERROR:                   /* error! */
+            if (cf_debug) printf("--- full_line_buf R_ERROR\n");
+            return (-1);
 
-		default:
-			cf_err_str = "damaged state in read_full_line()";
-			return (-1);
-		}
-	}
+        default:
+            cf_err_str = "damaged state in read_full_line()";
+            return (-1);
+        }
+    }
 
-	/*
-	 * Now trim off trailing white space.  In the case of a MULTI_STRING,
-	 * this could cause us to completely trim off the final string.  This
-	 * is fine... usually.
-	 */
-	cp = outp-1;
-	while (cf_isspace(*cp))
-		*cp-- = '\0';
+    /*
+     * Now trim off trailing white space.  In the case of a MULTI_STRING,
+     * this could cause us to completely trim off the final string.  This
+     * is fine... usually.
+     */
+    cp = outp-1;
+    while (cf_isspace(*cp))
+        *cp-- = '\0';
 
-	if (is_ms)
-		convert_ms();
+    if (is_ms)
+        convert_ms();
 
-	if (cf_debug) {
-		if (is_ms)
-			printf("PARSED: '%s':(multi-line str)\n", tag_buf);
-		else
-			printf("PARSED: '%s':'%s'\n", tag_buf, full_line_buf);
-	}
+    if (cf_debug) {
+        if (is_ms)
+            printf("PARSED: '%s':(multi-line str)\n", tag_buf);
+        else
+            printf("PARSED: '%s':'%s'\n", tag_buf, full_line_buf);
+    }
 
-	return (0);
+    return (0);
 }
 
 
@@ -693,70 +696,70 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
 static int
 eval_boolean(const CONFIG *configp)
 {
-	if (strcasecmp(full_line_buf, "true") == 0 ||
-		strcasecmp(full_line_buf, "on") == 0)
-	{
-		*((int *) configp->reference) = TRUE;
-		return (0);
-	} else if (strcasecmp(full_line_buf, "false") == 0 ||
-			   strcasecmp(full_line_buf, "off") == 0)
-	{
-		*((int *) configp->reference) = FALSE;
-		return (0);
-	} else {
-		cf_err_str = "invalid value for a boolean";
-		return (-1);
-	}
+    if (strcasecmp(full_line_buf, "true") == 0 ||
+        strcasecmp(full_line_buf, "on") == 0)
+    {
+        *((int *) configp->reference) = TRUE;
+        return (0);
+    } else if (strcasecmp(full_line_buf, "false") == 0 ||
+               strcasecmp(full_line_buf, "off") == 0)
+    {
+        *((int *) configp->reference) = FALSE;
+        return (0);
+    } else {
+        cf_err_str = "invalid value for a boolean";
+        return (-1);
+    }
 }
 
 static int
 eval_int(const CONFIG *configp)
 {
-	*((int *) configp->reference) = strtol(full_line_buf, NULL, 0);
-	return (0);
+    *((int *) configp->reference) = strtol(full_line_buf, NULL, 0);
+    return (0);
 }
 
 static int
 eval_double(const CONFIG *configp)
 {
-	/* Can use atof() here.  Note this will fail if strtod() not prototyped. */
-	*((double *) configp->reference) = (double)strtod(full_line_buf, NULL);
-	return (0);
+    /* Can use atof() here.  Note this will fail if strtod() not prototyped. */
+    *((double *) configp->reference) = (double)strtod(full_line_buf, NULL);
+    return (0);
 }
 
 static int
 eval_string(const CONFIG *configp)
 {
-	char *cp;
-	int len;
+    char *cp;
+    int len;
 
-	len = strlen(full_line_buf);
+    len = strlen(full_line_buf);
 
-	if (!configp->size) {
-		/* need to allocate space */
-		if (cf_check_alloc) {
-			if (*((char **) configp->reference) != NULL) {
-				cf_err_str = "tried to store dynamic string in non-NULL var";
-				return (-1);
-			}
-		}
-		if ((cp = (char *)malloc(len+1)) == NULL) {
-			cf_err_str = "malloc() failed";
-			return (-1);
-		}
-		if (cf_debug) printf("MALLOC 0x%.8lx\n", (long)cp);
-		strcpy(cp, full_line_buf);
-		*((char **) configp->reference) = cp;
-	} else {
-		/* reference is a fixed-size buffer */
-		if (configp->size < (len+1)) {
-			cf_err_str = "string longer than allocated space";
-			return (-1);
-		}
-		strcpy((char *) configp->reference, full_line_buf);
-	}
+    if (!configp->size) {
+        /* need to allocate space */
+        if (cf_check_alloc) {
+            if (*((char **) configp->reference) != NULL) {
+                cf_err_str = "tried to store dynamic string in non-NULL var";
+                return (-1);
+            }
+        }
+        if ((cp = (char *)malloc(len+1)) == NULL) {
+            cf_err_str = "malloc() failed";
+            return (-1);
+        }
+        if (cf_debug) printf("MALLOC 0x%.8lx\n", (long)cp);
+        strcpy(cp, full_line_buf);
+        *((char **) configp->reference) = cp;
+    } else {
+        /* reference is a fixed-size buffer */
+        if (configp->size < (len+1)) {
+            cf_err_str = "string longer than allocated space";
+            return (-1);
+        }
+        strcpy((char *) configp->reference, full_line_buf);
+    }
 
-	return (0);
+    return (0);
 }
 
 static int
@@ -765,39 +768,39 @@ eval_multi_string(const CONFIG *configp)
     int res;
 
     res = (*((CF_INTFUNCPTR) configp->reference))(ms_argc, ms_argv);
-    free(ms_argv);		/* free vector of pointers into full_line_buf */
+    free(ms_argv);      /* free vector of pointers into full_line_buf */
     ms_argc = 0;
 
     if (res < 0)
-		cf_err_str = "error parsing string data";
+        cf_err_str = "error parsing string data";
     return (res);
 }
 
 static int
 eval_multi_line(const CONFIG *configp, FILE *fp)
 {
-	int res, len;
+    int res, len;
 
-	len = strlen(configp->delim);
+    len = strlen(configp->delim);
 
-	while (1) {
-		res = read_line(fp);
-		if (res < 0) return (-1);
-		/*if (res > 0) break;*/		/* EOF reached; allow it */
-		if (res > 0) return (-1);	/* EOF reached; error */
+    while (1) {
+        res = read_line(fp);
+        if (res < 0) return (-1);
+        /*if (res > 0) break;*/     /* EOF reached; allow it */
+        if (res > 0) return (-1);   /* EOF reached; error */
 
-		/* match as a prefix; don't require a '\n' after it in line_buf */
-		if (strncasecmp(configp->delim, line_buf, len) == 0)
-			break;
+        /* match as a prefix; don't require a '\n' after it in line_buf */
+        if (strncasecmp(configp->delim, line_buf, len) == 0)
+            break;
 
-		res = (*((CF_INTFUNCPTR) configp->reference))(line_buf);
-		if (res < 0) {
-			cf_err_str = "error parsing multi-line data";
-			return (-1);
-		}
-	}
+        res = (*((CF_INTFUNCPTR) configp->reference))(line_buf);
+        if (res < 0) {
+            cf_err_str = "error parsing multi-line data";
+            return (-1);
+        }
+    }
 
-	return (0);
+    return (0);
 }
 
 /*
@@ -810,14 +813,14 @@ eval_multi_line(const CONFIG *configp, FILE *fp)
 static void
 report_problem(char *whine, int cline)
 {
-	/*syslog(LOG_ALERT|LOG_USER, "WARNING: config line %d: %s", cline, whine);*/
-	fprintf(stderr, "WARNING: config line %d: %s\n", cline, whine);
+    /*syslog(LOG_ALERT|LOG_USER, "WARNING: config line %d: %s", cline, whine);*/
+    fprintf(stderr, "WARNING: config line %d: %s\n", cline, whine);
 }
 
 
 /*
  * ===========================================================================
- *	Public routines.
+ *  Public routines.
  * ===========================================================================
  */
 
@@ -832,94 +835,94 @@ report_problem(char *whine, int cline)
 int
 read_config(const char *argv0, const CONFIG *config_tab, int config_size, FILE *fp)
 {
-	const CONFIG *configp;
-	int err, res;
+    const CONFIG *configp;
+    int err, res;
 
-	/* sanity check on config table */
-	if (config_tab[0].kind > CF_MULTI_LINE ||
-		config_size < 0 || config_size > 1024)
-	{
-		cf_err_str = "config table corrupt";
-		goto error;
-	}
+    /* sanity check on config table */
+    if (config_tab[0].kind > CF_MULTI_LINE ||
+        config_size < 0 || config_size > 1024)
+    {
+        cf_err_str = "config table corrupt";
+        goto error;
+    }
 
-	if (argv0 == NULL)
-		argv0 = default_argv0;
+    if (argv0 == NULL)
+        argv0 = default_argv0;
 
-	line = 0;
+    line = 0;
 
-	while (1) {
-		/* read a full config line into full_line_buf, tag in tag_buf */
-		res = get_full_line(config_tab, config_size, fp);
-		if (res > 0) break;		/* EOF reached */
-		if (res < 0) goto error;	/* error */
+    while (1) {
+        /* read a full config line into full_line_buf, tag in tag_buf */
+        res = get_full_line(config_tab, config_size, fp);
+        if (res > 0) break;     /* EOF reached */
+        if (res < 0) goto error;    /* error */
 
-		/* find the matching entry in config[] */
-		if ((configp = lookup_tag(config_tab, config_size, tag_buf)) == NULL) {
-			cf_err_str = "unknown tag";
-			if (cf_forgiving) {
-				report_problem(cf_err_str, line);
-				continue;
-			} else {
-				goto error;
-			}
-		}
+        /* find the matching entry in config[] */
+        if ((configp = lookup_tag(config_tab, config_size, tag_buf)) == NULL) {
+            cf_err_str = "unknown tag";
+            if (cf_forgiving) {
+                report_problem(cf_err_str, line);
+                continue;
+            } else {
+                goto error;
+            }
+        }
 
-		/* empty right-hand-side only allowed on MULTI_LINE tag */
-		if (configp->kind != CF_MULTI_LINE && full_line_buf[0] == '\0') {
-			/* (...but full_line_buf is irrelevant for MULTI_STRING) */
-			if (!(configp->kind == CF_MULTI_STRING && ms_argc)) {
-				cf_err_str = "missing rhs";
-				goto error;
-			}
-		}
+        /* empty right-hand-side only allowed on MULTI_LINE tag */
+        if (configp->kind != CF_MULTI_LINE && full_line_buf[0] == '\0') {
+            /* (...but full_line_buf is irrelevant for MULTI_STRING) */
+            if (!(configp->kind == CF_MULTI_STRING && ms_argc)) {
+                cf_err_str = "missing rhs";
+                goto error;
+            }
+        }
 
-		/* do something appropriate with the tag we got */
-		switch (configp->kind) {
-		case CF_BOOLEAN:
-			res = eval_boolean(configp);
-			break;
-		case CF_INT:
-			res = eval_int(configp);
-			break;
-		case CF_DOUBLE:
-			res = eval_double(configp);
-			break;
-		case CF_STRING:
-			res = eval_string(configp);
-			break;
-		case CF_MULTI_STRING:
-			res = eval_multi_string(configp);
-			break;
-		case CF_MULTI_LINE:
-			res = eval_multi_line(configp, fp);
-			break;
-		default:
-			cf_err_str = "bogus config kind?";
-			res = -1;
-		}
+        /* do something appropriate with the tag we got */
+        switch (configp->kind) {
+        case CF_BOOLEAN:
+            res = eval_boolean(configp);
+            break;
+        case CF_INT:
+            res = eval_int(configp);
+            break;
+        case CF_DOUBLE:
+            res = eval_double(configp);
+            break;
+        case CF_STRING:
+            res = eval_string(configp);
+            break;
+        case CF_MULTI_STRING:
+            res = eval_multi_string(configp);
+            break;
+        case CF_MULTI_LINE:
+            res = eval_multi_line(configp, fp);
+            break;
+        default:
+            cf_err_str = "bogus config kind?";
+            res = -1;
+        }
 
-		if (res < 0) goto error;
-	}
+        if (res < 0) goto error;
+    }
 
-	if (cf_verbose) printf("--- configuration successfully read\n");
-	return (0);
+    if (cf_verbose) printf("--- configuration successfully read\n");
+    return (0);
 
 error:
-	err = errno;
-	fflush(stdout);
-	errno = err;
-	if (cf_err_str != NULL) {
-		fprintf(stderr, "%s: ", argv0);
-		if (line) fprintf(stderr, "line %d: ", line);
-		fprintf(stderr, "%s\n", cf_err_str);
-	} else {
-		perror(argv0);
-	}
-	cf_err_str = NULL;
+    err = errno;
+    fflush(stdout);
+    errno = err;
+    if (cf_err_str != NULL) {
+        fprintf(stderr, "%s: ", argv0);
+        if (line) fprintf(stderr, "line %d: ", line);
+        fprintf(stderr, "%s\n", cf_err_str);
+    } else {
+        perror(argv0);
+    }
+    cf_err_str = NULL;
 
-	if (cf_verbose) printf("--- aborting config file read\n");
-	return (-1);
+    if (cf_verbose) printf("--- aborting config file read\n");
+    return (-1);
 }
 
 /*
@@ -930,25 +933,25 @@ error:
 int
 read_config_file(const char *argv0, const CONFIG *config_tab, int config_count, const char *filename)
 {
-	FILE *fp;
-	int err, res;
+    FILE *fp;
+    int err, res;
 
-	if (argv0 == NULL)
-		argv0 = default_argv0;
+    if (argv0 == NULL)
+        argv0 = default_argv0;
 
-	if ((fp = fopen(filename, "r")) == NULL) {
-		err = errno;
-		fprintf(stderr, "%s: unable to read %s: ", argv0, filename);
-		errno = err;	/* fprintf() could change errno */
-		perror(NULL);
-		return (-1);
-	}
+    if ((fp = fopen(filename, "r")) == NULL) {
+        err = errno;
+        fprintf(stderr, "%s: unable to read %s: ", argv0, filename);
+        errno = err;    /* fprintf() could change errno */
+        perror(NULL);
+        return (-1);
+    }
 
-	if (cf_verbose) printf("--- reading configuration from '%s'\n", filename);
+    if (cf_verbose) printf("--- reading configuration from '%s'\n", filename);
 
-	res = read_config(argv0, config_tab, config_count, fp);
-	fclose(fp);
-	return (res);
+    res = read_config(argv0, config_tab, config_count, fp);
+    fclose(fp);
+    return (res);
 }
 
 /*
@@ -964,29 +967,30 @@ read_config_file(const char *argv0, const CONFIG *config_tab, int config_count, 
 int
 dispose_config(const char *argv0, const CONFIG *config_tab, int config_count)
 {
-	const CONFIG *configp;
+    const CONFIG *configp;
 
-	if (argv0 == NULL)
-		argv0 = default_argv0;
+    if (argv0 == NULL)
+        argv0 = default_argv0;
 
-	for (configp = config_tab; config_count--; configp++) {
-		if (configp->dispose != NULL) {
-			if (cf_debug) printf("DISPOSE 0x%.8lx\n", (long)configp->dispose);
-			(*configp->dispose)();
-		} else {
-			/* no dispose routine; see if we want to call free() on the
-			   "reference" field */
-			if (configp->kind == CF_STRING && !configp->size &&
-				*((char **)configp->reference) != NULL)
-			{
-				char *cp = *((char **) configp->reference);
-				if (cf_debug) printf("FREE 0x%.8lx\n", (long)cp);
-				free(cp);
-				*((char **)configp->reference) = NULL;
-			}
-		}
-	}
+    for (configp = config_tab; config_count--; configp++) {
+        if (configp->dispose != NULL) {
+            if (cf_debug) printf("DISPOSE 0x%.8lx\n", (long)configp->dispose);
+            (*configp->dispose)();
+        } else {
+            /* no dispose routine; see if we want to call free() on the
+               "reference" field */
+            if (configp->kind == CF_STRING && !configp->size &&
+                *((char **)configp->reference) != NULL)
+            {
+                char *cp = *((char **) configp->reference);
+                if (cf_debug) printf("FREE 0x%.8lx\n", (long)cp);
+                free(cp);
+                *((char **)configp->reference) = NULL;
+            }
+        }
+    }
 
-	return (0);
+    return (0);
 }
 
+#endif

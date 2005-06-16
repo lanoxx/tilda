@@ -14,6 +14,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifndef TILDA_TILDA_C
+#define TILDA_TILDA_C
+
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -50,50 +53,50 @@ char lock_file[80];      /* stores the name of the socket used for accessing thi
 //gboolean bool_grab_focus;
 
 /* Removes the temporary file socket used to communicate with a running tilda */
-void clean_up () 
+void clean_up ()
 {
     remove (lock_file);
-    
+
     exit (0);
 }
 
 void getinstance ()
 {
     char tmp[80];
-	char *home_dir;
-    
+    char *home_dir;
+
     instance = 0;
-    
+
     home_dir = getenv ("HOME");
     strlcpy (lock_file, home_dir, sizeof(lock_file));
     strlcat (lock_file, "/.tilda", sizeof(lock_file));
     strlcat (lock_file, "/locks/", sizeof(lock_file));
-    
+
     mkdir (lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
- 
+
     strlcat (lock_file, "lock", sizeof(lock_file));
     strlcpy (tmp, lock_file, sizeof (tmp));
     sprintf (tmp, "%s_%i", tmp, instance);
 
     for (;;)
     {
-		if (access (tmp, R_OK) == 0)
+        if (access (tmp, R_OK) == 0)
         {
             instance++;
             strlcpy (tmp, lock_file, sizeof (tmp));
-        	sprintf (tmp, "%s_%i", tmp, instance); 
+            sprintf (tmp, "%s_%i", tmp, instance);
         }
         else
-        	break;
-	}
+            break;
+    }
 
     strlcpy (lock_file, tmp, sizeof (config_file));
     creat (lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
-}   
+}
 
 int main (int argc, char **argv)
 {
-	GtkAccelGroup *accel_group;
+    GtkAccelGroup *accel_group;
     GClosure *clean;
     char *home_dir;
     FILE *fp;
@@ -101,9 +104,9 @@ int main (int argc, char **argv)
     char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     int  env_add2_size;
     float tmp_val;
-    gboolean audible = TRUE, blink = TRUE, dingus = FALSE, 
-    		  geometry = TRUE, dbuffer = TRUE, console = FALSE, 
-              scroll = FALSE, icon_title = FALSE, shell = TRUE; 
+    gboolean audible = TRUE, blink = TRUE, dingus = FALSE,
+              geometry = TRUE, dbuffer = TRUE, console = FALSE,
+              scroll = FALSE, icon_title = FALSE, shell = TRUE;
     const char *command = NULL;
     const char *working_directory = NULL;
     char env_var[14];
@@ -122,9 +125,9 @@ int main (int argc, char **argv)
                 "[-s] "
                 "[-w directory] "
                 "[-c command] "
-                "[-t level] "        
+                "[-t level] "
                 "[-x position] "
-                "[-y position] "       
+                "[-y position] "
                 "[-l lines]\n\n"
                 "-B image : set background image\n"
                 "-T : Sorry this no longer does anything\n"
@@ -136,7 +139,7 @@ int main (int argc, char **argv)
                 "-s : use scrollbar\n"
                 "-w directory : switch working directory\n"
                 "-c command : run command\n"
-                "-t level: set transparent to true and set the level of transparency to level, 0-100\n"   
+                "-t level: set transparent to true and set the level of transparency to level, 0-100\n"
                 "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
                 "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
                 "-l lines : set number of scrollback lines\n";
@@ -148,52 +151,52 @@ int main (int argc, char **argv)
     cursor.green = cursor.blue = 0x8000;
     tint.red = tint.green = tint.blue = 0;
     tint = back;
-    
+
     strlcpy (s_font, "monospace 9", sizeof (s_font));
     user = getenv ("USER");
     display = getenv ("DISPLAY");
-    
+
     /* Have to do this early. */
-    if (getenv ("VTE_PROFILE_MEMORY")) 
+    if (getenv ("VTE_PROFILE_MEMORY"))
     {
-        if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0) 
+        if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
         {
             g_mem_set_vtable (glib_mem_profiler_table);
         }
     }
 
     /* Pull out long options for GTK+. */
-    for (i=j=1;i<argc;i++) 
+    for (i=j=1;i<argc;i++)
     {
-        if (g_ascii_strncasecmp ("--", argv[i], 2) == 0) 
+        if (g_ascii_strncasecmp ("--", argv[i], 2) == 0)
         {
             args = g_list_append (args, argv[i]);
-            
-            for (j=i;j<argc;j++) 
+
+            for (j=i;j<argc;j++)
                 argv[j] = argv[j + 1];
-            
+
             argc--;
             i--;
         }
     }
 
-	/* set the instance number and place a env in the array of envs 
+    /* set the instance number and place a env in the array of envs
     * to be set when the tilda terminal is created */
     getinstance ();
     sprintf (env_var, "TILDA_NUM=%d", instance);
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:wl:-")) != -1) 
+    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:wl:-")) != -1)
      {
         gboolean bail = FALSE;
         switch (opt) {
             case 'B':
-            	image_set_clo = TRUE;
+                image_set_clo = TRUE;
                 strlcpy (s_image, optarg, sizeof (s_image));
                 break;
             case 'b':
                 strlcpy (s_background, optarg, sizeof (s_background));
-                break;  
+                break;
             case 'T':
                 printf ("-T no longer does anything :(, tilda no longer uses xbindkeys\n");
                 printf ("If there is a demand I can fix it up so both new and old work.\n");
@@ -220,7 +223,7 @@ int main (int argc, char **argv)
                 break;
             case 'a':
                 antialias_set_clo = TRUE;
-                break;  
+                break;
             case 'h':
                 g_print(usage, argv[0]);
                 exit(1);
@@ -244,14 +247,14 @@ int main (int argc, char **argv)
             default:
                 break;
         }
-        if (bail) 
+        if (bail)
             break;
-    } 
-    
+    }
+
     home_dir = getenv ("HOME");
     strlcpy (config_file, home_dir, sizeof(config_file));
     strlcat (config_file, "/.tilda/config", sizeof(config_file));
-	sprintf (config_file, "%s_%i", config_file, instance);
+    sprintf (config_file, "%s_%i", config_file, instance);
 
     /* Call the wizard if we cannot read the config file.
      * This fixes a crash that happened if there was not a config file, and
@@ -271,15 +274,15 @@ int main (int argc, char **argv)
     }
 
     if (strcasecmp (s_key, "null") == 0)
-    	sprintf (s_key, "None+F%i", instance+1);
+        sprintf (s_key, "None+F%i", instance+1);
 
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
     strlcpy (env_add[2], env_var, env_add2_size);
 
-	g_thread_init(NULL);
-  	gdk_threads_init();
-    
+    g_thread_init(NULL);
+    gdk_threads_init();
+
     gtk_init (&argc, &argv);
 
     /* Create a window to hold the scrolling shell, and hook its
@@ -294,10 +297,10 @@ int main (int argc, char **argv)
 
     /* Create the terminal widget and add it to the scrolling shell. */
     widget = vte_terminal_new ();
-    
-    if (!dbuffer) 
+
+    if (!dbuffer)
         gtk_widget_set_double_buffered (widget, dbuffer);
-    
+
     gtk_box_pack_start (GTK_BOX(hbox), widget, TRUE, TRUE, 0);
 
     /* Connect to the "char_size_changed" signal to set geometry hints
@@ -313,7 +316,7 @@ int main (int argc, char **argv)
      * window's title. */
     g_signal_connect (G_OBJECT(widget), "window-title-changed",
                       G_CALLBACK(window_title_changed), window);
-    if (icon_title) 
+    if (icon_title)
     {
         g_signal_connect (G_OBJECT(widget), "icon-title-changed",
                           G_CALLBACK(icon_title_changed), window);
@@ -359,16 +362,16 @@ int main (int argc, char **argv)
     g_signal_connect (G_OBJECT(widget), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), window);
 
-	/* Exit on Ctrl-Q */
+    /* Exit on Ctrl-Q */
     clean = g_cclosure_new (clean_up, NULL, NULL);
-	accel_group = gtk_accel_group_new ();
+    accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
-	gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
+    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
 
     /* Create the scrollbar for the widget. */
     scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(widget))->adjustment);
     gtk_box_pack_start (GTK_BOX(hbox), scrollbar, FALSE, FALSE, 0);
-        
+
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(widget), audible);
     vte_terminal_set_visible_bell (VTE_TERMINAL(widget), !audible);
@@ -377,17 +380,17 @@ int main (int argc, char **argv)
     vte_terminal_set_scroll_on_output (VTE_TERMINAL(widget), FALSE);
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(widget), TRUE);
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(widget), lines);
-    vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);        
-    
-    /* Set everything up and display the widgets. 
-     *  Sending TRUE to let it know we are in main() 
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(widget), TRUE);
+
+    /* Set everything up and display the widgets.
+     *  Sending TRUE to let it know we are in main()
      */
     load_tilda (TRUE);
 
     /* Match "abcdefg". */
     vte_terminal_match_add (VTE_TERMINAL(widget), "abcdefg");
-    
-    if (dingus) 
+
+    if (dingus)
     {
         i = vte_terminal_match_add (VTE_TERMINAL(widget), DINGUS1);
         vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget), i, GDK_GUMBY);
@@ -395,9 +398,9 @@ int main (int argc, char **argv)
         vte_terminal_match_set_cursor_type (VTE_TERMINAL(widget), i, GDK_HAND1);
     }
 
-    if (!console) 
+    if (!console)
     {
-        if (shell) 
+        if (shell)
         {
             /* Launch a shell. */
             if (command == NULL)
@@ -415,9 +418,9 @@ int main (int argc, char **argv)
                                        TRUE, TRUE, TRUE);
         }
     }
-    
+
     gtk_window_set_decorated ((GtkWindow *) window, FALSE);
-    
+
     g_object_add_weak_pointer (G_OBJECT(widget), (gpointer*)&widget);
     g_object_add_weak_pointer (G_OBJECT(window), (gpointer*)&window);
 
@@ -431,16 +434,18 @@ int main (int argc, char **argv)
     signal (SIGKILL, clean_up);
     signal (SIGABRT, clean_up);
     signal (SIGTERM, clean_up);
-    
+
     if (!g_thread_create ((GThreadFunc) wait_for_signal, NULL, FALSE, &error))
         perror ("Fuck that thread!!!");
-    
+
     gdk_threads_enter ();
     gtk_main();
-	gdk_threads_leave ();
-    
+    gdk_threads_leave ();
+
     printf ("remove %s\n", lock_file);
     remove (lock_file);
 
     return 0;
 }
+
+#endif

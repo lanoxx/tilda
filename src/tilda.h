@@ -33,7 +33,7 @@
  *                 ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcpy.c
  *
  * Here is a little guide on usage: http://www.courtesan.com/todd/papers/strlcpy.html
- * 
+ *
  * In short, the syntax is just like strncpy() and strncat().
  */
 #include "strlcat.c"
@@ -47,7 +47,7 @@ GtkWidget *widget;
 GtkWidget *hbox;
 GtkWidget *window;
 gboolean image_set_clo=FALSE, antialias_set_clo=FALSE, scroll_set_clo=FALSE;
- 
+
 extern int wizard (int argc, char **argv);
 extern int write_key_bindings (char wm[], char key[]);
 extern void popup (char *message, char *b1_message, char *b2_message, void (*func1)(),void (*func2)());
@@ -84,11 +84,11 @@ const CONFIG tilda_config[] = {
         { CF_STRING,    "background",   s_background,   sizeof(s_background),   NULL, 0, NULL },
         { CF_STRING,    "font",         s_font,         sizeof(s_font),         NULL, 0, NULL },
         { CF_STRING,    "antialias",    s_antialias,    sizeof(s_antialias),    NULL, 0, NULL },
-        { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },               
+        { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },
         { CF_STRING,    "use_image",    s_use_image,    sizeof(s_use_image),    NULL, 0, NULL },
         { CF_STRING,    "grab_focus",   s_grab_focus,   sizeof(s_grab_focus),   NULL, 0, NULL },
-        { CF_STRING,    "key",   		s_key,          sizeof(s_key),          NULL, 0, NULL },
-        { CF_STRING,    "down",   		s_down,      	sizeof(s_down),		    NULL, 0, NULL }
+        { CF_STRING,    "key",          s_key,          sizeof(s_key),          NULL, 0, NULL },
+        { CF_STRING,    "down",         s_down,         sizeof(s_down),         NULL, 0, NULL }
 };
 
 #include "wizard.c"

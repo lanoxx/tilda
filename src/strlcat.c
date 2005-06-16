@@ -1,4 +1,4 @@
-/*	$OpenBSD: strlcat.c,v 1.12 2005/03/30 20:13:52 otto Exp $	*/
+/*  $OpenBSD: strlcat.c,v 1.12 2005/03/30 20:13:52 otto Exp $   */
 
 /*
  * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -36,29 +36,29 @@ static char *rcsid = "$OpenBSD: strlcat.c,v 1.12 2005/03/30 20:13:52 otto Exp $"
 size_t
 strlcat(char *dst, const char *src, size_t siz)
 {
-	char *d = dst;
-	const char *s = src;
-	size_t n = siz;
-	size_t dlen;
+    char *d = dst;
+    const char *s = src;
+    size_t n = siz;
+    size_t dlen;
 
-	/* Find the end of dst and adjust bytes left but don't go past end */
-	while (n-- != 0 && *d != '\0')
-		d++;
-	dlen = d - dst;
-	n = siz - dlen;
+    /* Find the end of dst and adjust bytes left but don't go past end */
+    while (n-- != 0 && *d != '\0')
+        d++;
+    dlen = d - dst;
+    n = siz - dlen;
 
-	if (n == 0)
-		return(dlen + strlen(s));
-	while (*s != '\0') {
-		if (n != 1) {
-			*d++ = *s;
-			n--;
-		}
-		s++;
-	}
-	*d = '\0';
+    if (n == 0)
+        return(dlen + strlen(s));
+    while (*s != '\0') {
+        if (n != 1) {
+            *d++ = *s;
+            n--;
+        }
+        s++;
+    }
+    *d = '\0';
 
-	return(dlen + (s - src));	/* count does not include NUL */
+    return(dlen + (s - src));   /* count does not include NUL */
 }
 
 #endif

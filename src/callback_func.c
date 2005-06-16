@@ -28,8 +28,8 @@ static GtkItemFactoryEntry menu_items[] = {
     { "/sep1",     NULL,      NULL,         0, "<Separator>" },
     { "/_Preferences...", NULL, config_and_update, 0, "<StockItem>", GTK_STOCK_PREFERENCES},
     { "/sep1",     NULL,      NULL,         0, "<Separator>" },
-	{ "/_Quit", "<Ctrl>Q", menu_quit, 0, "<StockItem>", GTK_STOCK_QUIT } };
-    
+    { "/_Quit", "<Ctrl>Q", menu_quit, 0, "<StockItem>", GTK_STOCK_QUIT } };
+
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 
@@ -44,9 +44,9 @@ void fix_size_settings ()
 int resize (GtkWidget *window, gint w, gint h)
 {
     gtk_window_resize ((GtkWindow *) window, w, h);
-    
+
     return 0;
-}   
+}
 
 static void window_title_changed (GtkWidget *widget, gpointer win)
 {
@@ -131,41 +131,41 @@ static void status_line_changed (GtkWidget *widget, gpointer data)
 
 void copy (GtkWidget *w, gpointer data)
 {
-	vte_terminal_copy_clipboard ((VteTerminal *) widget);
+    vte_terminal_copy_clipboard ((VteTerminal *) widget);
 }
 
 void paste (GtkWidget *w, gpointer data)
 {
-	vte_terminal_paste_clipboard ((VteTerminal *) widget);
+    vte_terminal_paste_clipboard ((VteTerminal *) widget);
 }
 
 void config_and_update (GtkWidget *widget, gpointer data)
 {
-	wizard (-1, NULL);
+    wizard (-1, NULL);
 }
 
 void menu_quit (GtkWidget *widget, gpointer data)
 {
-	gtk_widget_destroy (GTK_WIDGET(window));
+    gtk_widget_destroy (GTK_WIDGET(window));
     gtk_main_quit ();
 }
 
 void popup_menu ()
-{	
+{
     GtkItemFactory *item_factory;
-   	GtkWidget *menu;
-  
-   	item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>",
+    GtkWidget *menu;
+
+    item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>",
                                         NULL);
-   	
+
     gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
-   	
+
     menu = gtk_item_factory_get_widget (item_factory, "<main>");
-    
+
     gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
                    NULL, NULL, 3, gtk_get_current_event_time());
-                              
-   	gtk_widget_show_all(menu); 
+
+    gtk_widget_show_all(menu);
 }
 
 static int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -174,11 +174,11 @@ static int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer da
     char *match;
     int tag;
     gint xpad, ypad;
-    
+
     switch (event->button) {
     case 3:
         popup_menu ();
-        
+
         terminal = VTE_TERMINAL(widget);
         vte_terminal_get_padding (terminal, &xpad, &ypad);
         match = vte_terminal_match_check (terminal,
@@ -352,7 +352,7 @@ static gboolean read_and_feed (GIOChannel *source, GIOCondition condition, gpoin
     GIOStatus status;
     g_return_val_if_fail (VTE_IS_TERMINAL(data), FALSE);
     status = g_io_channel_read_chars (source, buf, sizeof(buf), &size, NULL);
-    
+
     if ((status == G_IO_STATUS_NORMAL) && (size > 0)) {
         vte_terminal_feed (VTE_TERMINAL(data), buf, size);
         return TRUE;
