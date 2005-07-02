@@ -34,7 +34,7 @@ GtkWidget *wizard_window;
 int exit_status=0;
 
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
-GtkWidget *button_image, *image_chooser;
+GtkWidget *button_image, *image_chooser, *combo_tab_pos;
 GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focus;
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar, *check_down;
 GtkWidget *radio_white, *radio_black;
@@ -54,14 +54,22 @@ void close_dialog (GtkWidget *widget, gpointer data)
 GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
-    GtkWidget *label_scrollback;
+    GtkWidget *label_scrollback, *label_tab_pos;
 
-    table = gtk_table_new (2, 5, FALSE);
+    table = gtk_table_new (2, 6, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
     gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 
     label_scrollback = gtk_label_new("Scrollback:");
-
+	label_tab_pos = gtk_label_new ("Position of Tabs: ");
+	
+	combo_tab_pos = gtk_combo_box_new_text    ();
+	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "RIGHT");
+	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "LEFT");
+	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "BOTTOM");
+	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "TOP");
+	gtk_combo_box_set_active ((GtkComboBox *)combo_tab_pos, tw->tc->tab_pos);
+	
     check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
     check_above = gtk_check_button_new_with_label ("Always on top");
     check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
@@ -97,13 +105,18 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     //gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_down, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-
-    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+	
+	gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+	gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), spin_scrollback, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-
-
+	
+	gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_tab_pos, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
     //gtk_widget_show (check_grab_focus);
+	gtk_widget_show (label_tab_pos);
+	gtk_widget_show (combo_tab_pos);
     gtk_widget_show (check_down);
     gtk_widget_show (check_pinned);
     gtk_widget_show (check_above);
@@ -111,7 +124,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (check_scrollbar);
     gtk_widget_show (label_scrollback);
     gtk_widget_show (spin_scrollback);
-
+	
     return table;
 }
 
@@ -326,6 +339,24 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
 
     strlcat (tw->config_file, "config", sizeof(tw->config_file));
     sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
+	
+	switch (gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos))
+	{
+		case 0:
+			tw->tc->tab_pos = 0;
+			break;
+		case 1:
+			tw->tc->tab_pos = 1;
+			break;
+		case 2:
+			tw->tc->tab_pos = 2;
+			break;
+		case 3:
+			tw->tc->tab_pos = 3;
+			break;
+		default:
+			tw->tc->tab_pos = 0;	
+	}
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
         strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));

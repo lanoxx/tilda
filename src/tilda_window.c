@@ -72,7 +72,7 @@ void init_tilda_window_configs (tilda_window *tw)
 		{ CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                      NULL, 0, NULL }
 	};
 	
-	for (i=0;i<20;i++)
+	for (i=0;i<NUM_ELEM;i++)
 		tw->tilda_config[i] = t_c[i];
     
     get_defaults (tw);

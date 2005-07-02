@@ -24,6 +24,8 @@
 
 G_BEGIN_DECLS;
 
+#define NUM_ELEM 21
+
 typedef struct tilda_window_ tilda_window;
 typedef struct tilda_conf_ tilda_conf;
 
@@ -36,7 +38,7 @@ struct tilda_window_
     gchar lock_file[80];   
     gchar config_file[80];   
     gint instance;
-    CONFIG tilda_config[20];
+    CONFIG tilda_config[NUM_ELEM];
 };
 
 struct tilda_conf_

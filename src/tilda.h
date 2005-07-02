@@ -31,7 +31,6 @@
 
 G_BEGIN_DECLS;
 
-#define NUM_ELEM 20
 #define DEFAULT_LINES 100
 
 gboolean image_set_clo, antialias_set_clo, scroll_set_clo;

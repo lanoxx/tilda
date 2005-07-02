@@ -292,7 +292,7 @@ int main (int argc, char **argv)
     else
         fclose (fp);
 
-    if (read_config_file (argv[0], tw->tilda_config, 20, tw->config_file) < 0)
+    if (read_config_file (argv[0], tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
     {
         puts("There was an error in the config file, terminating");
         exit(1);
