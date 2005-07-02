@@ -107,11 +107,11 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
     tw = tc->tw;
     tt = tc->tt;
 
-    pos = gtk_notebook_page_num (tw->notebook, tt->hbox);
-    gtk_notebook_remove_page (tw->notebook, pos);
+    pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
+    gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
     
-    if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)   
-        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) <= 1)   
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
     
     g_free (tt);
 }
@@ -143,7 +143,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
-    gtk_notebook_set_show_border ((GtkNotebook *) tw->notebook, FALSE); 
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE); 
         
     init_tilda_terminal (tw, tt);
 
