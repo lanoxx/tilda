@@ -89,8 +89,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
     }
 
-    if (strcasecmp (tw->tc->s_font, "null") != 0)
-        strlcpy (tw->tc->s_font, tw->tc->s_font, sizeof (tw->tc->s_font));
+    if ((strcasecmp (s_font_arg, "null") != 0) && (strlen (s_font_arg) > 0))
+        strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (use_antialias)
         vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);
