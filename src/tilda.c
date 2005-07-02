@@ -319,7 +319,6 @@ int main (int argc, char **argv)
     gtk_main();
     gdk_threads_leave ();
 
-    printf ("remove %s\n", tw->lock_file);
     remove (tw->lock_file);
 
     return 0;

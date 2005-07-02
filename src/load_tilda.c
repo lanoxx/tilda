@@ -144,7 +144,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 		gtk_widget_show (tw->notebook);
 	}
 	    
-	
 	if (x_pos_arg != -1)
         x = x_pos_arg;
     else
