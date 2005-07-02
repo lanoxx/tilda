@@ -365,10 +365,10 @@ lookup_tag(const CONFIG *config_tab, int config_count, char *tag_name)
 {
     const CONFIG *conp;
     int i;
-
+	
     for (conp = config_tab, i = 0; i < config_count; i++, conp++) {
-        if (strcasecmp(conp->tag, tag_name) == 0) {
-            if (cf_debug) printf("lookup: '%s' found\n", tag_name);
+        if (strcasecmp(conp->tag, tag_name) == 0) {    	
+	        if (cf_debug) printf("lookup: '%s' found\n", tag_name);
             return (conp);
         }
     }
@@ -437,7 +437,7 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
             state = R_START;
             break;
 
-        case R_START:               /* skip leading whitespace */
+        case R_START:            /* skip leading whitespace */
             if (cf_isspace(*inp)) {     /* WS --> loop */
                 inp++;
                 break;
@@ -445,14 +445,14 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
             if (*inp == '#' || cf_iseol(*inp)) {
                 state = R_CHAOS;        /* '#' or blank --> R_CHAOS */
                 break;
-            }
+            }  
             state = R_TAG;              /* else --> R_TAG */
             outp = tag_buf;
             break;
 
         case R_TAG:                 /* copy tag into tag_buf */
             /* terminate outp in case we exit */
-            *outp = '\0';
+            *outp = '\0'; 
             if (cf_isspace(*inp)) {     /* WS --> R_PRECOLON */
                 inp++;
                 state = R_PRECOLON;
@@ -492,7 +492,7 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
             state = R_ERROR;
             break;
 
-        case R_POSTCOLON:           /* got colon, eat whitespace */
+        case R_POSTCOLON:            /* got colon, eat whitespace */
             if (cf_isspace(*inp)) {     /* WS --> loop */
                 inp++;
                 break;
@@ -513,7 +513,7 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
                 cf_err_str = "unknown tag";
                 state = R_ERROR;
                 break;
-            }
+            }  
             is_ms = (configp->kind == CF_MULTI_STRING);
             outp = full_line_buf;
             if (is_ms)
@@ -521,7 +521,7 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
             state = R_RHS;              /* else --> R_RHS */
             break;
 
-        case R_RHS:                 /* reading right-hand-side now */
+        case R_RHS:               /* reading right-hand-side now */
             if (outp - full_line_buf >= CF_MAX_LINE_LEN) {
                 cf_err_str = "invalid rhs - line too long";
                 state = R_ERROR;
@@ -653,7 +653,7 @@ get_full_line(const CONFIG *config_tab, int config_size, FILE *fp)
             /* shouldn't actually get here, caught by while() */
             break;
 
-        case R_ERROR:                   /* error! */
+        case R_ERROR:                  /* error! */
             if (cf_debug) printf("--- full_line_buf R_ERROR\n");
             return (-1);
 
@@ -851,7 +851,7 @@ read_config(const char *argv0, const CONFIG *config_tab, int config_size, FILE *
 
     line = 0;
 
-    while (1) {
+    while (1) {	
         /* read a full config line into full_line_buf, tag in tag_buf */
         res = get_full_line(config_tab, config_size, fp);
         if (res > 0) break;     /* EOF reached */

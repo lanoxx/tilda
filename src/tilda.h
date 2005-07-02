@@ -17,17 +17,6 @@
 #ifndef TILDA_H
 #define TILDA_H
 
-#include <gtk/gtk.h>
-
-/* These are from readconf, which is a little program that makes reading
- * config files nice and easy.
- * The source was: http://www.fadden.com/dl-misc/
- *
- * It is released as public domain, so there's no problem using it in tilda
- */
-#include "readconf.h"
-#include "readconf.c"
-
 /* These are from OpenBSD. They are safe string handling functions.
  * The source was: ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcat.c
  *                 ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcpy.c
@@ -36,63 +25,57 @@
  *
  * In short, the syntax is just like strncpy() and strncat().
  */
-#include "strlcat.c"
-#include "strlcpy.c"
+ 
+#include <gtk/gtk.h>
+#include "tilda_window.h"
 
+G_BEGIN_DECLS;
+
+#define NUM_ELEM 20
 #define DEFAULT_LINES 100
-#define NUM_ELEM(a)        ((int)(sizeof(a) / sizeof((a)[0])))
 
-GtkWidget *scrollbar;
-GtkWidget *widget;
-GtkWidget *hbox;
-GtkWidget *window;
-gboolean image_set_clo=FALSE, antialias_set_clo=FALSE, scroll_set_clo=FALSE;
-
-extern int wizard (int argc, char **argv);
-extern int write_key_bindings (char wm[], char key[]);
-extern void popup (char *message, char *b1_message, char *b2_message, void (*func1)(),void (*func2)());
-extern void redo_wizard (GtkWidget *widget, gpointer data);
-extern void add_anyway (GtkWidget *widget, gpointer data);
-void menu_quit ();
-int  instance;              /* stores this instance's number */
-gchar s_font_arg[64] = "null";
+gboolean image_set_clo, antialias_set_clo, scroll_set_clo;
 gint old_max_height, old_max_width;
 
-double TRANS_LEVEL_arg=-1;
-int x_pos_arg=-1, y_pos_arg=-1;
-gint max_width, max_height, min_width, min_height;
-long lines = DEFAULT_LINES;
-gchar s_above[6], s_notaskbar[6], s_pinned[6];
-gchar s_image[100] = "none", s_background[6] = "white", s_font[64] = "monospace 9", s_down[6] = "TRUE";
-gchar s_antialias[6] = "TRUE", s_scrollbar[6] = "FALSE", s_use_image[6] ="FALSE", s_grab_focus[6] ="TRUE";
-gchar s_key[50] = "null";
-int transparency=0, x_pos=0, y_pos=0;
+// commandline arg values
+gint x_pos_arg; 
+gint y_pos_arg;
+gchar s_font_arg[64];
+gdouble TRANS_LEVEL_arg;
 
-const CONFIG tilda_config[] = {
-        { CF_INT,       "max_height",   &max_height,    0,                      NULL, 0, NULL },
-        { CF_INT,       "max_width",    &max_width,     0,                      NULL, 0, NULL },
-        { CF_INT,       "min_height",   &min_height,    0,                      NULL, 0, NULL },
-        { CF_INT,       "min_width",    &min_width,     0,                      NULL, 0, NULL },
-        { CF_STRING,    "notaskbar",    s_notaskbar,    sizeof(s_notaskbar),    NULL, 0, NULL },
-        { CF_STRING,    "above",        s_above,        sizeof(s_above),        NULL, 0, NULL },
-        { CF_STRING,    "pinned",       s_pinned,       sizeof(s_pinned),       NULL, 0, NULL },
-        { CF_INT,       "scrollback",   &lines,         0,                      NULL, 0, NULL },
-        { CF_INT,       "transparency", &transparency,  0,                      NULL, 0, NULL },
-        { CF_INT,       "x_pos",        &x_pos,         0,                      NULL, 0, NULL },
-        { CF_INT,       "y_pos",        &y_pos,         0,                      NULL, 0, NULL },
-        { CF_STRING,    "image",        s_image,        sizeof(s_image),        NULL, 0, NULL },
-        { CF_STRING,    "background",   s_background,   sizeof(s_background),   NULL, 0, NULL },
-        { CF_STRING,    "font",         s_font,         sizeof(s_font),         NULL, 0, NULL },
-        { CF_STRING,    "antialias",    s_antialias,    sizeof(s_antialias),    NULL, 0, NULL },
-        { CF_STRING,    "scrollbar",    s_scrollbar,    sizeof(s_scrollbar),    NULL, 0, NULL },
-        { CF_STRING,    "use_image",    s_use_image,    sizeof(s_use_image),    NULL, 0, NULL },
-        { CF_STRING,    "grab_focus",   s_grab_focus,   sizeof(s_grab_focus),   NULL, 0, NULL },
-        { CF_STRING,    "key",          s_key,          sizeof(s_key),          NULL, 0, NULL },
-        { CF_STRING,    "down",         s_down,         sizeof(s_down),         NULL, 0, NULL }
-};
+static const char *usage = "Usage: %s "
+    "[-B image] "
+    "[-T] "
+    "[-C] "
+    "[-b [white][black] ] "
+    "[-f font] "
+    "[-a]"
+    "[-h] "
+    "[-s] "
+    "[-w directory] "
+    "[-c command] "
+    "[-t level] "
+    "[-x position] "
+    "[-y position] "
+    "[-l lines]\n\n"
+    "-B image : set background image\n"
+    "-T : Sorry this no longer does anything\n"
+    "-C : bring up tilda configuration wizard\n"
+    "-b [white][black] : set the background color either white or black\n"
+    "-f font : set the font to the following string, ie \"monospace 11\"\n"
+    "-a : use antialias fonts\n"
+    "-h : show this message\n"
+    "-s : use scrollbar\n"
+    "-w directory : switch working directory\n"
+    "-c command : run command\n"
+    "-t level: set transparent to true and set the level of transparency to level, 0-100\n"
+    "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
+    "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
+    "-l lines : set number of scrollback lines\n";
+    
+void clean_up (tilda_window *tw);
+void clean_up_no_args ();
 
-#include "wizard.c"
-#include "key_grabber.c"
-#include "load_tilda.c"
+G_END_DECLS;
 
 #endif

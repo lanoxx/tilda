@@ -16,8 +16,12 @@
 
 #ifndef _READCONF_H
 #define _READCONF_H
+
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+G_BEGIN_DECLS;
 
 /*
  * Structure definition for configuration spec.
@@ -43,4 +47,7 @@ int read_config(const char *argv0, const CONFIG *config_tab, int config_size, FI
 int read_config_file(const char *argv0, const CONFIG *config_tab, int config_count, const char *filename);
 int dispose_config(const char *argv0, const CONFIG *config_tab, int config_count);
 
+G_END_DECLS;
+
 #endif /*_READCONF_H*/
+

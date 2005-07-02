@@ -20,9 +20,6 @@
  *
  */
 
-#ifndef TILDA_KEY_GRABBER_C
-#define TILDA_KEY_GRABBER_C
-
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
@@ -33,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tilda.h"
+#include "key_grabber.h"
 
 Display *dpy;
 Window root;
@@ -42,7 +40,7 @@ Window last_focused;
 int screen;
 KeySym key;
 
-void pull ()
+void pull (struct tilda_window_ *tw)
 {
     gint x, y;
     gint w, h;
@@ -51,41 +49,41 @@ void pull ()
     if (x_pos_arg != -1)
         x = x_pos_arg;
     else
-        x = x_pos;
+        x = tw->tc->x_pos;
     if (y_pos_arg != -1)
         y = y_pos_arg;
     else
-        y = y_pos;
+        y = tw->tc->y_pos;
 
-    gtk_window_get_size ((GtkWindow *) window, &w, &h);
+    gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
-    if (h == min_height)
+    if (h == tw->tc->min_height)
     {
         gdk_threads_enter();
 
-        if (gtk_window_is_active ((GtkWindow *) window) == FALSE)
-            gtk_window_present ((GtkWindow *) window);
+        if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
+            gtk_window_present ((GtkWindow *) tw->window);
         else
-            gtk_widget_show ((GtkWidget *) window);
+            gtk_widget_show ((GtkWidget *) tw->window);
 
-        if ((strcasecmp (s_pinned, "true")) == 0)
-            gtk_window_stick (GTK_WINDOW (window));
+        if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
+            gtk_window_stick (GTK_WINDOW (tw->window));
 
-        if ((strcasecmp (s_above, "true")) == 0)
-            gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+        if ((strcasecmp (tw->tc->s_above, "true")) == 0)
+            gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
-        gtk_window_move ((GtkWindow *) window, x, y);
+        gtk_window_move ((GtkWindow *) tw->window, x, y);
 
         /*for (max_h=h;max_h<=max_height;max_h++)
         {
             gtk_window_resize ((GtkWindow *) window, max_width, max_h);
             sleep (.01);
         }*/
-        gtk_window_resize ((GtkWindow *) window, max_width, max_height);
+        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
         gdk_flush ();
         gdk_threads_leave();
     }
-    else if (h == max_height)
+    else if (h == tw->tc->max_height)
     {
         gdk_threads_enter();
 
@@ -95,15 +93,15 @@ void pull ()
             sleep (.001);
         }*/
 
-        gtk_window_resize ((GtkWindow *) window, min_width, min_height);
-        gtk_widget_hide ((GtkWidget *) window);
+        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
+        gtk_widget_hide ((GtkWidget *) tw->window);
 
         gdk_flush ();
         gdk_threads_leave();
     }
 }
 
-void key_grab ()
+void key_grab (tilda_window *tw)
 {
     XModifierKeymap *modmap;
     unsigned int numlockmask = 0;
@@ -121,19 +119,19 @@ void key_grab ()
     }
     XFreeModifiermap(modmap);
 
-    if (strstr(s_key, "Control"))
+    if (strstr(tw->tc->s_key, "Control"))
         modmask = modmask | ControlMask;
 
-    if (strstr(s_key, "Alt"))
+    if (strstr(tw->tc->s_key, "Alt"))
         modmask = modmask | Mod1Mask;
 
-    if (strstr(s_key, "Win"))
+    if (strstr(tw->tc->s_key, "Win"))
         modmask = modmask | Mod4Mask;
 
-    if (strstr(s_key, "None"))
+    if (strstr(tw->tc->s_key, "None"))
         modmask = 0;
 
-    if (strtok(s_key, "+"))
+    if (strtok(tw->tc->s_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
 
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
@@ -146,7 +144,7 @@ void key_grab ()
     }
 }
 
-void *wait_for_signal ()
+void *wait_for_signal (struct tilda_window_ *tw)
 {
     KeySym grabbed_key;
     XEvent event;
@@ -158,12 +156,12 @@ void *wait_for_signal ()
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
-    key_grab ();
+    key_grab (tw);
 
-    if (strcmp (s_down, "TRUE") == 0)
-        pull ();
+    if (strcmp (tw->tc->s_down, "TRUE") == 0)
+        pull (tw);
     else
-        gtk_widget_hide (window);
+        gtk_widget_hide (tw->window);
 
     for (;;)
     {
@@ -176,7 +174,7 @@ void *wait_for_signal ()
 
                 if (key == grabbed_key)
                 {
-                    pull ();
+                    pull (tw);
                     break;
                 }
             default:
@@ -187,4 +185,3 @@ void *wait_for_signal ()
     return 0;
 }
 
-#endif

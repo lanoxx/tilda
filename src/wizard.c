@@ -14,9 +14,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef TILDA_WIZARD_C
-#define TILDA_WIZARD_C
-
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -29,19 +26,23 @@
 
 #include "tilda.h"
 #include "config.h"
+#include "wizard.h"
+
+#define MAX_INT 2147483647
 
 GtkWidget *wizard_window;
 int exit_status=0;
 
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
-GtkWidget *entry_scrollback, *entry_opacity, *button_image, *image_chooser;
+GtkWidget *button_image, *image_chooser;
 GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focus;
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar, *check_down;
 GtkWidget *radio_white, *radio_black;
+GtkWidget *slider_opacity, *spin_scrollback;
 GtkWidget *button_font;
 gboolean in_main = FALSE;
 
-gboolean load_tilda ();
+gboolean update_tilda ();
 void fix_size_settings ();
 
 void close_dialog (GtkWidget *widget, gpointer data)
@@ -50,11 +51,10 @@ void close_dialog (GtkWidget *widget, gpointer data)
     gtk_widget_destroy (GTK_WIDGET (data));
 }
 
-GtkWidget* general ()
+GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
     GtkWidget *label_scrollback;
-    char s_scrollback[20];
 
     table = gtk_table_new (2, 5, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
@@ -69,28 +69,27 @@ GtkWidget* general ()
     check_scrollbar = gtk_check_button_new_with_label ("Show scrollbar");
     check_down = gtk_check_button_new_with_label ("Display pulled down on start");
 
-    entry_scrollback = gtk_entry_new ();
+    spin_scrollback = gtk_spin_button_new_with_range (0, MAX_INT, 1);
 
-    if (strcasecmp (s_scrollbar, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_scrollbar, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scrollbar), TRUE);
 
-    if (strcasecmp (s_pinned, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_pinned, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_pinned), TRUE);
 
-    if (strcasecmp (s_above, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_above, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_above), TRUE);
 
-    if (strcasecmp (s_notaskbar, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_notaskbar, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_notaskbar), TRUE);
 
-    if (strcasecmp (s_grab_focus, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_grab_focus, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_grab_focus), TRUE);
 
-    if (strcasecmp (s_down, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_down, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_down), TRUE);
 
-    sprintf (s_scrollback, "%ld", lines);
-    gtk_entry_set_text (GTK_ENTRY (entry_scrollback), s_scrollback);
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
 
     gtk_table_attach (GTK_TABLE (table), check_pinned, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_above, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
@@ -101,7 +100,7 @@ GtkWidget* general ()
 
     gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_scrollback, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), spin_scrollback, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
 
     //gtk_widget_show (check_grab_focus);
@@ -111,7 +110,7 @@ GtkWidget* general ()
     gtk_widget_show (check_notaskbar);
     gtk_widget_show (check_scrollbar);
     gtk_widget_show (label_scrollback);
-    gtk_widget_show (entry_scrollback);
+    gtk_widget_show (spin_scrollback);
 
     return table;
 }
@@ -130,7 +129,7 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
     }
 }
 
-GtkWidget* appearance ()
+GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
     GtkWidget *label_image;
@@ -139,7 +138,7 @@ GtkWidget* appearance ()
     GtkWidget *label_x_pos, *label_y_pos;
 
     char s_max_height[6], s_max_width[6];
-    char s_x_pos[6], s_y_pos[6], s_transparency[4];
+    char s_x_pos[6], s_y_pos[6];
 
     table = gtk_table_new (3, 8, FALSE);
     label_height = gtk_label_new ("Height in Pixels:");
@@ -147,25 +146,24 @@ GtkWidget* appearance ()
     label_x_pos = gtk_label_new ("X Pixel Postion to Start:");
     label_y_pos = gtk_label_new ("Y Pixel Postion to Start:");
     label_color = gtk_label_new ("Background Color:");
-    label_opacity = gtk_label_new ("Level of Transparency (0-100%):");
+    label_opacity = gtk_label_new ("Level of Transparency:");
     label_image = gtk_label_new ("Background Image:");
 
     entry_height = gtk_entry_new ();
     entry_width = gtk_entry_new ();
     entry_x_pos = gtk_entry_new ();
     entry_y_pos = gtk_entry_new ();
-    entry_opacity = gtk_entry_new ();
+    slider_opacity = gtk_hscale_new_with_range (0, 100, 1);
 
-    sprintf (s_max_height, "%d", max_height);
-    sprintf (s_max_width, "%d", max_width);
-    sprintf (s_x_pos, "%d", x_pos);
-    sprintf (s_y_pos, "%d", y_pos);
-    sprintf (s_transparency, "%d", transparency);
+    sprintf (s_max_height, "%d", tw->tc->max_height);
+    sprintf (s_max_width, "%d", tw->tc->max_width);
+    sprintf (s_x_pos, "%d", tw->tc->x_pos);
+    sprintf (s_y_pos, "%d", tw->tc->y_pos);
     gtk_entry_set_text (GTK_ENTRY (entry_height), s_max_height);
     gtk_entry_set_text (GTK_ENTRY (entry_width), s_max_width);
     gtk_entry_set_text (GTK_ENTRY (entry_x_pos), s_x_pos);
     gtk_entry_set_text (GTK_ENTRY (entry_y_pos), s_y_pos);
-    gtk_entry_set_text (GTK_ENTRY (entry_opacity), s_transparency);
+    gtk_range_set_value (GTK_RANGE (slider_opacity), tw->tc->transparency);
 
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
 
@@ -177,17 +175,17 @@ GtkWidget* appearance ()
                       NULL);
     button_image = gtk_file_chooser_button_new_with_dialog (image_chooser);
 
-    if (strcmp (s_image, "none") != 0);
+    if (strcmp (tw->tc->s_image, "none") != 0);
 
     radio_white = gtk_radio_button_new_with_label (NULL, "White");
     radio_black = gtk_radio_button_new_with_label(gtk_radio_button_group (GTK_RADIO_BUTTON (radio_white)), "Black");
 
-    if (strcasecmp (s_background, "white") == 0)
+    if (strcasecmp (tw->tc->s_background, "white") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_white), TRUE);
     else
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_black), TRUE);
 
-    if (strcasecmp (s_use_image, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_use_image, "TRUE") == 0)
     {
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), TRUE);
         gtk_widget_show (label_image);
@@ -218,7 +216,7 @@ GtkWidget* appearance ()
     gtk_table_attach (GTK_TABLE (table), entry_y_pos, 1, 3, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
     gtk_table_attach (GTK_TABLE (table), label_opacity, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
     gtk_table_attach (GTK_TABLE (table), label_color, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), radio_white, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
@@ -238,7 +236,7 @@ GtkWidget* appearance ()
     gtk_widget_show (radio_black);
 
     gtk_widget_show (label_opacity);
-    gtk_widget_show (entry_opacity);
+    gtk_widget_show (slider_opacity);
     gtk_widget_show (label_color);
     gtk_widget_show (entry_x_pos);
     gtk_widget_show (label_x_pos);
@@ -249,17 +247,17 @@ GtkWidget* appearance ()
     return table;
 }
 
-GtkWidget* font ()
+GtkWidget* font (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
 
     table = gtk_table_new (2, 2, FALSE);
 
-    button_font = gtk_font_button_new_with_font (s_font);
+    button_font = gtk_font_button_new_with_font (tw->tc->s_font);
 
     check_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
 
-    if (strcasecmp (s_antialias, "TRUE") == 0)
+    if (strcasecmp (tw->tc->s_antialias, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_antialias), TRUE);
 
     gtk_table_set_row_spacings (GTK_TABLE (table), 3);
@@ -276,18 +274,18 @@ GtkWidget* font ()
 }
 
 
-GtkWidget* keybindings ()
+GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
     GtkWidget *label_key;
 
-    if (strcasecmp (s_key, "null") == 0)
-        sprintf (s_key, "None+F%i", instance+1);
+    if (strcasecmp (tw->tc->s_key, "null") == 0)
+        sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);
 
     table = gtk_table_new (2, 3, FALSE);
 
     entry_key = gtk_entry_new ();
-    gtk_entry_set_text (GTK_ENTRY (entry_key), s_key);
+    gtk_entry_set_text (GTK_ENTRY (entry_key), tw->tc->s_key);
 
     label_key = gtk_label_new("Key Bindings");
 
@@ -300,118 +298,119 @@ GtkWidget* keybindings ()
     return table;
 }
 
-void apply_settings ()
+void apply_settings (tilda_window *tw, tilda_term *tt)
 {
     FILE *fp;
     char *home_dir, *tmp_str, config_file[80];
 
-    strlcpy (s_key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(s_key));
-    strlcpy (s_font, gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)), sizeof (s_font));
+    strlcpy (tw->tc->s_key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(tw->tc->s_key));
+    strlcpy (tw->tc->s_font, gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)), sizeof (tw->tc->s_font));
 
     if (NULL != (tmp_str = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (image_chooser))))
-        strlcpy (s_image,  tmp_str, sizeof (s_image));
+        strlcpy (tw->tc->s_image,  tmp_str, sizeof (tw->tc->s_image));
 
-    old_max_height = max_height;
-    old_max_width = max_width;
-    max_height = atoi (gtk_entry_get_text (GTK_ENTRY (entry_height)));
-    max_width = atoi (gtk_entry_get_text (GTK_ENTRY (entry_width)));
-    lines = atoi (gtk_entry_get_text (GTK_ENTRY (entry_scrollback)));
-    transparency = atoi (gtk_entry_get_text (GTK_ENTRY (entry_opacity)));
-    x_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos)));
-    y_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos)));
+    old_max_height = tw->tc->max_height;
+    old_max_width = tw->tc->max_width;
+    tw->tc->max_height = atoi (gtk_entry_get_text (GTK_ENTRY (entry_height)));
+    tw->tc->max_width = atoi (gtk_entry_get_text (GTK_ENTRY (entry_width)));
+    tw->tc->lines = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin_scrollback));
+    tw->tc->transparency = gtk_range_get_value (GTK_RANGE (slider_opacity));
+    tw->tc->x_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos)));
+    tw->tc->y_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos)));
 
     home_dir = getenv ("HOME");
-    strlcpy (config_file, home_dir, sizeof(config_file));
-    strlcat (config_file, "/.tilda/", sizeof(config_file));
+    strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
+    strlcat (tw->config_file, "/.tilda/", sizeof(tw->config_file));
 
-    mkdir (config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+    mkdir (tw->config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
 
-    strlcat (config_file, "config", sizeof(config_file));
-    sprintf (config_file, "%s_%i", config_file, instance);
+    strlcat (tw->config_file, "config", sizeof(tw->config_file));
+    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
-        strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
+        strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));
     else
-        strlcpy (s_notaskbar, "FALSE", sizeof(s_notaskbar));
+        strlcpy (tw->tc->s_notaskbar, "FALSE", sizeof(tw->tc->s_notaskbar));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_pinned)) == TRUE)
-        strlcpy (s_pinned, "TRUE", sizeof(s_pinned));
+        strlcpy (tw->tc->s_pinned, "TRUE", sizeof(tw->tc->s_pinned));
     else
-        strlcpy (s_pinned, "FALSE", sizeof(s_pinned));
+        strlcpy (tw->tc->s_pinned, "FALSE", sizeof(tw->tc->s_pinned));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_above)) == TRUE)
-        strlcpy (s_above, "TRUE", sizeof(s_above));
+        strlcpy (tw->tc->s_above, "TRUE", sizeof(tw->tc->s_above));
     else
-        strlcpy (s_above, "FALSE", sizeof(s_above));
+        strlcpy (tw->tc->s_above, "FALSE", sizeof(tw->tc->s_above));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_antialias)) == TRUE)
-        strlcpy (s_antialias, "TRUE", sizeof(s_antialias));
+        strlcpy (tw->tc->s_antialias, "TRUE", sizeof(tw->tc->s_antialias));
     else
-        strlcpy (s_antialias, "FALSE", sizeof(s_antialias));
+        strlcpy (tw->tc->s_antialias, "FALSE", sizeof(tw->tc->s_antialias));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_scrollbar)) == TRUE)
-        strlcpy (s_scrollbar, "TRUE", sizeof(s_scrollbar));
+        strlcpy (tw->tc->s_scrollbar, "TRUE", sizeof(tw->tc->s_scrollbar));
     else
-        strlcpy (s_scrollbar, "FALSE", sizeof(s_scrollbar));
+        strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof(tw->tc->s_scrollbar));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio_white)))
-        strlcpy (s_background, "white", sizeof (s_background));
+        strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
     else
-        strlcpy (s_background, "black", sizeof (s_background));
+        strlcpy (tw->tc->s_background, "black", sizeof (tw->tc->s_background));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_use_image)) == TRUE)
-        strlcpy (s_use_image, "TRUE", sizeof(s_use_image));
+        strlcpy (tw->tc->s_use_image, "TRUE", sizeof(tw->tc->s_use_image));
     else
-        strlcpy (s_use_image, "FALSE", sizeof(s_use_image));
+        strlcpy (tw->tc->s_use_image, "FALSE", sizeof(tw->tc->s_use_image));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_grab_focus)) == TRUE)
-        strlcpy (s_grab_focus, "TRUE", sizeof(s_grab_focus));
+        strlcpy (tw->tc->s_grab_focus, "TRUE", sizeof(tw->tc->s_grab_focus));
     else
-        strlcpy (s_grab_focus, "FALSE", sizeof(s_grab_focus));
+        strlcpy (tw->tc->s_grab_focus, "FALSE", sizeof(tw->tc->s_grab_focus));
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_down)) == TRUE)
-        strlcpy (s_down, "TRUE", sizeof(s_grab_focus));
+        strlcpy (tw->tc->s_down, "TRUE", sizeof(tw->tc->s_grab_focus));
     else
-        strlcpy (s_down, "FALSE", sizeof(s_down));
+        strlcpy (tw->tc->s_down, "FALSE", sizeof(tw->tc->s_down));
 
-    if((fp = fopen(config_file, "w")) == NULL)
+    if((fp = fopen(tw->config_file, "w")) == NULL)
     {
         perror("fopen");
         exit(1);
     }
     else
     {
-        fprintf (fp, "max_height : %i\n", max_height);
-        fprintf (fp, "max_width : %i\n", max_width);
+        fprintf (fp, "max_height : %i\n", tw->tc->max_height);
+        fprintf (fp, "max_width : %i\n", tw->tc->max_width);
         fprintf (fp, "min_height : %i\n", 1);
-        fprintf (fp, "min_width : %i\n", max_width);
-        fprintf (fp, "notaskbar : %s\n", s_notaskbar);
-        fprintf (fp, "above : %s\n", s_above);
-        fprintf (fp, "pinned : %s\n", s_pinned);
-        fprintf (fp, "image : %s\n", s_image);
-        fprintf (fp, "background : %s\n", s_background);
-        fprintf (fp, "font : %s\n", s_font);
-        fprintf (fp, "antialias : %s\n", s_antialias);
-        fprintf (fp, "scrollbar : %s\n", s_scrollbar);
-        fprintf (fp, "transparency : %i\n", transparency);
-        fprintf (fp, "x_pos : %i\n", x_pos);
-        fprintf (fp, "y_pos : %i\n", y_pos);
-        fprintf (fp, "scrollback : %ld\n", lines);
-        fprintf (fp, "use_image : %s\n", s_use_image);
-        fprintf (fp, "grab_focus : %s\n", s_grab_focus);
-        fprintf (fp, "key : %s\n", s_key);
-        fprintf (fp, "down : %s\n", s_down);
+        fprintf (fp, "min_width : %i\n", tw->tc->max_width);
+        fprintf (fp, "notaskbar : %s\n", tw->tc->s_notaskbar);
+        fprintf (fp, "above : %s\n", tw->tc->s_above);
+        fprintf (fp, "pinned : %s\n", tw->tc->s_pinned);
+        fprintf (fp, "image : %s\n", tw->tc->s_image);
+        fprintf (fp, "background : %s\n", tw->tc->s_background);
+        fprintf (fp, "font : %s\n", tw->tc->s_font);
+        fprintf (fp, "antialias : %s\n", tw->tc->s_antialias);
+        fprintf (fp, "scrollbar : %s\n", tw->tc->s_scrollbar);
+        fprintf (fp, "transparency : %i\n", tw->tc->transparency);
+        fprintf (fp, "x_pos : %i\n", tw->tc->x_pos);
+        fprintf (fp, "y_pos : %i\n", tw->tc->y_pos);
+        fprintf (fp, "scrollback : %ld\n", tw->tc->lines);
+        fprintf (fp, "use_image : %s\n", tw->tc->s_use_image);
+        fprintf (fp, "grab_focus : %s\n", tw->tc->s_grab_focus);
+        fprintf (fp, "key : %s\n", tw->tc->s_key);
+        fprintf (fp, "down : %s\n", tw->tc->s_down);
+		fprintf (fp, "tab_pos : %i\n", tw->tc->tab_pos);
 
         fclose (fp);
     }
 
     if (!in_main)
-        load_tilda (FALSE);
+        update_tilda (tw, tt, FALSE);
 }
 
-gint ok ()
+gint ok (tilda_collect *tc)
 {
-    apply_settings ();
+    apply_settings (tc->tw, tc->tt);
 
     gtk_widget_destroy (wizard_window);
 
@@ -421,9 +420,9 @@ gint ok ()
     return (TRUE);
 }
 
-void apply ()
+void apply (tilda_collect *tc)
 {
-    apply_settings ();
+    apply_settings (tc->tw, tc->tt);
 }
 
 gint exit_app (GtkWidget *widget, gpointer data)
@@ -438,7 +437,7 @@ gint exit_app (GtkWidget *widget, gpointer data)
     return (FALSE);
 }
 
-int wizard (int argc, char **argv)
+int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *button;
     GtkWidget *table;
@@ -449,11 +448,12 @@ int wizard (int argc, char **argv)
     GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
+	tilda_collect *t_collect;
     char *argv0 = NULL;
     char title[20];
     char *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
 
-    GtkWidget* (*contents[4])();
+    GtkWidget* (*contents[4])(tilda_window *, tilda_term *);
 
     contents[0] = general;
     contents[1] = appearance;
@@ -462,32 +462,30 @@ int wizard (int argc, char **argv)
 
     FILE *fp;
     char *home_dir;
-    char config_file[80];
     int i;
 
     home_dir = getenv ("HOME");
-    strlcpy (config_file, home_dir, sizeof(config_file));
-    strlcat (config_file, "/.tilda/config", sizeof(config_file));
-    sprintf (config_file, "%s_%i", config_file, instance);
-
+    strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
+    strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
+    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
     if (argv != NULL)
         argv0 = argv[0];
 
     //read in height width settings already set
-    if((fp = fopen(config_file, "r")) == NULL)
+    if((fp = fopen(tw->config_file, "r")) == NULL)
     {
-        strlcpy (s_notaskbar, "TRUE", sizeof(s_notaskbar));
-        strlcpy (s_pinned, "TRUE", sizeof(s_pinned));
-        strlcpy (s_above, "TRUE", sizeof(s_above));
-        max_height = 1;
-        max_width = 1;
-        min_height = 1;
-        min_width = 1;
+        strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));
+        strlcpy (tw->tc->s_pinned, "TRUE", sizeof(tw->tc->s_pinned));
+        strlcpy (tw->tc->s_above, "TRUE", sizeof(tw->tc->s_above));
+        tw->tc->max_height = 1;
+        tw->tc->max_width = 1;
+        tw->tc->min_height = 1;
+        tw->tc->min_width = 1;
     }
     else
     {
-        if (read_config_file (argv0, tilda_config, NUM_ELEM(tilda_config), config_file) < 0)
+        if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
         {
             /* This should _NEVER_ happen, but it's here just in case */
             puts("Error reading config file, terminating");
@@ -497,6 +495,10 @@ int wizard (int argc, char **argv)
 
         fclose (fp);
     }
+
+	t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
+	t_collect->tw = tw;
+	t_collect->tt = tt;
 
     if (argc != -1)
     {
@@ -508,7 +510,7 @@ int wizard (int argc, char **argv)
     gtk_widget_realize (wizard_window);
 
     strlcpy (title, "Tilda", sizeof (title));
-    sprintf (title, "%s %i Config", title, instance);
+    sprintf (title, "%s %i Config", title, tw->instance);
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);
 
     g_signal_connect (G_OBJECT (wizard_window), "delete_event",
@@ -538,7 +540,7 @@ int wizard (int argc, char **argv)
     /* Let's append a bunch of pages to the notebook */
     for (i = 0; i < 4; i++)
     {
-        table2 = (*contents[i])();
+        table2 = (*contents[i])(tw, tt);
 
         gtk_widget_show (table2);
         label = gtk_label_new (tabs[i]);
@@ -549,13 +551,13 @@ int wizard (int argc, char **argv)
 
     button = gtk_button_new_with_label ("OK");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (ok), NULL);
+                  G_CALLBACK (ok), t_collect);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 0, 1, 2, 3);
     gtk_widget_show (button);
 
     button = gtk_button_new_with_label ("Apply");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (apply), NULL);
+                  G_CALLBACK (apply), t_collect);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 1, 2, 2, 3);
     gtk_widget_show (button);
 
@@ -575,5 +577,3 @@ int wizard (int argc, char **argv)
 
     return exit_status;
 }
-
-#endif

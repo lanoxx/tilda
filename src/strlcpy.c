@@ -16,8 +16,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef STRLCPY_C
-#define STRLCPY_C
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static char *rcsid = "$OpenBSD: strlcpy.c,v 1.9 2005/03/30 20:13:52 otto Exp $";
@@ -56,5 +54,3 @@ strlcpy(char *dst, const char *src, size_t siz)
 
     return(s - src - 1);    /* count does not include NUL */
 }
-
-#endif

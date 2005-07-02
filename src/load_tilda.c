@@ -14,14 +14,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef TILDA_LOAD_TILDA_C
-#define TILDA_LOAD_TILDA_C
-
 #include <gtk/gtk.h>
+#include <vte/vte.h>
 
 #include "tilda.h"
 
-gboolean load_tilda (gboolean from_main)
+gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
     gint x, y;
     double TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
@@ -39,116 +37,120 @@ gboolean load_tilda (gboolean from_main)
     tint = back;
 
     if (TRANS_LEVEL_arg == -1)
-        TRANS_LEVEL = ((double) transparency)/100;
+        TRANS_LEVEL = ((double) tw->tc->transparency)/100;
     else
         TRANS_LEVEL = TRANS_LEVEL_arg;
 
 
-    if (strcmp (s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
+    if (strcmp (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
         bool_use_image = TRUE;
     else
         bool_use_image = FALSE;
 
-    if (strcmp (s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
+    if (strcmp (tw->tc->s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
         use_antialias = TRUE;
     else
         use_antialias = FALSE;
 
-    if (strcmp (s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
+    if (strcmp (tw->tc->s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
         scroll = TRUE;
     else
         scroll = FALSE;
 
     if (bool_use_image)
-        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), s_image);
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), tw->tc->s_image);
     else
-        vte_terminal_set_background_image_file (VTE_TERMINAL(widget), NULL);
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
 
     if (TRANS_LEVEL > 0)
     {
-        vte_terminal_set_background_saturation (VTE_TERMINAL (widget), TRANS_LEVEL);
-        vte_terminal_set_background_transparent (VTE_TERMINAL(widget), TRUE);
+        vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), TRANS_LEVEL);
+        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);
     } else
-        vte_terminal_set_background_transparent (VTE_TERMINAL(widget), FALSE);
+        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
 
-    if (strcasecmp (s_background, "black") == 0)
+    if (strcasecmp (tw->tc->s_background, "black") == 0)
     {
         back.red = back.green = back.blue = 0x0000;
         fore.red = fore.green = fore.blue = 0xffff;
     }
 
-    vte_terminal_set_background_tint_color (VTE_TERMINAL(widget), &tint);
-    vte_terminal_set_colors (VTE_TERMINAL(widget), &fore, &back, NULL, 0);
+    vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
+    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fore, &back, NULL, 0);
 
     if (highlight_set)
     {
-        vte_terminal_set_color_highlight (VTE_TERMINAL(widget), &highlight);
+        vte_terminal_set_color_highlight (VTE_TERMINAL(tt->vte_term), &highlight);
     }
 
     if (cursor_set)
     {
-        vte_terminal_set_color_cursor (VTE_TERMINAL(widget), &cursor);
+        vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
     }
 
     if (strcasecmp (s_font_arg, "null") != 0)
-        strlcpy (s_font, s_font_arg, sizeof (s_font));
+        strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(widget), s_font, antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);
     else
-        vte_terminal_set_font_from_string (VTE_TERMINAL(widget), s_font);
+        vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), tw->tc->s_font);
 
     if (!from_main)
     {
-        gtk_widget_hide (window);
+        gtk_widget_hide (tw->window);
 
         if (scroll)
-            gtk_widget_show (scrollbar);
+            gtk_widget_show (tt->scrollbar);
         else
-            gtk_widget_hide (scrollbar);
+            gtk_widget_hide (tt->scrollbar);
 
-        gtk_widget_show (window);
+        gtk_widget_show (tw->window);
 
-        if ((strcasecmp (s_pinned, "true")) == 0)
-            gtk_window_stick (GTK_WINDOW (window));
+        if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
+            gtk_window_stick (GTK_WINDOW (tw->window));
 
-        if ((strcasecmp (s_above, "true")) == 0)
-            gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
+        if ((strcasecmp (tw->tc->s_above, "true")) == 0)
+            gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
     }
     else
     {
         if (scroll)
-            gtk_widget_show (scrollbar);
+            gtk_widget_show (tt->scrollbar);
         else
-            gtk_widget_hide (scrollbar);
+            gtk_widget_hide (tt->scrollbar);
     }
 
-    if ((strcasecmp (s_notaskbar, "true")) == 0)
-        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), TRUE);
+    if ((strcasecmp (tw->tc->s_notaskbar, "true")) == 0)
+        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), TRUE);
     else
-        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(window), FALSE);
-
-    gtk_widget_show (widget);
-    gtk_widget_show (hbox);
-
-    if (x_pos_arg != -1)
+        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), FALSE);
+	
+	if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)	
+        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
+	else {
+		gtk_widget_hide (tw->notebook);
+		gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
+		gtk_widget_show (tw->notebook);
+	}
+	    
+	
+	if (x_pos_arg != -1)
         x = x_pos_arg;
     else
-        x = x_pos;
+        x = tw->tc->x_pos;
     if (y_pos_arg != -1)
         y = y_pos_arg;
     else
-        y = y_pos;
+        y = tw->tc->y_pos;
 
-    gtk_window_move ((GtkWindow *) window, x, y);
+    gtk_window_move ((GtkWindow *) tw->window, x, y);
 
-    if (max_height != old_max_height || max_width != old_max_width)
+    if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
     {
-            gtk_window_resize ((GtkWindow *) window, max_width, max_height);
+            gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
     }
 
     return TRUE;
 }
-
-#endif

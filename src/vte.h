@@ -19,8 +19,9 @@
 #ifndef vte_vte_h_included
 #define vte_vte_h_included
 
-#ident "$Id: vte.h,v 1.5 2005/06/16 02:06:14 irasnyd Exp $"
+#ident "$Id: vte.h,v 1.6 2005/07/02 08:16:35 kungfooguru Exp $"
 
+#include <gtk/gtk.h>
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
