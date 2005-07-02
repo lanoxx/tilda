@@ -121,30 +121,30 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         else
             gtk_widget_hide (tt->scrollbar);
     }
-	
-	if (tw->tc->tab_pos == 0)
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
-	else if (tw->tc->tab_pos == 1)
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
-	else if (tw->tc->tab_pos == 2)
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
-	else if (tw->tc->tab_pos == 3)
-		gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
+    
+    if (tw->tc->tab_pos == 0)
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
+    else if (tw->tc->tab_pos == 1)
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
+    else if (tw->tc->tab_pos == 2)
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
+    else if (tw->tc->tab_pos == 3)
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
 
     if ((strcasecmp (tw->tc->s_notaskbar, "true")) == 0)
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), TRUE);
     else
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), FALSE);
-	
-	if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)	
+    
+    if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)   
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
-	else {
-		gtk_widget_hide (tw->notebook);
-		gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
-		gtk_widget_show (tw->notebook);
-	}
-	    
-	if (x_pos_arg != -1)
+    else {
+        gtk_widget_hide (tw->notebook);
+        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
+        gtk_widget_show (tw->notebook);
+    }
+        
+    if (x_pos_arg != -1)
         x = x_pos_arg;
     else
         x = tw->tc->x_pos;

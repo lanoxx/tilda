@@ -25,9 +25,9 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-	{ "/_New Tab", NULL, add_tab_menu_call, 0, "<Item>"},
-	{ "/_Close Tab", NULL, close_tab, 0, "<Item>"},
-	{ "/sep1",     NULL,      NULL,         0, "<Separator>" },
+    { "/_New Tab", NULL, add_tab_menu_call, 0, "<Item>"},
+    { "/_Close Tab", NULL, close_tab, 0, "<Item>"},
+    { "/sep1",     NULL,      NULL,         0, "<Separator>" },
     { "/_Copy", NULL, copy, 0, "<StockItem>", GTK_STOCK_COPY},
     { "/_Paste", NULL, paste, 0, "<StockItem>", GTK_STOCK_PASTE},
     { "/sep1",     NULL,      NULL,         0, "<Separator>" },
@@ -136,36 +136,36 @@ int resize (GtkWidget *window, gint w, gint h)
 
 void copy (gpointer data, guint callback_action, GtkWidget *w)
 {
-	tilda_window *tw;
-	tilda_term *tt;
-	tilda_collect *tc = (tilda_collect *) data;
+    tilda_window *tw;
+    tilda_term *tt;
+    tilda_collect *tc = (tilda_collect *) data;
     
     tw = tc->tw;
-	tt = tc->tt;
-	
+    tt = tc->tt;
+    
     vte_terminal_copy_clipboard ((VteTerminal *) tt->vte_term);
 }
 
 void paste (gpointer data, guint callback_action, GtkWidget *w)
 {
-	tilda_window *tw;
-	tilda_term *tt;
-	tilda_collect *tc = (tilda_collect *) data;
+    tilda_window *tw;
+    tilda_term *tt;
+    tilda_collect *tc = (tilda_collect *) data;
     
     tw = tc->tw;
-	tt = tc->tt;
-	
+    tt = tc->tt;
+    
     vte_terminal_paste_clipboard ((VteTerminal *) tt->vte_term);
 }
 
 void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
 {
-	tilda_window *tw;
-	tilda_term *tt;
-	tilda_collect *tc = (tilda_collect *) data;
+    tilda_window *tw;
+    tilda_term *tt;
+    tilda_collect *tc = (tilda_collect *) data;
     
     tw = tc->tw;
-	tt = tc->tt;
+    tt = tc->tt;
 
     wizard (-1, NULL, tw, tt);
 }
@@ -196,40 +196,40 @@ void popup_menu (tilda_collect *tc)
 
 int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-	VteTerminal *terminal;
-	tilda_term *tt;
-	tilda_collect *tc;
+    VteTerminal *terminal;
+    tilda_term *tt;
+    tilda_collect *tc;
     char *match;
     int tag;
     gint xpad, ypad;
     
     tc = (tilda_collect *) data;
-	tt = tc->tt;
+    tt = tc->tt;
 
     switch (event->button) {
- 		case 3:
-    		popup_menu (tc);
+        case 3:
+            popup_menu (tc);
 
-        	terminal  = VTE_TERMINAL(tt->vte_term);
-        	vte_terminal_get_padding (terminal, &xpad, &ypad);
-        	match = vte_terminal_match_check (terminal,
-            	(event->x - ypad) /
+            terminal  = VTE_TERMINAL(tt->vte_term);
+            vte_terminal_get_padding (terminal, &xpad, &ypad);
+            match = vte_terminal_match_check (terminal,
+                (event->x - ypad) /
                 terminal->char_width,
                 (event->y - ypad) /
                 terminal->char_height,
                 &tag);
-        	if (match != NULL) {
-            	g_print ("Matched `%s' (%d).\n", match, tag);
-            	g_free (match);
-            	if (GPOINTER_TO_INT(data) != 0) {
-                	vte_terminal_match_remove (terminal, tag);
-            	}
-        	}
-        	break;
-    	case 1:
-    	case 2:
-    	default:
-        	break;
+            if (match != NULL) {
+                g_print ("Matched `%s' (%d).\n", match, tag);
+                g_free (match);
+                if (GPOINTER_TO_INT(data) != 0) {
+                    vte_terminal_match_remove (terminal, tag);
+                }
+            }
+            break;
+        case 1:
+        case 2:
+        default:
+            break;
     }
     return FALSE;
 }

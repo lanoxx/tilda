@@ -53,24 +53,24 @@ void clean_up (tilda_window *tw)
 void getinstance (tilda_window *tw)
 {
     char *home_dir;
-	char buf[1024];
-	char filename[1024], tmp[100];
+    char buf[1024];
+    char filename[1024], tmp[100];
     FILE *ptr;
-	
+    
     tw->instance = 0;
-	
-	home_dir = getenv ("HOME");
+    
+    home_dir = getenv ("HOME");
     strlcpy (tw->lock_file, home_dir, sizeof(tw->lock_file));
     strlcat (tw->lock_file, "/.tilda", sizeof(tw->lock_file));
     strlcat (tw->lock_file, "/locks/", sizeof(tw->lock_file));
-	
-	mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
-	
-	for (;;)
+    
+    mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+    
+    for (;;)
     {
-		strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
+        strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
         sprintf (filename, "%s_*_%d", tmp, tw->instance);
-  		sprintf (filename, "%s 2> /dev/null", filename);
+        sprintf (filename, "%s 2> /dev/null", filename);
   
         if ((ptr = popen (filename, "r")) != NULL)
         {
@@ -85,26 +85,26 @@ void getinstance (tilda_window *tw)
         } 
     }
 
-	sprintf (filename, "%slock_%d_%d", tw->lock_file, getpid(), tw->instance);
+    sprintf (filename, "%slock_%d_%d", tw->lock_file, getpid(), tw->instance);
     strlcpy (tw->lock_file, filename, sizeof (tw->config_file));
     creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
 void clean_tmp ()
 {
-	char *home_dir;
-	char pid[10];
+    char *home_dir;
+    char pid[10];
     char cmd[128];
     char buf[1024], filename[1024];
-	char tmp[100];
-	char *throw_away;
+    char tmp[100];
+    char *throw_away;
     int  length, i, instance;
     FILE *ptr, *ptr2;
     int error_to_null, x;
-	gboolean old = TRUE;
-	
+    gboolean old = TRUE;
+    
     home_dir = getenv ("HOME");
-	strlcpy (cmd, "ls ", sizeof(cmd));
+    strlcpy (cmd, "ls ", sizeof(cmd));
     strlcat (cmd, home_dir, sizeof(cmd));
     strlcat (cmd, "/.tilda/locks/lock_* 2> /dev/null", sizeof(cmd));
  
@@ -112,46 +112,46 @@ void clean_tmp ()
     {
         while (fgets (buf, 1024, ptr) != NULL)
         {
-			strlcpy (filename, buf, sizeof (filename));
-			throw_away = strtok (buf, "/");
-			while (throw_away)
-			{
-				strlcpy (tmp, throw_away, sizeof (tmp));
-				throw_away = strtok (NULL, "/");
-				
-				if (!throw_away)
-				{
-					throw_away = strtok (tmp, "_");
-					throw_away = strtok (NULL, "_");
-					strlcpy (pid, throw_away, sizeof (pid));
-					break;
-				}
-			}
-			
-			strlcpy (cmd, "ps x | grep ", sizeof(cmd));
-			strlcat (cmd, pid, sizeof (cmd));
-			
-			if ((ptr2 = popen (cmd, "r")) != NULL)
-			{
-				while (fgets (tmp, 1024, ptr2) != NULL)
-				{
-					if (strstr (tmp, "tilda") != NULL)
-					{
-						old = FALSE;
-						break;
-					}
-				}
+            strlcpy (filename, buf, sizeof (filename));
+            throw_away = strtok (buf, "/");
+            while (throw_away)
+            {
+                strlcpy (tmp, throw_away, sizeof (tmp));
+                throw_away = strtok (NULL, "/");
+                
+                if (!throw_away)
+                {
+                    throw_away = strtok (tmp, "_");
+                    throw_away = strtok (NULL, "_");
+                    strlcpy (pid, throw_away, sizeof (pid));
+                    break;
+                }
+            }
+            
+            strlcpy (cmd, "ps x | grep ", sizeof(cmd));
+            strlcat (cmd, pid, sizeof (cmd));
+            
+            if ((ptr2 = popen (cmd, "r")) != NULL)
+            {
+                while (fgets (tmp, 1024, ptr2) != NULL)
+                {
+                    if (strstr (tmp, "tilda") != NULL)
+                    {
+                        old = FALSE;
+                        break;
+                    }
+                }
 
-				if (old)
-				{
-					filename[strlen(filename)-1] = '\0';
-					remove (filename);
-				}
-				else 
-					old = TRUE;			
-					
-				pclose (ptr2);
-			}
+                if (old)
+                {
+                    filename[strlen(filename)-1] = '\0';
+                    remove (filename);
+                }
+                else 
+                    old = TRUE;         
+                    
+                pclose (ptr2);
+            }
         } 
     }
     
@@ -160,7 +160,7 @@ void clean_tmp ()
 
 int main (int argc, char **argv)
 {
-	tilda_window *tw;
+    tilda_window *tw;
     tilda_term *tt;
 
     const char *command = NULL;
@@ -171,16 +171,16 @@ int main (int argc, char **argv)
     int  opt;
     int  i, j;
     GList *args = NULL;
-	
-	/* Gotta do this first to make sure no lock files are left over */
-	clean_tmp ();
+    
+    /* Gotta do this first to make sure no lock files are left over */
+    clean_tmp ();
 
-	/* create new tilda window and terminal */
+    /* create new tilda window and terminal */
     tw = (tilda_window *) malloc (sizeof (tilda_window));
-	tw->tc = (tilda_conf *) malloc (sizeof (tilda_conf));
-	tt = (tilda_term *) malloc (sizeof (tilda_term));
+    tw->tc = (tilda_conf *) malloc (sizeof (tilda_conf));
+    tt = (tilda_term *) malloc (sizeof (tilda_term));
 
-	init_tilda_window_configs (tw);
+    init_tilda_window_configs (tw);
 
     /* Have to do this early. */
     if (getenv ("VTE_PROFILE_MEMORY"))
@@ -306,7 +306,7 @@ int main (int argc, char **argv)
 
     gtk_init (&argc, &argv);
 
-	init_tilda_window (tw, tt);
+    init_tilda_window (tw, tt);
 
     /*signal (SIGINT, clean_up);
     signal (SIGQUIT, clean_up);

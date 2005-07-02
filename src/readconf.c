@@ -365,10 +365,10 @@ lookup_tag(const CONFIG *config_tab, int config_count, char *tag_name)
 {
     const CONFIG *conp;
     int i;
-	
+    
     for (conp = config_tab, i = 0; i < config_count; i++, conp++) {
-        if (strcasecmp(conp->tag, tag_name) == 0) {    	
-	        if (cf_debug) printf("lookup: '%s' found\n", tag_name);
+        if (strcasecmp(conp->tag, tag_name) == 0) {     
+            if (cf_debug) printf("lookup: '%s' found\n", tag_name);
             return (conp);
         }
     }
@@ -851,7 +851,7 @@ read_config(const char *argv0, const CONFIG *config_tab, int config_size, FILE *
 
     line = 0;
 
-    while (1) {	
+    while (1) { 
         /* read a full config line into full_line_buf, tag in tag_buf */
         res = get_full_line(config_tab, config_size, fp);
         if (res > 0) break;     /* EOF reached */

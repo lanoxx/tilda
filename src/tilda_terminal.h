@@ -27,7 +27,7 @@ typedef struct tilda_collect_ tilda_collect;
 
 struct tilda_term_
 {
-	GtkWidget *vte_term;
+    GtkWidget *vte_term;
     GtkWidget *hbox;
     GtkWidget *scrollbar;
 };
@@ -35,7 +35,7 @@ struct tilda_term_
 
 struct tilda_collect_
 {
-	struct tilda_window_ *tw;
+    struct tilda_window_ *tw;
     struct tilda_term_ *tt;
 };
 

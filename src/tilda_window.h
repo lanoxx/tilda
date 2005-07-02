@@ -31,8 +31,8 @@ typedef struct tilda_conf_ tilda_conf;
 
 struct tilda_window_
 {
-	GtkWidget *window;
-	GtkWidget *notebook;
+    GtkWidget *window;
+    GtkWidget *notebook;
 
     tilda_conf *tc;
     gchar lock_file[80];   
@@ -43,27 +43,27 @@ struct tilda_window_
 
 struct tilda_conf_
 {
-	gint max_width;
+    gint max_width;
     gint max_height;
     gint min_width;
     gint min_height;
-	glong lines;
-	gchar s_above[6];
+    glong lines;
+    gchar s_above[6];
     gchar s_notaskbar[6];
     gchar s_pinned[6];
-	gchar s_image[100]; 
+    gchar s_image[100]; 
     gchar s_background[6];
     gchar s_font[64];
     gchar s_down[6];
-	gchar s_antialias[6];
+    gchar s_antialias[6];
     gchar s_scrollbar[6];
     gchar s_use_image[6];
     gchar s_grab_focus[6];
-	gchar s_key[50];
-	gint transparency;
+    gchar s_key[50];
+    gint transparency;
     gint x_pos;
     gint y_pos;
-	gint tab_pos;
+    gint tab_pos;
 };
 
 void add_tab (tilda_window *tw);

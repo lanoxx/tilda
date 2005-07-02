@@ -61,15 +61,15 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_set_col_spacings (GTK_TABLE (table), 5);
 
     label_scrollback = gtk_label_new("Scrollback:");
-	label_tab_pos = gtk_label_new ("Position of Tabs: ");
-	
-	combo_tab_pos = gtk_combo_box_new_text    ();
-	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "RIGHT");
-	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "LEFT");
-	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "BOTTOM");
-	gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "TOP");
-	gtk_combo_box_set_active ((GtkComboBox *)combo_tab_pos, tw->tc->tab_pos);
-	
+    label_tab_pos = gtk_label_new ("Position of Tabs: ");
+    
+    combo_tab_pos = gtk_combo_box_new_text    ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "RIGHT");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "LEFT");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "BOTTOM");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "TOP");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_tab_pos, tw->tc->tab_pos);
+    
     check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
     check_above = gtk_check_button_new_with_label ("Always on top");
     check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
@@ -97,7 +97,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     if (strcasecmp (tw->tc->s_down, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_down), TRUE);
 
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
 
     gtk_table_attach (GTK_TABLE (table), check_pinned, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_above, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
@@ -105,18 +105,18 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     //gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_down, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-	
-	gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
-	gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), spin_scrollback, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-	
-	gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), combo_tab_pos, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     
     //gtk_widget_show (check_grab_focus);
-	gtk_widget_show (label_tab_pos);
-	gtk_widget_show (combo_tab_pos);
+    gtk_widget_show (label_tab_pos);
+    gtk_widget_show (combo_tab_pos);
     gtk_widget_show (check_down);
     gtk_widget_show (check_pinned);
     gtk_widget_show (check_above);
@@ -124,7 +124,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (check_scrollbar);
     gtk_widget_show (label_scrollback);
     gtk_widget_show (spin_scrollback);
-	
+    
     return table;
 }
 
@@ -339,24 +339,24 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
 
     strlcat (tw->config_file, "config", sizeof(tw->config_file));
     sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
-	
-	switch (gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos))
-	{
-		case 0:
-			tw->tc->tab_pos = 0;
-			break;
-		case 1:
-			tw->tc->tab_pos = 1;
-			break;
-		case 2:
-			tw->tc->tab_pos = 2;
-			break;
-		case 3:
-			tw->tc->tab_pos = 3;
-			break;
-		default:
-			tw->tc->tab_pos = 0;	
-	}
+    
+    switch (gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos))
+    {
+        case 0:
+            tw->tc->tab_pos = 0;
+            break;
+        case 1:
+            tw->tc->tab_pos = 1;
+            break;
+        case 2:
+            tw->tc->tab_pos = 2;
+            break;
+        case 3:
+            tw->tc->tab_pos = 3;
+            break;
+        default:
+            tw->tc->tab_pos = 0;    
+    }
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
         strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));
@@ -430,7 +430,7 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
         fprintf (fp, "grab_focus : %s\n", tw->tc->s_grab_focus);
         fprintf (fp, "key : %s\n", tw->tc->s_key);
         fprintf (fp, "down : %s\n", tw->tc->s_down);
-		fprintf (fp, "tab_pos : %i\n", tw->tc->tab_pos);
+        fprintf (fp, "tab_pos : %i\n", tw->tc->tab_pos);
 
         fclose (fp);
     }
@@ -479,7 +479,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
-	tilda_collect *t_collect;
+    tilda_collect *t_collect;
     char *argv0 = NULL;
     char title[20];
     char *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
@@ -527,9 +527,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
         fclose (fp);
     }
 
-	t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
-	t_collect->tw = tw;
-	t_collect->tt = tt;
+    t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
+    t_collect->tw = tw;
+    t_collect->tt = tt;
 
     if (argc != -1)
     {
