@@ -158,7 +158,7 @@ void *wait_for_signal (struct tilda_window_ *tw)
 
     key_grab (tw);
 
-    if (strcmp (tw->tc->s_down, "TRUE") == 0)
+    if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
         pull (tw);
     else
         gtk_widget_hide (tw->window);

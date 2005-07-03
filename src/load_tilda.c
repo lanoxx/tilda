@@ -28,7 +28,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
              use_antialias = FALSE, bool_use_image = FALSE;
     GdkColor fore, back, tint, highlight, cursor, black;
 
-	black.red = black.green = black.blue = 0x0000;
+    black.red = black.green = black.blue = 0x0000;
     back.red = back.green = back.blue = 0xffff;
     fore.red = fore.green = fore.blue = 0x0000;
     highlight.red = highlight.green = highlight.blue = 0xc000;
@@ -43,17 +43,17 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     //    TRANS_LEVEL = TRANS_LEVEL_arg;
 
 
-    if (strcmp (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
+    if (QUICK_STRCMP (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
         bool_use_image = TRUE;
     else
         bool_use_image = FALSE;
 
-    if (strcmp (tw->tc->s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
+    if (QUICK_STRCMP (tw->tc->s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
         use_antialias = TRUE;
     else
         use_antialias = FALSE;
 
-    if (strcmp (tw->tc->s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
+    if (QUICK_STRCMP (tw->tc->s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
         scroll = TRUE;
     else
         scroll = FALSE;
@@ -162,3 +162,4 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     return TRUE;
 }
+

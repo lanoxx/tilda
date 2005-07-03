@@ -188,7 +188,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
                       NULL);
     button_image = gtk_file_chooser_button_new_with_dialog (image_chooser);
 
-    if (strcmp (tw->tc->s_image, "none") != 0);
+    if (QUICK_STRCMP (tw->tc->s_image, "none") != 0);
 
     radio_white = gtk_radio_button_new_with_label (NULL, "White");
     radio_black = gtk_radio_button_new_with_label(gtk_radio_button_group (GTK_RADIO_BUTTON (radio_white)), "Black");
