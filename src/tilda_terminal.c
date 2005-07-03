@@ -170,8 +170,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (tt->hbox); 
 
     /* Create page to append to notebook */
-    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new("hello"));
-    gtk_notebook_set_tab_label_packing((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
+    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new (TILDA_VERSION));
+    gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
     
     /* Set everything up and display the widgets.

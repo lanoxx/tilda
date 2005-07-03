@@ -31,6 +31,7 @@
 
 G_BEGIN_DECLS;
 
+#define TILDA_VERSION "Tilda 0.07 devel"
 #define DEFAULT_LINES 100
 #define QUICK_STRCMP(a, b) (*(a)!=*(b)? \
     (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
