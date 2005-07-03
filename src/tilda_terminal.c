@@ -39,7 +39,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
         scroll = FALSE, icon_title = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
-    
+	
     sprintf (env_var, "TILDA_NUM=%d", tw->instance);
 
     /* Create a box to hold everything. */
@@ -170,7 +170,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (tt->hbox); 
 
     /* Create page to append to notebook */
-    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new ("Hello"));
+    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new("hello"));
     gtk_notebook_set_tab_label_packing((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
     

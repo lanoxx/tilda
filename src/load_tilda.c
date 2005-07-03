@@ -26,20 +26,21 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,
              use_antialias = FALSE, bool_use_image = FALSE;
-    GdkColor fore, back, tint, highlight, cursor;
+    GdkColor fore, back, tint, highlight, cursor, black;
 
+	black.red = black.green = black.blue = 0x0000;
     back.red = back.green = back.blue = 0xffff;
     fore.red = fore.green = fore.blue = 0x0000;
     highlight.red = highlight.green = highlight.blue = 0xc000;
     cursor.red = 0xffff;
     cursor.green = cursor.blue = 0x8000;
     tint.red = tint.green = tint.blue = 0;
-    tint = back;
+    tint = black;
 
-    if (TRANS_LEVEL_arg == -1)
+    //if (TRANS_LEVEL_arg == -1)
         TRANS_LEVEL = ((double) tw->tc->transparency)/100;
-    else
-        TRANS_LEVEL = TRANS_LEVEL_arg;
+    //else
+    //    TRANS_LEVEL = TRANS_LEVEL_arg;
 
 
     if (strcmp (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
@@ -61,7 +62,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), tw->tc->s_image);
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
-
 
     if (TRANS_LEVEL > 0)
     {
