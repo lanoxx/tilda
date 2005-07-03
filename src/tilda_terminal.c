@@ -39,7 +39,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
         scroll = FALSE, icon_title = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
-	
+    
     sprintf (env_var, "TILDA_NUM=%d", tw->instance);
 
     /* Create a box to hold everything. */
@@ -51,12 +51,22 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
 
     /* Create the terminal widget and add it to the scrolling shell. */
     tt->vte_term = vte_terminal_new ();
+    tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
  
     if (!dbuffer)
         gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
-   
-    gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0);
-   
+
+    if (SCROLLBAR_LEFT)
+    {
+        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
+    }
+    else /* scrollbar on the right */
+    {
+        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
+        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+    }
+
      /* Connect to the "char_size_changed" signal to set geometry hints
      * whenever the font used by the terminal is changed. */
     if (geometry)
@@ -115,10 +125,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
                       G_CALLBACK(increase_font_size), tw->window);
     g_signal_connect (G_OBJECT(tt->vte_term), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), tw->window);
-
-    /* Create the scrollbar for the widget. */
-    tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
-    gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0);
 
     /* Match "abcdefg". */
     vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), "abcdefg");
