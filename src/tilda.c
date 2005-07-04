@@ -60,15 +60,15 @@ void getinstance (tilda_window *tw)
     tw->instance = 0;
     
     home_dir = getenv ("HOME");
-    strlcpy (tw->lock_file, home_dir, sizeof(tw->lock_file));
-    strlcat (tw->lock_file, "/.tilda", sizeof(tw->lock_file));
-    strlcat (tw->lock_file, "/locks/", sizeof(tw->lock_file));
+    g_strlcpy (tw->lock_file, home_dir, sizeof(tw->lock_file));
+    g_strlcat (tw->lock_file, "/.tilda", sizeof(tw->lock_file));
+    g_strlcat (tw->lock_file, "/locks/", sizeof(tw->lock_file));
     
     mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
     
     for (;;)
     {
-        strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
+        g_strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
         sprintf (filename, "%s_*_%d", tmp, tw->instance);
         sprintf (filename, "%s 2> /dev/null", filename);
   
@@ -86,7 +86,7 @@ void getinstance (tilda_window *tw)
     }
 
     sprintf (filename, "%slock_%d_%d", tw->lock_file, getpid(), tw->instance);
-    strlcpy (tw->lock_file, filename, sizeof (tw->config_file));
+    g_strlcpy (tw->lock_file, filename, sizeof (tw->config_file));
     creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
@@ -104,32 +104,32 @@ void clean_tmp ()
     gboolean old = TRUE;
     
     home_dir = getenv ("HOME");
-    strlcpy (cmd, "ls ", sizeof(cmd));
-    strlcat (cmd, home_dir, sizeof(cmd));
-    strlcat (cmd, "/.tilda/locks/lock_* 2> /dev/null", sizeof(cmd));
+    g_strlcpy (cmd, "ls ", sizeof(cmd));
+    g_strlcat (cmd, home_dir, sizeof(cmd));
+    g_strlcat (cmd, "/.tilda/locks/lock_* 2> /dev/null", sizeof(cmd));
  
     if ((ptr = popen (cmd, "r")) != NULL)
     {
         while (fgets (buf, 1024, ptr) != NULL)
         {
-            strlcpy (filename, buf, sizeof (filename));
+            g_strlcpy (filename, buf, sizeof (filename));
             throw_away = strtok (buf, "/");
             while (throw_away)
             {
-                strlcpy (tmp, throw_away, sizeof (tmp));
+                g_strlcpy (tmp, throw_away, sizeof (tmp));
                 throw_away = strtok (NULL, "/");
                 
                 if (!throw_away)
                 {
                     throw_away = strtok (tmp, "_");
                     throw_away = strtok (NULL, "_");
-                    strlcpy (pid, throw_away, sizeof (pid));
+                    g_strlcpy (pid, throw_away, sizeof (pid));
                     break;
                 }
             }
             
-            strlcpy (cmd, "ps x | grep ", sizeof(cmd));
-            strlcat (cmd, pid, sizeof (cmd));
+            g_strlcpy (cmd, "ps x | grep ", sizeof(cmd));
+            g_strlcat (cmd, pid, sizeof (cmd));
             
             if ((ptr2 = popen (cmd, "r")) != NULL)
             {
@@ -217,10 +217,10 @@ int main (int argc, char **argv)
         switch (opt) {
             case 'B':
                 image_set_clo = TRUE;
-                strlcpy (tw->tc->s_image, optarg, sizeof (tw->tc->s_image));
+                g_strlcpy (tw->tc->s_image, optarg, sizeof (tw->tc->s_image));
                 break;
             case 'b':
-                strlcpy (tw->tc->s_background, optarg, sizeof (tw->tc->s_background));
+                g_strlcpy (tw->tc->s_background, optarg, sizeof (tw->tc->s_background));
                 break;
             case 'T':
                 printf ("-T no longer does anything :(, tilda no longer uses xbindkeys\n");
@@ -241,7 +241,7 @@ int main (int argc, char **argv)
                 if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL_arg = ((double) tmp_val)/100; }
                 break;
             case 'f':
-                strlcpy (s_font_arg, optarg, sizeof (tw->tc->s_font));
+                g_strlcpy (s_font_arg, optarg, sizeof (tw->tc->s_font));
                 break;
             case 'w':
                 working_directory = optarg;
@@ -277,8 +277,8 @@ int main (int argc, char **argv)
     }
 
     home_dir = getenv ("HOME");
-    strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
-    strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
+    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
+    g_strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
     sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
     /* Call the wizard if we cannot read the config file.

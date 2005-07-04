@@ -29,15 +29,15 @@
 void get_defaults (tilda_window *tw)
 {
     tw->tc->lines = DEFAULT_LINES;
-    strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image)); 
-    strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
-    strlcpy (tw->tc->s_font, "monospace 9", sizeof (tw->tc->s_font));
-    strlcpy (tw->tc->s_down, "TRUE", sizeof (tw->tc->s_down));
-    strlcpy (tw->tc->s_antialias, "TRUE", sizeof (tw->tc->s_antialias));
-    strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof (tw->tc->s_scrollbar));
-    strlcpy (tw->tc->s_use_image, "FALSE", sizeof (tw->tc->s_use_image));
-    strlcpy (tw->tc->s_grab_focus, "TRUE", sizeof (tw->tc->s_grab_focus));
-    strlcpy (tw->tc->s_key, "null", sizeof (tw->tc->s_key));
+    g_strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image)); 
+    g_strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
+    g_strlcpy (tw->tc->s_font, "monospace 9", sizeof (tw->tc->s_font));
+    g_strlcpy (tw->tc->s_down, "TRUE", sizeof (tw->tc->s_down));
+    g_strlcpy (tw->tc->s_antialias, "TRUE", sizeof (tw->tc->s_antialias));
+    g_strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof (tw->tc->s_scrollbar));
+    g_strlcpy (tw->tc->s_use_image, "FALSE", sizeof (tw->tc->s_use_image));
+    g_strlcpy (tw->tc->s_grab_focus, "TRUE", sizeof (tw->tc->s_grab_focus));
+    g_strlcpy (tw->tc->s_key, "null", sizeof (tw->tc->s_key));
     tw->tc->transparency = 0;
     tw->tc->x_pos = 0;
     tw->tc->y_pos = 0;

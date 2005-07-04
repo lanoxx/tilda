@@ -17,15 +17,6 @@
 #ifndef TILDA_H
 #define TILDA_H
 
-/* These are from OpenBSD. They are safe string handling functions.
- * The source was: ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcat.c
- *                 ftp://ftp.openbsd.org//pub/OpenBSD/src/lib/libc/string/strlcpy.c
- *
- * Here is a little guide on usage: http://www.courtesan.com/todd/papers/strlcpy.html
- *
- * In short, the syntax is just like strncpy() and strncat().
- */
- 
 #include <gtk/gtk.h>
 #include "tilda_window.h"
 

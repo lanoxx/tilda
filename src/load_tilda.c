@@ -90,7 +90,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     }
 
     if ((strcasecmp (s_font_arg, "null") != 0) && (strlen (s_font_arg) > 0))
-        strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
+        g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (use_antialias)
         vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);

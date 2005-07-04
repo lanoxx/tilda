@@ -131,7 +131,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
-    strlcpy (env_add[2], env_var, env_add2_size);
+    g_strlcpy (env_add[2], env_var, env_add2_size);
 
     if (dingus)
     {
