@@ -11,18 +11,14 @@ tilda_headers = \
     readconf.h  \
     vte.h \
 	config.h         \
-    strlcat.h   \
     tilda_terminal.h  \
     wizard.h \
 	key_grabber.h   \
-    strlcpy.h   \
     tilda_window.h 
 
 
 tilda_SOURCES = $(tilda_headers)	\
                 readconf.c \
-                strlcat.c \
-                strlcpy.c \
                 tilda_window.c \
                 tilda_terminal.c \
                 wizard.c \

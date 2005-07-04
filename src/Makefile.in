@@ -81,18 +81,14 @@ tilda_headers = \
     readconf.h  \
     vte.h \
 	config.h         \
-    strlcat.h   \
     tilda_terminal.h  \
     wizard.h \
 	key_grabber.h   \
-    strlcpy.h   \
     tilda_window.h 
 
 
 tilda_SOURCES = $(tilda_headers)	\
                 readconf.c \
-                strlcat.c \
-                strlcpy.c \
                 tilda_window.c \
                 tilda_terminal.c \
                 wizard.c \
@@ -107,8 +103,8 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = tilda$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_tilda_OBJECTS = readconf.$(OBJEXT) strlcat.$(OBJEXT) \
-	strlcpy.$(OBJEXT) tilda_window.$(OBJEXT) \
+am_tilda_OBJECTS = readconf.$(OBJEXT) \
+	tilda_window.$(OBJEXT) \
 	tilda_terminal.$(OBJEXT) wizard.$(OBJEXT) \
 	callback_func.$(OBJEXT) key_grabber.$(OBJEXT) \
 	load_tilda.$(OBJEXT) tilda.$(OBJEXT)
@@ -124,8 +120,8 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/callback_func.Po \
 @AMDEP_TRUE@	$(DEPDIR)/key_grabber.Po $(DEPDIR)/load_tilda.Po \
-@AMDEP_TRUE@	$(DEPDIR)/readconf.Po $(DEPDIR)/strlcat.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strlcpy.Po $(DEPDIR)/tilda.Po \
+@AMDEP_TRUE@	$(DEPDIR)/readconf.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tilda.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tilda_terminal.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tilda_window.Po $(DEPDIR)/wizard.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -184,8 +180,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/key_grabber.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/load_tilda.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readconf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strlcat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strlcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tilda.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tilda_terminal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tilda_window.Po@am__quote@
