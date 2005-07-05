@@ -29,14 +29,14 @@
 
 gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt) 
 {
-    char env_var[14];
-    int  env_add2_size;
-    char *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
-    const char *command = NULL;
-    const char *working_directory = NULL;
+    gchar env_var[14];
+    gint  env_add2_size;
+    gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
+    const gchar *command = NULL;
+    const gchar *working_directory = NULL;
     gboolean audible = TRUE, blink = TRUE, dingus = FALSE,
-        geometry = TRUE, dbuffer = TRUE, console = FALSE,
-        scroll = FALSE, icon_title = FALSE, shell = TRUE;
+		dbuffer = TRUE, console = FALSE, scroll = FALSE, 
+		icon_title = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
     
@@ -67,15 +67,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
     }
 
-     /* Connect to the "char_size_changed" signal to set geometry hints
-     * whenever the font used by the terminal is changed. */
-    if (geometry)
-    {
-        char_size_changed (tt->vte_term, 0, 0, tw->window);
-        g_signal_connect (G_OBJECT(tt->vte_term), "char-size-changed",
-                          G_CALLBACK(char_size_changed), tw->window);
-    }
-
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
     g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
@@ -88,9 +79,9 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
 
     /* Connect to the "eof" signal to quit when the session ends. */
     g_signal_connect (G_OBJECT(tt->vte_term), "eof",
-                      G_CALLBACK(destroy_and_quit_eof), tw->window);
+                      G_CALLBACK(destroy_and_quit_eof), t_collect);
     g_signal_connect (G_OBJECT(tt->vte_term), "child-exited",
-                      G_CALLBACK(destroy_and_quit_exited), tw->window);
+                      G_CALLBACK(close_tab_on_exit), t_collect);
 
     /* Connect to the "status-line-changed" signal. */
     g_signal_connect (G_OBJECT(tt->vte_term), "status-line-changed",

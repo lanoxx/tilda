@@ -16,6 +16,7 @@
 
 #include <gtk/gtk.h>
 #include <vte/vte.h>
+#include "tilda.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 
@@ -53,6 +54,43 @@ int resize (GtkWidget *window, gint w, gint h)
     return 0;
 }
 
+void clean_up_no_args ()
+{
+     gtk_main_quit ();
+}
+
+/* Removes the temporary file socket used to communicate with a running tilda */
+void clean_up (tilda_window *tw)
+{
+    remove (tw->lock_file);
+
+    gtk_main_quit ();
+}
+
+void close_tab_on_exit (GtkWidget *widget, gpointer data)
+{
+	gint pos;
+    tilda_term *tt;
+    tilda_window *tw;
+    tilda_collect *tc = (tilda_collect *) data;
+
+    tw = tc->tw;
+    tt = tc->tt;
+	
+	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
+	{
+		clean_up (tw);
+	} else {
+    	pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
+    	gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
+    	
+    	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)   
+    	    gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+    
+    	g_free (tt);
+	} 
+}
+
  void window_title_changed (GtkWidget *widget, gpointer win)
 {
     GtkWindow *window;
@@ -78,58 +116,30 @@ int resize (GtkWidget *window, gint w, gint h)
           VTE_TERMINAL(widget)->icon_title);
 }
 
- void char_size_changed (GtkWidget *widget, guint width, guint height, gpointer data)
-{
-    /*VteTerminal *terminal;
-    GtkWindow *window;
-    GdkGeometry geometry;
-    int xpad, ypad;
-
-    g_return_if_fail (GTK_IS_WINDOW(data));
-    g_return_if_fail (VTE_IS_TERMINAL(widget));
-
-    terminal = VTE_TERMINAL(widget);
-    window = GTK_WINDOW(data);
-
-    vte_terminal_get_padding (terminal, &xpad, &ypad);
-
-    geometry.width_inc = terminal->char_width;
-    geometry.height_inc = terminal->char_height;
-    geometry.base_width = xpad;
-    geometry.base_height = ypad;
-    geometry.min_width = xpad + terminal->char_width * 2;
-    geometry.min_height = ypad + terminal->char_height * 2;
-
-    gtk_window_set_geometry_hints (window, widget, &geometry,
-                      GDK_HINT_RESIZE_INC |
-                      GDK_HINT_BASE_SIZE |
-                      GDK_HINT_MIN_SIZE);*/
-}
-
- void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
+void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     gtk_widget_destroy(GTK_WIDGET(data));
     gtk_main_quit();
 }
 
- void destroy_and_quit (GtkWidget *widget, gpointer data)
+void destroy_and_quit (GtkWidget *widget, gpointer data)
 {
     gtk_widget_destroy (GTK_WIDGET(data));
     gtk_main_quit ();
 }
 
- void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
+void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
 {
-    /* g_print("Detected EOF.\n"); */
+   close_tab_on_exit (widget, data);
 }
 
- void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
+void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
 {
     //g_print("Detected child exit.\n");
     destroy_and_quit (widget, data);
 }
 
- void status_line_changed (GtkWidget *widget, gpointer data)
+void status_line_changed (GtkWidget *widget, gpointer data)
 {
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
 }
@@ -234,7 +244,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     return FALSE;
 }
 
- void iconify_window (GtkWidget *widget, gpointer data)
+void iconify_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -243,7 +253,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void deiconify_window (GtkWidget *widget, gpointer data)
+void deiconify_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -252,7 +262,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void raise_window (GtkWidget *widget, gpointer data)
+void raise_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -261,7 +271,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void lower_window (GtkWidget *widget, gpointer data)
+void lower_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -270,7 +280,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void maximize_window (GtkWidget *widget, gpointer data)
+void maximize_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -279,7 +289,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void restore_window (GtkWidget *widget, gpointer data)
+void restore_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -288,7 +298,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void refresh_window (GtkWidget *widget, gpointer data)
+void refresh_window (GtkWidget *widget, gpointer data)
 {
     GdkRectangle rect;
     if (GTK_IS_WIDGET(data)) {
@@ -302,7 +312,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
+void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 {
     VteTerminal *terminal;
     gint owidth, oheight, xpad, ypad;
@@ -323,7 +333,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
+void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
 {
     if (GTK_IS_WIDGET(data)) {
         if ((GTK_WIDGET(data))->window) {
@@ -332,7 +342,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     }
 }
 
- void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
+void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
 {
     VteTerminal *terminal;
     PangoFontDescription *desired;
@@ -365,87 +375,12 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     pango_font_description_free (desired);
 }
 
- void increase_font_size(GtkWidget *widget, gpointer data)
+void increase_font_size(GtkWidget *widget, gpointer data)
 {
     adjust_font_size (widget, data, 1);
 }
 
- void decrease_font_size (GtkWidget *widget, gpointer data)
+void decrease_font_size (GtkWidget *widget, gpointer data)
 {
     adjust_font_size (widget, data, -1);
 }
-
-/*
- gboolean read_and_feed (GIOChannel *source, GIOCondition condition, gpointer data)
-{
-    char buf[2048];
-    gsize size;
-    GIOStatus status;
-    g_return_val_if_fail (VTE_IS_TERMINAL(data), FALSE);
-    status = g_io_channel_read_chars (source, buf, sizeof(buf), &size, NULL);
-
-    if ((status == G_IO_STATUS_NORMAL) && (size > 0)) {
-        vte_terminal_feed (VTE_TERMINAL(data), buf, size);
-        return TRUE;
-    }
-    return FALSE;
-}
-*/
-
-/*
- void disconnect_watch (GtkWidget *widget, gpointer data)
-{
-    g_source_remove (GPOINTER_TO_INT(data));
-}
-*/
-
-/*
- void clipboard_get (GtkClipboard *clipboard, GtkSelectionData *selection_data,
-          guint info, gpointer owner)
-{
-    return;
-}
-*/
-
-/*
- void take_xconsole_ownership (GtkWidget *widget, gpointer data)
-{
-    char *name, hostname[255];
-    GdkAtom atom;
-    GtkClipboard *clipboard;
-    GtkTargetEntry targets[] = {
-        {"UTF8_STRING", 0, 0},
-        {"COMPOUND_TEXT", 0, 0},
-        {"TEXT", 0, 0},
-        {"STRING", 0, 0},
-    };
-
-    memset (hostname, '\0', sizeof(hostname));
-    gethostname (hostname, sizeof(hostname) - 1);
-
-    name = g_strdup_printf ("MIT_CONSOLE_%s", hostname);
-    atom = gdk_atom_intern (name, FALSE);
-#if GTK_CHECK_VERSION(2,2,0)
-    clipboard = gtk_clipboard_get_for_display (gtk_widget_get_display (widget),
-                          atom);
-#else
-    clipboard = gtk_clipboard_get (atom);
-#endif
-    g_free(name);
-
-    gtk_clipboard_set_with_owner (clipboard,
-                     targets,
-                     G_N_ELEMENTS(targets),
-                     clipboard_get,
-                     (GtkClipboardClearFunc)gtk_main_quit,
-                     G_OBJECT(widget));
-}
-*/
-
-/*
- void add_weak_pointer(GObject *object, GtkWidget **target)
-{
-    _weak_pointer(object, (gpointer*)target);
-}
-*/
-

@@ -22,8 +22,10 @@
 G_BEGIN_DECLS;
 
  void window_title_changed (GtkWidget *widget, gpointer win);
+ void clean_up_no_args ();
+ void clean_up (tilda_window *tw);
+ void close_tab_on_exit (GtkWidget *widget, gpointer data);
  void icon_title_changed (GtkWidget *widget, gpointer win);
- void char_size_changed (GtkWidget *widget, guint width, guint height, gpointer data);
  void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data);
  void destroy_and_quit (GtkWidget *widget, gpointer data);
  void destroy_and_quit_eof (GtkWidget *widget, gpointer data);

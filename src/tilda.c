@@ -33,22 +33,10 @@
 #include <vte/vte.h>
 #include "config.h"
 #include "tilda.h"
+#include "callback_func.h"
 #include "tilda_window.h"
 
 char *user, *display;
-
-void clean_up_no_args ()
-{
-     exit (0);
-}
-
-/* Removes the temporary file socket used to communicate with a running tilda */
-void clean_up (tilda_window *tw)
-{
-    remove (tw->lock_file);
-
-    exit (0);
-}
 
 void getinstance (tilda_window *tw)
 {
@@ -308,12 +296,12 @@ int main (int argc, char **argv)
 
     init_tilda_window (tw, tt);
 
-    /*signal (SIGINT, clean_up);
-    signal (SIGQUIT, clean_up);
-    signal (SIGABRT, clean_up);
-    signal (SIGKILL, clean_up);
-    signal (SIGABRT, clean_up);
-    signal (SIGTERM, clean_up);*/
+    signal (SIGINT, clean_up_no_args);
+    signal (SIGQUIT, clean_up_no_args);
+    signal (SIGABRT, clean_up_no_args);
+    signal (SIGKILL, clean_up_no_args);
+    signal (SIGABRT, clean_up_no_args);
+    signal (SIGTERM, clean_up_no_args);
 
     gdk_threads_enter ();
     gtk_main();
