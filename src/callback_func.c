@@ -26,7 +26,7 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab", 		  NULL, 	 add_tab_menu_call, 	0, "<Item>"								},
+    { "/_New Tab", 		  "<CTRL>T", add_tab_menu_call, 	0, "<Item>"								},
     { "/_Close Tab",	  NULL, 	 close_tab, 			0, "<Item>"								},
     { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
     { "/_Copy", 		  NULL, 	 copy, 					0, "<StockItem>", GTK_STOCK_COPY		},
@@ -34,7 +34,7 @@ static GtkItemFactoryEntry menu_items[] = {
     { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
     { "/_Preferences...", NULL, 	 config_and_update, 	0, "<StockItem>", GTK_STOCK_PREFERENCES	},
     { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
-    { "/_Quit", "<Ctrl>Q",menu_quit, 						0, "<StockItem>", GTK_STOCK_QUIT 		} 		
+    { "/_Quit", 		"<Ctrl>Q",	menu_quit, 						0, "<StockItem>", GTK_STOCK_QUIT 		} 		
 };
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -192,8 +192,7 @@ void popup_menu (tilda_collect *tc)
     GtkItemFactory *item_factory;
     GtkWidget *menu;
 
-    item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>",
-                                        NULL);
+    item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", NULL);
 
     gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, tc);
 

@@ -83,7 +83,7 @@ void add_tab (tilda_window *tw)
     tilda_term *tt; 
     
     tt = (tilda_term *) malloc (sizeof (tilda_term));
-    
+
     init_tilda_terminal (tw, tt);
 }
 
@@ -110,19 +110,21 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
     pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
     gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
     
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) <= 1)   
+	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 0)
+		clean_up (tw);
+    else if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)   
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-    
+	
     g_free (tt);
 }
 
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 {
     GtkAccelGroup *accel_group;
-    GClosure *clean;
+    GClosure *clean, *new_tab;
     GError *error;
     
-     /* Create a window to hold the scrolling shell, and hook its
+    /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
@@ -147,7 +149,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     init_tilda_terminal (tw, tt);
 
     /* Exit on Ctrl-Q */
-    clean = g_cclosure_new (clean_up_no_args, NULL, NULL);
+    clean = g_cclosure_new (clean_up, tw, NULL);
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
     gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
