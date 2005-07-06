@@ -442,12 +442,12 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
 gint ok (tilda_collect *tc)
 {
     apply_settings (tc->tw, tc->tt);
-
+	exit_status = 0;
     gtk_widget_destroy (wizard_window);
 
     if (in_main)
-        gtk_main_quit();
-
+		gtk_main_quit();
+	
     return (TRUE);
 }
 
@@ -492,30 +492,13 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     contents[3] = keybindings;
 
     FILE *fp;
-    char *home_dir;
     int i;
-
-    home_dir = getenv ("HOME");
-    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
-    g_strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
-    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
-
+	
     if (argv != NULL)
         argv0 = argv[0];
 
-    //read in height width settings already set
-    if((fp = fopen(tw->config_file, "r")) == NULL)
-    {
-        g_strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));
-        g_strlcpy (tw->tc->s_pinned, "TRUE", sizeof(tw->tc->s_pinned));
-        g_strlcpy (tw->tc->s_above, "TRUE", sizeof(tw->tc->s_above));
-        tw->tc->max_height = 1;
-        tw->tc->max_width = 1;
-        tw->tc->min_height = 1;
-        tw->tc->min_width = 1;
-    }
-    else
-    {
+	if((fp = fopen(tw->config_file, "r")) != NULL)
+	{
         if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
         {
             /* This should _NEVER_ happen, but it's here just in case */

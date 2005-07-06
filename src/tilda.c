@@ -288,10 +288,12 @@ int main (int argc, char **argv)
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
         sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);
-
-    g_thread_init(NULL);
-    gdk_threads_init();
-
+	
+	if (!g_thread_supported ())
+		g_thread_init(NULL);
+    
+	gdk_threads_init();
+	
     gtk_init (&argc, &argv);
 
     init_tilda_window (tw, tt);

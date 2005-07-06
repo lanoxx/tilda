@@ -22,8 +22,8 @@
 
 G_BEGIN_DECLS;
 
-void pull (struct tilda_window_ *tw);
-void *wait_for_signal (struct tilda_window_ *tw);
+void pull (tilda_window *tw);
+void *wait_for_signal (tilda_window *tw);
 
 G_END_DECLS;
 

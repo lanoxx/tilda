@@ -144,11 +144,11 @@ void key_grab (tilda_window *tw)
     }
 }
 
-void *wait_for_signal (struct tilda_window_ *tw)
+void *wait_for_signal (tilda_window *tw)
 {
     KeySym grabbed_key;
     XEvent event;
-
+	
     if (!(dpy = XOpenDisplay(NULL)))
         fprintf(stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
 
@@ -160,10 +160,14 @@ void *wait_for_signal (struct tilda_window_ *tw)
 
     if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
         pull (tw);
-    else
+    else {
+		gdk_threads_enter();
         gtk_widget_hide (tw->window);
-
-    for (;;)
+		gdk_flush ();
+        gdk_threads_leave();
+	}
+	
+	for (;;)
     {
         XNextEvent(dpy, &event);
 
