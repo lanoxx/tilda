@@ -151,15 +151,15 @@ int main (int argc, char **argv)
     tilda_window *tw;
     tilda_term *tt;
 
-    const char *command = NULL;
-    const char *working_directory = NULL;
-    char *home_dir;
+    gchar *home_dir;
     FILE *fp;
-    float tmp_val;
-    int  opt;
-    int  i, j;
+    gdouble tmp_val;
+    gint  opt;
+    gint  i, j;
     GList *args = NULL;
-    
+    gint tmp_trans = -1, x_pos_arg = -1, y_pos_arg = -1;
+	gchar s_font_arg[64];
+	
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
 
@@ -199,7 +199,7 @@ int main (int argc, char **argv)
     getinstance (tw);
 
     /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
-    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:wl:-")) != -1)
+    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:w:l:-")) != -1)
      {
         gboolean bail = FALSE;
         switch (opt) {
@@ -225,11 +225,10 @@ int main (int argc, char **argv)
                 command = optarg;
                 break;
             case 't':
-                tmp_val = atoi (optarg);
-                if (tmp_val <= 100 && tmp_val >=0 ) { TRANS_LEVEL_arg = ((double) tmp_val)/100; }
+                tmp_trans= atoi (optarg);
                 break;
             case 'f':
-                g_strlcpy (s_font_arg, optarg, sizeof (tw->tc->s_font));
+                g_strlcpy (s_font_arg, optarg, sizeof (s_font_arg));
                 break;
             case 'w':
                 working_directory = optarg;
@@ -274,24 +273,36 @@ int main (int argc, char **argv)
      * tilda was not called with "-C" */
     if ((fp = fopen(tw->config_file, "r")) == NULL)
     {
-        printf("Unable to open config file, showing the wizard\n");
-        if ((wizard (argc, argv, tw, tt)) == 1) { clean_up(tw); }
+        perror ("Unable to open config file, showing the wizard\n");
+        if ((wizard (argc, argv, tw, tt)) == 1) { clean_up (tw); }
     }
     else
         fclose (fp);
 
     if (read_config_file (argv[0], tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
     {
-        puts("There was an error in the config file, terminating");
+        perror ("There was an error in the config file, terminating");
         exit(1);
     }
+	
+	if (tmp_trans >= 0)
+		tw->tc->transparency = tmp_trans;
+
+	if (x_pos_arg >= 0)
+		tw->tc->x_pos = x_pos_arg;
+
+	if (y_pos_arg >= 0)
+		tw->tc->y_pos = y_pos_arg;
+	
+	if (strlen (s_font_arg) > 0)
+		g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
         sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);
 	
 	if (!g_thread_supported ())
 		g_thread_init(NULL);
-    
+  
 	gdk_threads_init();
 	
     gtk_init (&argc, &argv);

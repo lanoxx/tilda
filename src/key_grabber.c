@@ -42,19 +42,8 @@ KeySym key;
 
 void pull (struct tilda_window_ *tw)
 {
-    gint x, y;
     gint w, h;
-    //gint min_h, max_h;
-
-    if (x_pos_arg != -1)
-        x = x_pos_arg;
-    else
-        x = tw->tc->x_pos;
-    if (y_pos_arg != -1)
-        y = y_pos_arg;
-    else
-        y = tw->tc->y_pos;
-
+	
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
     if (h == tw->tc->min_height)
@@ -72,13 +61,8 @@ void pull (struct tilda_window_ *tw)
         if ((strcasecmp (tw->tc->s_above, "true")) == 0)
             gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
-        gtk_window_move ((GtkWindow *) tw->window, x, y);
+        gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
 
-        /*for (max_h=h;max_h<=max_height;max_h++)
-        {
-            gtk_window_resize ((GtkWindow *) window, max_width, max_h);
-            sleep (.01);
-        }*/
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
         gdk_flush ();
         gdk_threads_leave();
@@ -86,12 +70,6 @@ void pull (struct tilda_window_ *tw)
     else if (h == tw->tc->max_height)
     {
         gdk_threads_enter();
-
-        /*for (min_h=h;min_h>1;min_h--)
-        {
-            gtk_window_resize ((GtkWindow *) window, min_width, min_h);
-            sleep (.001);
-        }*/
 
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
         gtk_widget_hide ((GtkWidget *) tw->window);
@@ -104,9 +82,12 @@ void pull (struct tilda_window_ *tw)
 void key_grab (tilda_window *tw)
 {
     XModifierKeymap *modmap;
+	gchar tmp_key[25];
     unsigned int numlockmask = 0;
     unsigned int modmask = 0;
-    int i, j;
+    gint i, j;
+
+	g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
 
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
@@ -119,19 +100,19 @@ void key_grab (tilda_window *tw)
     }
     XFreeModifiermap(modmap);
 
-    if (strstr(tw->tc->s_key, "Control"))
+    if (strstr(tmp_key, "Control"))
         modmask = modmask | ControlMask;
 
-    if (strstr(tw->tc->s_key, "Alt"))
+    if (strstr(tmp_key, "Alt"))
         modmask = modmask | Mod1Mask;
 
-    if (strstr(tw->tc->s_key, "Win"))
+    if (strstr(tmp_key, "Win"))
         modmask = modmask | Mod4Mask;
 
-    if (strstr(tw->tc->s_key, "None"))
+    if (strstr(tmp_key, "None"))
         modmask = 0;
 
-    if (strtok(tw->tc->s_key, "+"))
+    if (strtok(tmp_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
 
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
@@ -150,14 +131,13 @@ void *wait_for_signal (tilda_window *tw)
     XEvent event;
 	
     if (!(dpy = XOpenDisplay(NULL)))
-        fprintf(stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
-
+        fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
 
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
     key_grab (tw);
-
+	
     if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
         pull (tw);
     else {

@@ -22,7 +22,7 @@
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
     gint x, y;
-    double TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
+    gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,
              use_antialias = FALSE, bool_use_image = FALSE;
@@ -37,11 +37,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint.red = tint.green = tint.blue = 0;
     tint = black;
 
-    //if (TRANS_LEVEL_arg == -1)
-        TRANS_LEVEL = ((double) tw->tc->transparency)/100;
-    //else
-    //    TRANS_LEVEL = TRANS_LEVEL_arg;
-
+    TRANS_LEVEL = ((gdouble) tw->tc->transparency)/100;
 
     if (QUICK_STRCMP (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
         bool_use_image = TRUE;
@@ -88,9 +84,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     {
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
     }
-
-    if ((strcasecmp (s_font_arg, "null") != 0) && (strlen (s_font_arg) > 0))
-        g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (use_antialias)
         vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);
@@ -143,22 +136,11 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
         gtk_widget_show (tw->notebook);
     }
-        
-    if (x_pos_arg != -1)
-        x = x_pos_arg;
-    else
-        x = tw->tc->x_pos;
-    if (y_pos_arg != -1)
-        y = y_pos_arg;
-    else
-        y = tw->tc->y_pos;
 
-    gtk_window_move ((GtkWindow *) tw->window, x, y);
+    gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
 
     if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
-    {
-            gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
-    }
+    	gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
 
     return TRUE;
 }

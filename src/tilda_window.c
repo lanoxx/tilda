@@ -140,11 +140,10 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     else if (tw->tc->tab_pos == 3)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
     
-    
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE); 
-        
+    
     init_tilda_terminal (tw, tt);
 
     /* Exit on Ctrl-Q */
@@ -161,6 +160,6 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
        perror ("Fuck that thread!!!");
-	
+
     return TRUE;
 }

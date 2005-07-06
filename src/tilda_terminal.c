@@ -32,8 +32,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     gchar env_var[14];
     gint  env_add2_size;
     gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
-    const gchar *command = NULL;
-    const gchar *working_directory = NULL;
     gboolean audible = TRUE, blink = TRUE, dingus = FALSE,
 		dbuffer = TRUE, console = FALSE, scroll = FALSE, 
 		icon_title = FALSE, shell = TRUE;
@@ -140,16 +138,16 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
             if (command == NULL)
             {
                 #ifdef DEBUG
-                puts ("had to fix 'command'");
+                perror ("had to fix 'command'");
                 #endif
 
                 command = getenv ("SHELL"); 
             }
 
             vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-                                       command, NULL, env_add,
-                                       working_directory,
-                                       TRUE, TRUE, TRUE);
+            	command, NULL, env_add,
+                working_directory,
+                TRUE, TRUE, TRUE);
         }
     }
     

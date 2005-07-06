@@ -480,9 +480,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
     tilda_collect *t_collect;
-    char *argv0 = NULL;
-    char title[20];
-    char *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
+    gchar *argv0 = NULL;
+    gchar title[20];
+    gchar *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
 
     GtkWidget* (*contents[4])(tilda_window *, tilda_term *);
 
@@ -492,30 +492,30 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     contents[3] = keybindings;
 
     FILE *fp;
-    int i;
+    gint i;
 	
     if (argv != NULL)
         argv0 = argv[0];
 
-	if((fp = fopen(tw->config_file, "r")) != NULL)
-	{
-        if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
-        {
-            /* This should _NEVER_ happen, but it's here just in case */
-            puts("Error reading config file, terminating");
-            puts("If you created your config file prior to release .06 then you must delete it and start over, sorry :(");
-            exit(1);
-        }
-
-        fclose (fp);
-    }
-
-    t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
-    t_collect->tw = tw;
+	t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
+	t_collect->tw = tw;
     t_collect->tt = tt;
 
     if (argc != -1)
     {
+		if((fp = fopen(tw->config_file, "r")) != NULL)
+		{
+        	if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
+        	{
+            	/* This should _NEVER_ happen, but it's here just in case */
+            	perror ("Error reading config file, terminating");
+            	perror ("If you created your config file prior to release .06 then you must delete it and start over, sorry :(");
+            	exit (1);
+        	}
+
+        	fclose (fp);
+    	}
+
         in_main = TRUE;
         gtk_init (&argc, &argv);
     }

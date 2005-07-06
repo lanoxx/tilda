@@ -32,11 +32,9 @@ G_BEGIN_DECLS;
 gboolean image_set_clo, antialias_set_clo, scroll_set_clo;
 gint old_max_height, old_max_width;
 
-// commandline arg values
-gint x_pos_arg; 
-gint y_pos_arg;
-gchar s_font_arg[64];
-gdouble TRANS_LEVEL_arg;
+/* global commandline arg values */
+gchar *command;
+gchar *working_directory;
 
 static const char *usage = "Usage: %s "
     "[-B image] "
