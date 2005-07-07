@@ -33,6 +33,7 @@
 #include <vte/vte.h>
 #include "config.h"
 #include "tilda.h"
+#include "../tilda-config.h"
 #include "callback_func.h"
 #include "tilda_window.h"
 

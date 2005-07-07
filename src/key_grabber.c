@@ -21,7 +21,6 @@
  */
 
 #include <X11/Xlib.h>
-#include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -31,6 +30,7 @@
 #include <string.h>
 #include "tilda.h"
 #include "key_grabber.h"
+#include "../tilda-config.h"
 
 Display *dpy;
 Window root;

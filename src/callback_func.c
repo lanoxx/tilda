@@ -17,6 +17,7 @@
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 #include "tilda.h"
+#include "../tilda-config.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 

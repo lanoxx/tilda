@@ -20,6 +20,7 @@
 #include <vte/vte.h>
 #include "config.h"
 #include "tilda.h"
+#include "../tilda-config.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 #include "callback_func.h"

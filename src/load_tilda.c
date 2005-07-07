@@ -18,6 +18,7 @@
 #include <vte/vte.h>
 
 #include "tilda.h"
+#include "../tilda-config.h"
 
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
