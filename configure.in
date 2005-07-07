@@ -1,0 +1,47 @@
+# Autoconf file for tilda
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT([tilda], [0.7], [sloutri@iit.edu])
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([src/tilda.c])
+AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
+
+# Checks for programs.
+AC_PROG_CC
+
+# Checks for libraries.
+
+pkg_modules="gtk+-2.0 >= 2.0.0, gthread-2.0, vte"
+PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
+AC_SUBST(PACKAGE_CFLAGS)
+AC_SUBST(PACKAGE_LIBS)
+
+dnl uncomment following lines to add gettext support
+dnl GETTEXT_PACKAGE=tilda
+dnl AC_SUBST(GETTEXT_PACKAGE)
+dnl AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
+
+dnl Add the languages which your application supports here.
+dnl ALL_LINGUAS=""
+dnl AM_GLIB_GNU_GETTEXT
+
+# Checks for header files.
+AC_PATH_X
+AC_HEADER_STDC
+AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_STRTOD
+AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
+
+AC_CONFIG_FILES([Makefile
+                 src/Makefile])
+AC_OUTPUT
