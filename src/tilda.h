@@ -65,7 +65,7 @@ static const char *usage = "Usage: %s "
     "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
     "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
     "-l lines : set number of scrollback lines\n";
-    
+
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 

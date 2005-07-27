@@ -115,7 +115,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         else
             gtk_widget_hide (tt->scrollbar);
     }
-    
+
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
     else if (tw->tc->tab_pos == 1)
@@ -129,8 +129,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), TRUE);
     else
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), FALSE);
-    
-    if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)   
+
+    if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) <= 1)
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     else {
         gtk_widget_hide (tw->notebook);
@@ -141,7 +141,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
 
     if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
-    	gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
+        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
 
     return TRUE;
 }

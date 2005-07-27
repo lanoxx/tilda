@@ -28,17 +28,17 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
-gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt) 
+gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
 {
     gchar env_var[14];
     gint  env_add2_size;
     gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
     gboolean audible = TRUE, blink = TRUE, dingus = FALSE,
-		dbuffer = TRUE, console = FALSE, scroll = FALSE, 
-		icon_title = FALSE, shell = TRUE;
+        dbuffer = TRUE, console = FALSE, scroll = FALSE,
+        icon_title = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
-    
+
     sprintf (env_var, "TILDA_NUM=%d", tw->instance);
 
     /* Create a box to hold everything. */
@@ -51,7 +51,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     /* Create the terminal widget and add it to the scrolling shell. */
     tt->vte_term = vte_terminal_new ();
     tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
- 
+
     if (!dbuffer)
         gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
 
@@ -118,7 +118,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
 
     /* Match "abcdefg". */
     vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), "abcdefg");
-    
+
     env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
     env_add[2] = (char *) malloc (env_add2_size);
     g_strlcpy (env_add[2], env_var, env_add2_size);
@@ -142,16 +142,16 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
                 perror ("had to fix 'command'");
                 #endif
 
-                command = getenv ("SHELL"); 
+                command = getenv ("SHELL");
             }
 
             vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-            	command, NULL, env_add,
+                command, NULL, env_add,
                 working_directory,
                 TRUE, TRUE, TRUE);
         }
     }
-    
+
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
     vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !audible);
@@ -161,19 +161,20 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), TRUE);
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), tw->tc->lines);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
-        
+
     gtk_widget_show (tt->vte_term);
-    gtk_widget_show (tt->hbox); 
+    gtk_widget_show (tt->hbox);
 
     /* Create page to append to notebook */
     gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new (TILDA_VERSION));
     gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
-    
+
     /* Set everything up and display the widgets.
      *  Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, TRUE);
-    
-    return TRUE;   
+
+    return TRUE;
 }
+

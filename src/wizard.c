@@ -63,14 +63,14 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
 
     label_scrollback = gtk_label_new("Scrollback:");
     label_tab_pos = gtk_label_new ("Position of Tabs: ");
-    
+
     combo_tab_pos = gtk_combo_box_new_text    ();
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "RIGHT");
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "LEFT");
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "BOTTOM");
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_pos, "TOP");
     gtk_combo_box_set_active ((GtkComboBox *)combo_tab_pos, tw->tc->tab_pos);
-    
+
     check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
     check_above = gtk_check_button_new_with_label ("Always on top");
     check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
@@ -106,15 +106,15 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     //gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_down, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    
+
     gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    
+
     gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), spin_scrollback, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    
+
     gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), combo_tab_pos, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    
+
     //gtk_widget_show (check_grab_focus);
     gtk_widget_show (label_tab_pos);
     gtk_widget_show (combo_tab_pos);
@@ -125,7 +125,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (check_scrollbar);
     gtk_widget_show (label_scrollback);
     gtk_widget_show (spin_scrollback);
-    
+
     return table;
 }
 
@@ -340,7 +340,7 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
 
     g_strlcat (tw->config_file, "config", sizeof(tw->config_file));
     sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
-    
+
     switch (gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos))
     {
         case 0:
@@ -356,7 +356,7 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
             tw->tc->tab_pos = 3;
             break;
         default:
-            tw->tc->tab_pos = 0;    
+            tw->tc->tab_pos = 0;
     }
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
@@ -443,12 +443,12 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
 gint ok (tilda_collect *tc)
 {
     apply_settings (tc->tw, tc->tt);
-	exit_status = 0;
+    exit_status = 0;
     gtk_widget_destroy (wizard_window);
 
     if (in_main)
-		gtk_main_quit();
-	
+        gtk_main_quit();
+
     return (TRUE);
 }
 
@@ -494,28 +494,28 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     FILE *fp;
     gint i;
-	
+
     if (argv != NULL)
         argv0 = argv[0];
 
-	t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
-	t_collect->tw = tw;
+    t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
+    t_collect->tw = tw;
     t_collect->tt = tt;
 
     if (argc != -1)
     {
-		if((fp = fopen(tw->config_file, "r")) != NULL)
-		{
-        	if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
-        	{
-            	/* This should _NEVER_ happen, but it's here just in case */
-            	perror ("Error reading config file, terminating");
-            	perror ("If you created your config file prior to release .06 then you must delete it and start over, sorry :(");
-            	exit (1);
-        	}
+        if((fp = fopen(tw->config_file, "r")) != NULL)
+        {
+            if (read_config_file (argv0, tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
+            {
+                /* This should _NEVER_ happen, but it's here just in case */
+                perror ("Error reading config file, terminating");
+                perror ("If you created your config file prior to release .06 then you must delete it and start over, sorry :(");
+                exit (1);
+            }
 
-        	fclose (fp);
-    	}
+            fclose (fp);
+        }
 
         in_main = TRUE;
         gtk_init (&argc, &argv);
@@ -592,3 +592,4 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     return exit_status;
 }
+

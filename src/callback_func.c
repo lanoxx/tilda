@@ -27,15 +27,15 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab", 		  "<CTRL>T", add_tab_menu_call, 	0, "<Item>"								},
-    { "/_Close Tab",	  NULL, 	 close_tab, 			0, "<Item>"								},
-    { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
-    { "/_Copy", 		  NULL, 	 copy, 					0, "<StockItem>", GTK_STOCK_COPY		},
-    { "/_Paste", 		  NULL, 	 paste, 				0, "<StockItem>", GTK_STOCK_PASTE		},
-    { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
-    { "/_Preferences...", NULL, 	 config_and_update, 	0, "<StockItem>", GTK_STOCK_PREFERENCES	},
-    { "/sep1",     		  NULL,      NULL,         			0, "<Separator>" 						},
-    { "/_Quit", 		"<Ctrl>Q",	menu_quit, 						0, "<StockItem>", GTK_STOCK_QUIT 		} 		
+    { "/_New Tab",        "<CTRL>T", add_tab_menu_call,     0, "<Item>"                             },
+    { "/_Close Tab",      NULL,      close_tab,             0, "<Item>"                             },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/_Copy",           NULL,      copy,                  0, "<StockItem>", GTK_STOCK_COPY        },
+    { "/_Paste",          NULL,      paste,                 0, "<StockItem>", GTK_STOCK_PASTE       },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/_Preferences...", NULL,      config_and_update,     0, "<StockItem>", GTK_STOCK_PREFERENCES },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/_Quit",         "<Ctrl>Q",  menu_quit,              0, "<StockItem>", GTK_STOCK_QUIT        }
 };
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -71,26 +71,26 @@ void clean_up (tilda_window *tw)
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
 {
-	gint pos;
+    gint pos;
     tilda_term *tt;
     tilda_window *tw;
     tilda_collect *tc = (tilda_collect *) data;
 
     tw = tc->tw;
     tt = tc->tt;
-	
-	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
-	{
-		clean_up (tw);
-	} else {
-    	pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
-    	gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-    	
-    	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)   
-    	    gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-    
-    	g_free (tt);
-	} 
+
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
+    {
+        clean_up (tw);
+    } else {
+        pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
+        gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
+
+        if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+            gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+
+        g_free (tt);
+    }
 }
 
  void window_title_changed (GtkWidget *widget, gpointer win)
@@ -151,10 +151,10 @@ void copy (gpointer data, guint callback_action, GtkWidget *w)
     tilda_window *tw;
     tilda_term *tt;
     tilda_collect *tc = (tilda_collect *) data;
-    
+
     tw = tc->tw;
     tt = tc->tt;
-    
+
     vte_terminal_copy_clipboard ((VteTerminal *) tt->vte_term);
 }
 
@@ -163,10 +163,10 @@ void paste (gpointer data, guint callback_action, GtkWidget *w)
     tilda_window *tw;
     tilda_term *tt;
     tilda_collect *tc = (tilda_collect *) data;
-    
+
     tw = tc->tw;
     tt = tc->tt;
-    
+
     vte_terminal_paste_clipboard ((VteTerminal *) tt->vte_term);
 }
 
@@ -175,7 +175,7 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
     tilda_window *tw;
     tilda_term *tt;
     tilda_collect *tc = (tilda_collect *) data;
-    
+
     tw = tc->tw;
     tt = tc->tt;
 
@@ -213,7 +213,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     char *match;
     int tag;
     gint xpad, ypad;
-    
+
     tc = (tilda_collect *) data;
     tt = tc->tt;
 
@@ -385,3 +385,4 @@ void decrease_font_size (GtkWidget *widget, gpointer data)
 {
     adjust_font_size (widget, data, -1);
 }
+

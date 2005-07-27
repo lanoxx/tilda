@@ -35,8 +35,8 @@ struct tilda_window_
     GtkWidget *notebook;
 
     tilda_conf *tc;
-    gchar lock_file[80];   
-    gchar config_file[80];   
+    gchar lock_file[80];
+    gchar config_file[80];
     gint instance;
     CONFIG tilda_config[NUM_ELEM];
 };
@@ -51,7 +51,7 @@ struct tilda_conf_
     gchar s_above[6];
     gchar s_notaskbar[6];
     gchar s_pinned[6];
-    gchar s_image[100]; 
+    gchar s_image[100];
     gchar s_background[6];
     gchar s_font[64];
     gchar s_down[6];

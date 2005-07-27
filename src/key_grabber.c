@@ -43,7 +43,7 @@ KeySym key;
 void pull (struct tilda_window_ *tw)
 {
     gint w, h;
-	
+
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
     if (h == tw->tc->min_height)
@@ -82,12 +82,12 @@ void pull (struct tilda_window_ *tw)
 void key_grab (tilda_window *tw)
 {
     XModifierKeymap *modmap;
-	gchar tmp_key[25];
+    gchar tmp_key[25];
     unsigned int numlockmask = 0;
     unsigned int modmask = 0;
     gint i, j;
 
-	g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
+    g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
 
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
@@ -129,7 +129,7 @@ void *wait_for_signal (tilda_window *tw)
 {
     KeySym grabbed_key;
     XEvent event;
-	
+
     if (!(dpy = XOpenDisplay(NULL)))
         fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
 
@@ -137,17 +137,17 @@ void *wait_for_signal (tilda_window *tw)
     root = RootWindow(dpy, screen);
 
     key_grab (tw);
-	
+
     if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
         pull (tw);
     else {
-		gdk_threads_enter();
+        gdk_threads_enter();
         gtk_widget_hide (tw->window);
-		gdk_flush ();
+        gdk_flush ();
         gdk_threads_leave();
-	}
-	
-	for (;;)
+    }
+
+    for (;;)
     {
         XNextEvent(dpy, &event);
 

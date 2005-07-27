@@ -30,7 +30,7 @@
 void get_defaults (tilda_window *tw)
 {
     tw->tc->lines = DEFAULT_LINES;
-    g_strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image)); 
+    g_strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image));
     g_strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
     g_strlcpy (tw->tc->s_font, "monospace 9", sizeof (tw->tc->s_font));
     g_strlcpy (tw->tc->s_down, "TRUE", sizeof (tw->tc->s_down));
@@ -48,7 +48,7 @@ void get_defaults (tilda_window *tw)
 void init_tilda_window_configs (tilda_window *tw)
 {
     int i ;
-    
+
     CONFIG t_c[] = {
         { CF_INT,       "max_height",   &(tw->tc->max_height),    0,                      NULL, 0, NULL },
         { CF_INT,       "max_width",    &(tw->tc->max_width),     0,                      NULL, 0, NULL },
@@ -72,29 +72,29 @@ void init_tilda_window_configs (tilda_window *tw)
         { CF_STRING,    "down",         tw->tc->s_down,         sizeof(tw->tc->s_down),         NULL, 0, NULL },
         { CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                      NULL, 0, NULL }
     };
-    
+
     for (i=0;i<NUM_ELEM;i++)
         tw->tilda_config[i] = t_c[i];
-    
+
     get_defaults (tw);
 }
 
 void add_tab (tilda_window *tw)
 {
-    tilda_term *tt; 
-    
+    tilda_term *tt;
+
     tt = (tilda_term *) malloc (sizeof (tilda_term));
 
     init_tilda_terminal (tw, tt);
 }
 
 void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
-{   
+{
     tilda_window *tw;
     tilda_collect *tc = (tilda_collect *) data;
-    
+
     tw = tc->tw;
-    
+
     add_tab (tw);
 }
 
@@ -104,18 +104,18 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
     tilda_term *tt;
     tilda_window *tw;
     tilda_collect *tc = (tilda_collect *) data;
-    
+
     tw = tc->tw;
     tt = tc->tt;
 
     pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
     gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-    
-	if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 0)
-		clean_up (tw);
-    else if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)   
+
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 0)
+        clean_up (tw);
+    else if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-	
+
     g_free (tt);
 }
 
@@ -124,7 +124,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     GtkAccelGroup *accel_group;
     GClosure *clean, *new_tab;
     GError *error;
-    
+
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -133,7 +133,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Create notebook to hold all terminal widgets */
     tw->notebook = gtk_notebook_new ();
-    
+
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
     else if (tw->tc->tab_pos == 1)
@@ -142,11 +142,11 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
     else if (tw->tc->tab_pos == 3)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
-    
+
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE); 
-    
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
+
     init_tilda_terminal (tw, tt);
 
     /* Exit on Ctrl-Q */
@@ -166,3 +166,4 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     return TRUE;
 }
+

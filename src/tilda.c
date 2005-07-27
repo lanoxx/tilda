@@ -45,22 +45,22 @@ void getinstance (tilda_window *tw)
     char buf[1024];
     char filename[1024], tmp[100];
     FILE *ptr;
-    
+
     tw->instance = 0;
-    
+
     home_dir = getenv ("HOME");
     g_strlcpy (tw->lock_file, home_dir, sizeof(tw->lock_file));
     g_strlcat (tw->lock_file, "/.tilda", sizeof(tw->lock_file));
     g_strlcat (tw->lock_file, "/locks/", sizeof(tw->lock_file));
-    
+
     mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
-    
+
     for (;;)
     {
         g_strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
         sprintf (filename, "%s_*_%d", tmp, tw->instance);
         sprintf (filename, "%s 2> /dev/null", filename);
-  
+
         if ((ptr = popen (filename, "r")) != NULL)
         {
             if (fgets (buf, BUFSIZ, ptr) != NULL)
@@ -71,7 +71,7 @@ void getinstance (tilda_window *tw)
                 break;
             }
             pclose (ptr);
-        } 
+        }
     }
 
     sprintf (filename, "%slock_%d_%d", tw->lock_file, getpid(), tw->instance);
@@ -91,12 +91,12 @@ void clean_tmp ()
     FILE *ptr, *ptr2;
     int error_to_null, x;
     gboolean old = TRUE;
-    
+
     home_dir = getenv ("HOME");
     g_strlcpy (cmd, "ls ", sizeof(cmd));
     g_strlcat (cmd, home_dir, sizeof(cmd));
     g_strlcat (cmd, "/.tilda/locks/lock_* 2> /dev/null", sizeof(cmd));
- 
+
     if ((ptr = popen (cmd, "r")) != NULL)
     {
         while (fgets (buf, 1024, ptr) != NULL)
@@ -107,7 +107,7 @@ void clean_tmp ()
             {
                 g_strlcpy (tmp, throw_away, sizeof (tmp));
                 throw_away = strtok (NULL, "/");
-                
+
                 if (!throw_away)
                 {
                     throw_away = strtok (tmp, "_");
@@ -116,10 +116,10 @@ void clean_tmp ()
                     break;
                 }
             }
-            
+
             g_strlcpy (cmd, "ps x | grep ", sizeof(cmd));
             g_strlcat (cmd, pid, sizeof (cmd));
-            
+
             if ((ptr2 = popen (cmd, "r")) != NULL)
             {
                 while (fgets (tmp, 1024, ptr2) != NULL)
@@ -136,14 +136,14 @@ void clean_tmp ()
                     filename[strlen(filename)-1] = '\0';
                     remove (filename);
                 }
-                else 
-                    old = TRUE;         
-                    
+                else
+                    old = TRUE;
+
                 pclose (ptr2);
             }
-        } 
+        }
     }
-    
+
     pclose (ptr);
 }
 
@@ -159,8 +159,10 @@ int main (int argc, char **argv)
     gint  i, j;
     GList *args = NULL;
     gint tmp_trans = -1, x_pos_arg = -1, y_pos_arg = -1;
-	gchar s_font_arg[64];
-	
+    gchar s_font_arg[64];
+
+    s_font_arg[0] = '\0';
+
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
 
@@ -285,27 +287,27 @@ int main (int argc, char **argv)
         perror ("There was an error in the config file, terminating");
         exit(1);
     }
-	
-	if (tmp_trans >= 0)
-		tw->tc->transparency = tmp_trans;
 
-	if (x_pos_arg >= 0)
-		tw->tc->x_pos = x_pos_arg;
+    if (tmp_trans >= 0)
+        tw->tc->transparency = tmp_trans;
 
-	if (y_pos_arg >= 0)
-		tw->tc->y_pos = y_pos_arg;
-	
-	if (strlen (s_font_arg) > 0)
-		g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
+    if (x_pos_arg >= 0)
+        tw->tc->x_pos = x_pos_arg;
+
+    if (y_pos_arg >= 0)
+        tw->tc->y_pos = y_pos_arg;
+
+    if (strlen (s_font_arg) > 0)
+        g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
         sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);
-	
-	if (!g_thread_supported ())
-		g_thread_init(NULL);
-  
-	gdk_threads_init();
-	
+
+    if (!g_thread_supported ())
+        g_thread_init(NULL);
+
+    gdk_threads_init();
+
     gtk_init (&argc, &argv);
 
     init_tilda_window (tw, tt);
