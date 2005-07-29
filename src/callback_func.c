@@ -27,7 +27,7 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab",        "<CTRL>T", add_tab_menu_call,     0, "<Item>"                             },
+    { "/_New Tab",        NULL, add_tab_menu_call,          0, "<Item>"                             },
     { "/_Close Tab",      NULL,      close_tab,             0, "<Item>"                             },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
     { "/_Copy",           NULL,      copy,                  0, "<StockItem>", GTK_STOCK_COPY        },

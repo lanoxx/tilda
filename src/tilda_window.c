@@ -42,7 +42,11 @@ void get_defaults (tilda_window *tw)
     tw->tc->transparency = 0;
     tw->tc->x_pos = 0;
     tw->tc->y_pos = 0;
-    tw->tc->tab_pos = 0;
+	tw->tc->max_height = 100;
+	tw->tc->max_width = 200;
+	tw->tc->min_height = 0;
+	tw->tc->min_width = 0;
+	tw->tc->tab_pos = 0;
 }
 
 void init_tilda_window_configs (tilda_window *tw)

@@ -160,8 +160,11 @@ int main (int argc, char **argv)
     GList *args = NULL;
     gint tmp_trans = -1, x_pos_arg = -1, y_pos_arg = -1;
     gchar s_font_arg[64];
-
-    s_font_arg[0] = '\0';
+	gchar s_background_arg[7];
+	gchar s_image_arg[100];
+    
+	s_font_arg[0] = '\0';
+	s_image_arg[0] = '\0';
 
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
@@ -208,10 +211,10 @@ int main (int argc, char **argv)
         switch (opt) {
             case 'B':
                 image_set_clo = TRUE;
-                g_strlcpy (tw->tc->s_image, optarg, sizeof (tw->tc->s_image));
+                g_strlcpy (s_image_arg, optarg, sizeof (s_image_arg));
                 break;
             case 'b':
-                g_strlcpy (tw->tc->s_background, optarg, sizeof (tw->tc->s_background));
+                g_strlcpy (s_background_arg, optarg, sizeof (s_background_arg));
                 break;
             case 'T':
                 printf ("-T no longer does anything :(, tilda no longer uses xbindkeys\n");
@@ -299,6 +302,12 @@ int main (int argc, char **argv)
 
     if (strlen (s_font_arg) > 0)
         g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
+	
+	if (strlen (s_background_arg) > 0)
+        g_strlcpy (tw->tc->s_background, s_background_arg, sizeof (tw->tc->s_background));
+
+	if (strlen (s_image_arg) > 0)
+        g_strlcpy (tw->tc->s_image, s_image_arg, sizeof (tw->tc->s_image));
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
         sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);

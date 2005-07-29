@@ -489,20 +489,20 @@ s,@INSTALL_DATA@,${INSTALL} -m 644,;t t
 s,@CYGPATH_W@,echo,;t t
 s,@PACKAGE@,tilda,;t t
 s,@VERSION@,0.7,;t t
-s,@ACLOCAL@,${SHELL} /home/tristan/tilda/missing --run aclocal-1.9,;t t
-s,@AUTOCONF@,${SHELL} /home/tristan/tilda/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /home/tristan/tilda/missing --run automake-1.9,;t t
-s,@AUTOHEADER@,${SHELL} /home/tristan/tilda/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /home/tristan/tilda/missing --run makeinfo,;t t
-s,@install_sh@,/home/tristan/tilda/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /home/tristan/Devel/tilda/missing --run aclocal-1.9,;t t
+s,@AUTOCONF@,${SHELL} /home/tristan/Devel/tilda/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /home/tristan/Devel/tilda/missing --run automake-1.9,;t t
+s,@AUTOHEADER@,${SHELL} /home/tristan/Devel/tilda/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo,;t t
+s,@install_sh@,/home/tristan/Devel/tilda/install-sh,;t t
 s,@STRIP@,,;t t
 s,@ac_ct_STRIP@,,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
 s,@mkdir_p@,mkdir -p --,;t t
-s,@AWK@,mawk,;t t
+s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t
 s,@am__leading_dot@,.,;t t
-s,@AMTAR@,${SHELL} /home/tristan/tilda/missing --run tar,;t t
+s,@AMTAR@,${SHELL} /home/tristan/Devel/tilda/missing --run tar,;t t
 s,@am__tar@,${AMTAR} chof - "$$tardir",;t t
 s,@am__untar@,${AMTAR} xf -,;t t
 s,@CC@,gcc,;t t
@@ -522,8 +522,8 @@ s,@CCDEPMODE@,depmode=gcc3,;t t
 s,@am__fastdepCC_TRUE@,,;t t
 s,@am__fastdepCC_FALSE@,#,;t t
 s,@PKG_CONFIG@,/usr/bin/pkg-config,;t t
-s,@PACKAGE_CFLAGS@,-DXTHREADS -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  ,;t t
-s,@PACKAGE_LIBS@,-pthread -L/usr/X11R6/lib -lgthread-2.0 -lvte -lncurses -lXft -lfreetype -lz -lXrender -lX11 -lgtk-x11-2.0 -lfontconfig -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  ,;t t
+s,@PACKAGE_CFLAGS@,-DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  ,;t t
+s,@PACKAGE_LIBS@,-pthread -lgthread-2.0 -lvte -lz -lncurses -lSM -lICE -lXft -lX11 -lfreetype -lXrender -lgtk-x11-2.0 -lfontconfig -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  ,;t t
 s,@CPP@,gcc -E,;t t
 s,@EGREP@,grep -E,;t t
 s,@LIBOBJS@,,;t t
