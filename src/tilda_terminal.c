@@ -52,7 +52,9 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     tt->vte_term = vte_terminal_new ();
     tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
 
-    if (!dbuffer)
+	vte_terminal_set_backspace_binding (VTE_TERMINAL (tt->vte_term), VTE_ERASE_ASCII_BACKSPACE);
+    
+	if (!dbuffer)
         gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
 
     if (SCROLLBAR_LEFT)

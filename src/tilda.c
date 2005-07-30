@@ -165,6 +165,7 @@ int main (int argc, char **argv)
     
 	s_font_arg[0] = '\0';
 	s_image_arg[0] = '\0';
+	s_background_arg[0] = '\0';
 
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
