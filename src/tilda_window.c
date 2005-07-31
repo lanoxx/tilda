@@ -155,7 +155,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     init_tilda_terminal (tw, tt);
 
     /* Exit on Ctrl-Q */
-    clean = g_cclosure_new (clean_up, tw, NULL);
+    clean = g_cclosure_new ((GCallback) clean_up, tw, NULL);
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
     gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
