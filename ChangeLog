@@ -1,4 +1,11 @@
-New in Tilda-0.7
+New in .08
+Tabs have been added -- right click on the window to add or remove a tab.
+May have fixed some focus issues.
+Fixed problem with gnu-screen.
+Fixed gthread crash problem.
+Other bug fixes as well :)
+
+New in Tilda-0.07
 New right click menu -- can config tilda while its running, everything but the key bind that is.
 GOT RID OF XBINDKEYS! Tilda now listens for each key press on its own. See the Readme to setup
 a key for the new way of doing things.

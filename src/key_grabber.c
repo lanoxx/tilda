@@ -88,7 +88,7 @@ void key_grab (tilda_window *tw)
     gint i, j;
 
     g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
-
+	
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
     for (i = 0; i < 8; i++) {

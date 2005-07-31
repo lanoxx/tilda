@@ -342,6 +342,16 @@ void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
         }
     }
 }
+void focus_term (GtkWidget *widget, gpointer data)
+{
+	GList *list;
+	GtkWidget *box;
+	GtkWidget *n = (GtkWidget *) data;
+	
+	box = gtk_notebook_get_nth_page ((GtkNotebook *) n, gtk_notebook_get_current_page((GtkNotebook *) n));
+	list = gtk_container_children ((GtkContainer *) box);
+	gtk_widget_grab_focus (list->data);
+}
 
 void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
 {

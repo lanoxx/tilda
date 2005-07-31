@@ -134,9 +134,10 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
     g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(deleted_and_quit), tw->window);
-
-    /* Create notebook to hold all terminal widgets */
+	
+	/* Create notebook to hold all terminal widgets */
     tw->notebook = gtk_notebook_new ();
+	g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
 
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
