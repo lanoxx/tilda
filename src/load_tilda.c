@@ -16,6 +16,8 @@
 
 #include <gtk/gtk.h>
 #include <vte/vte.h>
+#include <string.h>
+#include <strings.h>
 
 #include "tilda.h"
 #include "../tilda-config.h"
