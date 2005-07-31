@@ -160,12 +160,12 @@ int main (int argc, char **argv)
     GList *args = NULL;
     gint tmp_trans = -1, x_pos_arg = -1, y_pos_arg = -1;
     gchar s_font_arg[64];
-	gchar s_background_arg[7];
-	gchar s_image_arg[100];
-    
-	s_font_arg[0] = '\0';
-	s_image_arg[0] = '\0';
-	s_background_arg[0] = '\0';
+    gchar s_background_arg[7];
+    gchar s_image_arg[100];
+
+    s_font_arg[0] = '\0';
+    s_image_arg[0] = '\0';
+    s_background_arg[0] = '\0';
 
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
@@ -303,11 +303,11 @@ int main (int argc, char **argv)
 
     if (strlen (s_font_arg) > 0)
         g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
-	
-	if (strlen (s_background_arg) > 0)
+
+    if (strlen (s_background_arg) > 0)
         g_strlcpy (tw->tc->s_background, s_background_arg, sizeof (tw->tc->s_background));
 
-	if (strlen (s_image_arg) > 0)
+    if (strlen (s_image_arg) > 0)
         g_strlcpy (tw->tc->s_image, s_image_arg, sizeof (tw->tc->s_image));
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
