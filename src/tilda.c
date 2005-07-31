@@ -36,7 +36,7 @@
 #include "../tilda-config.h"
 #include "callback_func.h"
 #include "tilda_window.h"
-
+#include "wizard.h"
 char *user, *display;
 
 void getinstance (tilda_window *tw)

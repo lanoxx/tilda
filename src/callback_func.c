@@ -20,6 +20,7 @@
 #include "../tilda-config.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
+#include "wizard.h"
 
 void copy (gpointer data, guint callback_action, GtkWidget *w);
 void paste (gpointer data, guint callback_action, GtkWidget *w);

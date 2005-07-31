@@ -18,8 +18,6 @@
 #define WIZARD_H
 
 #include <gtk/gtk.h>
-#include "tilda_terminal.h"
-#include "tilda_window.h"
 
 G_BEGIN_DECLS;
 
