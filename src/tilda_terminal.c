@@ -29,7 +29,7 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
-gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
+gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main)
 {
     gchar env_var[14];
     gint  env_add2_size;
@@ -176,7 +176,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt)
     /* Set everything up and display the widgets.
      *  Sending TRUE to let it know we are in main()
      */
-    update_tilda (tw, tt, TRUE);
+    update_tilda (tw, tt, in_main);
 
     return TRUE;
 }

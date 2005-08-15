@@ -523,8 +523,8 @@ s,@am__fastdepCC_TRUE@,,;t t
 s,@am__fastdepCC_FALSE@,#,;t t
 s,@PKG_CONFIG@,/usr/bin/pkg-config,;t t
 s,@ac_pt_PKG_CONFIG@,/usr/bin/pkg-config,;t t
-s,@PACKAGE_CFLAGS@,-DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  ,;t t
-s,@PACKAGE_LIBS@,-pthread -lgthread-2.0 -lvte -lz -lncurses -lSM -lICE -lXft -lX11 -lfreetype -lXrender -lgtk-x11-2.0 -lfontconfig -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  ,;t t
+s,@PACKAGE_CFLAGS@,-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/freetype2 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2/config  ,;t t
+s,@PACKAGE_LIBS@,-pthread -lgthread-2.0 -lvte -lncurses -lSM -lICE -lXft -lX11 -lXrender -lgtk-x11-2.0 -lpangoxft-1.0 -lpangox-1.0 -lfontconfig -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lfreetype -lz -lcairo -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  ,;t t
 s,@CPP@,gcc -E,;t t
 s,@EGREP@,grep -E,;t t
 s,@LIBOBJS@,,;t t

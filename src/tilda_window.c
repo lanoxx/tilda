@@ -89,7 +89,7 @@ void add_tab (tilda_window *tw)
 
     tt = (tilda_term *) malloc (sizeof (tilda_term));
 
-    init_tilda_terminal (tw, tt);
+    init_tilda_terminal (tw, tt, FALSE);
 }
 
 void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
@@ -152,7 +152,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (tw->notebook);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
 
-    init_tilda_terminal (tw, tt);
+    init_tilda_terminal (tw, tt, TRUE);
 
     /* Exit on Ctrl-Q */
     clean = g_cclosure_new ((GCallback) clean_up, tw, NULL);
