@@ -312,10 +312,12 @@ GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-void apply_settings (tilda_window *tw, tilda_term *tt)
+void apply_settings (tilda_window *tw)
 {
     FILE *fp;
     char *home_dir, *tmp_str, config_file[80];
+    tilda_term *tt;
+    int i;
 
     g_strlcpy (tw->tc->s_key, gtk_entry_get_text (GTK_ENTRY (entry_key)), sizeof(tw->tc->s_key));
     g_strlcpy (tw->tc->s_font, gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)), sizeof (tw->tc->s_font));
@@ -437,12 +439,18 @@ void apply_settings (tilda_window *tw, tilda_term *tt)
     }
 
     if (!in_main)
-        update_tilda (tw, tt, FALSE);
+    {
+        for (i=0;i<g_list_length(tw->terms);i++)
+        {        
+            tt = (tilda_term *)g_list_nth_data (tw->terms, i);
+            update_tilda (tw, tt, FALSE);
+        }    
+    }
 }
 
 gint ok (tilda_collect *tc)
 {
-    apply_settings (tc->tw, tc->tt);
+    apply_settings (tc->tw);
     exit_status = 0;
     gtk_widget_destroy (wizard_window);
 
@@ -454,7 +462,7 @@ gint ok (tilda_collect *tc)
 
 void apply (tilda_collect *tc)
 {
-    apply_settings (tc->tw, tc->tt);
+    apply_settings (tc->tw);
 }
 
 gint exit_app (GtkWidget *widget, gpointer data)

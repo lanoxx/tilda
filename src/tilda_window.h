@@ -33,6 +33,7 @@ struct tilda_window_
 {
     GtkWidget *window;
     GtkWidget *notebook;
+    GList *terms;
 
     tilda_conf *tc;
     gchar lock_file[80];

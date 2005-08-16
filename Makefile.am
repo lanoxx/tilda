@@ -4,15 +4,10 @@ SUBDIRS = src
 
 MAINTAINER_CLEAN_FILES =  \
 	Makefile.in  \
-	configure \
-	compile \
 	config.log \
 	config.status \
-	depcomp \
-	install-sh \
-	missing \
-	mkinstalldirs \
 	stamp-h.in \
+	stamp-h1
 	tilda-config.h \
 	tilda-config.h.in
 

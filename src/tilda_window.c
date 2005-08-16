@@ -112,15 +112,19 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
     tw = tc->tw;
     tt = tc->tt;
 
-    pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
-    gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 0)
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
+    {
         clean_up (tw);
-    else if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
-        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+    } else {
+        pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
+        gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
 
-    g_free (tt);
+        if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+            gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+        
+        tw->terms = g_list_remove (tw->terms, tt);
+        ///g_free (tt);
+    }
 }
 
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
@@ -138,6 +142,9 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 	/* Create notebook to hold all terminal widgets */
     tw->notebook = gtk_notebook_new ();
 	g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
+
+    /* Init GList of all tilda_term structures */
+    tw->terms = NULL;
 
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);

@@ -50,13 +50,6 @@ void fix_size_settings (tilda_window *tw)
     gtk_window_get_size ((GtkWindow *) tw->window, &tw->tc->min_width, &tw->tc->min_height);
 }
 
-int resize (GtkWidget *window, gint w, gint h)
-{
-    gtk_window_resize ((GtkWindow *) window, w, h);
-
-    return 0;
-}
-
 void clean_up_no_args ()
 {
      gtk_main_quit ();
@@ -65,7 +58,18 @@ void clean_up_no_args ()
 /* Removes the temporary file socket used to communicate with a running tilda */
 void clean_up (tilda_window *tw)
 {
+    int i;
+
     remove (tw->lock_file);
+
+    for (i=0;i<g_list_length(tw->terms);i++)
+    {        
+        free (g_list_nth_data (tw->terms, i));
+    }
+    
+    g_list_free (tw->terms);
+    free (tw->tc);
+    free (tw);
 
     gtk_main_quit ();
 }
@@ -75,26 +79,11 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
     gint pos;
     tilda_term *tt;
     tilda_window *tw;
-    tilda_collect *tc = (tilda_collect *) data;
 
-    tw = tc->tw;
-    tt = tc->tt;
-
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
-    {
-        clean_up (tw);
-    } else {
-        pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
-        gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-
-        if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
-            gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-
-        g_free (tt);
-    }
+    close_tab (data, 0, widget);
 }
 
- void window_title_changed (GtkWidget *widget, gpointer win)
+void window_title_changed (GtkWidget *widget, gpointer win)
 {
     GtkWindow *window;
 
@@ -106,7 +95,7 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
     gtk_window_set_title (window, VTE_TERMINAL(widget)->window_title);
 }
 
- void icon_title_changed (GtkWidget *widget, gpointer win)
+void icon_title_changed (GtkWidget *widget, gpointer win)
 {
     GtkWindow *window;
 

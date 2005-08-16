@@ -43,7 +43,7 @@ KeySym key;
 void pull (struct tilda_window_ *tw)
 {
     gint w, h;
-
+    
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
     if (h == tw->tc->min_height)
@@ -62,7 +62,6 @@ void pull (struct tilda_window_ *tw)
             gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
         gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
-
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
         gdk_flush ();
         gdk_threads_leave();
@@ -70,7 +69,6 @@ void pull (struct tilda_window_ *tw)
     else if (h == tw->tc->max_height)
     {
         gdk_threads_enter();
-
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
         gtk_widget_hide ((GtkWidget *) tw->window);
 

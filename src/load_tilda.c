@@ -93,7 +93,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 	if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) > 1)
 	{
 	    gtk_widget_hide (tw->notebook);
-        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
+        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);   
 		gtk_widget_show (tw->notebook);
 	} else {
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
@@ -101,14 +101,15 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     if (!from_main)
     {
-        gtk_widget_hide (tw->window);
-
         if (scroll)
+        {
+            gtk_widget_hide (tw->window);
             gtk_widget_show (tt->scrollbar);
-        else
+            gtk_widget_show (tw->window);     
+        } else
             gtk_widget_hide (tt->scrollbar);
 
-        gtk_widget_show (tw->window);
+        refresh_window (tw->window, tw->window);
 
         if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
             gtk_window_stick (GTK_WINDOW (tw->window));
@@ -137,8 +138,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), TRUE);
     else
         gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), FALSE);
-
-    
 
     gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
 
