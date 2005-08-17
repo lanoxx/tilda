@@ -36,36 +36,6 @@ gint old_max_height, old_max_width;
 gchar *command;
 gchar *working_directory;
 
-static const char *usage = "Usage: %s "
-    "[-B image] "
-    "[-T] "
-    "[-C] "
-    "[-b [white][black] ] "
-    "[-f font] "
-    "[-a]"
-    "[-h] "
-    "[-s] "
-    "[-w directory] "
-    "[-c command] "
-    "[-t level] "
-    "[-x position] "
-    "[-y position] "
-    "[-l lines]\n\n"
-    "-B image : set background image\n"
-    "-T : Sorry this no longer does anything\n"
-    "-C : bring up tilda configuration wizard\n"
-    "-b [white][black] : set the background color either white or black\n"
-    "-f font : set the font to the following string, ie \"monospace 11\"\n"
-    "-a : use antialias fonts\n"
-    "-h : show this message\n"
-    "-s : use scrollbar\n"
-    "-w directory : switch working directory\n"
-    "-c command : run command\n"
-    "-t level: set transparent to true and set the level of transparency to level, 0-100\n"
-    "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
-    "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
-    "-l lines : set number of scrollback lines\n";
-
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 

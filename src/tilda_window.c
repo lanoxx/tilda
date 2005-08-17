@@ -130,7 +130,7 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 {
     GtkAccelGroup *accel_group;
-    GClosure *clean, *new_tab;
+    GClosure *clean;
     GError *error;
 
     /* Create a window to hold the scrolling shell, and hook its

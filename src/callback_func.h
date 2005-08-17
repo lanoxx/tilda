@@ -21,30 +21,31 @@
 
 G_BEGIN_DECLS;
 
- void window_title_changed (GtkWidget *widget, gpointer win);
- void clean_up_no_args ();
- void clean_up (tilda_window *tw);
- void close_tab_on_exit (GtkWidget *widget, gpointer data);
- void icon_title_changed (GtkWidget *widget, gpointer win);
- void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data);
- void destroy_and_quit (GtkWidget *widget, gpointer data);
- void destroy_and_quit_eof (GtkWidget *widget, gpointer data);
- void destroy_and_quit_exited (GtkWidget *widget, gpointer data);
- void status_line_changed (GtkWidget *widget, gpointer data);
- int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data);
- void iconify_window (GtkWidget *widget, gpointer data);
- void deiconify_window (GtkWidget *widget, gpointer data);
- void raise_window (GtkWidget *widget, gpointer data);
- void lower_window (GtkWidget *widget, gpointer data);
- void maximize_window (GtkWidget *widget, gpointer data);
- void restore_window (GtkWidget *widget, gpointer data);
- void refresh_window (GtkWidget *widget, gpointer data);
- void resize_window (GtkWidget *widget, guint width, guint height, gpointer data);
- void move_window (GtkWidget *widget, guint x, guint y, gpointer data);
- void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch);
- void increase_font_size(GtkWidget *widget, gpointer data);
- void decrease_font_size (GtkWidget *widget, gpointer data);
- void focus_term (GtkWidget *widget, gpointer data);
+void fix_size_settings (tilda_window *tw);
+void window_title_changed (GtkWidget *widget, gpointer win);
+void clean_up_no_args ();
+void clean_up (tilda_window *tw);
+void close_tab_on_exit (GtkWidget *widget, gpointer data);
+void icon_title_changed (GtkWidget *widget, gpointer win);
+void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data);
+void destroy_and_quit (GtkWidget *widget, gpointer data);
+void destroy_and_quit_eof (GtkWidget *widget, gpointer data);
+void destroy_and_quit_exited (GtkWidget *widget, gpointer data);
+void status_line_changed (GtkWidget *widget, gpointer data);
+int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data);
+void iconify_window (GtkWidget *widget, gpointer data);
+void deiconify_window (GtkWidget *widget, gpointer data);
+void raise_window (GtkWidget *widget, gpointer data);
+void lower_window (GtkWidget *widget, gpointer data);
+void maximize_window (GtkWidget *widget, gpointer data);
+void restore_window (GtkWidget *widget, gpointer data);
+void refresh_window (GtkWidget *widget, gpointer data);
+void resize_window (GtkWidget *widget, guint width, guint height, gpointer data);
+void move_window (GtkWidget *widget, guint x, guint y, gpointer data);
+void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch);
+void increase_font_size(GtkWidget *widget, gpointer data);
+void decrease_font_size (GtkWidget *widget, gpointer data);
+void focus_term (GtkWidget *widget, gpointer data);
  
 G_END_DECLS;
 

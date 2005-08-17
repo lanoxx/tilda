@@ -14,35 +14,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef TILDA_TERMINAL_H
-#define TILDA_TERMINAL_H
+#ifndef LOAD_TILDA_H
+#define LOAD_TILDA_H
 
 #include <gtk/gtk.h>
-#include "tilda_window.h"
 
 G_BEGIN_DECLS;
 
-typedef struct tilda_term_ tilda_term;
-typedef struct tilda_collect_ tilda_collect;
-
-struct tilda_term_
-{
-    GtkWidget *vte_term;
-    GtkWidget *hbox;
-    GtkWidget *scrollbar;
-};
-
-
-struct tilda_collect_
-{
-    struct tilda_window_ *tw;
-    struct tilda_term_ *tt;
-};
-
-gboolean init_tilda_terminal (struct tilda_window_ *tw, struct tilda_term_ *tt, gboolean in_main);
+gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main);
 
 G_END_DECLS;
 
 #endif
-
-

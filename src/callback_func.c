@@ -76,10 +76,6 @@ void clean_up (tilda_window *tw)
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
 {
-    gint pos;
-    tilda_term *tt;
-    tilda_window *tw;
-
     close_tab (data, 0, widget);
 }
 

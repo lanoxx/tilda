@@ -20,12 +20,11 @@
 #include <strings.h>
 
 #include "tilda.h"
+#include "callback_func.h"
 #include "../tilda-config.h"
 
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
-	GdkRegion *region;
-    gint x, y;
     gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,

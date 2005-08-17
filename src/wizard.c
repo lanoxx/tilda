@@ -28,6 +28,8 @@
 #include "../tilda-config.h"
 #include "config.h"
 #include "wizard.h"
+#include "wizard_xpm.h"
+#include "load_tilda.h"
 
 #define MAX_INT 2147483647
 
@@ -315,7 +317,7 @@ GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 void apply_settings (tilda_window *tw)
 {
     FILE *fp;
-    char *home_dir, *tmp_str, config_file[80];
+    char *home_dir, *tmp_str;
     tilda_term *tt;
     int i;
 

@@ -148,18 +148,12 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = gnu
 SUBDIRS = src
 MAINTAINER_CLEAN_FILES = \
-	Makefile.in  \
-	configure \
-	compile \
+	Makefile \
+	src/Makefile \
 	config.log \
 	config.status \
-	depcomp \
-	install-sh \
-	missing \
-	mkinstalldirs \
-	stamp-h.in \
-	tilda-config.h \
-	tilda-config.h.in
+	stamp-h1 \
+	tilda-config.h
 
 all: tilda-config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

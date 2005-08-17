@@ -88,9 +88,7 @@ void clean_tmp ()
     char buf[1024], filename[1024];
     char tmp[100];
     char *throw_away;
-    int  length, i, instance;
     FILE *ptr, *ptr2;
-    int error_to_null, x;
     gboolean old = TRUE;
 
     home_dir = getenv ("HOME");
@@ -155,7 +153,6 @@ int main (int argc, char **argv)
 
     gchar *home_dir;
     FILE *fp;
-    gdouble tmp_val;
     gint  opt;
     gint  i, j;
     GList *args = NULL;
@@ -163,6 +160,36 @@ int main (int argc, char **argv)
     gchar s_font_arg[64];
     gchar s_background_arg[7];
     gchar s_image_arg[100];
+
+    const char *usage = "Usage: %s "
+        "[-B image] "
+        "[-T] "
+        "[-C] "
+        "[-b [white][black] ] "
+        "[-f font] "
+        "[-a]"
+        "[-h] "
+        "[-s] "
+        "[-w directory] "
+        "[-c command] "
+        "[-t level] "
+        "[-x position] "
+        "[-y position] "
+        "[-l lines]\n\n"
+        "-B image : set background image\n"
+        "-T : Sorry this no longer does anything\n"
+        "-C : bring up tilda configuration wizard\n"
+        "-b [white][black] : set the background color either white or black\n"
+        "-f font : set the font to the following string, ie \"monospace 11\"\n"
+        "-a : use antialias fonts\n"
+        "-h : show this message\n"
+        "-s : use scrollbar\n"
+        "-w directory : switch working directory\n"
+        "-c command : run command\n"
+        "-t level: set transparent to true and set the level of transparency to level, 0-100\n"
+        "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
+        "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
+        "-l lines : set number of scrollback lines\n";
 
     s_font_arg[0] = '\0';
     s_image_arg[0] = '\0';
