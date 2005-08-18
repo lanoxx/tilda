@@ -80,23 +80,23 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     if (highlight_set)
         vte_terminal_set_color_highlight (VTE_TERMINAL(tt->vte_term), &highlight);
-    
+
     if (cursor_set)
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
-    
+
     if (use_antialias)
         vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);
     else
         vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), tw->tc->s_font);
 
-	if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) > 1)
-	{
-	    gtk_widget_hide (tw->notebook);
-        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);   
-		gtk_widget_show (tw->notebook);
-	} else {
+    if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) > 1)
+    {
+        gtk_widget_hide (tw->notebook);
+        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
+        gtk_widget_show (tw->notebook);
+    } else {
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
-	}
+    }
 
     if (!from_main)
     {
@@ -104,9 +104,12 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         {
             gtk_widget_hide (tw->window);
             gtk_widget_show (tt->scrollbar);
-            gtk_widget_show (tw->window);     
-        } else
+            gtk_widget_show (tw->window);
+        }
+        else
+        {
             gtk_widget_hide (tt->scrollbar);
+        }
 
         refresh_window (tw->window, tw->window);
 

@@ -62,11 +62,11 @@ void clean_up (tilda_window *tw)
 
     remove (tw->lock_file);
 
-    for (i=0;i<g_list_length(tw->terms);i++)
-    {        
+    for (i=0; i<g_list_length(tw->terms); i++)
+    {
         free (g_list_nth_data (tw->terms, i));
     }
-    
+
     g_list_free (tw->terms);
     free (tw->tc);
     free (tw);
@@ -106,7 +106,7 @@ void icon_title_changed (GtkWidget *widget, gpointer win)
 
 void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-    gtk_widget_destroy(GTK_WIDGET(data));
+    gtk_widget_destroy (GTK_WIDGET(data));
     gtk_main_quit();
 }
 
@@ -203,7 +203,8 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     tc = (tilda_collect *) data;
     tt = tc->tt;
 
-    switch (event->button) {
+    switch (event->button)
+    {
         case 3:
             popup_menu (tc);
 
@@ -215,10 +216,12 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
                 (event->y - ypad) /
                 terminal->char_height,
                 &tag);
-            if (match != NULL) {
+            if (match != NULL)
+            {
                 g_print ("Matched `%s' (%d).\n", match, tag);
                 g_free (match);
-                if (GPOINTER_TO_INT(data) != 0) {
+                if (GPOINTER_TO_INT(data) != 0)
+                {
                     vte_terminal_match_remove (terminal, tag);
                 }
             }
@@ -233,8 +236,10 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 
 void iconify_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_iconify ((GTK_WIDGET(data))->window);
         }
     }
@@ -242,8 +247,10 @@ void iconify_window (GtkWidget *widget, gpointer data)
 
 void deiconify_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_deiconify ((GTK_WIDGET(data))->window);
         }
     }
@@ -251,8 +258,10 @@ void deiconify_window (GtkWidget *widget, gpointer data)
 
 void raise_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_raise ((GTK_WIDGET(data))->window);
         }
     }
@@ -260,8 +269,10 @@ void raise_window (GtkWidget *widget, gpointer data)
 
 void lower_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_lower ((GTK_WIDGET(data))->window);
         }
     }
@@ -269,8 +280,10 @@ void lower_window (GtkWidget *widget, gpointer data)
 
 void maximize_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_maximize ((GTK_WIDGET(data))->window);
         }
     }
@@ -278,8 +291,10 @@ void maximize_window (GtkWidget *widget, gpointer data)
 
 void restore_window (GtkWidget *widget, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_unmaximize ((GTK_WIDGET(data))->window);
         }
     }
@@ -288,8 +303,10 @@ void restore_window (GtkWidget *widget, gpointer data)
 void refresh_window (GtkWidget *widget, gpointer data)
 {
     GdkRectangle rect;
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             rect.x = rect.y = 0;
             rect.width = (GTK_WIDGET(data))->allocation.width;
             rect.height = (GTK_WIDGET(data))->allocation.height;
@@ -303,7 +320,8 @@ void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 {
     VteTerminal *terminal;
     gint owidth, oheight, xpad, ypad;
-    if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2)) {
+    if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2))
+    {
         terminal = VTE_TERMINAL(widget);
 
         /* Take into account border overhead. */
@@ -322,21 +340,23 @@ void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 
 void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
 {
-    if (GTK_IS_WIDGET(data)) {
-        if ((GTK_WIDGET(data))->window) {
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
             gdk_window_move ((GTK_WIDGET(data))->window, x, y);
         }
     }
 }
 void focus_term (GtkWidget *widget, gpointer data)
 {
-	GList *list;
-	GtkWidget *box;
-	GtkWidget *n = (GtkWidget *) data;
-	
-	box = gtk_notebook_get_nth_page ((GtkNotebook *) n, gtk_notebook_get_current_page((GtkNotebook *) n));
-	list = gtk_container_children ((GtkContainer *) box);
-	gtk_widget_grab_focus (list->data);
+    GList *list;
+    GtkWidget *box;
+    GtkWidget *n = (GtkWidget *) data;
+
+    box = gtk_notebook_get_nth_page ((GtkNotebook *) n, gtk_notebook_get_current_page((GtkNotebook *) n));
+    list = gtk_container_children ((GtkContainer *) box);
+    gtk_widget_grab_focus (list->data);
 }
 
 void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)

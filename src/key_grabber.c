@@ -43,7 +43,7 @@ KeySym key;
 void pull (struct tilda_window_ *tw)
 {
     gint w, h;
-    
+
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
     if (h == tw->tc->min_height)
@@ -86,12 +86,15 @@ void key_grab (tilda_window *tw)
     gint i, j;
 
     g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
-	
+
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
-    for (i = 0; i < 8; i++) {
-        for (j = 0; j < modmap->max_keypermod; j++) {
-            if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock)) {
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < modmap->max_keypermod; j++)
+        {
+            if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock))
+            {
                 numlockmask = (1 << i);
             }
         }
@@ -138,7 +141,8 @@ void *wait_for_signal (tilda_window *tw)
 
     if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
         pull (tw);
-    else {
+    else
+    {
         gdk_threads_enter();
         gtk_widget_hide (tw->window);
         gdk_flush ();

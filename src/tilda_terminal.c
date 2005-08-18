@@ -178,8 +178,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
      *  Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
-    
-    /* Add to GList list of tilda_term structures in tilda_window structure */    
+
+    /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, tt);
 
     return TRUE;
