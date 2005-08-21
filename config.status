@@ -489,12 +489,12 @@ s,@INSTALL_DATA@,${INSTALL} -m 644,;t t
 s,@CYGPATH_W@,echo,;t t
 s,@PACKAGE@,tilda,;t t
 s,@VERSION@,0.08.1,;t t
-s,@ACLOCAL@,${SHELL} /home/tristan/tilda/missing --run aclocal-1.9,;t t
-s,@AUTOCONF@,${SHELL} /home/tristan/tilda/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /home/tristan/tilda/missing --run automake-1.9,;t t
-s,@AUTOHEADER@,${SHELL} /home/tristan/tilda/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /home/tristan/tilda/missing --run makeinfo,;t t
-s,@install_sh@,/home/tristan/tilda/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /home/tristan/Devel/tilda/missing --run aclocal-1.9,;t t
+s,@AUTOCONF@,${SHELL} /home/tristan/Devel/tilda/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /home/tristan/Devel/tilda/missing --run automake-1.9,;t t
+s,@AUTOHEADER@,${SHELL} /home/tristan/Devel/tilda/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo,;t t
+s,@install_sh@,/home/tristan/Devel/tilda/install-sh,;t t
 s,@STRIP@,,;t t
 s,@ac_ct_STRIP@,,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
@@ -502,7 +502,7 @@ s,@mkdir_p@,mkdir -p --,;t t
 s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t
 s,@am__leading_dot@,.,;t t
-s,@AMTAR@,${SHELL} /home/tristan/tilda/missing --run tar,;t t
+s,@AMTAR@,${SHELL} /home/tristan/Devel/tilda/missing --run tar,;t t
 s,@am__tar@,${AMTAR} chof - "$$tardir",;t t
 s,@am__untar@,${AMTAR} xf -,;t t
 s,@CC@,gcc,;t t

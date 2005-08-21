@@ -41,7 +41,39 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint = black;
 
     TRANS_LEVEL = ((gdouble) tw->tc->transparency)/100;
-
+    
+    switch (tw->tc->backspace_key)
+    {
+        case 0:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
+            break;
+        case 1:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_DELETE_SEQUENCE);
+            break;
+        case 2:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_BACKSPACE);
+            break;
+        default:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
+            break;
+    }
+    
+    switch (tw->tc->delete_key)
+    {
+        case 0:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
+            break;
+        case 1:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_DELETE_SEQUENCE);
+            break;
+        case 2:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_BACKSPACE);
+            break;
+        default:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
+            break;
+    }
+    
     if (QUICK_STRCMP (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
         bool_use_image = TRUE;
     else

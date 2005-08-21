@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS;
 
-#define NUM_ELEM 21
+#define NUM_ELEM 23
 
 typedef struct tilda_window_ tilda_window;
 typedef struct tilda_conf_ tilda_conf;
@@ -65,6 +65,8 @@ struct tilda_conf_
     gint x_pos;
     gint y_pos;
     gint tab_pos;
+    gint backspace_key;
+    gint delete_key;
 };
 
 void add_tab (tilda_window *tw);

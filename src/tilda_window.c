@@ -47,6 +47,8 @@ void get_defaults (tilda_window *tw)
     tw->tc->min_height = 0;
     tw->tc->min_width = 0;
     tw->tc->tab_pos = 0;
+    tw->tc->backspace_key = 0;
+    tw->tc->delete_key = 1;
 }
 
 void init_tilda_window_configs (tilda_window *tw)
@@ -74,7 +76,9 @@ void init_tilda_window_configs (tilda_window *tw)
         { CF_STRING,    "grab_focus",   tw->tc->s_grab_focus,       sizeof(tw->tc->s_grab_focus),   NULL, 0, NULL },
         { CF_STRING,    "key",          tw->tc->s_key,              sizeof(tw->tc->s_key),          NULL, 0, NULL },
         { CF_STRING,    "down",         tw->tc->s_down,             sizeof(tw->tc->s_down),         NULL, 0, NULL },
-        { CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                              NULL, 0, NULL }
+        { CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                              NULL, 0, NULL },
+        { CF_INT,       "backspace_key",&(tw->tc->backspace_key),   0,                              NULL, 0, NULL },
+        { CF_INT,       "delete_key",   &(tw->tc->delete_key),      0,                              NULL, 0, NULL }
     };
 
     for (i=0;i<NUM_ELEM;i++)

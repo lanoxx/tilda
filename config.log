@@ -38,6 +38,7 @@ PATH: /opt/sun-jdk-1.4.2.08/jre/javaws
 PATH: /usr/qt/3/bin
 PATH: /usr/kde/3.4/bin
 PATH: /usr/kde/3.3/bin
+PATH: /usr/games/bin
 
 
 ## ----------- ##
@@ -508,14 +509,14 @@ pkg_cv_PACKAGE_LIBS='-pthread -lgthread-2.0 -lvte -lncurses -lSM -lICE -lXft -lX
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/tristan/tilda/missing --run aclocal-1.9'
+ACLOCAL='${SHELL} /home/tristan/Devel/tilda/missing --run aclocal-1.9'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
-AMTAR='${SHELL} /home/tristan/tilda/missing --run tar'
-AUTOCONF='${SHELL} /home/tristan/tilda/missing --run autoconf'
-AUTOHEADER='${SHELL} /home/tristan/tilda/missing --run autoheader'
-AUTOMAKE='${SHELL} /home/tristan/tilda/missing --run automake-1.9'
+AMTAR='${SHELL} /home/tristan/Devel/tilda/missing --run tar'
+AUTOCONF='${SHELL} /home/tristan/Devel/tilda/missing --run autoconf'
+AUTOHEADER='${SHELL} /home/tristan/Devel/tilda/missing --run autoheader'
+AUTOMAKE='${SHELL} /home/tristan/Devel/tilda/missing --run automake-1.9'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=gcc3'
@@ -538,7 +539,7 @@ LDFLAGS=''
 LIBOBJS=''
 LIBS=''
 LTLIBOBJS=''
-MAKEINFO='${SHELL} /home/tristan/tilda/missing --run makeinfo'
+MAKEINFO='${SHELL} /home/tristan/Devel/tilda/missing --run makeinfo'
 OBJEXT='o'
 PACKAGE='tilda'
 PACKAGE_BUGREPORT='sloutri@iit.edu'
@@ -572,7 +573,7 @@ exec_prefix='${prefix}'
 host_alias=''
 includedir='${prefix}/include'
 infodir='${prefix}/info'
-install_sh='/home/tristan/tilda/install-sh'
+install_sh='/home/tristan/Devel/tilda/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localstatedir='${prefix}/var'

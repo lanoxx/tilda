@@ -42,6 +42,7 @@ GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focu
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar, *check_down;
 GtkWidget *radio_white, *radio_black;
 GtkWidget *slider_opacity, *spin_scrollback;
+GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
 gboolean in_main = FALSE;
 
@@ -289,6 +290,61 @@ GtkWidget* font (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
+void revert_default_compatability (tilda_window *tw)
+{
+    
+    tw->tc->backspace_key = 0;
+    tw->tc->delete_key = 1;
+    
+    gtk_combo_box_set_active ((GtkComboBox *)combo_backspace, tw->tc->backspace_key);
+    gtk_combo_box_set_active ((GtkComboBox *)combo_delete, tw->tc->delete_key);
+    
+}
+
+GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
+{
+    GtkWidget *table;
+    GtkWidget *label_backspace, *label_delete;
+    GtkWidget *button_defaults;
+    
+    table = gtk_table_new (2, 3, FALSE);
+    
+    label_backspace = gtk_label_new ("Backspace key generates: ");
+
+    combo_backspace = gtk_combo_box_new_text ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_backspace, "Control-H");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_backspace, "Espace sequence");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_backspace, "ASCII DEL");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_backspace, tw->tc->backspace_key);
+
+    label_delete = gtk_label_new ("Delete key generates: ");
+
+    combo_delete = gtk_combo_box_new_text ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "Control-H");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "Espace sequence");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "ASCII DEL");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_delete, tw->tc->delete_key);
+    
+    button_defaults = gtk_button_new_with_label ("Revert to Defaults");
+    g_signal_connect_swapped (G_OBJECT (button_defaults), "clicked",
+                  G_CALLBACK (revert_default_compatability), tw);
+
+    gtk_table_attach (GTK_TABLE (table), label_backspace, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_backspace, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_delete, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_delete, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), button_defaults, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_widget_show (label_backspace);
+    gtk_widget_show (combo_backspace);
+    gtk_widget_show (label_delete);
+    gtk_widget_show (combo_delete);
+    gtk_widget_show (button_defaults);
+    
+    return table;
+}
 
 GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 {
@@ -345,23 +401,10 @@ void apply_settings (tilda_window *tw)
     g_strlcat (tw->config_file, "config", sizeof(tw->config_file));
     sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
-    switch (gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos))
-    {
-        case 0:
-            tw->tc->tab_pos = 0;
-            break;
-        case 1:
-            tw->tc->tab_pos = 1;
-            break;
-        case 2:
-            tw->tc->tab_pos = 2;
-            break;
-        case 3:
-            tw->tc->tab_pos = 3;
-            break;
-        default:
-            tw->tc->tab_pos = 0;
-    }
+    tw->tc->tab_pos = gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos);
+    
+    tw->tc->backspace_key = gtk_combo_box_get_active ((GtkComboBox *) combo_backspace);
+    tw->tc->delete_key = gtk_combo_box_get_active ((GtkComboBox *) combo_delete);
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notaskbar)) == TRUE)
         g_strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof(tw->tc->s_notaskbar));
@@ -436,7 +479,9 @@ void apply_settings (tilda_window *tw)
         fprintf (fp, "key : %s\n", tw->tc->s_key);
         fprintf (fp, "down : %s\n", tw->tc->s_down);
         fprintf (fp, "tab_pos : %i\n", tw->tc->tab_pos);
-
+        fprintf (fp, "backspace_key : %i\n", tw->tc->backspace_key);
+        fprintf (fp, "delete_key : %i\n", tw->tc->delete_key);
+        
         fclose (fp);
     }
 
@@ -493,14 +538,15 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     tilda_collect *t_collect;
     gchar *argv0 = NULL;
     gchar title[20];
-    gchar *tabs[] = {"General", "Appearance", "Font", "Keybindings"};
+    gchar *tabs[] = {"General", "Appearance", "Font", "Compatibility", "Keybindings"};
 
-    GtkWidget* (*contents[4])(tilda_window *, tilda_term *);
+    GtkWidget* (*contents[5])(tilda_window *, tilda_term *);
 
     contents[0] = general;
     contents[1] = appearance;
     contents[2] = font;
-    contents[3] = keybindings;
+    contents[3] = compatibility;
+    contents[4] = keybindings;
 
     FILE *fp;
     gint i;
@@ -563,7 +609,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_widget_show (notebook);
 
     /* Let's append a bunch of pages to the notebook */
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 5; i++)
     {
         table2 = (*contents[i])(tw, tt);
 
