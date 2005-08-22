@@ -161,7 +161,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll);
     vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), FALSE);
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), TRUE);
-    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), tw->tc->lines);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
 
     gtk_widget_show (tt->vte_term);
@@ -173,7 +172,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
 
     /* Set everything up and display the widgets.
-     *  Sending TRUE to let it know we are in main()
+     * Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
 

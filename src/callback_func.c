@@ -68,8 +68,6 @@ void clean_up (tilda_window *tw)
     }
 
     g_list_free (tw->terms);
-    free (tw->tc);
-    free (tw);
 
     gtk_main_quit ();
 }

@@ -362,6 +362,8 @@ int main (int argc, char **argv)
     gdk_threads_leave ();
 
     remove (tw->lock_file);
+    free (tw->tc);
+    free (tw);
 
     return 0;
 }

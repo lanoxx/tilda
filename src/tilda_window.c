@@ -129,7 +129,7 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
             gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
 
         tw->terms = g_list_remove (tw->terms, tt);
-        ///g_free (tt);
+        free (tt);
     }
 }
 

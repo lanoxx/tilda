@@ -159,6 +159,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             gtk_widget_hide (tt->scrollbar);
     }
 
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), tw->tc->lines);
+
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
     else if (tw->tc->tab_pos == 1)

@@ -46,9 +46,6 @@ GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
 gboolean in_main = FALSE;
 
-gboolean update_tilda ();
-void fix_size_settings ();
-
 void close_dialog (GtkWidget *widget, gpointer data)
 {
     gtk_grab_remove (GTK_WIDGET (widget));
@@ -291,8 +288,7 @@ GtkWidget* font (tilda_window *tw, tilda_term *tt)
 }
 
 void revert_default_compatability (tilda_window *tw)
-{
-    
+{ 
     tw->tc->backspace_key = 0;
     tw->tc->delete_key = 1;
     
@@ -645,6 +641,8 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     if (in_main)
         gtk_main ();
+        
+    free (t_collect);
 
     return exit_status;
 }

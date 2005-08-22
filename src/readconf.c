@@ -27,9 +27,6 @@
  *  Seems to work.
  */
 
-#ifndef TILDA_READCONF_C
-#define TILDA_READCONF_C
-
 #include <stdio.h>
 #ifdef SYSV
 # include <stdlib.h>
@@ -992,5 +989,3 @@ dispose_config(const char *argv0, const CONFIG *config_tab, int config_count)
 
     return (0);
 }
-
-#endif
