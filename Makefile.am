@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = gnu
 SUBDIRS = src
 
 MAINTAINER_CLEAN_FILES =  \
-	Makefile \	
+	Makefile \
 	src/Makefile \
 	config.log \
 	config.status \

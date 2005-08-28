@@ -18,7 +18,7 @@ installed before, ~/.tilda/config changes all the time.
 5) Default key F[$instance+1] so if this is first tilda you run, instance=0, press
 F1 to bring tilda up and down. Example key bindings:
 
-	None+grave -- ~
+    None+grave -- ~
     None+F1 -- can be any key instead of F1 as well
     Control+x -- can be any key instead of x as well
     Alt+x -- can be any key instead of x as well
