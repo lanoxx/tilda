@@ -592,7 +592,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_container_add (GTK_CONTAINER (wizard_window), table);
 
     style = gtk_widget_get_style(wizard_window);
-    image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(wizard_window)->window,&image_pix_mask, &style->bg[GTK_STATE_NORMAL],(gchar **)wizard_xpm);
+    image_pix = gdk_pixmap_create_from_xpm_d (GTK_WIDGET(wizard_window)->window,
+            &image_pix_mask, &style->bg[GTK_STATE_NORMAL],
+            (gchar **)wizard_xpm);
     image = gtk_pixmap_new (image_pix, image_pix_mask);
     gdk_pixmap_unref (image_pix);
     gdk_pixmap_unref (image_pix_mask);

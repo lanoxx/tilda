@@ -721,13 +721,13 @@ echo X"$0" |
   	  /^X\(\/\).*/{ s//\1/; q; }
   	  s/.*/./; q'`
   srcdir=$ac_confdir
-  if test ! -r $srcdir/$ac_unique_file; then
+  if test ! -r "$srcdir/$ac_unique_file"; then
     srcdir=..
   fi
 else
   ac_srcdir_defaulted=no
 fi
-if test ! -r $srcdir/$ac_unique_file; then
+if test ! -r "$srcdir/$ac_unique_file"; then
   if test "$ac_srcdir_defaulted" = yes; then
     { echo "$as_me: error: cannot find sources ($ac_unique_file) in $ac_confdir or .." >&2
    { (exit 1); exit 1; }; }
@@ -736,7 +736,7 @@ if test ! -r $srcdir/$ac_unique_file; then
    { (exit 1); exit 1; }; }
   fi
 fi
-(cd $srcdir && test -r ./$ac_unique_file) 2>/dev/null ||
+(cd $srcdir && test -r "./$ac_unique_file") 2>/dev/null ||
   { echo "$as_me: error: sources are in $srcdir, but \`cd $srcdir' does not work" >&2
    { (exit 1); exit 1; }; }
 srcdir=`echo "$srcdir" | sed 's%\([^\\/]\)[\\/]*$%\1%'`
@@ -2993,52 +2993,37 @@ echo "${ECHO_T}no" >&6
 fi
 
 pkg_failed=no
-echo "$as_me:$LINENO: checking for PACKAGE_CFLAGS" >&5
-echo $ECHO_N "checking for PACKAGE_CFLAGS... $ECHO_C" >&6
-if test "${pkg_cv_PACKAGE_CFLAGS+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test "x$ac_cv_env_PACKAGE_CFLAGS_set" = "xset"; then
-	pkg_cv_PACKAGE_CFLAGS=$ac_cv_env_PACKAGE_CFLAGS_value
-elif test -n "$PKG_CONFIG"; then
-	if { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists \"\$pkg_modules\" >/dev/null 2>&1") >&5
-  ($PKG_CONFIG --exists "$pkg_modules" >/dev/null 2>&1) 2>&5
+echo "$as_me:$LINENO: checking for PACKAGE" >&5
+echo $ECHO_N "checking for PACKAGE... $ECHO_C" >&6
+
+if test -n "$PKG_CONFIG"; then
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\$pkg_modules\"") >&5
+  ($PKG_CONFIG --exists --print-errors "$pkg_modules") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-		pkg_cv_PACKAGE_CFLAGS=`$PKG_CONFIG --cflags "$pkg_modules" 2>/dev/null`
-	else
-		pkg_failed=yes
-	fi
+  pkg_cv_PACKAGE_CFLAGS=`$PKG_CONFIG --cflags "$pkg_modules" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
 else
 	pkg_failed=untried
 fi
-fi
-echo "$as_me:$LINENO: result: $pkg_cv_PACKAGE_CFLAGS" >&5
-echo "${ECHO_T}$pkg_cv_PACKAGE_CFLAGS" >&6
-echo "$as_me:$LINENO: checking for PACKAGE_LIBS" >&5
-echo $ECHO_N "checking for PACKAGE_LIBS... $ECHO_C" >&6
-if test "${pkg_cv_PACKAGE_LIBS+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test "x$ac_cv_env_PACKAGE_LIBS_set" = "xset"; then
-	pkg_cv_PACKAGE_LIBS=$ac_cv_env_PACKAGE_LIBS_value
-elif test -n "$PKG_CONFIG"; then
-	if { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists \"\$pkg_modules\" >/dev/null 2>&1") >&5
-  ($PKG_CONFIG --exists "$pkg_modules" >/dev/null 2>&1) 2>&5
+if test -n "$PKG_CONFIG"; then
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\$pkg_modules\"") >&5
+  ($PKG_CONFIG --exists --print-errors "$pkg_modules") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-		pkg_cv_PACKAGE_LIBS=`$PKG_CONFIG --libs "$pkg_modules" 2>/dev/null`
-	else
-		pkg_failed=yes
-	fi
+  pkg_cv_PACKAGE_LIBS=`$PKG_CONFIG --libs "$pkg_modules" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
 else
 	pkg_failed=untried
 fi
-fi
-echo "$as_me:$LINENO: result: $pkg_cv_PACKAGE_LIBS" >&5
-echo "${ECHO_T}$pkg_cv_PACKAGE_LIBS" >&6
 
 if test $pkg_failed = yes; then
 	PACKAGE_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$pkg_modules"`

@@ -173,6 +173,7 @@
                         'AC_HEADER_STDC' => 1,
                         'AC_HEADER_MAJOR' => 1,
                         'AM_SANITY_CHECK' => 1,
+                        'PKG_CHECK_EXISTS' => 1,
                         '_AM_PROG_TAR' => 1,
                         'AC_FUNC_ERROR_AT_LINE' => 1,
                         'AC_PROG_GCC_TRADITIONAL' => 1,

@@ -126,7 +126,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         gtk_widget_hide (tw->notebook);
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, TRUE);
         gtk_widget_show (tw->notebook);
-    } else {
+    }
+    else
+    {
         gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
 

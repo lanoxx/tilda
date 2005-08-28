@@ -36,7 +36,7 @@ static GtkItemFactoryEntry menu_items[] = {
     { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
     { "/_Preferences...", NULL,      config_and_update,     0, "<StockItem>", GTK_STOCK_PREFERENCES },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
-    { "/_Quit",         "<Ctrl>Q",  menu_quit,              0, "<StockItem>", GTK_STOCK_QUIT        }
+    { "/_Quit",         "<Ctrl>Q",   menu_quit,             0, "<StockItem>", GTK_STOCK_QUIT        }
 };
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -52,7 +52,7 @@ void fix_size_settings (tilda_window *tw)
 
 void clean_up_no_args ()
 {
-     gtk_main_quit ();
+    gtk_main_quit ();
 }
 
 /* Removes the temporary file socket used to communicate with a running tilda */
@@ -63,9 +63,7 @@ void clean_up (tilda_window *tw)
     remove (tw->lock_file);
 
     for (i=0; i<g_list_length(tw->terms); i++)
-    {
         free (g_list_nth_data (tw->terms, i));
-    }
 
     g_list_free (tw->terms);
 
@@ -116,7 +114,7 @@ void destroy_and_quit (GtkWidget *widget, gpointer data)
 
 void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
 {
-   close_tab_on_exit (widget, data);
+    close_tab_on_exit (widget, data);
 }
 
 void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
@@ -218,10 +216,9 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
             {
                 g_print ("Matched `%s' (%d).\n", match, tag);
                 g_free (match);
+
                 if (GPOINTER_TO_INT(data) != 0)
-                {
                     vte_terminal_match_remove (terminal, tag);
-                }
             }
             break;
         case 1:
@@ -235,67 +232,43 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 void iconify_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_iconify ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void deiconify_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_deiconify ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void raise_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_raise ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void lower_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_lower ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void maximize_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_maximize ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void restore_window (GtkWidget *widget, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_unmaximize ((GTK_WIDGET(data))->window);
-        }
-    }
 }
 
 void refresh_window (GtkWidget *widget, gpointer data)
@@ -318,6 +291,7 @@ void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 {
     VteTerminal *terminal;
     gint owidth, oheight, xpad, ypad;
+
     if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2))
     {
         terminal = VTE_TERMINAL(widget);
@@ -331,20 +305,15 @@ void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
         vte_terminal_get_padding (VTE_TERMINAL(widget), &xpad, &ypad);
         owidth -= xpad;
         oheight -= ypad;
-        gtk_window_resize (GTK_WINDOW(data),
-                  width + owidth, height + oheight);
+        gtk_window_resize (GTK_WINDOW(data), width + owidth, height + oheight);
     }
 }
 
 void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
 {
     if (GTK_IS_WIDGET(data))
-    {
         if ((GTK_WIDGET(data))->window)
-        {
             gdk_window_move ((GTK_WIDGET(data))->window, x, y);
-        }
-    }
 }
 void focus_term (GtkWidget *widget, gpointer data)
 {

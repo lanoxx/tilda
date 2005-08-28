@@ -16,15 +16,22 @@ if test -n "$PKG_CONFIG"; then
 		
 fi[]dnl
 ])
-m4trace:/usr/share/aclocal/pkg.m4:114: -1- AC_DEFUN([PKG_CHECK_MODULES], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+m4trace:/usr/share/aclocal/pkg.m4:63: -1- AC_DEFUN([PKG_CHECK_EXISTS], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+if test -n "$PKG_CONFIG" && \
+    AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "$1"]); then
+  m4_ifval([$2], [$2], [:])
+m4_ifvaln([$3], [else
+  $3])dnl
+fi])
+m4trace:/usr/share/aclocal/pkg.m4:130: -1- AC_DEFUN([PKG_CHECK_MODULES], [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
 AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
 
 pkg_failed=no
-AC_CACHE_CHECK([for $1][_CFLAGS], [pkg_cv_][$1][_CFLAGS],
-	[_PKG_CONFIG([$1][_CFLAGS], [cflags], [$2])])
-AC_CACHE_CHECK([for $1][_LIBS], [pkg_cv_][$1][_LIBS],
-	[_PKG_CONFIG([$1][_LIBS], [libs], [$2])])
+AC_MSG_CHECKING([for $1])
+
+_PKG_CONFIG([$1][_CFLAGS], [cflags], [$2])
+_PKG_CONFIG([$1][_LIBS], [libs], [$2])
 
 if test $pkg_failed = yes; then
 	$1[]_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
@@ -59,7 +66,7 @@ else
 fi[]dnl
 ])
 m4trace:/usr/share/aclocal-1.9/amversion.m4:13: -1- AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.9"])
-m4trace:/usr/share/aclocal-1.9/amversion.m4:20: -1- AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION], [AM_AUTOMAKE_VERSION([1.9.5])])
+m4trace:/usr/share/aclocal-1.9/amversion.m4:20: -1- AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION], [AM_AUTOMAKE_VERSION([1.9.6])])
 m4trace:/usr/share/aclocal-1.9/auxdir.m4:52: -1- AC_DEFUN([AM_AUX_DIR_EXPAND], [dnl Rely on autoconf to set up CDPATH properly.
 AC_PREREQ([2.50])dnl
 # expand $ac_aux_dir to an absolute path
@@ -600,7 +607,7 @@ m4trace:configure.in:6: -1- AC_SUBST([LIBS])
 m4trace:configure.in:7: -1- AM_INIT_AUTOMAKE
 m4trace:configure.in:7: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS$])
 m4trace:configure.in:7: -1- AM_SET_CURRENT_AUTOMAKE_VERSION
-m4trace:configure.in:7: -1- AM_AUTOMAKE_VERSION([1.9.5])
+m4trace:configure.in:7: -1- AM_AUTOMAKE_VERSION([1.9.6])
 m4trace:configure.in:7: -1- AC_PROG_INSTALL
 m4trace:configure.in:7: -1- AC_SUBST([INSTALL_PROGRAM])
 m4trace:configure.in:7: -1- AC_SUBST([INSTALL_SCRIPT])
@@ -711,6 +718,8 @@ m4trace:configure.in:17: -1- AC_SUBST([PKG_CONFIG], [$ac_cv_path_PKG_CONFIG])
 m4trace:configure.in:17: -1- AC_SUBST([ac_pt_PKG_CONFIG], [$ac_cv_path_ac_pt_PKG_CONFIG])
 m4trace:configure.in:17: -1- AC_SUBST([PACKAGE_CFLAGS])
 m4trace:configure.in:17: -1- AC_SUBST([PACKAGE_LIBS])
+m4trace:configure.in:17: -1- PKG_CHECK_EXISTS([$pkg_modules], [pkg_cv_[]PACKAGE_CFLAGS=`$PKG_CONFIG --[]cflags "$pkg_modules" 2>/dev/null`], [pkg_failed=yes])
+m4trace:configure.in:17: -1- PKG_CHECK_EXISTS([$pkg_modules], [pkg_cv_[]PACKAGE_LIBS=`$PKG_CONFIG --[]libs "$pkg_modules" 2>/dev/null`], [pkg_failed=yes])
 m4trace:configure.in:18: -1- AC_SUBST([PACKAGE_CFLAGS])
 m4trace:configure.in:19: -1- AC_SUBST([PACKAGE_LIBS])
 m4trace:configure.in:31: -1- AC_PATH_X

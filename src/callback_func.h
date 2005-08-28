@@ -32,7 +32,7 @@ void destroy_and_quit (GtkWidget *widget, gpointer data);
 void destroy_and_quit_eof (GtkWidget *widget, gpointer data);
 void destroy_and_quit_exited (GtkWidget *widget, gpointer data);
 void status_line_changed (GtkWidget *widget, gpointer data);
-int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data);
+int  button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data);
 void iconify_window (GtkWidget *widget, gpointer data);
 void deiconify_window (GtkWidget *widget, gpointer data);
 void raise_window (GtkWidget *widget, gpointer data);

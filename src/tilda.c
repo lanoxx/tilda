@@ -230,14 +230,16 @@ int main (int argc, char **argv)
     }
 
     /* set the instance number and place a env in the array of envs
-    * to be set when the tilda terminal is created */
+     * to be set when the tilda terminal is created */
     getinstance (tw);
 
-    /*check for -T argument, if there is one just write to the pipe and exit, this will bring down or move up the term*/
+    /* check for -T argument, if there is one just write to the pipe and exit,
+     * this will bring down or move up the term */
     while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:w:l:-")) != -1)
-     {
+    {
         gboolean bail = FALSE;
-        switch (opt) {
+        switch (opt)
+        {
             case 'B':
                 image_set_clo = TRUE;
                 g_strlcpy (s_image_arg, optarg, sizeof (s_image_arg));
@@ -294,6 +296,7 @@ int main (int argc, char **argv)
             default:
                 break;
         }
+
         if (bail)
             break;
     }

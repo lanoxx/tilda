@@ -99,6 +99,7 @@ void key_grab (tilda_window *tw)
             }
         }
     }
+
     XFreeModifiermap(modmap);
 
     if (strstr(tmp_key, "Control"))
