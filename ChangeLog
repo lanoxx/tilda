@@ -1,47 +1,70 @@
-New in .08
-Tabs have been added -- right click on the window to add or remove a tab.
-May have fixed some focus issues.
-Fixed problem with gnu-screen.
-Fixed gthread crash problem.
-Other bug fixes as well :)
+version 0.09 (UNRELEASED):
+	* Cleaned up the autotools build stuff. There were some directories that
+	  should have never gotten into CVS. Run autogen.sh to set up the build now.
 
-New in Tilda-0.07
-New right click menu -- can config tilda while its running, everything but the key bind that is.
-GOT RID OF XBINDKEYS! Tilda now listens for each key press on its own. See the Readme to setup
-a key for the new way of doing things.
-Sorry but no longer can you do 'tilda -T $NUM' or any form.
-I may add it back later with XTestFakeKey if people really want it so just let me know.
-Lots more bug fixes as well of course :).
+version 0.08.1 (2005-08-18):
+	* Fixed a bug where the scrollbar would not show up on new tabs.
+	* Fixed a bug where all new tabs in the same instance did not take on the
+	  same properties as their parent.
+	* Fixed some GCC4 compile warnings. Thanks to Daniel Holbach for pointing
+	  them out!
+	* Minor code cleanups.
+	* Misc bugfixes.
 
-New in Tilda-0.06
-New Config Wizard. Still alittle ugly and doesn't auto update, but I am
-saving that for when you can have each tilda instance configured seperatly.
+version 0.08 (2005-07-31):
+	* Tabs have been added -- right cick on the tilda window to add or remove
+	  a tab.
+	* May have fixed some focus issues.
+	* Fixed problem with GNU Screen.
+	* Fixed gthread crash problem.
+	* Misc bugfixes.
 
-Lots of bug fixes too :). 
+version 0.07 (2005-06-15):
+	* New right-click menu -- you can configure tilda while it is running.
+	  This works for everything but changing the key binding.
+	* Removed the dependency on XBindKeys. Tilda now listens for key-presses
+	  on it's own. See the README for details.
+	* Removed support for commands of the form 'tilda -T $NUM'
+	* Each instance of tilda now has it's own config file.
+	* Misc bugfixes.
 
+version 0.06 (2005-05-24):
+	* New configuration wizard. Still ugly, and it still does not auto-update
+	  yet, but I'm saving that for when you can have each tilda instance
+	  configured seperately.
+	* Fixed LOTS of possible (and real) buffer overflows. This fixes some GTK
+	  crashes that we were having due to overwriting memory.
+	* Changed the config file code around, it's much less hackish now.
+	* Changed the way tilda is built.
+	* Misc bugfixes.
 
-################################
+version 0.05.1 (2005-03-25):
+	* Fixed a defunct process that was running loose.
 
-Fixed LOTS of buffer overflows. This should also fix some of the GTK problems
-we were having.
-Changed the config file system, it is much less hackish now.
-Changed the way tilda builds a little bit.
+version 0.05 (2005-03-15):
+	* Added the environmental variable TILDA_NUM which is set to the current
+	  tilda's number to move it up and down.
+	* Fixed a bug where tilda would not clean up after itself 100%. Now each
+	  time tilda is run it will check the tmp directory and clean it up if it is not
+	  completely clean.
 
-New in Tilda-0.05:
-Added env var TILDA_NUM which is set to the current tilda num to move it up and
-down
-added better clean up support
+version 0.04 (2005-02-09):
+	* Added support for running multiple instances of tilda at the same time.
+	* Fixed a bug where tilda would close X when closing tilda.
 
-New in Tilda-0.03:
-Fixed bugs of not completely leaving the screen on some window managers. 
-Added many command line options.
-Removed the need for devilspie!!!
-Changed the configuration wizard and the ~/.tilda/config file, be sure to run
-tilda -C if you are moving from .02 or before to .03.
+version 0.03 (2005-01-12):
+	* Fixed bugs of not completely leaving the screen on some window managers.
+	* Added many command-line options. Run 'tilda -h' to see them.
+	* Removed the dependency on devilspie.
+	* Changed the configuration wizard and the ~/.tilda/config file syntax. Be
+	  sure to run tilda -C if you are migrating from version 0.02 or earlier to
+	  version 0.03.
+	* Added fake transparency, option of black or white background color,
+	  option of a scrollbar, and many more.
 
+version 0.02 (2005-01-05):
+	* Fixed bugs, hopefully, in writing to configuration files.
+	* Added options in configuration wizard for devilspie and xbindkeys.
+	* Tilda can start devilspie and xbindkeys on start of tilda.
+	* Our first release!
 
-New features in Tilda-0.02:
-Fixed bugs, hopefully, in writing to configuration files. 
-Added options in configuration wizard for devilspie and 
-xbindkeys. Also, tilda can start devilspie and xbindkeys 
-on start of tilda.
