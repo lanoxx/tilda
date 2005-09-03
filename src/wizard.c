@@ -499,6 +499,8 @@ gint ok (tilda_collect *tc)
 
     if (in_main)
         gtk_main_quit();
+    else
+        free (tc);
 
     return (TRUE);
 }
@@ -508,12 +510,14 @@ void apply (tilda_collect *tc)
     apply_settings (tc->tw);
 }
 
-gint exit_app (GtkWidget *widget, gpointer data)
+gint exit_app (GtkWidget *widget, gpointer data, tilda_collect *tc)
 {
     gtk_widget_destroy (wizard_window);
-
+    
     if (in_main)
         gtk_main_quit();
+    else
+        free (tc);
 
     exit_status = 1;
 
@@ -581,7 +585,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);
 
     g_signal_connect (G_OBJECT (wizard_window), "delete_event",
-                  G_CALLBACK (exit_app), NULL);
+                  G_CALLBACK (exit_app), t_collect);
 
     gtk_container_set_border_width (GTK_CONTAINER (wizard_window), 10);
 
@@ -632,7 +636,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     button = gtk_button_new_with_label ("Cancel");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (exit_app), NULL);
+                  G_CALLBACK (exit_app), t_collect);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 2, 3, 2, 3);
     gtk_widget_show (button);
 
@@ -642,10 +646,11 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_widget_show (wizard_window);
 
     if (in_main)
+    {
         gtk_main ();
-        
-    free (t_collect);
-
+        free (t_collect);
+    }
+    
     return exit_status;
 }
 
