@@ -35,8 +35,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gchar env_var[14];
     gint  env_add2_size;
     gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
-    gboolean audible = TRUE, blink = TRUE, dingus = FALSE,
-        dbuffer = TRUE, console = FALSE, scroll = FALSE,
+    gboolean dingus = FALSE, dbuffer = TRUE, console = FALSE,
         icon_title = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
@@ -153,15 +152,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
                 TRUE, TRUE, TRUE);
         }
     }
-
-    /* Set some defaults. */
-    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !audible);
-    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), blink);
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll);
-    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), FALSE);
-    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), TRUE);
-    vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
 
     gtk_widget_show (tt->vte_term);
     gtk_widget_show (tt->hbox);

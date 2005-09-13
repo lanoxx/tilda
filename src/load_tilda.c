@@ -29,11 +29,19 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,
              use_antialias = FALSE, bool_use_image = FALSE;
+    gboolean audible = TRUE, blink = TRUE;
     GdkColor fore, back, tint, highlight, cursor, black;
 
     black.red = black.green = black.blue = 0x0000;
-    back.red = back.green = back.blue = 0xffff;
-    fore.red = fore.green = fore.blue = 0x0000;
+    
+    back.red = tw->tc->back_red;
+    back.green = tw->tc->back_green;
+    back.blue = tw->tc->back_blue;
+    
+    fore.red = tw->tc->text_blue;
+    fore.green = tw->tc->text_blue;
+    fore.blue = tw->tc->text_blue;
+    
     highlight.red = highlight.green = highlight.blue = 0xc000;
     cursor.red = 0xffff;
     cursor.green = cursor.blue = 0x8000;
@@ -41,6 +49,15 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint = black;
 
     TRANS_LEVEL = ((gdouble) tw->tc->transparency)/100;
+    
+    /* Set some defaults. */
+    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !audible);
+    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), blink);
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll);
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), FALSE);
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), TRUE);
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     
     switch (tw->tc->backspace_key)
     {

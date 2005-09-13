@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS;
 
-#define NUM_ELEM 23
+#define NUM_ELEM 40
 
 typedef struct tilda_window_ tilda_window;
 typedef struct tilda_conf_ tilda_conf;
@@ -66,7 +66,24 @@ struct tilda_conf_
     gint y_pos;
     gint tab_pos;
     gint backspace_key;
-    gint delete_key;
+    gint delete_key;    
+    gchar s_title[50];
+    gchar s_bold[6];
+    gchar s_blinks[6];
+    gchar s_bell[6];
+    gint d_set_title;
+    gchar s_run_command[6];
+    gchar s_command[150];
+    gint command_exit;
+    gint scheme;
+    gchar s_scroll_on_key[6];
+    gint scrollbar_pos;
+    guint16 back_red;
+    guint16 back_green;
+    guint16 back_blue;
+    guint16 text_red;
+    guint16 text_green;
+    guint16 text_blue;    
 };
 
 void add_tab (tilda_window *tw);

@@ -49,6 +49,23 @@ void get_defaults (tilda_window *tw)
     tw->tc->tab_pos = 0;
     tw->tc->backspace_key = 0;
     tw->tc->delete_key = 1;
+    g_strlcpy (tw->tc->s_title, "Tilda", sizeof (tw->tc->s_title));
+    g_strlcpy (tw->tc->s_command, "none", sizeof (tw->tc->s_command));
+    g_strlcpy (tw->tc->s_bold, "TRUE", sizeof (tw->tc->s_bold));
+    g_strlcpy (tw->tc->s_blinks, "TRUE", sizeof (tw->tc->s_blinks));
+    g_strlcpy (tw->tc->s_bell, "TRUE", sizeof (tw->tc->s_bell));
+    g_strlcpy (tw->tc->s_run_command, "TRUE", sizeof (tw->tc->s_run_command));
+    g_strlcpy (tw->tc->s_scroll_on_key, "TRUE", sizeof (tw->tc->s_scroll_on_key));
+    tw->tc->d_set_title = 1;
+    tw->tc->command_exit = 0;
+    tw->tc->scheme = 0;
+    tw->tc->scrollbar_pos = 1;
+    tw->tc->back_red = 1;
+    tw->tc->back_green = 1;
+    tw->tc->back_blue = 1;
+    tw->tc->text_red = 1;
+    tw->tc->text_green = 1;
+    tw->tc->text_blue = 1;    
 }
 
 void init_tilda_window_configs (tilda_window *tw)
@@ -78,7 +95,24 @@ void init_tilda_window_configs (tilda_window *tw)
         { CF_STRING,    "down",         tw->tc->s_down,             sizeof(tw->tc->s_down),         NULL, 0, NULL },
         { CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                              NULL, 0, NULL },
         { CF_INT,       "backspace_key",&(tw->tc->backspace_key),   0,                              NULL, 0, NULL },
-        { CF_INT,       "delete_key",   &(tw->tc->delete_key),      0,                              NULL, 0, NULL }
+        { CF_INT,       "delete_key",   &(tw->tc->delete_key),      0,                              NULL, 0, NULL },      
+        { CF_STRING,    "title",        tw->tc->s_title,            sizeof(tw->tc->s_title),        NULL, 0, NULL },
+        { CF_STRING,    "bold",         tw->tc->s_bold,             sizeof(tw->tc->s_bold),         NULL, 0, NULL },
+        { CF_STRING,    "blinks",       tw->tc->s_blinks,           sizeof(tw->tc->s_blinks),       NULL, 0, NULL },
+        { CF_STRING,    "bell",         tw->tc->s_bell,             sizeof(tw->tc->s_bell),         NULL, 0, NULL },
+        { CF_INT,       "d_set_title",  &(tw->tc->d_set_title),     0,                              NULL, 0, NULL },
+        { CF_STRING,    "run_command",  tw->tc->s_run_command,      sizeof(tw->tc->s_run_command),  NULL, 0, NULL },
+        { CF_STRING,    "command",      tw->tc->s_command,          sizeof(tw->tc->s_command),      NULL, 0, NULL },
+        { CF_INT,       "command_exit", &(tw->tc->command_exit),    0,                              NULL, 0, NULL },
+        { CF_INT,       "scheme",       &(tw->tc->scheme),          0,                              NULL, 0, NULL },
+        { CF_STRING,    "scroll_on_key",tw->tc->s_scroll_on_key,    sizeof(tw->tc->s_scroll_on_key),NULL, 0, NULL },
+        { CF_INT,       "scrollbar_pos",&(tw->tc->scrollbar_pos),   0,                              NULL, 0, NULL },
+        { CF_INT,       "back_red",     &(tw->tc->back_red),        0,                              NULL, 0, NULL },
+        { CF_INT,       "back_green",   &(tw->tc->back_green),      0,                              NULL, 0, NULL },
+        { CF_INT,       "back_blue",    &(tw->tc->back_blue),       0,                              NULL, 0, NULL },
+        { CF_INT,       "text_red",     &(tw->tc->text_red),        0,                              NULL, 0, NULL },
+        { CF_INT,       "text_green",   &(tw->tc->text_green),      0,                              NULL, 0, NULL },
+        { CF_INT,       "text_blue",    &(tw->tc->text_blue),       0,                              NULL, 0, NULL }
     };
 
     for (i=0;i<NUM_ELEM;i++)
