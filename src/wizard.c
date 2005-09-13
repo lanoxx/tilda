@@ -701,12 +701,12 @@ void apply_settings (tilda_window *tw)
         fprintf (fp, "scheme : %i\n", tw->tc->scheme);
         fprintf (fp, "scroll_on_key : %s\n", tw->tc->s_scroll_on_key);
         fprintf (fp, "scrollbar_pos : %i\n", tw->tc->scrollbar_pos);
-        fprintf (fp, "back_red : %i\n", tw->tc->back_red);
-        fprintf (fp, "back_green : %i\n", tw->tc->back_green);
-        fprintf (fp, "back_blue : %i\n", tw->tc->back_blue);
-        fprintf (fp, "text_red : %i\n", tw->tc->text_red);
-        fprintf (fp, "text_green : %i\n", tw->tc->text_green);
-        fprintf (fp, "text_blue : %i\n", tw->tc->text_blue);  
+        fprintf (fp, "back_red : %u\n", tw->tc->back_red);
+        fprintf (fp, "back_green : %u\n", tw->tc->back_green);
+        fprintf (fp, "back_blue : %u\n", tw->tc->back_blue);
+        fprintf (fp, "text_red : %u\n", tw->tc->text_red);
+        fprintf (fp, "text_green : %u\n", tw->tc->text_green);
+        fprintf (fp, "text_blue : %u\n", tw->tc->text_blue);  
         
         fclose (fp);
     }
@@ -730,7 +730,7 @@ gint ok (tilda_collect *tc)
     if (in_main)
         gtk_main_quit();
     else
-        //free (tc);
+        free (tc);
 
     return (TRUE);
 }
@@ -747,7 +747,7 @@ gint exit_app (GtkWidget *widget, gpointer data, tilda_collect *tc)
     if (in_main)
         gtk_main_quit();
     else
-        ///free (tc);
+        //free (tc);
 
     exit_status = 1;
 
@@ -880,7 +880,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     if (in_main)
     {
         gtk_main ();
-        //free (t_collect);
+        free (t_collect);
     }
     
     return exit_status;

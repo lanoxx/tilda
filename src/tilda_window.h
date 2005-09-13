@@ -77,7 +77,7 @@ struct tilda_conf_
     gint command_exit;
     gint scheme;
     gchar s_scroll_on_key[6];
-    gint scrollbar_pos;
+    guint16 scrollbar_pos;
     guint16 back_red;
     guint16 back_green;
     guint16 back_blue;
