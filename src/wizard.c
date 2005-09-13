@@ -36,14 +36,17 @@
 GtkWidget *wizard_window;
 int exit_status=0;
 
+GtkWidget *entry_title, *combo_set_title, *check_run_command, *entry_command, *combo_command_exit;
+GtkWidget *check_allow_bold, *check_cursor_blinks, *check_terminal_bell;
+GtkWidget *text_color, *back_color, *combo_schemes;
 GtkWidget *entry_height, *entry_width, *entry_x_pos, *entry_y_pos, *entry_key;
 GtkWidget *button_image, *image_chooser, *combo_tab_pos;
-GtkWidget *check_xbindkeys, *check_antialias, *check_use_image, *check_grab_focus;
+GtkWidget *check_xbindkeys, *check_antialias, *check_use_image;
 GtkWidget *check_pinned, *check_above, *check_notaskbar, *check_scrollbar, *check_down;
-GtkWidget *radio_white, *radio_black;
 GtkWidget *slider_opacity, *spin_scrollback;
 GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
+GtkWidget *combo_scroll_pos, *check_scroll_on_keystroke;
 gboolean in_main = FALSE;
 
 void close_dialog (GtkWidget *widget, gpointer data)
@@ -55,13 +58,19 @@ void close_dialog (GtkWidget *widget, gpointer data)
 GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
-    GtkWidget *label_scrollback, *label_tab_pos;
+    GtkWidget *label_tab_pos;
 
-    table = gtk_table_new (2, 6, FALSE);
+    table = gtk_table_new (2, 8, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
     gtk_table_set_col_spacings (GTK_TABLE (table), 5);
+       
+    button_font = gtk_font_button_new_with_font (tw->tc->s_font);
 
-    label_scrollback = gtk_label_new("Scrollback:");
+    check_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
+
+    if (strcasecmp (tw->tc->s_antialias, "TRUE") == 0)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_antialias), TRUE);
+    
     label_tab_pos = gtk_label_new ("Position of Tabs: ");
 
     combo_tab_pos = gtk_combo_box_new_text    ();
@@ -74,14 +83,12 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     check_pinned = gtk_check_button_new_with_label ("Display on all workspaces");
     check_above = gtk_check_button_new_with_label ("Always on top");
     check_notaskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
-    check_grab_focus = gtk_check_button_new_with_label ("Grab focus on pull down");
-    check_scrollbar = gtk_check_button_new_with_label ("Show scrollbar");
+    
     check_down = gtk_check_button_new_with_label ("Display pulled down on start");
-
-    spin_scrollback = gtk_spin_button_new_with_range (0, MAX_INT, 1);
-
-    if (strcasecmp (tw->tc->s_scrollbar, "TRUE") == 0)
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scrollbar), TRUE);
+    
+    check_allow_bold = gtk_check_button_new_with_label ("Allow bold text");
+    check_cursor_blinks = gtk_check_button_new_with_label ("Cursor blinks");
+    check_terminal_bell = gtk_check_button_new_with_label ("Terminal Bell");
 
     if (strcasecmp (tw->tc->s_pinned, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_pinned), TRUE);
@@ -92,42 +99,116 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     if (strcasecmp (tw->tc->s_notaskbar, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_notaskbar), TRUE);
 
-    if (strcasecmp (tw->tc->s_grab_focus, "TRUE") == 0)
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_grab_focus), TRUE);
-
     if (strcasecmp (tw->tc->s_down, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_down), TRUE);
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
 
     gtk_table_attach (GTK_TABLE (table), check_pinned, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_above,  1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
     gtk_table_attach (GTK_TABLE (table), check_notaskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    //gtk_table_attach (GTK_TABLE (table), check_grab_focus, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_down, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), check_terminal_bell, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_cursor_blinks, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_antialias, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_allow_bold, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+   
 
-    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), spin_scrollback,  1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_tab_pos, 1, 2, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), combo_tab_pos, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), button_font, 0, 2, 5, 6, GTK_FILL, GTK_FILL, 3, 3);
 
-    //gtk_widget_show (check_grab_focus);
     gtk_widget_show (label_tab_pos);
     gtk_widget_show (combo_tab_pos);
     gtk_widget_show (check_down);
     gtk_widget_show (check_pinned);
     gtk_widget_show (check_above);
     gtk_widget_show (check_notaskbar);
-    gtk_widget_show (check_scrollbar);
-    gtk_widget_show (label_scrollback);
-    gtk_widget_show (spin_scrollback);
+    gtk_widget_show (button_font);
+    gtk_widget_show (check_antialias);
+    gtk_widget_show (check_allow_bold);
+    gtk_widget_show (check_cursor_blinks);
+    gtk_widget_show (check_terminal_bell);
 
     return table;
 }
+GtkWidget *entry_title, *combo_set_title, *check_run_command, *entry_command, *combo_command_exit;
+GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
+{
+    GtkWidget *table;
+    GtkWidget *label_title, *label_command;
+    GtkWidget *label_initial_title, *label_dynamically_set_title_pos;
+    GtkWidget *label_custom_command, *label_on_command_exit;
+
+    table = gtk_table_new (2, 8, FALSE);
+    
+    label_title = gtk_label_new ("Title:");
+    gtk_misc_set_alignment ((GtkMisc *)label_title, 0, 0);
+    label_command = gtk_label_new ("Command:");
+    gtk_misc_set_alignment ((GtkMisc *)label_command, 0, 0); 
+    label_initial_title = gtk_label_new ("Initial title:");
+    gtk_misc_set_alignment ((GtkMisc *)label_initial_title, 0, 0);
+    label_dynamically_set_title_pos = gtk_label_new ("Dynamically-set title:");
+    gtk_misc_set_alignment ((GtkMisc *)label_dynamically_set_title_pos, 0, 0);
+    label_custom_command = gtk_label_new ("Custom command:");
+    gtk_misc_set_alignment ((GtkMisc *)label_custom_command, 0, 0);
+    label_on_command_exit = gtk_label_new ("When command exit:");
+    gtk_misc_set_alignment ((GtkMisc *)label_on_command_exit, 0, 0);
+    
+    entry_title = gtk_entry_new ();
+    entry_command = gtk_entry_new ();
+    
+    check_run_command = gtk_check_button_new_with_label ("Run a custom command instead of shell");
+    
+    combo_set_title = gtk_combo_box_new_text    ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_set_title, "Replace initial title");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_set_title, "Goes before initial title");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_set_title, "Goes after initial title");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_set_title, "Isn't displayed");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_set_title, 0);// tw->tc->tab_pos);
+    
+    combo_command_exit = gtk_combo_box_new_text    ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_command_exit, "Exit the terminal");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_command_exit, "Restart the command");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_command_exit, "Hold the terminal open");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_command_exit, 0);// tw->tc->tab_pos);
+    
+    gtk_table_attach (GTK_TABLE (table), label_title, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_initial_title, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_title, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_dynamically_set_title_pos, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_set_title, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_command, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), check_run_command, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_custom_command, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_command, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_on_command_exit, 0, 1, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_command_exit, 1, 2, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_widget_show (label_title);
+    gtk_widget_show (label_initial_title);
+    gtk_widget_show (entry_title);
+    gtk_widget_show (label_dynamically_set_title_pos);
+    gtk_widget_show (combo_set_title);
+    gtk_widget_show (label_command);
+    gtk_widget_show (check_run_command);
+    gtk_widget_show (label_custom_command);
+    gtk_widget_show (entry_command);
+    gtk_widget_show (label_on_command_exit);
+    gtk_widget_show (combo_command_exit);
+    
+    return table;
+}
+
 
 void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
@@ -147,7 +228,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
     GtkWidget *label_image;
-    GtkWidget *label_color, *label_opacity;
+    GtkWidget *label_opacity;
     GtkWidget *label_height, *label_width;
     GtkWidget *label_x_pos, *label_y_pos;
 
@@ -159,7 +240,6 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     label_width = gtk_label_new ("Width in Pixels:");
     label_x_pos = gtk_label_new ("X Pixel Postion to Start:");
     label_y_pos = gtk_label_new ("Y Pixel Postion to Start:");
-    label_color = gtk_label_new ("Background Color:");
     label_opacity = gtk_label_new ("Level of Transparency:");
     label_image = gtk_label_new ("Background Image:");
 
@@ -190,14 +270,6 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     button_image = gtk_file_chooser_button_new_with_dialog (image_chooser);
 
     if (QUICK_STRCMP (tw->tc->s_image, "none") != 0);
-
-    radio_white = gtk_radio_button_new_with_label (NULL, "White");
-    radio_black = gtk_radio_button_new_with_label(gtk_radio_button_group (GTK_RADIO_BUTTON (radio_white)), "Black");
-
-    if (strcasecmp (tw->tc->s_background, "white") == 0)
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_white), TRUE);
-    else
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_black), TRUE);
 
     if (strcasecmp (tw->tc->s_use_image, "TRUE") == 0)
     {
@@ -232,26 +304,17 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_color, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), radio_white, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), radio_black, 2, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-
-    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
     gtk_widget_show (entry_height);
     gtk_widget_show (label_height);
     gtk_widget_show (entry_width);
     gtk_widget_show (label_width);
-
-    gtk_widget_show (radio_white);
-    gtk_widget_show (radio_black);
-
     gtk_widget_show (label_opacity);
     gtk_widget_show (slider_opacity);
-    gtk_widget_show (label_color);
     gtk_widget_show (entry_x_pos);
     gtk_widget_show (label_x_pos);
     gtk_widget_show (entry_y_pos);
@@ -261,29 +324,93 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-GtkWidget* font (tilda_window *tw, tilda_term *tt)
+GtkWidget* colors (tilda_window *tw, tilda_term *tt)
 {
     GtkWidget *table;
+    GtkWidget *label_color, *label_builtin, *label_text_color, *label_back_color;
+    GdkColor white, black;
 
-    table = gtk_table_new (2, 2, FALSE);
+    table = gtk_table_new (4, 4, FALSE);
+    
+    label_color = gtk_label_new ("Foreground and Background Colors:");
+    label_builtin = gtk_label_new ("Built-in schemes:");
+    label_text_color = gtk_label_new ("Text Color:");
+    label_back_color = gtk_label_new ("Background Color:");
+    
+    combo_schemes = gtk_combo_box_new_text ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_schemes, "White on Black");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_schemes, "Black on White");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_schemes, "Green on Black");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_schemes, "Custom");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_schemes, 0);//tw->tc->tab_pos);
+    
+    black.red = black.green = black.blue = 0x0000;
+    white.red = white.green = white.blue = 0xffff;
+    
+    text_color = gtk_color_button_new_with_color (&black);
+    back_color = gtk_color_button_new_with_color (&white);
+    
+    gtk_table_attach (GTK_TABLE (table), label_color, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_builtin, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_schemes, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_text_color, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), text_color, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_back_color, 2, 3, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), back_color, 3, 4, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_widget_show (label_builtin);
+    gtk_widget_show (combo_schemes);
+    gtk_widget_show (label_color);
+    gtk_widget_show (label_text_color);
+    gtk_widget_show (text_color);
+    gtk_widget_show (label_back_color);
+    gtk_widget_show (back_color);
+    
+    return table;
+}
 
-    button_font = gtk_font_button_new_with_font (tw->tc->s_font);
+GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
+{
+    GtkWidget *table;
+    GtkWidget *label_scrollback, *label_scroll_pos;
+    
+    table = gtk_table_new (3, 8, FALSE);
 
-    check_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
+    combo_scroll_pos = gtk_combo_box_new_text ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_scroll_pos, "RIGHT");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_scroll_pos, "LEFT");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_scroll_pos, 0);//tw->tc->tab_pos);
 
-    if (strcasecmp (tw->tc->s_antialias, "TRUE") == 0)
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_antialias), TRUE);
+    label_scrollback = gtk_label_new("Scrollback:");
+    label_scroll_pos = gtk_label_new("Scrollbar is:");
+    check_scrollbar = gtk_check_button_new_with_label ("Show scrollbar");
+    check_scroll_on_keystroke = gtk_check_button_new_with_label ("Scroll on keystroke");
+    
+    spin_scrollback = gtk_spin_button_new_with_range (0, MAX_INT, 1);
 
-    gtk_table_set_row_spacings (GTK_TABLE (table), 3);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 3);
+    if (strcasecmp (tw->tc->s_scrollbar, "TRUE") == 0)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scrollbar), TRUE);
+        
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
+    
+    gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scroll_on_keystroke, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), button_font, 0, 2, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_scroll_pos, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_scroll_pos,  1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_antialias, 0, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), spin_scrollback,  1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_widget_show (button_font);
-    gtk_widget_show (check_antialias);
-
+    gtk_widget_show (label_scroll_pos);
+    gtk_widget_show (check_scroll_on_keystroke);
+    gtk_widget_show (combo_scroll_pos);
+    gtk_widget_show (check_scrollbar);
+    gtk_widget_show (label_scrollback);
+    gtk_widget_show (spin_scrollback);
+        
     return table;
 }
 
@@ -427,23 +554,13 @@ void apply_settings (tilda_window *tw)
     else
         g_strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof(tw->tc->s_scrollbar));
 
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio_white)))
-        g_strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
-    else
-        g_strlcpy (tw->tc->s_background, "black", sizeof (tw->tc->s_background));
-
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_use_image)) == TRUE)
         g_strlcpy (tw->tc->s_use_image, "TRUE", sizeof(tw->tc->s_use_image));
     else
         g_strlcpy (tw->tc->s_use_image, "FALSE", sizeof(tw->tc->s_use_image));
 
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_grab_focus)) == TRUE)
-        g_strlcpy (tw->tc->s_grab_focus, "TRUE", sizeof(tw->tc->s_grab_focus));
-    else
-        g_strlcpy (tw->tc->s_grab_focus, "FALSE", sizeof(tw->tc->s_grab_focus));
-
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_down)) == TRUE)
-        g_strlcpy (tw->tc->s_down, "TRUE", sizeof(tw->tc->s_grab_focus));
+        g_strlcpy (tw->tc->s_down, "TRUE", sizeof(tw->tc->s_down));
     else
         g_strlcpy (tw->tc->s_down, "FALSE", sizeof(tw->tc->s_down));
 
@@ -517,7 +634,7 @@ gint exit_app (GtkWidget *widget, gpointer data, tilda_collect *tc)
     if (in_main)
         gtk_main_quit();
     else
-        free (tc);
+        ///free (tc);
 
     exit_status = 1;
 
@@ -538,15 +655,17 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     tilda_collect *t_collect;
     gchar *argv0 = NULL;
     gchar title[20];
-    gchar *tabs[] = {"General", "Appearance", "Font", "Compatibility", "Keybindings"};
+    gchar *tabs[] = {"General", "Title and Command", "Appearance", "Colors", "Scrolling", "Compatibility", "Keybindings"};
 
-    GtkWidget* (*contents[5])(tilda_window *, tilda_term *);
+    GtkWidget* (*contents[7])(tilda_window *, tilda_term *);
 
     contents[0] = general;
-    contents[1] = appearance;
-    contents[2] = font;
-    contents[3] = compatibility;
-    contents[4] = keybindings;
+    contents[1] = title_command; 
+    contents[2] = appearance;
+    contents[3] = colors;
+    contents[4] = scrolling;
+    contents[5] = compatibility;
+    contents[6] = keybindings;
 
     FILE *fp;
     gint i;
@@ -611,7 +730,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_widget_show (notebook);
 
     /* Let's append a bunch of pages to the notebook */
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 7; i++)
     {
         table2 = (*contents[i])(tw, tt);
 
