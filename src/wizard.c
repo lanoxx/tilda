@@ -524,6 +524,44 @@ GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
+/* Check that the string has some length, then write it to the config file.
+ * Returns TRUE if a line was written, FALSE otherwise. */
+int write_str_to_config (FILE *fp, const char *label, const char *value)
+{
+    if (strlen (value) > 0)
+    {
+        fprintf (fp, "%s : %s\n", label, value);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/* This does not check integer values for anything, but it could be made to
+ * check for non-negative values, etc. */
+int write_int_to_config (FILE *fp, const char *label, const int value)
+{
+    fprintf (fp, "%s : %i\n", label, value);
+
+    return TRUE;
+}
+
+/* Same as above, but for long's */
+int write_lng_to_config (FILE *fp, const char *label, const long value)
+{
+    fprintf (fp, "%s : %ld\n", label, value);
+
+    return TRUE;
+}
+
+/* Same as above, but for unsigned int's */
+int write_uns_to_config (FILE *fp, const char *label, const unsigned int value)
+{
+    fprintf (fp, "%s : %u\n", label, value);
+
+    return TRUE;
+}
+
 void apply_settings (tilda_window *tw)
 {
     GdkColor gdk_text_color, gdk_back_color;
@@ -667,46 +705,46 @@ void apply_settings (tilda_window *tw)
     }
     else
     {
-        fprintf (fp, "max_height : %i\n", tw->tc->max_height);
-        fprintf (fp, "max_width : %i\n", tw->tc->max_width);
-        fprintf (fp, "min_height : %i\n", 1);
-        fprintf (fp, "min_width : %i\n", tw->tc->max_width);
-        fprintf (fp, "notaskbar : %s\n", tw->tc->s_notaskbar);
-        fprintf (fp, "above : %s\n", tw->tc->s_above);
-        fprintf (fp, "pinned : %s\n", tw->tc->s_pinned);
-        fprintf (fp, "image : %s\n", tw->tc->s_image);
-        fprintf (fp, "background : %s\n", tw->tc->s_background);
-        fprintf (fp, "font : %s\n", tw->tc->s_font);
-        fprintf (fp, "antialias : %s\n", tw->tc->s_antialias);
-        fprintf (fp, "scrollbar : %s\n", tw->tc->s_scrollbar);
-        fprintf (fp, "transparency : %i\n", tw->tc->transparency);
-        fprintf (fp, "x_pos : %i\n", tw->tc->x_pos);
-        fprintf (fp, "y_pos : %i\n", tw->tc->y_pos);
-        fprintf (fp, "scrollback : %ld\n", tw->tc->lines);
-        fprintf (fp, "use_image : %s\n", tw->tc->s_use_image);
-        fprintf (fp, "grab_focus : %s\n", tw->tc->s_grab_focus);
-        fprintf (fp, "key : %s\n", tw->tc->s_key);
-        fprintf (fp, "down : %s\n", tw->tc->s_down);
-        fprintf (fp, "tab_pos : %i\n", tw->tc->tab_pos);
-        fprintf (fp, "backspace_key : %i\n", tw->tc->backspace_key);
-        fprintf (fp, "delete_key : %i\n", tw->tc->delete_key);
-        fprintf (fp, "title : %s\n", tw->tc->s_title);
-        fprintf (fp, "bold : %s\n", tw->tc->s_bold);
-        fprintf (fp, "blinks : %s\n", tw->tc->s_blinks);
-        fprintf (fp, "bell : %s\n", tw->tc->s_bell);
-        fprintf (fp, "d_set_title : %i\n", tw->tc->d_set_title);
-        fprintf (fp, "run_command : %s\n", tw->tc->s_run_command);
-        fprintf (fp, "command : %s\n", tw->tc->s_command);
-        fprintf (fp, "command_exit : %i\n", tw->tc->command_exit);
-        fprintf (fp, "scheme : %i\n", tw->tc->scheme);
-        fprintf (fp, "scroll_on_key : %s\n", tw->tc->s_scroll_on_key);
-        fprintf (fp, "scrollbar_pos : %i\n", tw->tc->scrollbar_pos);
-        fprintf (fp, "back_red : %u\n", tw->tc->back_red);
-        fprintf (fp, "back_green : %u\n", tw->tc->back_green);
-        fprintf (fp, "back_blue : %u\n", tw->tc->back_blue);
-        fprintf (fp, "text_red : %u\n", tw->tc->text_red);
-        fprintf (fp, "text_green : %u\n", tw->tc->text_green);
-        fprintf (fp, "text_blue : %u\n", tw->tc->text_blue);  
+        write_int_to_config (fp, "max_height",      tw->tc->max_height);
+        write_int_to_config (fp, "max_width",       tw->tc->max_width);
+        write_int_to_config (fp, "min_height",      1);
+        write_int_to_config (fp, "min_width",       tw->tc->max_width);
+        write_str_to_config (fp, "notaskbar",       tw->tc->s_notaskbar);
+        write_str_to_config (fp, "above",           tw->tc->s_above);
+        write_str_to_config (fp, "pinned",          tw->tc->s_pinned);
+        write_str_to_config (fp, "image",           tw->tc->s_image);
+        write_str_to_config (fp, "background",      tw->tc->s_background);
+        write_str_to_config (fp, "font",            tw->tc->s_font);
+        write_str_to_config (fp, "antialias",       tw->tc->s_antialias);
+        write_str_to_config (fp, "scrollbar",       tw->tc->s_scrollbar);
+        write_int_to_config (fp, "transparency",    tw->tc->transparency);
+        write_int_to_config (fp, "x_pos",           tw->tc->x_pos);
+        write_int_to_config (fp, "y_pos",           tw->tc->y_pos);
+        write_lng_to_config (fp, "scrollback",      tw->tc->lines);
+        write_str_to_config (fp, "use_image",       tw->tc->s_use_image);
+        write_str_to_config (fp, "grab_focus",      tw->tc->s_grab_focus);
+        write_str_to_config (fp, "key",             tw->tc->s_key);
+        write_str_to_config (fp, "down",            tw->tc->s_down);
+        write_int_to_config (fp, "tab_pos",         tw->tc->tab_pos);
+        write_int_to_config (fp, "backspace_key",   tw->tc->backspace_key);
+        write_int_to_config (fp, "delete_key",      tw->tc->delete_key);
+        write_str_to_config (fp, "title",           tw->tc->s_title);
+        write_str_to_config (fp, "bold",            tw->tc->s_bold);
+        write_str_to_config (fp, "blinks",          tw->tc->s_blinks);
+        write_str_to_config (fp, "bell",            tw->tc->s_bell);
+        write_int_to_config (fp, "d_set_title",     tw->tc->d_set_title);
+        write_str_to_config (fp, "run_command",     tw->tc->s_run_command);
+        write_str_to_config (fp, "command",         tw->tc->s_command);
+        write_int_to_config (fp, "command_exit",    tw->tc->command_exit);
+        write_int_to_config (fp, "scheme",          tw->tc->scheme);
+        write_str_to_config (fp, "scroll_on_key",   tw->tc->s_scroll_on_key);
+        write_int_to_config (fp, "scrollbar_pos",   tw->tc->scrollbar_pos);
+        write_uns_to_config (fp, "back_red",        tw->tc->back_red);
+        write_uns_to_config (fp, "back_green",      tw->tc->back_green);
+        write_uns_to_config (fp, "back_blue",       tw->tc->back_blue);
+        write_uns_to_config (fp, "text_red",        tw->tc->text_red);
+        write_uns_to_config (fp, "text_green",      tw->tc->text_green);
+        write_uns_to_config (fp, "text_blue",       tw->tc->text_blue);  
         
         fclose (fp);
     }
