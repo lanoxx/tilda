@@ -22,11 +22,12 @@
 G_BEGIN_DECLS;
 
 void fix_size_settings (tilda_window *tw);
-void window_title_changed (GtkWidget *widget, gpointer win);
+void window_title_changed (GtkWidget *widget, gpointer data);
 void clean_up_no_args ();
 void clean_up (tilda_window *tw);
 void close_tab_on_exit (GtkWidget *widget, gpointer data);
 void icon_title_changed (GtkWidget *widget, gpointer win);
+void commit (VteTerminal *vteterminal, gpointer user_data);
 void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data);
 void destroy_and_quit (GtkWidget *widget, gpointer data);
 void destroy_and_quit_eof (GtkWidget *widget, gpointer data);

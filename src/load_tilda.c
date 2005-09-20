@@ -27,19 +27,19 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
     gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,
+    gboolean scroll = FALSE, scroll_background = FALSE, highlight_set = FALSE, cursor_set = FALSE,
              use_antialias = FALSE, bool_use_image = FALSE;
-    gboolean audible = TRUE, blink = TRUE;
+    gboolean audible = TRUE, blink = TRUE, scroll_on_output = FALSE, scroll_on_keystroke = FALSE;
     GdkColor fore, back, tint, highlight, cursor, black;
 
     black.red = black.green = black.blue = 0x0000;
-    
+
     back.red = tw->tc->back_red;
     back.green = tw->tc->back_green;
     back.blue = tw->tc->back_blue;
     
-    fore.red = tw->tc->text_blue;
-    fore.green = tw->tc->text_blue;
+    fore.red = tw->tc->text_red;
+    fore.green = tw->tc->text_green;
     fore.blue = tw->tc->text_blue;
     
     highlight.red = highlight.green = highlight.blue = 0xc000;
@@ -50,13 +50,29 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     TRANS_LEVEL = ((gdouble) tw->tc->transparency)/100;
     
+    if (QUICK_STRCMP (tw->tc->s_bell, "TRUE") == 0)
+        audible = TRUE;
+    
+    if (QUICK_STRCMP (tw->tc->s_blinks, "TRUE") == 0)
+        blink = TRUE;
+        
+    /*if (QUICK_STRCMP (tw->tc->s_scroll_background, "TRUE") == 0)
+        scroll_background = TRUE;
+    
+    if (QUICK_STRCMP (tw->tc->s_scroll_on_output, "TRUE") == 0)
+        scroll_on_output = TRUE;
+         
+    if (QUICK_STRCMP (tw->tc->s_scroll_on_key, "TRUE") == 0)
+        scroll_on_keystroke = TRUE;
+    */     
+    
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
     vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !audible);
     vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), blink);
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll);
-    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), FALSE);
-    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), TRUE);
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll_background);
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), scroll_on_output);
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), scroll_on_keystroke);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     
     switch (tw->tc->backspace_key)
@@ -117,13 +133,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);
     } else
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
-
-    if (strcasecmp (tw->tc->s_background, "black") == 0)
-    {
-        back.red = back.green = back.blue = 0x0000;
-        fore.red = fore.green = fore.blue = 0xffff;
-    }
-
+        
     vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
     vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fore, &back, NULL, 0);
 
@@ -146,8 +156,10 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     }
     else
     {
-        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
+       gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
+    
+    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, tw->tc->scrollbar_pos);
 
     if (!from_main)
     {

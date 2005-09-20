@@ -41,13 +41,13 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     tilda_collect *t_collect;
 
     sprintf (env_var, "TILDA_NUM=%d", tw->instance);
-
-    /* Create a box to hold everything. */
-    tt->hbox = gtk_hbox_new (0, FALSE);
-
+        
     t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
     t_collect->tw = tw;
     t_collect->tt = tt;
+
+    /* Create a box to hold everything. */
+    tt->hbox = gtk_hbox_new (0, FALSE);
 
     /* Create the terminal widget and add it to the scrolling shell. */
     tt->vte_term = vte_terminal_new ();
@@ -56,7 +56,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     if (!dbuffer)
         gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
 
-    if (SCROLLBAR_LEFT)
+    if (tw->tc->scrollbar_pos == 1)
     {
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
@@ -66,15 +66,16 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
     }
-
+    
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
-                      G_CALLBACK(window_title_changed), tw->window);
+    //g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
+    //                  G_CALLBACK(window_title_changed), t_collect);
+
     if (icon_title)
     {
         g_signal_connect (G_OBJECT(tt->vte_term), "icon-title-changed",
-                          G_CALLBACK(icon_title_changed), tw->window);
+                          G_CALLBACK(icon_title_changed), t_collect);
     }
 
     /* Connect to the "eof" signal to quit when the session ends. */
@@ -152,12 +153,12 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
                 TRUE, TRUE, TRUE);
         }
     }
-
+        
     gtk_widget_show (tt->vte_term);
     gtk_widget_show (tt->hbox);
 
     /* Create page to append to notebook */
-    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, gtk_label_new (TILDA_VERSION));
+    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, NULL);
     gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
 
