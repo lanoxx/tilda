@@ -131,15 +131,14 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         if (shell)
         {
             /* Launch a shell. */
-            if (command == NULL)
+            if (command == NULL && strcasecmp (tw->tc->s_run_command, "FALSE") == 0)
             {
-                #ifdef DEBUG
-                perror ("had to fix 'command'");
-                #endif
-
                 command = getenv ("SHELL");
+            } 
+            else if (command == NULL && strcasecmp (tw->tc->s_run_command, "FALSE") != 0) {
+                command = tw->tc->s_command;
             }
-
+            
             vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
                 command, NULL, env_add,
                 working_directory,
@@ -151,7 +150,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gtk_widget_show (tt->hbox);
 
     /* Create page to append to notebook */
-    GtkWidget *label = gtk_label_new ("hello");
+    GtkWidget *label = gtk_label_new ("Tilda");
     gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, label);
     gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);

@@ -190,6 +190,8 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Init GList of all tilda_term structures */
     tw->terms = NULL;
     
+    after_command = tw->tc->command_exit;
+    
     if (tw->tc->tab_pos == 0)
         gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
     else if (tw->tc->tab_pos == 1)

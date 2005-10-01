@@ -35,6 +35,7 @@ gint old_max_height, old_max_width;
 /* global commandline arg values */
 gchar *command;
 gchar *working_directory;
+gint after_command;
 
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();

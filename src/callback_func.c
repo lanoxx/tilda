@@ -72,7 +72,25 @@ void clean_up (tilda_window *tw)
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
 {
-    close_tab (data, 0, widget);
+    tilda_collect *collect = (tilda_collect *) data;
+
+    if (strcasecmp (collect->tw->tc->s_run_command, "FALSE") != 0)
+    switch (after_command)
+    {
+        case 2:
+            close_tab (data, 0, widget);
+            break;
+        case 1:
+            break;
+        case 0:
+            vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
+                command, NULL, NULL,
+                working_directory,
+                TRUE, TRUE, TRUE);
+            break;
+        default:
+            break;  
+     }
 }
 
 char* get_window_title (GtkWidget *widget, tilda_window *tw)
@@ -134,7 +152,7 @@ void window_title_changed (GtkWidget *widget, gpointer data)
 
     title = get_window_title (widget, tw);
 
-    current_page_num = gtk_notebook_get_current_page (tw->notebook);
+    current_page_num = gtk_notebook_get_current_page ((GtkNotebook *) tw->notebook);
 
     page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), current_page_num);
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
@@ -160,7 +178,6 @@ void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
 
 void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
 {
-    //g_print("Detected child exit.\n");
     destroy_and_quit (widget, data);
 }
 

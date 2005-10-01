@@ -102,6 +102,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), allow_bold);
     
+    /* What to do when child command exits */
+    after_command = tw->tc->command_exit;
+    
     switch (tw->tc->backspace_key)
     {
         case 0:
