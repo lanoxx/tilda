@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS;
 
-#define NUM_ELEM 40
+#define NUM_ELEM 42
 
 typedef struct tilda_window_ tilda_window;
 typedef struct tilda_conf_ tilda_conf;
@@ -83,7 +83,9 @@ struct tilda_conf_
     guint16 back_blue;
     guint16 text_red;
     guint16 text_green;
-    guint16 text_blue;    
+    guint16 text_blue; 
+    gchar s_scroll_background[6];
+    gchar s_scroll_on_output[6];
 };
 
 void add_tab (tilda_window *tw);

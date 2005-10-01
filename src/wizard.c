@@ -33,8 +33,10 @@
 
 #define MAX_INT 2147483647
 
-GtkWidget *wizard_window;
 int exit_status=0;
+
+GtkWidget *wizard_window;
+GtkWidget *check_scroll_background, *check_scroll_on_output;
 GtkWidget *entry_title, *combo_set_title, *check_run_command, *entry_command, *combo_command_exit;
 GtkWidget *check_allow_bold, *check_cursor_blinks, *check_terminal_bell;
 GtkWidget *text_color, *back_color, *combo_schemes;
@@ -46,6 +48,7 @@ GtkWidget *slider_opacity, *spin_scrollback;
 GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
 GtkWidget *combo_scroll_pos, *check_scroll_on_keystroke;
+
 gboolean in_main = FALSE;
 
 void close_dialog (GtkWidget *widget, gpointer data)
@@ -438,7 +441,7 @@ GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     GtkWidget *table;
     GtkWidget *label_scrollback, *label_scroll_pos;
     
-    table = gtk_table_new (3, 8, FALSE);
+    table = gtk_table_new (3, 4, FALSE);
 
     combo_scroll_pos = gtk_combo_box_new_text ();
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_scroll_pos, "RIGHT");
@@ -449,6 +452,8 @@ GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     label_scroll_pos = gtk_label_new("Scrollbar is:");
     check_scrollbar = gtk_check_button_new_with_label ("Show scrollbar");
     check_scroll_on_keystroke = gtk_check_button_new_with_label ("Scroll on keystroke");
+    check_scroll_background = gtk_check_button_new_with_label ("Scroll Background");
+    check_scroll_on_output = gtk_check_button_new_with_label ("Scroll on Output");
     
     spin_scrollback = gtk_spin_button_new_with_range (0, MAX_INT, 1);
 
@@ -458,17 +463,28 @@ GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     if (strcasecmp (tw->tc->s_scroll_on_key, "TRUE") == 0)
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scroll_on_keystroke), TRUE);
         
+    if (strcasecmp (tw->tc->s_scroll_background, "TRUE") == 0)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scroll_background), TRUE);
+        
+    if (strcasecmp (tw->tc->s_scroll_on_output, "TRUE") == 0)
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_scroll_on_output), TRUE);
+        
     gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_scrollback), tw->tc->lines);
     
     gtk_table_attach (GTK_TABLE (table), check_scrollbar, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), check_scroll_on_keystroke, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_scroll_pos, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), combo_scroll_pos,  1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scroll_on_output, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_scroll_background, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), spin_scrollback,  1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_scroll_pos, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_scroll_pos,  1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
+    gtk_table_attach (GTK_TABLE (table), label_scrollback, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), spin_scrollback,  1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+
+    gtk_widget_show (check_scroll_on_output);
+    gtk_widget_show (check_scroll_background);
     gtk_widget_show (label_scroll_pos);
     gtk_widget_show (check_scroll_on_keystroke);
     gtk_widget_show (combo_scroll_pos);
@@ -708,6 +724,16 @@ void apply_settings (tilda_window *tw)
     else
         g_strlcpy (tw->tc->s_scroll_on_key, "FALSE", sizeof(tw->tc->s_scroll_on_key));
 
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_scroll_on_output)) == TRUE)
+        g_strlcpy (tw->tc->s_scroll_on_output, "TRUE", sizeof(tw->tc->s_scroll_on_output));
+    else
+        g_strlcpy (tw->tc->s_scroll_on_output, "FALSE", sizeof(tw->tc->s_scroll_on_output));
+
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_scroll_background)) == TRUE)
+        g_strlcpy (tw->tc->s_scroll_background, "TRUE", sizeof(tw->tc->s_scroll_background));
+    else
+        g_strlcpy (tw->tc->s_scroll_background, "FALSE", sizeof(tw->tc->s_scroll_background));
+
     if((fp = fopen(tw->config_file, "w")) == NULL)
     {
         perror("fopen");
@@ -755,6 +781,8 @@ void apply_settings (tilda_window *tw)
         write_uns_to_config (fp, "text_red",        tw->tc->text_red);
         write_uns_to_config (fp, "text_green",      tw->tc->text_green);
         write_uns_to_config (fp, "text_blue",       tw->tc->text_blue);  
+        write_str_to_config (fp, "scroll_on_output",tw->tc->s_scroll_on_output);
+        write_str_to_config (fp, "scroll_background",tw->tc->s_scroll_background);
         
         fclose (fp);
     }

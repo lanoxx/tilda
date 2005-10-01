@@ -55,7 +55,9 @@ void get_defaults (tilda_window *tw)
     g_strlcpy (tw->tc->s_blinks, "TRUE", sizeof (tw->tc->s_blinks));
     g_strlcpy (tw->tc->s_bell, "TRUE", sizeof (tw->tc->s_bell));
     g_strlcpy (tw->tc->s_run_command, "TRUE", sizeof (tw->tc->s_run_command));
-    g_strlcpy (tw->tc->s_scroll_on_key, "TRUE", sizeof (tw->tc->s_scroll_on_key));
+    g_strlcpy (tw->tc->s_scroll_on_key, "TRUE", sizeof (tw->tc->s_scroll_on_key));   
+    g_strlcpy (tw->tc->s_scroll_on_output, "TRUE", sizeof (tw->tc->s_scroll_on_output));
+    g_strlcpy (tw->tc->s_scroll_background, "TRUE", sizeof (tw->tc->s_scroll_background));
     tw->tc->d_set_title = 1;
     tw->tc->command_exit = 0;
     tw->tc->scheme = 0;
@@ -112,7 +114,9 @@ void init_tilda_window_configs (tilda_window *tw)
         { CF_INT,       "back_blue",    &(tw->tc->back_blue),       0,                              NULL, 0, NULL },
         { CF_INT,       "text_red",     &(tw->tc->text_red),        0,                              NULL, 0, NULL },
         { CF_INT,       "text_green",   &(tw->tc->text_green),      0,                              NULL, 0, NULL },
-        { CF_INT,       "text_blue",    &(tw->tc->text_blue),       0,                              NULL, 0, NULL }
+        { CF_INT,       "text_blue",    &(tw->tc->text_blue),       0,                              NULL, 0, NULL },
+        { CF_STRING,    "scroll_on_output",tw->tc->s_scroll_on_output,    sizeof(tw->tc->s_scroll_on_output),NULL, 0, NULL },
+        { CF_STRING,    "scroll_background",tw->tc->s_scroll_background,    sizeof(tw->tc->s_scroll_background),NULL, 0, NULL }
     };
 
     for (i=0;i<NUM_ELEM;i++)

@@ -21,6 +21,7 @@
 
 G_BEGIN_DECLS;
 
+char* get_window_title (GtkWidget *widget, tilda_window *tw);
 void fix_size_settings (tilda_window *tw);
 void window_title_changed (GtkWidget *widget, gpointer data);
 void clean_up_no_args ();

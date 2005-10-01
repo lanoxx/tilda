@@ -52,8 +52,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, scroll_background = FALSE, highlight_set = FALSE, cursor_set = FALSE,
-             use_antialias = FALSE, bool_use_image = FALSE;
-    gboolean audible = TRUE, blink = TRUE, scroll_on_output = FALSE, scroll_on_keystroke = FALSE;
+             use_antialias = FALSE, bool_use_image = FALSE, allow_bold=FALSE;
+    gboolean audible = FALSE, blink = FALSE, scroll_on_output = FALSE, scroll_on_keystroke = FALSE;
     GdkColor fore, back, tint, highlight, cursor, black;
 
     black.red = black.green = black.blue = 0x0000;
@@ -80,15 +80,17 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     if (QUICK_STRCMP (tw->tc->s_blinks, "TRUE") == 0)
         blink = TRUE;
         
-    /*if (QUICK_STRCMP (tw->tc->s_scroll_background, "TRUE") == 0)
+    if (QUICK_STRCMP (tw->tc->s_scroll_background, "TRUE") == 0)
         scroll_background = TRUE;
     
     if (QUICK_STRCMP (tw->tc->s_scroll_on_output, "TRUE") == 0)
         scroll_on_output = TRUE;
          
     if (QUICK_STRCMP (tw->tc->s_scroll_on_key, "TRUE") == 0)
-        scroll_on_keystroke = TRUE;
-    */     
+        scroll_on_keystroke = TRUE; 
+        
+    if (QUICK_STRCMP (tw->tc->s_bold, "TRUE") == 0)
+        allow_bold = TRUE;     
     
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
@@ -98,6 +100,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), scroll_on_output);
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), scroll_on_keystroke);
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
+    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), allow_bold);
     
     switch (tw->tc->backspace_key)
     {
