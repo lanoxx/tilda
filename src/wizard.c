@@ -524,7 +524,7 @@ GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
 
     combo_delete = gtk_combo_box_new_text ();
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "Control-H");
-    gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "Escape sequence");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "Escape Sequence");
     gtk_combo_box_prepend_text ((GtkComboBox *)combo_delete, "ASCII DEL");
     gtk_combo_box_set_active ((GtkComboBox *)combo_delete, tw->tc->delete_key);
     
