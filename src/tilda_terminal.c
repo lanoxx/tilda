@@ -35,8 +35,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gchar env_var[14];
     gint  env_add2_size;
     gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
-    gboolean dingus = FALSE, dbuffer = TRUE, console = FALSE,
-        icon_title = FALSE, shell = TRUE;
+    gboolean dingus = FALSE, dbuffer = TRUE, console = FALSE, shell = TRUE;
     gint i;
     tilda_collect *t_collect;
 
@@ -69,14 +68,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
-    //g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
-    //                  G_CALLBACK(window_title_changed), t_collect);
-
-    if (icon_title)
-    {
-        g_signal_connect (G_OBJECT(tt->vte_term), "icon-title-changed",
-                          G_CALLBACK(icon_title_changed), t_collect);
-    }
+    g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
+                      G_CALLBACK(window_title_changed), tw);
 
     /* Connect to the "eof" signal to quit when the session ends. */
     g_signal_connect (G_OBJECT(tt->vte_term), "eof",
@@ -158,17 +151,18 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gtk_widget_show (tt->hbox);
 
     /* Create page to append to notebook */
-    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, NULL);
+    GtkWidget *label = gtk_label_new ("hello");
+    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, label);
     gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
+    
+    /* Add to GList list of tilda_term structures in tilda_window structure */
+    tw->terms = g_list_append (tw->terms, tt);
 
     /* Set everything up and display the widgets.
      * Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
-
-    /* Add to GList list of tilda_term structures in tilda_window structure */
-    tw->terms = g_list_append (tw->terms, tt);
 
     return TRUE;
 }

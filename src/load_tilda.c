@@ -23,6 +23,30 @@
 #include "callback_func.h"
 #include "../tilda-config.h"
 
+void window_title_change_all (tilda_window *tw) 
+{
+    GtkWidget *page;
+    GtkWidget *label;
+    GtkWidget *widget;
+    tilda_term *tt;
+    char *title;
+    int i;
+    int size, list_count;
+    
+    size = gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook);
+    list_count = size-1;
+    
+    for (i=0;i<size;i++,list_count--)
+    {
+        tt = g_list_nth (tw->terms, list_count)->data;
+        widget = tt->vte_term;
+        title = get_window_title (widget, tw);
+        page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), i);
+        label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
+        gtk_label_set_label ((GtkLabel *) label, title);
+    }
+}
+
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
     gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
@@ -210,6 +234,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
+
+    window_title_change_all (tw);
 
     return TRUE;
 }

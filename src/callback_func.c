@@ -75,41 +75,70 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
     close_tab (data, 0, widget);
 }
 
-void window_title_changed (GtkWidget *widget, gpointer data)
+char* get_window_title (GtkWidget *widget, tilda_window *tw)
 {
-    GtkWidget *label;
-    tilda_collect *t_collect = (tilda_collect *) data;
-    tilda_window *tw = (tilda_window *) t_collect->tw;
-    tilda_term *tt = t_collect->tt;
     const gchar *vte_title;
-    gchar *window_title;
-
-    //page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), pos);
-    //gtk_window_set_title (window, VTE_TERMINAL(widget)->window_title);
-    //pos = gtk_notebook_page_num (GTK_NOTEBOOK (notebook), tt->hbox);
-
+    gchar *window_title;  
+    gchar *initial;
+    gchar *title;
+    
     vte_title = vte_terminal_get_window_title (VTE_TERMINAL (widget));
-
     window_title = g_strdup (vte_title);
+    initial = g_strdup (tw->tc->s_title);
+    
+    switch (tw->tc->d_set_title)
+    {
+        case 3:
+            if (window_title != NULL)
+                title = g_strdup (window_title);
+            else
+                title = g_strdup ("Untitled");
+            break;
 
-    label = gtk_label_new (window_title);
+        case 2:
+            if (window_title != NULL)
+                title = g_strconcat (window_title, " - ", initial, NULL);
+            else
+                title = g_strdup (initial);
+            break;
 
-    gtk_notebook_set_tab_label (GTK_NOTEBOOK (tw->notebook), tt->hbox, label); 
+        case 1:
+            if (window_title != NULL)
+                title = g_strconcat (initial, " - ", window_title, NULL);
+            else
+                title = g_strdup (initial);
+        break;
 
-    //g_free (window_title);
+        case 0:
+            title = g_strdup (initial);
+            break;
+
+        default:
+            g_assert_not_reached ();
+            title = NULL;
+    }
+
+    g_free (window_title);
+    g_free (initial);
+    
+    return title;
 }
 
-void icon_title_changed (GtkWidget *widget, gpointer win)
+void window_title_changed (GtkWidget *widget, gpointer data)
 {
-    GtkWindow *window;
+    GtkWidget *page, *label;
+    gchar *title;
+    gint current_page_num;
+    
+    tilda_window *tw = (tilda_window *) data;
 
-    g_return_if_fail (VTE_TERMINAL(widget));
-    g_return_if_fail (GTK_IS_WINDOW(win));
-    g_return_if_fail (VTE_TERMINAL(widget)->icon_title != NULL);
-    window = GTK_WINDOW(win);
+    title = get_window_title (widget, tw);
 
-    g_message ("Icon title changed to \"%s\".\n",
-          VTE_TERMINAL(widget)->icon_title);
+    current_page_num = gtk_notebook_get_current_page (tw->notebook);
+
+    page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), current_page_num);
+    label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
+    gtk_label_set_label ((GtkLabel *) label, title);
 }
 
 void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
@@ -198,7 +227,10 @@ void popup_menu (tilda_collect *tc)
 
     gtk_widget_show_all(menu);
 }
-
+int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data) {
+    add_tab ((tilda_window *) data);
+    return 0;
+}
 int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
     VteTerminal *terminal;
