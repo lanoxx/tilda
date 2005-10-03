@@ -28,7 +28,6 @@
 #include "../tilda-config.h"
 #include "config.h"
 #include "wizard.h"
-#include "wizard_xpm.h"
 #include "load_tilda.h"
 
 #define MAX_INT 2147483647
@@ -827,33 +826,29 @@ void apply_settings (tilda_window *tw)
     }
 }
 
-gint ok (tilda_collect *tc)
+gint ok (tilda_window *tw)
 {
-    apply_settings (tc->tw);
+    apply_settings (tw);
     exit_status = 0;
     gtk_widget_destroy (wizard_window);
 
     if (in_main)
         gtk_main_quit();
-    else
-        free (tc);
 
     return (TRUE);
 }
 
-void apply (tilda_collect *tc)
+void apply (tilda_window *tw)
 {
-    apply_settings (tc->tw);
+    apply_settings (tw);
 }
 
-gint exit_app (GtkWidget *widget, gpointer data, tilda_collect *tc)
+gint exit_app (GtkWidget *widget, gpointer data)
 {
     gtk_widget_destroy (wizard_window);
     
     if (in_main)
         gtk_main_quit();
-    else
-        //free (tc);
 
     exit_status = 1;
 
@@ -871,7 +866,6 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     GdkPixmap *image_pix;
     GdkBitmap *image_pix_mask;
     GtkStyle   *style;
-    tilda_collect *t_collect;
     gchar *argv0 = NULL;
     gchar title[20];
     gchar *tabs[] = {"General", "Title and Command", "Appearance", "Colors", "Scrolling", "Compatibility", "Keybindings"};
@@ -891,10 +885,6 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     if (argv != NULL)
         argv0 = argv[0];
-
-    t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
-    t_collect->tw = tw;
-    t_collect->tt = tt;
 
     if (argc != -1)
     {
@@ -923,7 +913,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);
 
     g_signal_connect (G_OBJECT (wizard_window), "delete_event",
-                  G_CALLBACK (exit_app), t_collect);
+                  G_CALLBACK (exit_app), NULL);
 
     gtk_container_set_border_width (GTK_CONTAINER (wizard_window), 10);
 
@@ -953,19 +943,19 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     button = gtk_button_new_with_label ("OK");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (ok), t_collect);
+                  G_CALLBACK (ok), tw);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 0, 1, 2, 3);
     gtk_widget_show (button);
 
     button = gtk_button_new_with_label ("Apply");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (apply), t_collect);
+                  G_CALLBACK (apply), tw);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 1, 2, 2, 3);
     gtk_widget_show (button);
 
     button = gtk_button_new_with_label ("Cancel");
     g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (exit_app), t_collect);
+                  G_CALLBACK (exit_app), NULL);
     gtk_table_attach_defaults (GTK_TABLE (table), button, 2, 3, 2, 3);
     gtk_widget_show (button);
 
@@ -974,10 +964,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_widget_show (wizard_window);
 
     if (in_main)
-    {
         gtk_main ();
-        free (t_collect);
-    }
     
     return exit_status;
 }
