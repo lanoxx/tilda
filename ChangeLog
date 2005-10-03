@@ -1,4 +1,8 @@
-version 0.09 (UNRELEASED):
+version 0.09 (2005-10-3):
+    * Added Dynamic tab titles
+    * Added lots of added preferences to Tilda Wizard (too many to name here)
+    * Window Maker bug fix
+    * Possible fix to Tilda not grabbing focus on pull down
 	* Cleaned up the autotools build stuff. There were some directories that
 	  should have never gotten into CVS. Run autogen.sh to set up the build now.
 

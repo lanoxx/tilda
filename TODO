@@ -1,7 +1,3 @@
 [ ] guy in forum - It works fine on a single desktop, but multimonitor support would be very much appreciated. In the mean time, perhaps a way to specify the location on the desktop?
 
-[ ] guy in forum - Give users a way to enter xbindkeys key events. Perhaps a window to compose input events like "xbindkeys --multikey"?
-
 [ ] guy in forum - Optionally, a dragable bar on the bottom of Tilda to change the height?
-
-[ ] rhencke - Fix bug that prevents tilda from overlapping taskbars

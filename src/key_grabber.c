@@ -47,9 +47,10 @@ void pull (struct tilda_window_ *tw)
 
     if (pos == 0)
     {
-        pos++;
         gdk_threads_enter();
-
+        
+        pos++;
+        
         if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
             gtk_window_present ((GtkWindow *) tw->window);
         else
@@ -71,8 +72,10 @@ void pull (struct tilda_window_ *tw)
     }
     else 
     {
-        pos--;
         gdk_threads_enter();
+        
+        pos--;
+        
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
         gtk_widget_hide ((GtkWidget *) tw->window);
 
