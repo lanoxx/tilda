@@ -45,7 +45,7 @@ void pull (struct tilda_window_ *tw)
     gint w, h;
     static gint pos=0;
 
-    if (pos%2 == 0)
+    if (pos == 0)
     {
         pos++;
         gdk_threads_enter();
@@ -68,7 +68,7 @@ void pull (struct tilda_window_ *tw)
     }
     else 
     {
-        pos++;
+        pos--;
         gdk_threads_enter();
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
         gtk_widget_hide ((GtkWidget *) tw->window);

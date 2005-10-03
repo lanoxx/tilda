@@ -227,8 +227,8 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 
     gtk_widget_set_size_request ((GtkWidget *) tw->window, 0, 0);
-    fix_size_settings (tw);
-    gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
+    //fix_size_settings (tw);
+    //gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
 
     if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
        perror ("Fuck that thread!!!");
