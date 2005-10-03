@@ -46,7 +46,7 @@ void pull (struct tilda_window_ *tw)
 
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
 
-    if (h == tw->tc->min_height)
+    if (abs(h - tw->tc->min_height) < 5)
     {
         gdk_threads_enter();
 
