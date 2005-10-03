@@ -162,6 +162,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
      * Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
+    
+    gtk_widget_grab_focus (tt->vte_term);
 
     return TRUE;
 }
