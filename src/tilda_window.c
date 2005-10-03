@@ -69,9 +69,7 @@ void get_defaults (tilda_window *tw)
     tw->tc->back_red = 0;
     tw->tc->back_green = 0;
     tw->tc->back_blue = 0;
-    tw->tc->text_red = 1;
-    tw->tc->text_green = 1;
-    tw->tc->text_blue = 1;    
+    tw->tc->text_red = tw->tc->text_green = tw->tc->text_blue = 0xffffff;    
 }
 
 void init_tilda_window_configs (tilda_window *tw)

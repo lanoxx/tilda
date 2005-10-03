@@ -424,7 +424,7 @@ GtkWidget* colors (tilda_window *tw, tilda_term *tt)
 
     text_color = gtk_color_button_new_with_color (&text);
     back_color = gtk_color_button_new_with_color (&back);
-    
+
     g_signal_connect_swapped (G_OBJECT (combo_schemes), "changed",
                   G_CALLBACK (scheme_colors_changed), tw);
     g_signal_connect_swapped (G_OBJECT (text_color), "color-set",
@@ -906,8 +906,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     }
 
     wizard_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_position(GTK_WINDOW(wizard_window), GTK_WIN_POS_CENTER);
     gtk_widget_realize (wizard_window);
-
+    
     g_strlcpy (title, "Tilda", sizeof (title));
     sprintf (title, "%s %i Config", title, tw->instance);
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);

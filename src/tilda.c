@@ -312,7 +312,7 @@ int main (int argc, char **argv)
     if ((fp = fopen(tw->config_file, "r")) == NULL)
     {
         perror ("Unable to open config file, showing the wizard\n");
-        if ((wizard (argc, argv, tw, tt)) == 1) { clean_up (tw); }
+        if ((wizard (argc, argv, tw, tt)) == 1) { clean_up_no_main (tw); }
     }
     else
         fclose (fp);

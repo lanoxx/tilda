@@ -55,8 +55,7 @@ void clean_up_no_args ()
     gtk_main_quit ();
 }
 
-/* Removes the temporary file socket used to communicate with a running tilda */
-void clean_up (tilda_window *tw)
+void free_and_remove (tilda_window *tw)
 {
     int i;
 
@@ -66,8 +65,17 @@ void clean_up (tilda_window *tw)
         free (g_list_nth_data (tw->terms, i));
 
     g_list_free (tw->terms);
+}
 
+void clean_up (tilda_window *tw)
+{
+    free_and_remove (tw);
     gtk_main_quit ();
+}
+
+void clean_up_no_main (tilda_window *tw)
+{
+    free_and_remove (tw);
 }
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
