@@ -54,7 +54,7 @@ void pull (struct tilda_window_ *tw)
             gtk_window_present ((GtkWindow *) tw->window);
         else
             gtk_widget_show ((GtkWidget *) tw->window);
-
+            
         if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
             gtk_window_stick (GTK_WINDOW (tw->window));
 
@@ -63,6 +63,9 @@ void pull (struct tilda_window_ *tw)
 
         gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
+        
+        gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
+        
         gdk_flush ();
         gdk_threads_leave();
     }
