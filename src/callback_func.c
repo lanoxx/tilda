@@ -234,7 +234,6 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
 
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
 {
-    //gtk_widget_destroy (GTK_WIDGET(tw->window));
     gtk_main_quit ();
 }
 
