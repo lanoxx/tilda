@@ -43,11 +43,11 @@ KeySym key;
 void pull (struct tilda_window_ *tw)
 {
     gint w, h;
+    static gint pos=0;
 
-    gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
-
-    if (abs(h - tw->tc->min_height) < 10)
+    if (pos%2 == 0)
     {
+        pos++;
         gdk_threads_enter();
 
         if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
@@ -66,8 +66,9 @@ void pull (struct tilda_window_ *tw)
         gdk_flush ();
         gdk_threads_leave();
     }
-    else if (h == tw->tc->max_height)
+    else 
     {
+        pos++;
         gdk_threads_enter();
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
         gtk_widget_hide ((GtkWidget *) tw->window);
