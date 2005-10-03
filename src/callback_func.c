@@ -254,10 +254,12 @@ void popup_menu (tilda_collect *tc)
 
     gtk_widget_show_all(menu);
 }
+
 int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data) {
     add_tab ((tilda_window *) data);
     return 0;
 }
+
 int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
     VteTerminal *terminal;
@@ -297,6 +299,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
         default:
             break;
     }
+    
     return FALSE;
 }
 

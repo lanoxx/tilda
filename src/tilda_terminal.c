@@ -65,7 +65,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
         gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
     }
-    
+  
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
     g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
@@ -145,7 +145,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
                 TRUE, TRUE, TRUE);
         }
     }
-        
+
     gtk_widget_show (tt->vte_term);
     gtk_widget_show (tt->hbox);
 
