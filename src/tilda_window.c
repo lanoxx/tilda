@@ -30,9 +30,12 @@
 void get_defaults (tilda_window *tw)
 {
     tw->tc->lines = DEFAULT_LINES;
+    g_strlcpy (tw->tc->s_above, "TRUE", sizeof (tw->tc->s_above));
+    g_strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof (tw->tc->s_notaskbar));
+    g_strlcpy (tw->tc->s_pinned, "TRUE", sizeof (tw->tc->s_pinned));
     g_strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image));
     g_strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
-    g_strlcpy (tw->tc->s_font, "monospace 9", sizeof (tw->tc->s_font));
+    g_strlcpy (tw->tc->s_font, "monospace 13", sizeof (tw->tc->s_font));
     g_strlcpy (tw->tc->s_down, "TRUE", sizeof (tw->tc->s_down));
     g_strlcpy (tw->tc->s_antialias, "TRUE", sizeof (tw->tc->s_antialias));
     g_strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof (tw->tc->s_scrollbar));
@@ -42,8 +45,8 @@ void get_defaults (tilda_window *tw)
     tw->tc->transparency = 0;
     tw->tc->x_pos = 0;
     tw->tc->y_pos = 0;
-    tw->tc->max_height = 100;
-    tw->tc->max_width = 200;
+    tw->tc->max_height = 150;
+    tw->tc->max_width = 600;
     tw->tc->min_height = 0;
     tw->tc->min_width = 0;
     tw->tc->tab_pos = 0;
@@ -53,18 +56,19 @@ void get_defaults (tilda_window *tw)
     g_strlcpy (tw->tc->s_command, "none", sizeof (tw->tc->s_command));
     g_strlcpy (tw->tc->s_bold, "TRUE", sizeof (tw->tc->s_bold));
     g_strlcpy (tw->tc->s_blinks, "TRUE", sizeof (tw->tc->s_blinks));
-    g_strlcpy (tw->tc->s_bell, "TRUE", sizeof (tw->tc->s_bell));
-    g_strlcpy (tw->tc->s_run_command, "TRUE", sizeof (tw->tc->s_run_command));
+    g_strlcpy (tw->tc->s_bell, "FALSE", sizeof (tw->tc->s_bell));
+    g_strlcpy (tw->tc->s_run_command, "FALSE", sizeof (tw->tc->s_run_command));
     g_strlcpy (tw->tc->s_scroll_on_key, "TRUE", sizeof (tw->tc->s_scroll_on_key));   
-    g_strlcpy (tw->tc->s_scroll_on_output, "TRUE", sizeof (tw->tc->s_scroll_on_output));
+    g_strlcpy (tw->tc->s_scroll_on_output, "FALSE", sizeof (tw->tc->s_scroll_on_output));
     g_strlcpy (tw->tc->s_scroll_background, "TRUE", sizeof (tw->tc->s_scroll_background));
-    tw->tc->d_set_title = 1;
+    g_strlcpy (tw->tc->s_notebook_border, "FALSE", sizeof (tw->tc->s_notebook_border));
+    tw->tc->d_set_title = 3;
     tw->tc->command_exit = 0;
-    tw->tc->scheme = 0;
+    tw->tc->scheme = 3;
     tw->tc->scrollbar_pos = 1;
-    tw->tc->back_red = 1;
-    tw->tc->back_green = 1;
-    tw->tc->back_blue = 1;
+    tw->tc->back_red = 0;
+    tw->tc->back_green = 0;
+    tw->tc->back_blue = 0;
     tw->tc->text_red = 1;
     tw->tc->text_green = 1;
     tw->tc->text_blue = 1;    
@@ -116,7 +120,8 @@ void init_tilda_window_configs (tilda_window *tw)
         { CF_INT,       "text_green",   &(tw->tc->text_green),      0,                              NULL, 0, NULL },
         { CF_INT,       "text_blue",    &(tw->tc->text_blue),       0,                              NULL, 0, NULL },
         { CF_STRING,    "scroll_on_output",tw->tc->s_scroll_on_output,    sizeof(tw->tc->s_scroll_on_output),NULL, 0, NULL },
-        { CF_STRING,    "scroll_background",tw->tc->s_scroll_background,    sizeof(tw->tc->s_scroll_background),NULL, 0, NULL }
+        { CF_STRING,    "scroll_background",tw->tc->s_scroll_background,    sizeof(tw->tc->s_scroll_background),NULL, 0, NULL },
+        { CF_STRING,    "notebook_border",tw->tc->s_notebook_border,    sizeof(tw->tc->s_notebook_border),NULL, 0, NULL }    
     };
 
     for (i=0;i<NUM_ELEM;i++)
@@ -169,6 +174,8 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
         tw->terms = g_list_remove (tw->terms, tt);
         free (tt);
     }
+    
+    free (tc);
 }
 
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
@@ -203,8 +210,12 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
-
+    
+    if (QUICK_STRCMP (tw->tc->s_notebook_border, "TRUE") == 0)
+        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), TRUE);
+    else
+        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
+    
     init_tilda_terminal (tw, tt, TRUE);
 
     /* Exit on Ctrl-Q */

@@ -241,6 +241,11 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
         gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
 
+    if (QUICK_STRCMP (tw->tc->s_notebook_border, "TRUE") == 0)
+        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), TRUE);
+    else
+        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
+    
     window_title_change_all (tw);
 
     return TRUE;

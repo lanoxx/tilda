@@ -91,6 +91,8 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
         default:
             break;  
      }
+     
+     close_tab (data, 0, widget);
 }
 
 char* get_window_title (GtkWidget *widget, tilda_window *tw)

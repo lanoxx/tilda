@@ -232,6 +232,11 @@ int main (int argc, char **argv)
     /* set the instance number and place a env in the array of envs
      * to be set when the tilda terminal is created */
     getinstance (tw);
+    
+    home_dir = getenv ("HOME");
+    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
+    g_strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
+    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
     /* check for -T argument, if there is one just write to the pipe and exit,
      * this will bring down or move up the term */
@@ -300,11 +305,6 @@ int main (int argc, char **argv)
         if (bail)
             break;
     }
-
-    home_dir = getenv ("HOME");
-    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
-    g_strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
-    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
 
     /* Call the wizard if we cannot read the config file.
      * This fixes a crash that happened if there was not a config file, and

@@ -114,6 +114,9 @@ void key_grab (tilda_window *tw)
     if (strstr(tmp_key, "None"))
         modmask = 0;
 
+    if (!strstr(tmp_key, "+")) 
+        perror ("Key Incorrect -- Read the README or tilda.sf.net for info, rerun as 'tilda -C' to set keybinding\n");
+    
     if (strtok(tmp_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
 
