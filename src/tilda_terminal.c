@@ -69,7 +69,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
     g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
-                      G_CALLBACK(window_title_changed), tw);
+                      G_CALLBACK(window_title_changed), t_collect);
 
     /* Connect to the "eof" signal to quit when the session ends. */
     g_signal_connect (G_OBJECT(tt->vte_term), "eof",

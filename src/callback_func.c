@@ -157,15 +157,13 @@ void window_title_changed (GtkWidget *widget, gpointer data)
     GtkWidget *page, *label;
     gchar *title;
     gint current_page_num;
+    tilda_collect *tc = (tilda_collect *) data;
+    tilda_window *tw = (tilda_window *) tc->tw;
+    tilda_term *tt = (tilda_term *) tc->tt;
     
-    tilda_window *tw = (tilda_window *) data;
-
     title = get_window_title (widget, tw);
-
-    current_page_num = gtk_notebook_get_current_page ((GtkNotebook *) tw->notebook);
-
-    page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), current_page_num);
-    label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
+    
+    label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), tt->hbox);
     gtk_label_set_label ((GtkLabel *) label, title);
 }
 
