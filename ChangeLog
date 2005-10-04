@@ -1,3 +1,7 @@
+version 0.09.1 (2005-10-4):
+	* Fixed problem of tab taking other tabs title
+	* Fixed 100% CPU problem when Tilda is started hidden
+
 version 0.09 (2005-10-3):
 	* Added Dynamic tab titles
 	* Added lots of added preferences to Tilda Wizard (too many to name here)
