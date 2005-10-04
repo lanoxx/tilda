@@ -83,24 +83,25 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
     tilda_collect *collect = (tilda_collect *) data;
 
     if (strcasecmp (collect->tw->tc->s_run_command, "FALSE") != 0)
-    switch (after_command)
     {
-        case 2:
-            close_tab (data, 0, widget);
-            break;
-        case 1:
-            break;
-        case 0:
-            vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
-                command, NULL, NULL,
-                working_directory,
-                TRUE, TRUE, TRUE);
-            break;
-        default:
-            break;  
-     }
-     
-     close_tab (data, 0, widget);
+        switch (after_command)
+        {
+            case 2:
+                close_tab (data, 0, widget);
+                break;
+            case 1:
+                break;
+            case 0:
+                vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
+                    command, NULL, NULL,
+                    working_directory,
+                    TRUE, TRUE, TRUE);
+                break;
+            default:
+                break;  
+        }
+     } else
+         close_tab (data, 0, widget);
 }
 
 char* get_window_title (GtkWidget *widget, tilda_window *tw)
