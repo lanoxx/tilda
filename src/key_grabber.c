@@ -154,10 +154,12 @@ void *wait_for_signal (tilda_window *tw)
         pull (tw);
     else
     {
-        gdk_threads_enter();
+        /*gdk_threads_enter();
         gtk_widget_hide (tw->window);
         gdk_flush ();
-        gdk_threads_leave();
+        gdk_threads_leave();*/
+        pull (tw);
+        pull (tw);
     }
 
     for (;;)
