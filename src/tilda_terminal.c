@@ -32,6 +32,8 @@
 
 gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main)
 {
+    GtkAccelGroup *accel_group;
+    GClosure *close;
     gchar env_var[14];
     gint  env_add2_size;
     gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};

@@ -179,7 +179,7 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 {
     GtkAccelGroup *accel_group;
-    GClosure *clean;
+    GClosure *clean, *next, *prev, *add;
     GError *error;
 
     /* Create a window to hold the scrolling shell, and hook its
@@ -216,12 +216,26 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     
     init_tilda_terminal (tw, tt, TRUE);
 
-    /* Exit on Ctrl-Q */
-    clean = g_cclosure_new ((GCallback) clean_up, tw, NULL);
+    /* Create Accel Group to add key codes for quit, next, prev and new tabs */
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
+    
+    /* Exit on Ctrl-Q */
+    clean = g_cclosure_new_swap ((GCallback) clean_up, tw, NULL);
     gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
 
+    /* Go to Next Tab */
+    next = g_cclosure_new_swap ((GCallback) next_tab, tw, NULL);
+    gtk_accel_group_connect (accel_group, 'n', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, next);
+
+    /* Go to Next Tab */
+    prev = g_cclosure_new_swap ((GCallback) prev_tab, tw, NULL);
+    gtk_accel_group_connect (accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, prev);
+    
+    /* Go to New Tab */
+    add = g_cclosure_new_swap ((GCallback) add_tab, tw, NULL);
+    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, add);
+    
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 
     gtk_widget_set_size_request ((GtkWidget *) tw->window, 0, 0);
