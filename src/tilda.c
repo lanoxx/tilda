@@ -59,12 +59,12 @@ void getinstance (tilda_window *tw)
     for (;;)
     {
         g_strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
-        sprintf (filename, "%s_*_%d", tmp, tw->instance);
-        sprintf (filename, "%s 2> /dev/null", filename);
+        g_snprintf (filename, sizeof(filename), "%s_*_%d 2> /dev/null", 
+                tmp, tw->instance);
 
         if ((ptr = popen (filename, "r")) != NULL)
         {
-            if (fgets (buf, BUFSIZ, ptr) != NULL)
+            if (fgets (buf, sizeof(buf), ptr) != NULL)
                 tw->instance++;
             else
             {
@@ -75,7 +75,8 @@ void getinstance (tilda_window *tw)
         }
     }
 
-    sprintf (filename, "%slock_%d_%d", tw->lock_file, getpid(), tw->instance);
+    g_snprintf (filename, sizeof(filename), "%slock_%d_%d", tw->lock_file,
+            getpid(), tw->instance);
     g_strlcpy (tw->lock_file, filename, sizeof (tw->config_file));
     creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }
@@ -98,7 +99,7 @@ void clean_tmp ()
 
     if ((ptr = popen (cmd, "r")) != NULL)
     {
-        while (fgets (buf, 1024, ptr) != NULL)
+        while (fgets (buf, sizeof(buf), ptr) != NULL)
         {
             g_strlcpy (filename, buf, sizeof (filename));
             throw_away = strtok (buf, "/");
@@ -121,7 +122,7 @@ void clean_tmp ()
 
             if ((ptr2 = popen (cmd, "r")) != NULL)
             {
-                while (fgets (tmp, 1024, ptr2) != NULL)
+                while (fgets (tmp, sizeof(buf), ptr2) != NULL)
                 {
                     if (strstr (tmp, "tilda") != NULL)
                     {
@@ -233,10 +234,11 @@ int main (int argc, char **argv)
      * to be set when the tilda terminal is created */
     getinstance (tw);
     
+    char temp[1024];
     home_dir = getenv ("HOME");
-    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
-    g_strlcat (tw->config_file, "/.tilda/config", sizeof(tw->config_file));
-    sprintf (tw->config_file, "%s_%i", tw->config_file, tw->instance);
+    g_strlcpy (temp, home_dir, sizeof(temp));
+    g_strlcat (temp, "/.tilda/config", sizeof(temp));
+    g_snprintf (tw->config_file, sizeof(tw->config_file), "%s_%i", temp, tw->instance);
 
     /* check for -T argument, if there is one just write to the pipe and exit,
      * this will bring down or move up the term */
@@ -342,7 +344,7 @@ int main (int argc, char **argv)
         g_strlcpy (tw->tc->s_image, s_image_arg, sizeof (tw->tc->s_image));
 
     if (strcasecmp (tw->tc->s_key, "null") == 0)
-        sprintf (tw->tc->s_key, "None+F%i", tw->instance+1);
+        g_snprintf (tw->tc->s_key, sizeof(tw->tc->s_key), "None+F%i", tw->instance+1);
 
     if (!g_thread_supported ())
         g_thread_init(NULL);
