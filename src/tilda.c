@@ -16,6 +16,7 @@
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <sys/dir.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -25,6 +26,7 @@
 #include <glib-object.h>
 #include <stdio.h>
 #include <signal.h>
+#include <pwd.h>
 
 #ifdef HAVE_XFT2
 #include <fontconfig/fontconfig.h>
@@ -40,44 +42,77 @@
 
 char *user, *display;
 
+/**
+ * Get the current user's home directory from the passwd file
+ *
+ * @return a char* to the home directory.
+ */
+char* gethomedir ()
+{
+    char *lgn = getlogin();
+    struct passwd *pw = getpwnam(lgn);
+
+    return pw->pw_dir;
+}
+
+/**
+ * This is needed by getnextinstance(), which is basically emulating ls.
+ * This makes getnextinstance() ignore the "." and ".." directories.
+ *
+ * @param entry the entry structure
+ * @return return FALSE to ignore the file, TRUE to display it
+ */
+int file_select (struct direct *entry)
+{
+    if ((QUICK_STRCMP(entry->d_name, ".") == 0 || QUICK_STRCMP(entry->d_name, "..") == 0))
+        return FALSE;
+
+    return TRUE;
+}
+
+/**
+ * Get the next lock number to use, so that we know which config file to read.
+ *
+ * @param home_dir the user's home directory
+ * @return the next instance number to use
+ *
+ * TODO:
+ * Fix this so it checks the existing file names, instead of just checking the
+ * number of files in the directory. For now, it'll do, though :)
+ */
+int getnextinstance (char *home_dir)
+{
+    char lock_dir[1024];
+    int count;
+    struct direct **files;
+
+    g_snprintf (lock_dir, sizeof(lock_dir), "%s/.tilda/locks", home_dir);
+
+    count = scandir (lock_dir, &files, (void*)file_select, alphasort);
+
+    return count;
+}
+
+/**
+ * Set the instance number for tw, and create the lock file
+ *
+ * @param tw the tilda_window to manipulate
+ */
 void getinstance (tilda_window *tw)
 {
-    char *home_dir;
-    char buf[1024];
-    char filename[1024], tmp[100];
-    FILE *ptr;
+    char *home_dir = gethomedir();
 
-    tw->instance = 0;
-
-    home_dir = getenv ("HOME");
-    g_strlcpy (tw->lock_file, home_dir, sizeof(tw->lock_file));
-    g_strlcat (tw->lock_file, "/.tilda", sizeof(tw->lock_file));
-    g_strlcat (tw->lock_file, "/locks/", sizeof(tw->lock_file));
-
+    /* Make the ~/.tilda/locks directory */
     mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
 
-    for (;;)
-    {
-        g_strlcpy (tmp, "ls ~/.tilda/locks/lock", sizeof(tmp));
-        g_snprintf (filename, sizeof(filename), "%s_*_%d 2> /dev/null", 
-                tmp, tw->instance);
+    /* Get the number of existing locks */
+    tw->instance = getnextinstance (home_dir);
 
-        if ((ptr = popen (filename, "r")) != NULL)
-        {
-            if (fgets (buf, sizeof(buf), ptr) != NULL)
-                tw->instance++;
-            else
-            {
-                pclose (ptr);
-                break;
-            }
-            pclose (ptr);
-        }
-    }
+    /* Set tw->lock_file to the lock name for this instance */
+    g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks/lock_%d_%d",
+            home_dir, getpid(), tw->instance);
 
-    g_snprintf (filename, sizeof(filename), "%slock_%d_%d", tw->lock_file,
-            getpid(), tw->instance);
-    g_strlcpy (tw->lock_file, filename, sizeof (tw->config_file));
+    /* Create the lock file */
     creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
@@ -92,10 +127,8 @@ void clean_tmp ()
     FILE *ptr, *ptr2;
     gboolean old = TRUE;
 
-    home_dir = getenv ("HOME");
-    g_strlcpy (cmd, "ls ", sizeof(cmd));
-    g_strlcat (cmd, home_dir, sizeof(cmd));
-    g_strlcat (cmd, "/.tilda/locks/lock_* 2> /dev/null", sizeof(cmd));
+    home_dir = gethomedir();
+    g_snprintf (cmd, sizeof(cmd), "ls %s/.tilda/locks/lock_* 2> /dev/null", home_dir);
 
     if ((ptr = popen (cmd, "r")) != NULL)
     {
@@ -233,12 +266,10 @@ int main (int argc, char **argv)
     /* set the instance number and place a env in the array of envs
      * to be set when the tilda terminal is created */
     getinstance (tw);
-    
-    char temp[1024];
-    home_dir = getenv ("HOME");
-    g_strlcpy (temp, home_dir, sizeof(temp));
-    g_strlcat (temp, "/.tilda/config", sizeof(temp));
-    g_snprintf (tw->config_file, sizeof(tw->config_file), "%s_%i", temp, tw->instance);
+
+    home_dir = gethomedir();
+    g_snprintf (tw->config_file, sizeof(tw->config_file),
+            "%s/.tilda/config_%i", home_dir, tw->instance);
 
     /* check for -T argument, if there is one just write to the pipe and exit,
      * this will bring down or move up the term */
