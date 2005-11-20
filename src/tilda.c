@@ -49,8 +49,15 @@ char *user, *display;
  */
 char* gethomedir ()
 {
-    char *lgn = getlogin();
-    struct passwd *pw = getpwnam(lgn);
+    int euid = geteuid(); // Always successful
+    struct passwd *pw = getpwuid(euid);
+
+    if (pw == NULL)
+    {
+        printf ("There was a problem getting your home directory.\n");
+        printf ("Errno reports: %s\n", strerror(errno));
+        exit(1);
+    }
 
     return pw->pw_dir;
 }
@@ -75,7 +82,7 @@ int file_select (struct direct *entry)
  *
  * @return the next instance number to use
  *
- * TODO:
+ * FIXME:
  * Fix this so it checks the existing file names, instead of just checking the
  * number of files in the directory. For now, it'll do, though :)
  */
