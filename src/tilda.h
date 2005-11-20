@@ -40,6 +40,8 @@ gint after_command;
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 
+gchar *home_dir;
+
 G_END_DECLS;
 
 #endif

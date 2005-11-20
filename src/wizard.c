@@ -638,7 +638,7 @@ void apply_settings (tilda_window *tw)
 {
     GdkColor gdk_text_color, gdk_back_color;
     FILE *fp;
-    gchar *home_dir, *tmp_str;
+    gchar *tmp_str;
     tilda_term *tt;
     gint i;
 
@@ -659,7 +659,6 @@ void apply_settings (tilda_window *tw)
     tw->tc->x_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos)));
     tw->tc->y_pos = atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos)));
 
-    home_dir = getenv ("HOME");
     g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
     g_strlcat (tw->config_file, "/.tilda/", sizeof(tw->config_file));
 

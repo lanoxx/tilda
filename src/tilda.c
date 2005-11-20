@@ -73,14 +73,13 @@ int file_select (struct direct *entry)
 /**
  * Get the next lock number to use, so that we know which config file to read.
  *
- * @param home_dir the user's home directory
  * @return the next instance number to use
  *
  * TODO:
  * Fix this so it checks the existing file names, instead of just checking the
  * number of files in the directory. For now, it'll do, though :)
  */
-int getnextinstance (char *home_dir)
+int getnextinstance ()
 {
     char lock_dir[1024];
     int count;
@@ -100,8 +99,6 @@ int getnextinstance (char *home_dir)
  */
 void getinstance (tilda_window *tw)
 {
-    char *home_dir = gethomedir();
-
     /* Make the ~/.tilda/locks directory */
     mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
 
@@ -118,7 +115,6 @@ void getinstance (tilda_window *tw)
 
 void clean_tmp ()
 {
-    char *home_dir;
     char pid[10];
     char cmd[128];
     char buf[1024], filename[1024];
@@ -127,7 +123,6 @@ void clean_tmp ()
     FILE *ptr, *ptr2;
     gboolean old = TRUE;
 
-    home_dir = gethomedir();
     g_snprintf (cmd, sizeof(cmd), "ls %s/.tilda/locks/lock_* 2> /dev/null", home_dir);
 
     if ((ptr = popen (cmd, "r")) != NULL)
@@ -185,7 +180,6 @@ int main (int argc, char **argv)
     tilda_window *tw;
     tilda_term *tt;
 
-    gchar *home_dir;
     FILE *fp;
     gint  opt;
     gint  i, j;
@@ -229,6 +223,9 @@ int main (int argc, char **argv)
     s_image_arg[0] = '\0';
     s_background_arg[0] = '\0';
 
+    /* Get the user's home directory */
+    home_dir = gethomedir();
+
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
 
@@ -267,7 +264,6 @@ int main (int argc, char **argv)
      * to be set when the tilda terminal is created */
     getinstance (tw);
 
-    home_dir = gethomedir();
     g_snprintf (tw->config_file, sizeof(tw->config_file),
             "%s/.tilda/config_%i", home_dir, tw->instance);
 
