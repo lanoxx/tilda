@@ -47,6 +47,10 @@ gchar *user, *display;
  */
 gint getnextinstance ()
 {
+#ifdef DEBUG
+    puts("getnextinstance");
+#endif
+
     gchar lock_dir[1024];
     gint count = 0;
     GDir *dir;
@@ -71,6 +75,10 @@ gint getnextinstance ()
  */
 void getinstance (tilda_window *tw)
 {
+#ifdef DEBUG
+    puts("getinstance");
+#endif
+
     /* Make the ~/.tilda/locks directory */
     g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks", home_dir);
     g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
@@ -97,15 +105,19 @@ void getinstance (tilda_window *tw)
  */
 gboolean islockfile (gchar *filename, gint *lock_pid)
 {
+#ifdef DEBUG
+    puts("islockfile");
+#endif
+
     gboolean matches = g_str_has_prefix (filename, "lock_");
     gboolean islock = FALSE;
     gchar *pid, *conf_num;
     gint int_pid, int_cnum;
-    
+
     if (matches) /* we are prefixed with "lock_" and are probably a lock */
     {
         pid = strstr (filename, "_");
-    
+
         if (pid) /* we have a valid pid */
         {
             int_pid = atoi (pid+1);
@@ -128,6 +140,10 @@ gboolean islockfile (gchar *filename, gint *lock_pid)
  */
 void clean_tmp ()
 {
+#ifdef DEBUG
+    puts("clean_tmp");
+#endif
+
     FILE *ptr;
     gchar cmd[1024];
     gchar buf[1024];
@@ -135,7 +151,7 @@ void clean_tmp ()
 
     gint num_pids = 0;
     gint running_pids[128];
-    
+
     /* Get all running tilda pids, and store them in an array */
     g_strlcpy (cmd, "ps -C tilda -o pid=", sizeof(cmd));
 
@@ -188,51 +204,17 @@ void clean_tmp ()
 
 int main (int argc, char **argv)
 {
+#ifdef DEBUG
+    puts("main");
+#endif
+
     tilda_window *tw;
     tilda_term *tt;
 
     FILE *fp;
-    gint  opt;
     gint  i, j;
-    GList *args = NULL;
-    gint tmp_trans = -1, x_pos_arg = -1, y_pos_arg = -1;
-    gchar s_font_arg[64];
-    gchar s_background_arg[7];
-    gchar s_image_arg[100];
 
-    const gchar *usage = "Usage: %s "
-        "[-B image] "
-        "[-T] "
-        "[-C] "
-        "[-b [white][black] ] "
-        "[-f font] "
-        "[-a]"
-        "[-h] "
-        "[-s] "
-        "[-w directory] "
-        "[-c command] "
-        "[-t level] "
-        "[-x position] "
-        "[-y position] "
-        "[-l lines]\n\n"
-        "-B image : set background image\n"
-        "-T : Sorry this no longer does anything\n"
-        "-C : bring up tilda configuration wizard\n"
-        "-b [white][black] : set the background color either white or black\n"
-        "-f font : set the font to the following string, ie \"monospace 11\"\n"
-        "-a : use antialias fonts\n"
-        "-h : show this message\n"
-        "-s : use scrollbar\n"
-        "-w directory : switch working directory\n"
-        "-c command : run command\n"
-        "-t level: set transparent to true and set the level of transparency to level, 0-100\n"
-        "-x postion: sets the number of pixels from the top left corner to move tilda over\n"
-        "-y postion: sets the number of pixels from the top left corner to move tilda down\n"
-        "-l lines : set number of scrollback lines\n";
-
-    s_font_arg[0] = '\0';
-    s_image_arg[0] = '\0';
-    s_background_arg[0] = '\0';
+    gboolean show_config = FALSE;
 
     /* Get the user's home directory */
     home_dir = (gchar*)g_get_home_dir ();
@@ -242,9 +224,19 @@ int main (int argc, char **argv)
 
     /* create new tilda window and terminal */
     tw = (tilda_window *) malloc (sizeof (tilda_window));
-    tw->tc = (tilda_conf *) malloc (sizeof (tilda_conf));
     tt = (tilda_term *) malloc (sizeof (tilda_term));
 
+    /* FIXME BAD COMMENT
+     * set the instance number and place a env in the array of envs
+     * to be set when the tilda terminal is created */
+    getinstance (tw);
+
+    /* Set the config file name */
+    g_snprintf (tw->config_file, sizeof(tw->config_file),
+            "%s/.tilda/config_%i", home_dir, tw->instance);
+
+    /* Sets up tw->tc.
+     * MUST HAVE tw->config_file set by now!!! */
     init_tilda_window_configs (tw);
 
 #ifdef DEBUG
@@ -254,133 +246,62 @@ int main (int argc, char **argv)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
 
-    /* Pull out long options for GTK+. */
-    for (i=j=1;i<argc;i++)
-    {
-        if (g_ascii_strncasecmp ("--", argv[i], 2) == 0)
-        {
-            args = g_list_append (args, argv[i]);
+#if 0
+    
+    /* THIS DOES WORK, DONT ABANDON IT,
+     * IN FACT, MAKE A FUNCTION TO COPY ALL OF IT OVER INTO THE cfg IF WE CAN :) */
+         
+    /* All of the various command-line options */
+    GOptionEntry cl_opts[] = {
+        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &tw->tc->antialias,         "Use Antialiased Fonts", NULL },
+        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &tw->tc->background_color,  "Set the background color", NULL },
+        { "command",            'c', 0, G_OPTION_ARG_STRING,    &tw->tc->command,           "Run a command at startup", NULL },
+        { "font",               'f', 0, G_OPTION_ARG_STRING,    &tw->tc->font,              "Set the font to the following string", NULL },
+        { "lines",              'l', 0, G_OPTION_ARG_INT,       &tw->tc->lines,             "Scrollback Lines", NULL },
+        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &tw->tc->scrollbar,         "Use Scrollbar", NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &tw->tc->transparency,      "Opaqueness: 0-100%", NULL },
+        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &tw->tc->working_dir,       "Set Initial Working Directory", NULL },
+        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &tw->tc->x_pos,             "X Position", NULL },
+        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &tw->tc->y_pos,             "Y Position", NULL },
+        { "image",              'B', 0, G_OPTION_ARG_STRING,    &tw->tc->image,             "Set Background Image", NULL },
+        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,               "Show Configuration Wizard", NULL },
 
-            for (j=i;j<argc;j++)
-                argv[j] = argv[j + 1];
+        { NULL }
+    };
 
-            argc--;
-            i--;
-        }
-    }
+    GError *error = NULL;
+    GOptionContext *context = g_option_context_new (NULL);
+    g_option_context_add_main_entries (context, clopts, NULL);
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_parse (context, &argc, &argv, &error);
 
-    /* set the instance number and place a env in the array of envs
-     * to be set when the tilda terminal is created */
-    getinstance (tw);
+#endif
 
-    g_snprintf (tw->config_file, sizeof(tw->config_file),
-            "%s/.tilda/config_%i", home_dir, tw->instance);
+    /****************************************************************************
+     ****************************************************************************/
+    //puts ("got to the exit");
+    //exit(1);
+    /*                                  DMZ                                     */
 
-    /* check for -T argument, if there is one just write to the pipe and exit,
-     * this will bring down or move up the term */
-    while ((opt = getopt(argc, argv, "x:y:B:CDTab:c:df:ghkn:st:w:l:-")) != -1)
-    {
-        gboolean bail = FALSE;
-        switch (opt)
-        {
-            case 'B':
-                image_set_clo = TRUE;
-                g_strlcpy (s_image_arg, optarg, sizeof (s_image_arg));
-                break;
-            case 'b':
-                g_strlcpy (s_background_arg, optarg, sizeof (s_background_arg));
-                break;
-            case 'T':
-                printf ("-T no longer does anything :(, tilda no longer uses xbindkeys\n");
-                printf ("If there is a demand I can fix it up so both new and old work.\n");
-                printf ("I see this as extra overhead for no reason however, sorry.\n");
-                break;
-            case 'C':
-                if ((wizard (argc, argv, tw, tt)) == 1) { clean_up(tw); }
-                break;
-            case 's':
-                scroll_set_clo = TRUE;
-                break;
-            case 'c':
-                command = optarg;
-                break;
-            case 't':
-                tmp_trans= atoi (optarg);
-                break;
-            case 'f':
-                g_strlcpy (s_font_arg, optarg, sizeof (s_font_arg));
-                break;
-            case 'w':
-                working_directory = optarg;
-                break;
-            case 'a':
-                antialias_set_clo = TRUE;
-                break;
-            case 'h':
-                g_print(usage, argv[0]);
-                exit(1);
-                break;
-            case 'l':
-                tw->tc->lines = atoi (optarg);
+    /****************************************************************************
+     ****************************************************************************/
 
-                if (tw->tc->lines <= 0)
-                    tw->tc->lines = DEFAULT_LINES;
 
-                break;
-            case '-':
-                bail = TRUE;
-                break;
-            case 'x':
-                x_pos_arg = atoi (optarg);
-                break;
-            case 'y':
-                y_pos_arg = atoi (optarg);
-                break;
-            default:
-                break;
-        }
 
-        if (bail)
-            break;
-    }
 
-    /* Call the wizard if we cannot read the config file.
-     * This fixes a crash that happened if there was not a config file, and
-     * tilda was not called with "-C" */
-    if ((fp = fopen(tw->config_file, "r")) == NULL)
-    {
-        perror ("Unable to open config file, showing the wizard\n");
-        if ((wizard (argc, argv, tw, tt)) == 1) { clean_up_no_main (tw); }
-    }
-    else
-        fclose (fp);
 
-    if (read_config_file (argv[0], tw->tilda_config, NUM_ELEM, tw->config_file) < 0)
-    {
-        perror ("There was an error in the config file, terminating");
-        exit(1);
-    }
+    /* STEPS:
+     * 1) Set the window defaults
+     * 2) Check if the config exists
+     * 3) If it does, try to read it, otherwise write out the defaults
+     * 4) Look at cmd-line args
+     */
+    
+    
+    /******************************************************************************
+     *                              DONT TOUCH ME
+     ******************************************************************************/
 
-    if (tmp_trans >= 0)
-        tw->tc->transparency = tmp_trans;
-
-    if (x_pos_arg >= 0)
-        tw->tc->x_pos = x_pos_arg;
-
-    if (y_pos_arg >= 0)
-        tw->tc->y_pos = y_pos_arg;
-
-    if (strlen (s_font_arg) > 0)
-        g_strlcpy (tw->tc->s_font, s_font_arg, sizeof (tw->tc->s_font));
-
-    if (strlen (s_background_arg) > 0)
-        g_strlcpy (tw->tc->s_background, s_background_arg, sizeof (tw->tc->s_background));
-
-    if (strlen (s_image_arg) > 0)
-        g_strlcpy (tw->tc->s_image, s_image_arg, sizeof (tw->tc->s_image));
-
-    if (strcasecmp (tw->tc->s_key, "null") == 0)
-        g_snprintf (tw->tc->s_key, sizeof(tw->tc->s_key), "None+F%i", tw->instance+1);
 
     if (!g_thread_supported ())
         g_thread_init(NULL);
@@ -403,7 +324,8 @@ int main (int argc, char **argv)
     gdk_threads_leave ();
 
     g_remove (tw->lock_file);
-    free (tw->tc);
+    //free (tw->tc);
+    cfg_free(tw->tc);
     free (tw);
 
     return 0;

@@ -32,6 +32,10 @@
 
 gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main)
 {
+#ifdef DEBUG
+    puts("init_tilda_terminal");
+#endif
+
     GtkAccelGroup *accel_group;
     GClosure *close;
     gchar env_var[14];
@@ -57,15 +61,17 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     if (!dbuffer)
         gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
 
-    if (tw->tc->scrollbar_pos == 1)
+    switch (cfg_getint (tw->tc, "scrollbar_pos"))
     {
-        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
-        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
-    }
-    else /* scrollbar on the right */
-    {
-        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
-        gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+        case 1: /* scrollbar on left */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
+            break;
+
+        default: /* scrollbar on the right */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+            break;
     }
   
     /* Connect to the "window_title_changed" signal to set the main
@@ -132,14 +138,12 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     {
         if (shell)
         {
+            //FIXME: bad logic here
             /* Launch a shell. */
-            if (command == NULL && strcasecmp (tw->tc->s_run_command, "FALSE") == 0)
-            {
+            if (command == NULL && cfg_getbool(tw->tc, "run_command") == FALSE)
                 command = getenv ("SHELL");
-            } 
-            else if (command == NULL && strcasecmp (tw->tc->s_run_command, "FALSE") != 0) {
-                command = tw->tc->s_command;
-            }
+            else if (command == NULL && cfg_getbool(tw->tc, "run_command") == FALSE)
+                command = cfg_getstr(tw->tc, "command");
             
             vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
                 command, NULL, env_add,

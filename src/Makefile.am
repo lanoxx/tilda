@@ -5,7 +5,6 @@ bin_PROGRAMS = tilda
 tilda_headers = \
     tilda.h     \
 	callback_func.h  \
-    readconf.h  \
 	config.h         \
     tilda_terminal.h  \
     wizard.h \
@@ -14,7 +13,6 @@ tilda_headers = \
 
 
 tilda_SOURCES = $(tilda_headers)	\
-                readconf.c \
                 tilda_window.c \
                 tilda_terminal.c \
                 wizard.c \

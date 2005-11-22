@@ -25,6 +25,10 @@
 
 void window_title_change_all (tilda_window *tw) 
 {
+#ifdef DEBUG
+    puts("window_title_change_all");
+#endif
+
     GtkWidget *page;
     GtkWidget *label;
     GtkWidget *widget;
@@ -49,6 +53,10 @@ void window_title_change_all (tilda_window *tw)
 
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
+#ifdef DEBUG
+    puts("update_tilda");
+#endif
+
     gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, scroll_background = FALSE, highlight_set = FALSE, cursor_set = FALSE,
@@ -58,13 +66,13 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     black.red = black.green = black.blue = 0x0000;
 
-    back.red = tw->tc->back_red;
-    back.green = tw->tc->back_green;
-    back.blue = tw->tc->back_blue;
+    back.red   =    cfg_getint (tw->tc, "back_red");
+    back.green =    cfg_getint (tw->tc, "back_green");
+    back.blue  =    cfg_getint (tw->tc, "back_blue");
     
-    fore.red = tw->tc->text_red;
-    fore.green = tw->tc->text_green;
-    fore.blue = tw->tc->text_blue;
+    fore.red   =    cfg_getint (tw->tc, "text_red");
+    fore.green =    cfg_getint (tw->tc, "text_green");
+    fore.blue  =    cfg_getint (tw->tc, "text_blue");
     
     highlight.red = highlight.green = highlight.blue = 0xc000;
     cursor.red = 0xffff;
@@ -72,40 +80,22 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint.red = tint.green = tint.blue = 0;
     tint = black;
 
-    TRANS_LEVEL = ((gdouble) tw->tc->transparency)/100;
-    
-    if (QUICK_STRCMP (tw->tc->s_bell, "TRUE") == 0)
-        audible = TRUE;
-    
-    if (QUICK_STRCMP (tw->tc->s_blinks, "TRUE") == 0)
-        blink = TRUE;
-        
-    if (QUICK_STRCMP (tw->tc->s_scroll_background, "TRUE") == 0)
-        scroll_background = TRUE;
-    
-    if (QUICK_STRCMP (tw->tc->s_scroll_on_output, "TRUE") == 0)
-        scroll_on_output = TRUE;
-         
-    if (QUICK_STRCMP (tw->tc->s_scroll_on_key, "TRUE") == 0)
-        scroll_on_keystroke = TRUE; 
-        
-    if (QUICK_STRCMP (tw->tc->s_bold, "TRUE") == 0)
-        allow_bold = TRUE;     
+    TRANS_LEVEL = ((gdouble) cfg_getint (tw->tc, "transparency"))/100;
     
     /* Set some defaults. */
-    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), audible);
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !audible);
-    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), blink);
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), scroll_background);
-    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), scroll_on_output);
-    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), scroll_on_keystroke);
+    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bell"));
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !cfg_getbool (tw->tc, "bell"));
+    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "blinks"));
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_background"));
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_on_output"));
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_on_key"));
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
-    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), allow_bold);
+    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bold"));
     
     /* What to do when child command exits */
-    after_command = tw->tc->command_exit;
+    after_command = cfg_getint (tw->tc, "command_exit");
     
-    switch (tw->tc->backspace_key)
+    switch (cfg_getint (tw->tc, "backspace_key"))
     {
         case 0:
             vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -121,7 +111,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
     
-    switch (tw->tc->delete_key)
+    switch (cfg_getint (tw->tc, "delete_key"))
     {
         case 0:
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -137,23 +127,12 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
     
-    if (QUICK_STRCMP (tw->tc->s_use_image, "TRUE") == 0 || image_set_clo == TRUE)
-        bool_use_image = TRUE;
-    else
-        bool_use_image = FALSE;
-
-    if (QUICK_STRCMP (tw->tc->s_antialias, "TRUE") == 0 || antialias_set_clo == TRUE)
-        use_antialias = TRUE;
-    else
-        use_antialias = FALSE;
-
-    if (QUICK_STRCMP (tw->tc->s_scrollbar, "TRUE") == 0 || scroll_set_clo == TRUE)
-        scroll = TRUE;
-    else
-        scroll = FALSE;
-
+    bool_use_image = cfg_getbool (tw->tc, "use_image") || image_set_clo;
+    use_antialias = cfg_getbool (tw->tc, "antialias") || antialias_set_clo;
+    scroll = cfg_getbool (tw->tc, "scrollbar") || scroll_set_clo;
+    
     if (bool_use_image)
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), tw->tc->s_image);
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "image"));
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
@@ -161,7 +140,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), TRANS_LEVEL);
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);
-    } else
+    }
+    else
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
         
     vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
@@ -174,9 +154,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), tw->tc->s_font, antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "font"), antialias);
     else
-        vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), tw->tc->s_font);
+        vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "font"));
 
     if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) > 1)
     {
@@ -189,7 +169,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
     
-    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, tw->tc->scrollbar_pos);
+    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, cfg_getint (tw->tc, "scrollbar_pos"));
 
     if (!from_main)
     {
@@ -206,11 +186,10 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
         refresh_window (tw->window, tw->window);
 
-        if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
+        if (cfg_getbool (tw->tc, "pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-        if ((strcasecmp (tw->tc->s_above, "true")) == 0)
-            gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
+        gtk_window_set_keep_above (GTK_WINDOW (tw->window), cfg_getbool (tw->tc, "above"));
     }
     else
     {
@@ -220,31 +199,35 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             gtk_widget_hide (tt->scrollbar);
     }
 
-    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), tw->tc->lines);
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), cfg_getint (tw->tc, "lines"));
 
-    if (tw->tc->tab_pos == 0)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
-    else if (tw->tc->tab_pos == 1)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
-    else if (tw->tc->tab_pos == 2)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
-    else if (tw->tc->tab_pos == 3)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
+    switch (cfg_getint (tw->tc, "tab_pos"))
+    {
+        case 0:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
+            break;
+        case 1:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
+            break;
+        case 2:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
+            break;
+        case 3:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
+            break;
+        default:
+            printf ("Bad tab_pos, not changing\n");
+            break;
+    }
 
-    if ((strcasecmp (tw->tc->s_notaskbar, "true")) == 0)
-        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), TRUE);
-    else
-        gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), FALSE);
 
-    gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
+    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), cfg_getbool (tw->tc, "notaskbar"));
+    gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
 
-    if (tw->tc->max_height != old_max_height || tw->tc->max_width != old_max_width)
-        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
+    if (cfg_getint (tw->tc, "max_height") != old_max_height || cfg_getint (tw->tc, "max_width") != old_max_width)
+        gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
 
-    if (QUICK_STRCMP (tw->tc->s_notebook_border, "TRUE") == 0)
-        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), TRUE);
-    else
-        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool (tw->tc, "notebook_border"));
     
     window_title_change_all (tw);
 

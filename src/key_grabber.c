@@ -42,6 +42,10 @@ KeySym key;
 
 void pull (struct tilda_window_ *tw)
 {
+#ifdef DEBUG
+    puts("pull");
+#endif
+
     gint w, h;
     static gint pos=0;
 
@@ -56,14 +60,14 @@ void pull (struct tilda_window_ *tw)
         else
             gtk_widget_show ((GtkWidget *) tw->window);
             
-        if ((strcasecmp (tw->tc->s_pinned, "true")) == 0)
+        if (cfg_getbool (tw->tc, "pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-        if ((strcasecmp (tw->tc->s_above, "true")) == 0)
+        if (cfg_getbool (tw->tc, "above"))
             gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
-        gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->y_pos);
-        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
+        gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
+        gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
         
         gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
         
@@ -76,7 +80,7 @@ void pull (struct tilda_window_ *tw)
         
         pos--;
         
-        gtk_window_resize ((GtkWindow *) tw->window, tw->tc->min_width, tw->tc->min_height);
+        gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
         gtk_widget_hide ((GtkWidget *) tw->window);
 
         gdk_flush ();
@@ -86,13 +90,17 @@ void pull (struct tilda_window_ *tw)
 
 void key_grab (tilda_window *tw)
 {
+#ifdef DEBUG
+    puts("key_grab");
+#endif
+
     XModifierKeymap *modmap;
-    gchar tmp_key[25];
+    gchar tmp_key[32];
     unsigned int numlockmask = 0;
     unsigned int modmask = 0;
     gint i, j;
 
-    g_strlcpy (tmp_key, tw->tc->s_key, sizeof (tmp_key));
+    g_strlcpy (tmp_key, cfg_getstr (tw->tc, "key"), sizeof (tmp_key));
 
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
@@ -150,7 +158,7 @@ void *wait_for_signal (tilda_window *tw)
 
     key_grab (tw);
 
-    if (QUICK_STRCMP (tw->tc->s_down, "TRUE") == 0)
+    if (cfg_getbool (tw->tc, "down"))
         pull (tw);
     else
     {

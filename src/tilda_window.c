@@ -18,7 +18,6 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <vte/vte.h>
-#include "readconf.h"
 #include "config.h"
 #include "../tilda-config.h"
 #include "tilda.h"
@@ -27,109 +26,84 @@
 #include "tilda_terminal.h"
 #include "key_grabber.h"
 
-void get_defaults (tilda_window *tw)
-{
-    tw->tc->lines = DEFAULT_LINES;
-    g_strlcpy (tw->tc->s_above, "TRUE", sizeof (tw->tc->s_above));
-    g_strlcpy (tw->tc->s_notaskbar, "TRUE", sizeof (tw->tc->s_notaskbar));
-    g_strlcpy (tw->tc->s_pinned, "TRUE", sizeof (tw->tc->s_pinned));
-    g_strlcpy (tw->tc->s_image, "none", sizeof (tw->tc->s_image));
-    g_strlcpy (tw->tc->s_background, "white", sizeof (tw->tc->s_background));
-    g_strlcpy (tw->tc->s_font, "monospace 13", sizeof (tw->tc->s_font));
-    g_strlcpy (tw->tc->s_down, "TRUE", sizeof (tw->tc->s_down));
-    g_strlcpy (tw->tc->s_antialias, "TRUE", sizeof (tw->tc->s_antialias));
-    g_strlcpy (tw->tc->s_scrollbar, "FALSE", sizeof (tw->tc->s_scrollbar));
-    g_strlcpy (tw->tc->s_use_image, "FALSE", sizeof (tw->tc->s_use_image));
-    g_strlcpy (tw->tc->s_grab_focus, "TRUE", sizeof (tw->tc->s_grab_focus));
-    g_strlcpy (tw->tc->s_key, "null", sizeof (tw->tc->s_key));
-    tw->tc->transparency = 0;
-    tw->tc->x_pos = 0;
-    tw->tc->y_pos = 0;
-    tw->tc->max_height = 150;
-    tw->tc->max_width = 600;
-    tw->tc->min_height = 0;
-    tw->tc->min_width = 0;
-    tw->tc->tab_pos = 0;
-    tw->tc->backspace_key = 0;
-    tw->tc->delete_key = 1;
-    g_strlcpy (tw->tc->s_title, "Tilda", sizeof (tw->tc->s_title));
-    g_strlcpy (tw->tc->s_command, "none", sizeof (tw->tc->s_command));
-    g_strlcpy (tw->tc->s_bold, "TRUE", sizeof (tw->tc->s_bold));
-    g_strlcpy (tw->tc->s_blinks, "TRUE", sizeof (tw->tc->s_blinks));
-    g_strlcpy (tw->tc->s_bell, "FALSE", sizeof (tw->tc->s_bell));
-    g_strlcpy (tw->tc->s_run_command, "FALSE", sizeof (tw->tc->s_run_command));
-    g_strlcpy (tw->tc->s_scroll_on_key, "TRUE", sizeof (tw->tc->s_scroll_on_key));   
-    g_strlcpy (tw->tc->s_scroll_on_output, "FALSE", sizeof (tw->tc->s_scroll_on_output));
-    g_strlcpy (tw->tc->s_scroll_background, "TRUE", sizeof (tw->tc->s_scroll_background));
-    g_strlcpy (tw->tc->s_notebook_border, "FALSE", sizeof (tw->tc->s_notebook_border));
-    tw->tc->d_set_title = 3;
-    tw->tc->command_exit = 0;
-    tw->tc->scheme = 3;
-    tw->tc->scrollbar_pos = 1;
-    tw->tc->back_red = 0;
-    tw->tc->back_green = 0;
-    tw->tc->back_blue = 0;
-    tw->tc->text_red = tw->tc->text_green = tw->tc->text_blue = 0xffff;    
-}
+/* CONFIGURATION OPTIONS */
+static cfg_opt_t new_conf[] = {
+
+    /* strings */
+    CFG_STR("image", NULL, CFGF_NONE),
+    CFG_STR("command", NULL, CFGF_NONE),
+    CFG_STR("font", "Monospace 13", CFGF_NONE),
+    CFG_STR("key", NULL, CFGF_NONE),
+    CFG_STR("title", "Tilda", CFGF_NONE),
+    CFG_STR("background_color", "white", CFGF_NONE),
+    CFG_STR("working_dir", NULL, CFGF_NONE),
+
+    /* ints */
+    CFG_INT("lines", 100, CFGF_NONE),
+    CFG_INT("max_width", 600, CFGF_NONE),
+    CFG_INT("max_height", 150, CFGF_NONE),
+    CFG_INT("min_width", 0, CFGF_NONE),
+    CFG_INT("min_height", 0, CFGF_NONE),
+    CFG_INT("transparency", 0, CFGF_NONE),
+    CFG_INT("x_pos", 0, CFGF_NONE),
+    CFG_INT("y_pos", 0, CFGF_NONE),
+    CFG_INT("tab_pos", 0, CFGF_NONE),
+    CFG_INT("backspace_key", 0, CFGF_NONE),
+    CFG_INT("delete_key", 1, CFGF_NONE),
+    CFG_INT("d_set_title", 3, CFGF_NONE),
+    CFG_INT("command_exit", 0, CFGF_NONE),
+    CFG_INT("scheme", 3, CFGF_NONE),
+
+    /* guint16 */
+    CFG_INT("scrollbar_pos", 1, CFGF_NONE),
+    CFG_INT("back_red", 0x0000, CFGF_NONE),
+    CFG_INT("back_green", 0x0000, CFGF_NONE),
+    CFG_INT("back_blue", 0x0000, CFGF_NONE),
+    CFG_INT("text_red", 0xffff, CFGF_NONE),
+    CFG_INT("text_green", 0xffff, CFGF_NONE),
+    CFG_INT("text_blue", 0xffff, CFGF_NONE),
+
+    /* booleans */
+    CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
+    CFG_BOOL("scroll_on_output", FALSE, CFGF_NONE),
+    CFG_BOOL("notebook_border", FALSE, CFGF_NONE),
+    CFG_BOOL("down", TRUE, CFGF_NONE),
+    CFG_BOOL("antialias", TRUE, CFGF_NONE),
+    CFG_BOOL("scrollbar", FALSE, CFGF_NONE),
+    CFG_BOOL("use_image", FALSE, CFGF_NONE),
+    CFG_BOOL("grab_focus", TRUE, CFGF_NONE),
+    CFG_BOOL("above", TRUE, CFGF_NONE),
+    CFG_BOOL("notaskbar", TRUE, CFGF_NONE),
+    CFG_BOOL("bold", TRUE, CFGF_NONE),
+    CFG_BOOL("blinks", TRUE, CFGF_NONE),
+    CFG_BOOL("scroll_on_key", TRUE, CFGF_NONE),
+    CFG_BOOL("bell", FALSE, CFGF_NONE),
+    CFG_BOOL("run_command", FALSE, CFGF_NONE),
+    CFG_BOOL("pinned", TRUE, CFGF_NONE),
+    CFG_END()
+};
 
 void init_tilda_window_configs (tilda_window *tw)
 {
-    int i ;
+#ifdef DEBUG
+    puts("init_tilda_window_configs");
+#endif
 
-    CONFIG t_c[] = {
-        { CF_INT,       "max_height",   &(tw->tc->max_height),      0,                              NULL, 0, NULL },
-        { CF_INT,       "max_width",    &(tw->tc->max_width),       0,                              NULL, 0, NULL },
-        { CF_INT,       "min_height",   &(tw->tc->min_height),      0,                              NULL, 0, NULL },
-        { CF_INT,       "min_width",    &(tw->tc->min_width),       0,                              NULL, 0, NULL },
-        { CF_STRING,    "notaskbar",    tw->tc->s_notaskbar,        sizeof(tw->tc->s_notaskbar),    NULL, 0, NULL },
-        { CF_STRING,    "above",        tw->tc->s_above,            sizeof(tw->tc->s_above),        NULL, 0, NULL },
-        { CF_STRING,    "pinned",       tw->tc->s_pinned,           sizeof(tw->tc->s_pinned),       NULL, 0, NULL },
-        { CF_INT,       "scrollback",   &(tw->tc->lines),           0,                              NULL, 0, NULL },
-        { CF_INT,       "transparency", &(tw->tc->transparency),    0,                              NULL, 0, NULL },
-        { CF_INT,       "x_pos",        &(tw->tc->x_pos),           0,                              NULL, 0, NULL },
-        { CF_INT,       "y_pos",        &(tw->tc->y_pos),           0,                              NULL, 0, NULL },
-        { CF_STRING,    "image",        tw->tc->s_image,            sizeof(tw->tc->s_image),        NULL, 0, NULL },
-        { CF_STRING,    "background",   tw->tc->s_background,       sizeof(tw->tc->s_background),   NULL, 0, NULL },
-        { CF_STRING,    "font",         tw->tc->s_font,             sizeof(tw->tc->s_font),         NULL, 0, NULL },
-        { CF_STRING,    "antialias",    tw->tc->s_antialias,        sizeof(tw->tc->s_antialias),    NULL, 0, NULL },
-        { CF_STRING,    "scrollbar",    tw->tc->s_scrollbar,        sizeof(tw->tc->s_scrollbar),    NULL, 0, NULL },
-        { CF_STRING,    "use_image",    tw->tc->s_use_image,        sizeof(tw->tc->s_use_image),    NULL, 0, NULL },
-        { CF_STRING,    "grab_focus",   tw->tc->s_grab_focus,       sizeof(tw->tc->s_grab_focus),   NULL, 0, NULL },
-        { CF_STRING,    "key",          tw->tc->s_key,              sizeof(tw->tc->s_key),          NULL, 0, NULL },
-        { CF_STRING,    "down",         tw->tc->s_down,             sizeof(tw->tc->s_down),         NULL, 0, NULL },
-        { CF_INT,       "tab_pos",      &(tw->tc->tab_pos),         0,                              NULL, 0, NULL },
-        { CF_INT,       "backspace_key",&(tw->tc->backspace_key),   0,                              NULL, 0, NULL },
-        { CF_INT,       "delete_key",   &(tw->tc->delete_key),      0,                              NULL, 0, NULL },      
-        { CF_STRING,    "title",        tw->tc->s_title,            sizeof(tw->tc->s_title),        NULL, 0, NULL },
-        { CF_STRING,    "bold",         tw->tc->s_bold,             sizeof(tw->tc->s_bold),         NULL, 0, NULL },
-        { CF_STRING,    "blinks",       tw->tc->s_blinks,           sizeof(tw->tc->s_blinks),       NULL, 0, NULL },
-        { CF_STRING,    "bell",         tw->tc->s_bell,             sizeof(tw->tc->s_bell),         NULL, 0, NULL },
-        { CF_INT,       "d_set_title",  &(tw->tc->d_set_title),     0,                              NULL, 0, NULL },
-        { CF_STRING,    "run_command",  tw->tc->s_run_command,      sizeof(tw->tc->s_run_command),  NULL, 0, NULL },
-        { CF_STRING,    "command",      tw->tc->s_command,          sizeof(tw->tc->s_command),      NULL, 0, NULL },
-        { CF_INT,       "command_exit", &(tw->tc->command_exit),    0,                              NULL, 0, NULL },
-        { CF_INT,       "scheme",       &(tw->tc->scheme),          0,                              NULL, 0, NULL },
-        { CF_STRING,    "scroll_on_key",tw->tc->s_scroll_on_key,    sizeof(tw->tc->s_scroll_on_key),NULL, 0, NULL },
-        { CF_INT,       "scrollbar_pos",&(tw->tc->scrollbar_pos),   0,                              NULL, 0, NULL },
-        { CF_INT,       "back_red",     &(tw->tc->back_red),        0,                              NULL, 0, NULL },
-        { CF_INT,       "back_green",   &(tw->tc->back_green),      0,                              NULL, 0, NULL },
-        { CF_INT,       "back_blue",    &(tw->tc->back_blue),       0,                              NULL, 0, NULL },
-        { CF_INT,       "text_red",     &(tw->tc->text_red),        0,                              NULL, 0, NULL },
-        { CF_INT,       "text_green",   &(tw->tc->text_green),      0,                              NULL, 0, NULL },
-        { CF_INT,       "text_blue",    &(tw->tc->text_blue),       0,                              NULL, 0, NULL },
-        { CF_STRING,    "scroll_on_output",tw->tc->s_scroll_on_output,    sizeof(tw->tc->s_scroll_on_output),NULL, 0, NULL },
-        { CF_STRING,    "scroll_background",tw->tc->s_scroll_background,    sizeof(tw->tc->s_scroll_background),NULL, 0, NULL },
-        { CF_STRING,    "notebook_border",tw->tc->s_notebook_border,    sizeof(tw->tc->s_notebook_border),NULL, 0, NULL }    
-    };
+    /* Set up the default config */
+    tw->tc = cfg_init (new_conf, 0);
 
-    for (i=0;i<NUM_ELEM;i++)
-        tw->tilda_config[i] = t_c[i];
+    /* Parse the config file */
+    printf ("Attempting to parse: %s\n", tw->config_file);
+    cfg_parse (tw->tc, tw->config_file);
 
-    get_defaults (tw);
 }
 
 void add_tab (tilda_window *tw)
 {
+#ifdef DEBUG
+    puts("add_tab");
+#endif
+
     tilda_term *tt;
 
     tt = (tilda_term *) malloc (sizeof (tilda_term));
@@ -139,6 +113,10 @@ void add_tab (tilda_window *tw)
 
 void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
 {
+#ifdef DEBUG
+    puts("add_tab_menu_call");
+#endif
+
     tilda_window *tw;
     tilda_collect *tc = (tilda_collect *) data;
 
@@ -149,6 +127,10 @@ void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
 
 void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 {
+#ifdef DEBUG
+    puts("close_tab");
+#endif
+
     gint pos;
     tilda_term *tt;
     tilda_window *tw;
@@ -178,6 +160,10 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 {
+#ifdef DEBUG
+    puts("init_tilda_window");
+#endif
+
     GtkAccelGroup *accel_group;
     GClosure *clean, *next, *prev, *add;
     GError *error;
@@ -195,24 +181,31 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Init GList of all tilda_term structures */
     tw->terms = NULL;
     
-    after_command = tw->tc->command_exit;
+    after_command = cfg_getint (tw->tc, "command_exit");
     
-    if (tw->tc->tab_pos == 0)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
-    else if (tw->tc->tab_pos == 1)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
-    else if (tw->tc->tab_pos == 2)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
-    else if (tw->tc->tab_pos == 3)
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
+    switch (cfg_getint (tw->tc, "tab_pos"))
+    {
+        case 0:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
+            break;
+        case 1:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
+            break;
+        case 2:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
+            break;
+        case 3:
+            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
+            break;
+        default:
+            printf ("Bad tab_pos, not changing anything...\n");
+            break;
+    }
 
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
     
-    if (QUICK_STRCMP (tw->tc->s_notebook_border, "TRUE") == 0)
-        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), TRUE);
-    else
-        gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), FALSE);
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool(tw->tc, "notebook_border"));
     
     init_tilda_terminal (tw, tt, TRUE);
 
