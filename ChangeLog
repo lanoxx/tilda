@@ -1,3 +1,6 @@
+	* Internal cleanups / documentation.
+	* Increase use of GLib.
+
 version 0.09.1 (2005-10-4):
 	* Fixed problem of tab taking other tabs title
 	* Fixed 100% CPU problem when Tilda is started hidden
