@@ -40,61 +40,26 @@
 #include "tilda_window.h"
 #include "wizard.h"
 
-char *user, *display;
+gchar *user, *display;
 
 /**
- * Get the current user's home directory from the passwd file
- *
- * @return a char* to the home directory.
+ * Get the next instance number to use
  */
-char* gethomedir ()
+gint getnextinstance ()
 {
-    int euid = geteuid(); // Always successful
-    struct passwd *pw = getpwuid(euid);
-
-    if (pw == NULL)
-    {
-        printf ("There was a problem getting your home directory.\n");
-        printf ("Errno reports: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    return pw->pw_dir;
-}
-
-/**
- * This is needed by getnextinstance(), which is basically emulating ls.
- * This makes getnextinstance() ignore the "." and ".." directories.
- *
- * @param entry the entry structure
- * @return return FALSE to ignore the file, TRUE to display it
- */
-int file_select (struct direct *entry)
-{
-    if ((QUICK_STRCMP(entry->d_name, ".") == 0 || QUICK_STRCMP(entry->d_name, "..") == 0))
-        return FALSE;
-
-    return TRUE;
-}
-
-/**
- * Get the next lock number to use, so that we know which config file to read.
- *
- * @return the next instance number to use
- *
- * FIXME:
- * Fix this so it checks the existing file names, instead of just checking the
- * number of files in the directory. For now, it'll do, though :)
- */
-int getnextinstance ()
-{
-    char lock_dir[1024];
-    int count;
-    struct direct **files;
+    gchar lock_dir[1024];
+    gint count = 0;
+    GDir *dir;
 
     g_snprintf (lock_dir, sizeof(lock_dir), "%s/.tilda/locks", home_dir);
+    dir = g_dir_open (lock_dir, 0, NULL);
 
-    count = scandir (lock_dir, &files, (void*)file_select, alphasort);
+    //FIXME: check that this name corresponds to a valid lock
+    //FIXME: check the last char(s) to find out the correct next instance
+    while (g_dir_read_name (dir))
+        count++;
+
+    g_dir_close (dir);
 
     return count;
 }
@@ -107,79 +72,118 @@ int getnextinstance ()
 void getinstance (tilda_window *tw)
 {
     /* Make the ~/.tilda/locks directory */
-    mkdir (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+    g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks", home_dir);
+    g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
 
     /* Get the number of existing locks */
-    tw->instance = getnextinstance (home_dir);
+    tw->instance = getnextinstance ();
 
     /* Set tw->lock_file to the lock name for this instance */
     g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks/lock_%d_%d",
             home_dir, getpid(), tw->instance);
 
     /* Create the lock file */
-    creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
+    g_creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
+/**
+ * Check if a filename corresponds to a valid lockfile. Note that this
+ * routine does NOT check whether it is a stale lock, however. This
+ * will return the lock file's corresponding pid, if it is a valid lock.
+ *
+ * @param filename the filename to check
+ * @param lock_pid the pid of the lock file (if it was valid)
+ * @return TRUE if this is a lockfile, FALSE otherwise
+ */
+gboolean islockfile (gchar *filename, gint *lock_pid)
+{
+    gboolean matches = g_str_has_prefix (filename, "lock_");
+    gboolean islock = FALSE;
+    gchar *pid, *conf_num;
+    gint int_pid, int_cnum;
+    
+    if (matches) /* we are prefixed with "lock_" and are probably a lock */
+    {
+        pid = strstr (filename, "_");
+    
+        if (pid) /* we have a valid pid */
+        {
+            int_pid = atoi (pid+1);
+            conf_num = strstr (pid+1, "_");
+
+            if (int_pid > 0 && conf_num)
+            {
+                int_cnum = atoi (conf_num+1);
+                *lock_pid = int_pid;
+                islock = TRUE; /* we parsed everything, so yes, we were a lock */
+            }
+        }
+    }
+
+    return islock;
+}
+
+/**
+ * Remove stale locks in the ~/.tilda/locks/ directory.
+ */
 void clean_tmp ()
 {
-    char pid[10];
-    char cmd[128];
-    char buf[1024], filename[1024];
-    char tmp[100];
-    char *throw_away;
-    FILE *ptr, *ptr2;
-    gboolean old = TRUE;
+    FILE *ptr;
+    gchar cmd[1024];
+    gchar buf[1024];
+    gint i;
 
-    g_snprintf (cmd, sizeof(cmd), "ls %s/.tilda/locks/lock_* 2> /dev/null", home_dir);
+    gint num_pids = 0;
+    gint running_pids[128];
+    
+    /* Get all running tilda pids, and store them in an array */
+    g_strlcpy (cmd, "ps -C tilda -o pid=", sizeof(cmd));
 
     if ((ptr = popen (cmd, "r")) != NULL)
     {
         while (fgets (buf, sizeof(buf), ptr) != NULL)
         {
-            g_strlcpy (filename, buf, sizeof (filename));
-            throw_away = strtok (buf, "/");
-            while (throw_away)
+            i = atoi(buf); /* get the pid */
+
+            if (i > 0 && i < 32768)
             {
-                g_strlcpy (tmp, throw_away, sizeof (tmp));
-                throw_away = strtok (NULL, "/");
-
-                if (!throw_away)
-                {
-                    throw_away = strtok (tmp, "_");
-                    throw_away = strtok (NULL, "_");
-                    g_strlcpy (pid, throw_away, sizeof (pid));
-                    break;
-                }
-            }
-
-            g_strlcpy (cmd, "ps x | grep ", sizeof(cmd));
-            g_strlcat (cmd, pid, sizeof (cmd));
-
-            if ((ptr2 = popen (cmd, "r")) != NULL)
-            {
-                while (fgets (tmp, sizeof(buf), ptr2) != NULL)
-                {
-                    if (strstr (tmp, "tilda") != NULL)
-                    {
-                        old = FALSE;
-                        break;
-                    }
-                }
-
-                if (old)
-                {
-                    filename[strlen(filename)-1] = '\0';
-                    remove (filename);
-                }
-                else
-                    old = TRUE;
-
-                pclose (ptr2);
+                running_pids[num_pids] = i;
+                num_pids++;
             }
         }
     }
 
-    pclose (ptr);
+    gchar lock_dir[1024];
+    gchar remove_file[1024];
+    gchar *filename;
+    GDir *dir;
+    gint pid;
+    gboolean stale;
+
+    g_snprintf (lock_dir, sizeof(lock_dir), "%s/.tilda/locks", home_dir);
+    dir = g_dir_open (lock_dir, 0, NULL);
+
+    /* For each possible lock file, check if it is a lock, and see if
+     * it matches one of the running tildas */
+    while (filename = (gchar*)g_dir_read_name (dir))
+    {
+        if (islockfile (filename, &pid))
+        {
+            stale = TRUE;
+
+            for (i=0; i<num_pids; i++)
+                if (running_pids[i] == pid)
+                    stale = FALSE;
+
+            if (stale)
+            {
+                g_snprintf (remove_file, sizeof(remove_file), "%s/%s", lock_dir, filename);
+                g_remove (remove_file);
+            }
+        }
+    }
+
+    g_dir_close (dir);
 }
 
 int main (int argc, char **argv)
@@ -196,7 +200,7 @@ int main (int argc, char **argv)
     gchar s_background_arg[7];
     gchar s_image_arg[100];
 
-    const char *usage = "Usage: %s "
+    const gchar *usage = "Usage: %s "
         "[-B image] "
         "[-T] "
         "[-C] "
@@ -231,7 +235,7 @@ int main (int argc, char **argv)
     s_background_arg[0] = '\0';
 
     /* Get the user's home directory */
-    home_dir = gethomedir();
+    home_dir = (gchar*)g_get_home_dir ();
 
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp ();
@@ -243,14 +247,12 @@ int main (int argc, char **argv)
 
     init_tilda_window_configs (tw);
 
+#ifdef DEBUG
     /* Have to do this early. */
     if (getenv ("VTE_PROFILE_MEMORY"))
-    {
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
-        {
             g_mem_set_vtable (glib_mem_profiler_table);
-        }
-    }
+#endif
 
     /* Pull out long options for GTK+. */
     for (i=j=1;i<argc;i++)
@@ -400,7 +402,7 @@ int main (int argc, char **argv)
     gtk_main();
     gdk_threads_leave ();
 
-    remove (tw->lock_file);
+    g_remove (tw->lock_file);
     free (tw->tc);
     free (tw);
 
