@@ -36,8 +36,8 @@ struct tilda_window_
     GList *terms;
 
     tilda_conf *tc;
-    gchar lock_file[80];
-    gchar config_file[80];
+    gchar lock_file[1024];
+    gchar config_file[1024];
     gint instance;
     CONFIG tilda_config[NUM_ELEM];
 };
@@ -52,7 +52,7 @@ struct tilda_conf_
     gchar s_above[6];
     gchar s_notaskbar[6];
     gchar s_pinned[6];
-    gchar s_image[100];
+    gchar s_image[1024];
     gchar s_background[6];
     gchar s_font[64];
     gchar s_down[6];
@@ -60,20 +60,20 @@ struct tilda_conf_
     gchar s_scrollbar[6];
     gchar s_use_image[6];
     gchar s_grab_focus[6];
-    gchar s_key[50];
+    gchar s_key[64];
     gint transparency;
     gint x_pos;
     gint y_pos;
     gint tab_pos;
     gint backspace_key;
     gint delete_key;    
-    gchar s_title[50];
+    gchar s_title[64];
     gchar s_bold[6];
     gchar s_blinks[6];
     gchar s_bell[6];
     gint d_set_title;
     gchar s_run_command[6];
-    gchar s_command[150];
+    gchar s_command[256];
     gint command_exit;
     gint scheme;
     gchar s_scroll_on_key[6];
