@@ -25,7 +25,6 @@
 G_BEGIN_DECLS;
 
 typedef struct tilda_window_ tilda_window;
-typedef struct tilda_conf_ tilda_conf;
 
 struct tilda_window_
 {

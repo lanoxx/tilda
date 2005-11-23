@@ -204,24 +204,21 @@ void clean_tmp ()
 
 void parse_cli (int *argc, char ***argv, tilda_window *tw)
 {
-    gchar *background_color;
-    gchar *command;
-    gchar *font;
-    gchar *image;
-    gchar *working_dir;
-    gint lines;
-    gint transparency;
-    gint x_pos;
-    gint y_pos;
-    gboolean show_config;
-    gboolean antialias;
-    gboolean scrollbar;
-
     /* Set default values */
-    background_color = command = font = image = working_dir = NULL;
-    lines = transparency = x_pos = y_pos = -1;
-    antialias = scrollbar = TRUE;
-    show_config = FALSE;
+    gchar *background_color = cfg_getstr (tw->tc, "background_color");
+    gchar *command = cfg_getstr (tw->tc, "command");
+    gchar *font = cfg_getstr (tw->tc, "font");
+    gchar *image = cfg_getstr (tw->tc, "image");
+    gchar *working_dir = cfg_getstr (tw->tc, "working_dir");
+    
+    gint lines = cfg_getint (tw->tc, "lines");
+    gint transparency = cfg_getint (tw->tc, "transparency");
+    gint x_pos = cfg_getint (tw->tc, "x_pos");
+    gint y_pos = cfg_getint (tw->tc, "y_pos");
+
+    gboolean antialias = cfg_getbool (tw->tc, "antialias");
+    gboolean scrollbar = cfg_getbool (tw->tc, "scrollbar");
+    gboolean show_config = FALSE;
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
@@ -247,19 +244,33 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw)
     g_option_context_parse (context, argc, argv, &error);
 
     /* Now set the options in the config, if they changed */
-    if (font) cfg_setstr (tw->tc, "font", font);
-    if (background_color) cfg_setstr (tw->tc, "background_color", background_color);
-    if (command) cfg_setstr (tw->tc, "command", command);
-    if (image) cfg_setstr (tw->tc, "image", command);
-    if (working_dir) cfg_setstr (tw->tc, "working_dir", working_dir);
+    if (background_color != cfg_getstr (tw->tc, "background_color"))
+        cfg_setstr (tw->tc, "background_color", background_color);
+    if (command != cfg_getstr (tw->tc, "command"))
+        cfg_setstr (tw->tc, "command", background_color);
+    if (font != cfg_getstr (tw->tc, "font"))
+        cfg_setstr (tw->tc, "font", font);
+    if (image != cfg_getstr (tw->tc, "image"))
+        cfg_setstr (tw->tc, "image", image);
+    if (working_dir != cfg_getstr (tw->tc, "working_dir"))
+        cfg_setstr (tw->tc, "working_dir", working_dir);
 
-    if (lines != -1) cfg_setint (tw->tc, "lines", lines);
-    if (transparency != -1) cfg_setint (tw->tc, "transparency", transparency);
-    if (x_pos != -1) cfg_setint (tw->tc, "x_pos", x_pos);
-    if (y_pos != -1) cfg_setint (tw->tc, "y_pos", y_pos);
+    if (lines != cfg_getint (tw->tc, "lines"))
+        cfg_setint (tw->tc, "lines", lines);
+    if (transparency != cfg_getint (tw->tc, "transparency"))
+        cfg_setint (tw->tc, "transparency", transparency);
+    if (x_pos != cfg_getint (tw->tc, "x_pos"))
+        cfg_setint (tw->tc, "x_pos", x_pos);
+    if (y_pos != cfg_getint (tw->tc, "y_pos"))
+        cfg_setint (tw->tc, "y_pos", y_pos);
+    
+    if (antialias != cfg_getbool (tw->tc, "antialias"))
+        cfg_setbool (tw->tc, "antialias", antialias);
+    if (scrollbar != cfg_getbool (tw->tc, "scrollbar"))
+        cfg_setbool (tw->tc, "scrollbar", scrollbar);
 
-    if (!antialias) cfg_setbool (tw->tc, "antialias", antialias);
-    if (!scrollbar) cfg_setbool (tw->tc, "scrollbar", scrollbar);
+    if (show_config)
+        printf ("we need to show the config now!!!\n");
 }
 
 int main (int argc, char **argv)

@@ -694,7 +694,6 @@ void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "notebook_border", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notebook_border)));
 
     /* Write out the config file */
-    printf ("attempint to write config: %s\n", tw->config_file);
     fp = fopen(tw->config_file, "w");
     cfg_print (tw->tc, fp);
     fclose (fp);
