@@ -18,6 +18,7 @@
 #define TILDA_KEY_GRABBER_C
 
 #include <gtk/gtk.h>
+#include <confuse.h>
 #include "tilda_window.h"
 
 G_BEGIN_DECLS;

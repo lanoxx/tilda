@@ -18,6 +18,7 @@
 #define WIZARD_H
 
 #include <gtk/gtk.h>
+#include <confuse.h>
 
 G_BEGIN_DECLS;
 

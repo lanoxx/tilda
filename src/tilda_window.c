@@ -93,7 +93,6 @@ void init_tilda_window_configs (tilda_window *tw)
     tw->tc = cfg_init (new_conf, 0);
 
     /* Parse the config file */
-    printf ("Attempting to parse: %s\n", tw->config_file);
     cfg_parse (tw->tc, tw->config_file);
 
 }

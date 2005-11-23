@@ -18,16 +18,15 @@
 #define TILDA_H
 
 #include <gtk/gtk.h>
+#include <confuse.h>
 #include "tilda_window.h"
 
 G_BEGIN_DECLS;
 
 #define TILDA_VERSION PACKAGE_NAME " " PACKAGE_VERSION
-#define DEFAULT_LINES 100
 #define QUICK_STRCMP(a, b) (*(a)!=*(b)? \
     (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
     strcmp ((a), (b)))
-#define SCROLLBAR_LEFT 0 /* false */
 
 gboolean image_set_clo, antialias_set_clo, scroll_set_clo;
 gint old_max_height, old_max_width;

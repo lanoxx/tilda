@@ -202,6 +202,66 @@ void clean_tmp ()
     g_dir_close (dir);
 }
 
+void parse_cli (int *argc, char ***argv, tilda_window *tw)
+{
+    gchar *background_color;
+    gchar *command;
+    gchar *font;
+    gchar *image;
+    gchar *working_dir;
+    gint lines;
+    gint transparency;
+    gint x_pos;
+    gint y_pos;
+    gboolean show_config;
+    gboolean antialias;
+    gboolean scrollbar;
+
+    /* Set default values */
+    background_color = command = font = image = working_dir = NULL;
+    lines = transparency = x_pos = y_pos = -1;
+    antialias = scrollbar = TRUE;
+    show_config = FALSE;
+
+    /* All of the various command-line options */
+    GOptionEntry cl_opts[] = {
+        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         "Use Antialiased Fonts", NULL },
+        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  "Set the background color", NULL },
+        { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           "Run a command at startup", NULL },
+        { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              "Set the font to the following string", NULL },
+        { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             "Scrollback Lines", NULL },
+        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         "Use Scrollbar", NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      "Opaqueness: 0-100%", NULL },
+        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       "Set Initial Working Directory", NULL },
+        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             "X Position", NULL },
+        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             "Y Position", NULL },
+        { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             "Set Background Image", NULL },
+        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       "Show Configuration Wizard", NULL },
+        { NULL }
+    };
+
+    GError *error = NULL;
+    GOptionContext *context = g_option_context_new (NULL);
+    g_option_context_add_main_entries (context, cl_opts, NULL);
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_parse (context, argc, argv, &error);
+
+    /* Now set the options in the config, if they changed */
+    if (font) cfg_setstr (tw->tc, "font", font);
+    if (background_color) cfg_setstr (tw->tc, "background_color", background_color);
+    if (command) cfg_setstr (tw->tc, "command", command);
+    if (image) cfg_setstr (tw->tc, "image", command);
+    if (working_dir) cfg_setstr (tw->tc, "working_dir", working_dir);
+
+    if (lines != -1) cfg_setint (tw->tc, "lines", lines);
+    if (transparency != -1) cfg_setint (tw->tc, "transparency", transparency);
+    if (x_pos != -1) cfg_setint (tw->tc, "x_pos", x_pos);
+    if (y_pos != -1) cfg_setint (tw->tc, "y_pos", y_pos);
+
+    if (!antialias) cfg_setbool (tw->tc, "antialias", antialias);
+    if (!scrollbar) cfg_setbool (tw->tc, "scrollbar", scrollbar);
+}
+
 int main (int argc, char **argv)
 {
 #ifdef DEBUG
@@ -246,63 +306,9 @@ int main (int argc, char **argv)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
 
-#if 0
+    /* Parse all of the command-line options */
+    parse_cli (&argc, &argv, tw);
     
-    /* THIS DOES WORK, DONT ABANDON IT,
-     * IN FACT, MAKE A FUNCTION TO COPY ALL OF IT OVER INTO THE cfg IF WE CAN :) */
-         
-    /* All of the various command-line options */
-    GOptionEntry cl_opts[] = {
-        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &tw->tc->antialias,         "Use Antialiased Fonts", NULL },
-        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &tw->tc->background_color,  "Set the background color", NULL },
-        { "command",            'c', 0, G_OPTION_ARG_STRING,    &tw->tc->command,           "Run a command at startup", NULL },
-        { "font",               'f', 0, G_OPTION_ARG_STRING,    &tw->tc->font,              "Set the font to the following string", NULL },
-        { "lines",              'l', 0, G_OPTION_ARG_INT,       &tw->tc->lines,             "Scrollback Lines", NULL },
-        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &tw->tc->scrollbar,         "Use Scrollbar", NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &tw->tc->transparency,      "Opaqueness: 0-100%", NULL },
-        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &tw->tc->working_dir,       "Set Initial Working Directory", NULL },
-        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &tw->tc->x_pos,             "X Position", NULL },
-        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &tw->tc->y_pos,             "Y Position", NULL },
-        { "image",              'B', 0, G_OPTION_ARG_STRING,    &tw->tc->image,             "Set Background Image", NULL },
-        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,               "Show Configuration Wizard", NULL },
-
-        { NULL }
-    };
-
-    GError *error = NULL;
-    GOptionContext *context = g_option_context_new (NULL);
-    g_option_context_add_main_entries (context, clopts, NULL);
-    g_option_context_add_group (context, gtk_get_option_group (TRUE));
-    g_option_context_parse (context, &argc, &argv, &error);
-
-#endif
-
-    /****************************************************************************
-     ****************************************************************************/
-    //puts ("got to the exit");
-    //exit(1);
-    /*                                  DMZ                                     */
-
-    /****************************************************************************
-     ****************************************************************************/
-
-
-
-
-
-    /* STEPS:
-     * 1) Set the window defaults
-     * 2) Check if the config exists
-     * 3) If it does, try to read it, otherwise write out the defaults
-     * 4) Look at cmd-line args
-     */
-    
-    
-    /******************************************************************************
-     *                              DONT TOUCH ME
-     ******************************************************************************/
-
-
     if (!g_thread_supported ())
         g_thread_init(NULL);
 
