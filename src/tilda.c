@@ -202,7 +202,7 @@ void clean_tmp ()
     g_dir_close (dir);
 }
 
-void parse_cli (int *argc, char ***argv, tilda_window *tw)
+void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 {
     /* Set default values */
     gchar *background_color = cfg_getstr (tw->tc, "background_color");
@@ -270,7 +270,7 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw)
         cfg_setbool (tw->tc, "scrollbar", scrollbar);
 
     if (show_config)
-        printf ("we need to show the config now!!!\n");
+        if ((wizard (*argc, *argv, tw, tt)) == 1) { clean_up(tw); }
 }
 
 int main (int argc, char **argv)
@@ -318,7 +318,7 @@ int main (int argc, char **argv)
 #endif
 
     /* Parse all of the command-line options */
-    parse_cli (&argc, &argv, tw);
+    parse_cli (&argc, &argv, tw, tt);
     
     if (!g_thread_supported ())
         g_thread_init(NULL);
