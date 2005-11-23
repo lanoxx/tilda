@@ -40,7 +40,8 @@
 #include "tilda_window.h"
 #include "wizard.h"
 
-gchar *user, *display;
+/* unneeded right now (not used) */
+/* gchar *user, *display; */
 
 /**
  * Get the next instance number to use
@@ -202,15 +203,28 @@ void clean_tmp ()
     g_dir_close (dir);
 }
 
+/**
+ * Parse all of the Command-Line Options given to tilda.
+ * This can modify argv and argc, and will set values in tw->tc.
+ *
+ * @param argc argc from main
+ * @param argv argv from main
+ * @param tw the tilda_window from main. Used for setting values in tw->tc.
+ * @param tt the tilda_term, from main. Used for calling the wizard.
+ */
 void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 {
+#ifdef DEBUG
+    puts("parse_cli");
+#endif
+
     /* Set default values */
     gchar *background_color = cfg_getstr (tw->tc, "background_color");
     gchar *command = cfg_getstr (tw->tc, "command");
     gchar *font = cfg_getstr (tw->tc, "font");
     gchar *image = cfg_getstr (tw->tc, "image");
     gchar *working_dir = cfg_getstr (tw->tc, "working_dir");
-    
+
     gint lines = cfg_getint (tw->tc, "lines");
     gint transparency = cfg_getint (tw->tc, "transparency");
     gint x_pos = cfg_getint (tw->tc, "x_pos");
@@ -237,6 +251,7 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         { NULL }
     };
 
+    /* Set up the command-line parser */
     GError *error = NULL;
     GOptionContext *context = g_option_context_new (NULL);
     g_option_context_add_main_entries (context, cl_opts, NULL);
@@ -247,7 +262,7 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
     if (background_color != cfg_getstr (tw->tc, "background_color"))
         cfg_setstr (tw->tc, "background_color", background_color);
     if (command != cfg_getstr (tw->tc, "command"))
-        cfg_setstr (tw->tc, "command", background_color);
+        cfg_setstr (tw->tc, "command", command);
     if (font != cfg_getstr (tw->tc, "font"))
         cfg_setstr (tw->tc, "font", font);
     if (image != cfg_getstr (tw->tc, "image"))
@@ -263,12 +278,13 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         cfg_setint (tw->tc, "x_pos", x_pos);
     if (y_pos != cfg_getint (tw->tc, "y_pos"))
         cfg_setint (tw->tc, "y_pos", y_pos);
-    
+
     if (antialias != cfg_getbool (tw->tc, "antialias"))
         cfg_setbool (tw->tc, "antialias", antialias);
     if (scrollbar != cfg_getbool (tw->tc, "scrollbar"))
         cfg_setbool (tw->tc, "scrollbar", scrollbar);
 
+    /* Show the config wizard, if it was requested */
     if (show_config)
         if ((wizard (*argc, *argv, tw, tt)) == 1) { clean_up(tw); }
 }
@@ -282,11 +298,6 @@ int main (int argc, char **argv)
     tilda_window *tw;
     tilda_term *tt;
 
-    FILE *fp;
-    gint  i, j;
-
-    gboolean show_config = FALSE;
-
     /* Get the user's home directory */
     home_dir = (gchar*)g_get_home_dir ();
 
@@ -297,18 +308,16 @@ int main (int argc, char **argv)
     tw = (tilda_window *) malloc (sizeof (tilda_window));
     tt = (tilda_term *) malloc (sizeof (tilda_term));
 
-    /* FIXME BAD COMMENT
-     * set the instance number and place a env in the array of envs
-     * to be set when the tilda terminal is created */
-    getinstance (tw);
+    /* Check the allocations above, since they are extremely critical,
+     * and segfaults suck */
+    if (tw == NULL || tt == NULL)
+    {
+        fprintf (stderr, "You ran out of memory... exiting\n");
+        exit(1);
+    }
 
-    /* Set the config file name */
-    g_snprintf (tw->config_file, sizeof(tw->config_file),
-            "%s/.tilda/config_%i", home_dir, tw->instance);
-
-    /* Sets up tw->tc.
-     * MUST HAVE tw->config_file set by now!!! */
-    init_tilda_window_configs (tw);
+    /* Set: tw->instance, tw->config_file, and parse the config file */
+    init_tilda_window_instance (tw);
 
 #ifdef DEBUG
     /* Have to do this early. */
@@ -319,7 +328,7 @@ int main (int argc, char **argv)
 
     /* Parse all of the command-line options */
     parse_cli (&argc, &argv, tw, tt);
-    
+
     if (!g_thread_supported ())
         g_thread_init(NULL);
 
@@ -341,7 +350,6 @@ int main (int argc, char **argv)
     gdk_threads_leave ();
 
     g_remove (tw->lock_file);
-    //free (tw->tc);
     cfg_free(tw->tc);
     free (tw);
 

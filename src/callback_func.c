@@ -134,7 +134,7 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
 
     if (cfg_getbool (collect->tw->tc, "run_command") == FALSE)
     {
-        switch (after_command)
+        switch (cfg_getint (collect->tw->tc, "command_exit"))
         {
             case 2:
                 close_tab (data, 0, widget);
@@ -143,8 +143,8 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
                 break;
             case 0:
                 vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
-                    command, NULL, NULL,
-                    working_directory,
+                    cfg_getstr (collect->tw->tc, "command"), NULL, NULL,
+                    cfg_getstr (collect->tw->tc, "working_dir"),
                     TRUE, TRUE, TRUE);
                 break;
             default:

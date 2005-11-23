@@ -92,9 +92,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bold"));
     
-    /* What to do when child command exits */
-    after_command = cfg_getint (tw->tc, "command_exit");
-    
     switch (cfg_getint (tw->tc, "backspace_key"))
     {
         case 0:
@@ -216,7 +213,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
             break;
         default:
-            printf ("Bad tab_pos, not changing\n");
+            fprintf (stderr, "Bad tab_pos, not changing\n");
             break;
     }
 

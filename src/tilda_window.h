@@ -44,7 +44,7 @@ void add_tab (tilda_window *tw);
 void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w);
 void close_tab (gpointer data, guint callback_action, GtkWidget *w);
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt);
-void init_tilda_window_configs (tilda_window *tw);
+void init_tilda_window_instance (tilda_window *tw);
 
 G_END_DECLS;
 

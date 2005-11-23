@@ -38,15 +38,11 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
 
     GtkAccelGroup *accel_group;
     GClosure *close;
-    gchar env_var[14];
-    gint  env_add2_size;
-    gchar *env_add[] = {"FOO=BAR", "BOO=BIZ", NULL, NULL};
-    gboolean dingus = FALSE, dbuffer = TRUE, console = FALSE, shell = TRUE;
+    gboolean dingus = FALSE, dbuffer = TRUE;
     gint i;
     tilda_collect *t_collect;
+    gchar *command;
 
-    sprintf (env_var, "TILDA_NUM=%d", tw->instance);
-        
     t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
     t_collect->tw = tw;
     t_collect->tt = tt;
@@ -122,10 +118,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     /* Match "abcdefg". */
     vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), "abcdefg");
 
-    env_add2_size = (sizeof(char) * strlen (env_var)) + 1;
-    env_add[2] = (char *) malloc (env_add2_size);
-    g_strlcpy (env_add[2], env_var, env_add2_size);
-
     if (dingus)
     {
         i = vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), DINGUS1);
@@ -134,23 +126,13 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND1);
     }
 
-    if (!console)
-    {
-        if (shell)
-        {
-            //FIXME: bad logic here
-            /* Launch a shell. */
-            if (command == NULL && cfg_getbool(tw->tc, "run_command") == FALSE)
-                command = getenv ("SHELL");
-            else if (command == NULL && cfg_getbool(tw->tc, "run_command") == FALSE)
-                command = cfg_getstr(tw->tc, "command");
-            
-            vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-                command, NULL, env_add,
-                working_directory,
-                TRUE, TRUE, TRUE);
-        }
-    }
+    if ((command = cfg_getstr (tw->tc, "command")) == NULL)
+        command = getenv ("SHELL");
+
+    vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
+            command, NULL, NULL,
+            cfg_getstr (tw->tc, "working_dir"),
+            TRUE, TRUE, TRUE);
 
     gtk_widget_show (tt->vte_term);
     gtk_widget_show (tt->hbox);

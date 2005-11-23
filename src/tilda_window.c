@@ -83,18 +83,33 @@ static cfg_opt_t new_conf[] = {
     CFG_END()
 };
 
-void init_tilda_window_configs (tilda_window *tw)
+/**
+ * Set up tw->tc to hold all of the values in tilda's config.
+ * Gets the tw->instance number.
+ * Sets tw->config_file.
+ * Parses tw->config_file into tw->tc.
+ * 
+ * @param tw the tilda_window in which to store the config
+ */
+void init_tilda_window_instance (tilda_window *tw)
 {
 #ifdef DEBUG
-    puts("init_tilda_window_configs");
+    puts("init_tilda_window_instance");
 #endif
+    
+    /* Get the instance number for this tilda, and store it in tw->instance.
+     * Also create the lock file for this instance. */
+    getinstance (tw);
+    
+    /* Set the correct config file name */
+    g_snprintf (tw->config_file, sizeof(tw->config_file),
+            "%s/.tilda/config_%i", home_dir, tw->instance);
 
-    /* Set up the default config */
+    /* Set up the default config dictionary */
     tw->tc = cfg_init (new_conf, 0);
 
     /* Parse the config file */
     cfg_parse (tw->tc, tw->config_file);
-
 }
 
 void add_tab (tilda_window *tw)
@@ -180,8 +195,6 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Init GList of all tilda_term structures */
     tw->terms = NULL;
     
-    after_command = cfg_getint (tw->tc, "command_exit");
-    
     switch (cfg_getint (tw->tc, "tab_pos"))
     {
         case 0:
@@ -197,7 +210,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
             break;
         default:
-            printf ("Bad tab_pos, not changing anything...\n");
+            fprintf (stderr, "Bad tab_pos, not changing anything...\n");
             break;
     }
 
