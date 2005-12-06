@@ -32,8 +32,8 @@ struct tilda_window_
     GtkWidget *notebook;
     GList *terms;
 
-    gchar lock_file[1024];
-    gchar config_file[1024];
+    gchar *lock_file;
+    gchar *config_file;
     gint instance;
 
     /* Stores all configuration */

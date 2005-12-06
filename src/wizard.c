@@ -652,13 +652,6 @@ void apply_settings (tilda_window *tw)
     cfg_setint (tw->tc, "x_pos", atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos))));
     cfg_setint (tw->tc, "y_pos", atoi (gtk_entry_get_text (GTK_ENTRY (entry_y_pos))));
 
-    g_strlcpy (tw->config_file, home_dir, sizeof(tw->config_file));
-    g_strlcat (tw->config_file, "/.tilda/", sizeof(tw->config_file));
-
-    g_mkdir (tw->config_file,  S_IRUSR | S_IWUSR | S_IXUSR);
-
-    g_snprintf (tw->config_file, sizeof(tw->config_file), "%s/.tilda/config_%i", home_dir, tw->instance);
-
     cfg_setint (tw->tc, "tab_pos", gtk_combo_box_get_active ((GtkComboBox *) combo_tab_pos));
     cfg_setint (tw->tc, "backspace_key", gtk_combo_box_get_active ((GtkComboBox *) combo_backspace));
     cfg_setint (tw->tc, "delete_key", gtk_combo_box_get_active ((GtkComboBox *) combo_delete));

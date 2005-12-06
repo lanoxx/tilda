@@ -84,6 +84,37 @@ static cfg_opt_t new_conf[] = {
 };
 
 /**
+ * Get a pointer to the config file name for this instance.
+ * 
+ * NOTE: you MUST call free() on the returned value!!!
+ * 
+ * @param tw the tilda_window structure corresponding to this instance
+ * @return a pointer to a string representation of the config file's name
+ */
+gchar* get_config_file_name (tilda_window *tw)
+{
+    gchar *config_file;
+    gchar instance_str[6];
+    gchar *config_prefix = "/.tilda/config_";
+    gint config_file_size = 0;
+
+    /* Get a string form of the instance */
+    g_snprintf (instance_str, sizeof(instance_str), "%d", tw->instance);
+
+    /* Calculate the config_file variable's size */
+    config_file_size = strlen (home_dir) + strlen (config_prefix) + strlen (instance_str) + 1;
+
+    /* Allocate the config_file variable */
+    if ((config_file = (gchar*) malloc (config_file_size * sizeof(gchar))) == NULL)
+        print_and_exit ("Out of memory, exiting...", 1);
+
+    /* Store the config file name in the allocated space */
+    g_snprintf (config_file, config_file_size, "%s%s%s", home_dir, config_prefix, instance_str);
+
+    return config_file;
+}
+
+/**
  * Set up tw->tc to hold all of the values in tilda's config.
  * Gets the tw->instance number.
  * Sets tw->config_file.
@@ -100,10 +131,9 @@ void init_tilda_window_instance (tilda_window *tw)
     /* Get the instance number for this tilda, and store it in tw->instance.
      * Also create the lock file for this instance. */
     getinstance (tw);
-    
-    /* Set the correct config file name */
-    g_snprintf (tw->config_file, sizeof(tw->config_file),
-            "%s/.tilda/config_%i", home_dir, tw->instance);
+
+    /* Get and store the config file's name */
+    tw->config_file = get_config_file_name (tw);
 
     /* Set up the default config dictionary */
     tw->tc = cfg_init (new_conf, 0);

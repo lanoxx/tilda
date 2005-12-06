@@ -105,16 +105,34 @@ void getinstance (tilda_window *tw)
     puts("getinstance");
 #endif
 
-    /* Make the ~/.tilda/locks directory */
-    g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks", home_dir);
-    g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+    gchar pid[6];
+    gchar instance[6];
+    gchar *lock_subdir = "/.tilda/locks";
+    gint lock_file_size = 0;
 
     /* Get the number of existing locks */
     tw->instance = getnextinstance ();
 
+    /* Set up the temporary variables used for calculating the
+     * size of the tw->lock_file string. */
+    g_snprintf (pid, sizeof(pid), "%d", getpid());
+    g_snprintf (instance, sizeof(instance), "%d", tw->instance);
+    
+    /* Calculate tw->lock_file's size, and allocate it */
+    lock_file_size = strlen (home_dir) + strlen (lock_subdir)
+                   + strlen ("/lock_") + strlen (pid) + strlen ("_")
+                   + strlen (instance) + 1;
+
+    if ((tw->lock_file = (gchar*) malloc (lock_file_size * sizeof(gchar))) == NULL)
+        print_and_exit ("Out of memory, exiting...", 1);
+
+    /* Make the ~/.tilda/locks directory */
+    g_snprintf (tw->lock_file, lock_file_size, "%s%s", home_dir, lock_subdir);
+    g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+
     /* Set tw->lock_file to the lock name for this instance */
-    g_snprintf (tw->lock_file, sizeof(tw->lock_file), "%s/.tilda/locks/lock_%d_%d",
-            home_dir, getpid(), tw->instance);
+    g_snprintf (tw->lock_file, lock_file_size, "%s%s/lock_%s_%s",
+            home_dir, lock_subdir, pid, instance);
 
     /* Create the lock file */
     g_creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
@@ -399,6 +417,8 @@ int main (int argc, char **argv)
 
     g_remove (tw->lock_file);
     cfg_free(tw->tc);
+    free (tw->lock_file);
+    free (tw->config_file);
     free (tw);
 
     return 0;
