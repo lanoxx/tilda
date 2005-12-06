@@ -32,6 +32,7 @@ struct tilda_window_
     GtkWidget *notebook;
     GList *terms;
 
+    gchar *home_dir;
     gchar *lock_file;
     gchar *config_file;
     gint instance;

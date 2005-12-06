@@ -57,8 +57,10 @@ void print_and_exit (gchar *message, gint exitval)
 
 /**
  * Get the next instance number to use
+ *
+ * @param tw the tilda_window structure for this instance
  */
-gint getnextinstance ()
+gint getnextinstance (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("getnextinstance");
@@ -72,14 +74,14 @@ gint getnextinstance ()
 
     /* Figure out the size of the lock_dir variable. Make sure to
      * account for the null-terminator at the end of the string. */
-    lock_dir_size = strlen (home_dir) + strlen (lock_subdir) + 1;
+    lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
 
     /* Make sure our allocation did not fail */
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
         print_and_exit ("You ran out of memory... exiting!", 1);
 
     /* Get the lock directory for this user, and open the directory */
-    g_snprintf (lock_dir, lock_dir_size, "%s%s", home_dir, lock_subdir);
+    g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
     //FIXME: check that this name corresponds to a valid lock
@@ -111,15 +113,15 @@ void getinstance (tilda_window *tw)
     gint lock_file_size = 0;
 
     /* Get the number of existing locks */
-    tw->instance = getnextinstance ();
+    tw->instance = getnextinstance (tw);
 
     /* Set up the temporary variables used for calculating the
      * size of the tw->lock_file string. */
     g_snprintf (pid, sizeof(pid), "%d", getpid());
     g_snprintf (instance, sizeof(instance), "%d", tw->instance);
-    
+
     /* Calculate tw->lock_file's size, and allocate it */
-    lock_file_size = strlen (home_dir) + strlen (lock_subdir)
+    lock_file_size = strlen (tw->home_dir) + strlen (lock_subdir)
                    + strlen ("/lock_") + strlen (pid) + strlen ("_")
                    + strlen (instance) + 1;
 
@@ -127,12 +129,12 @@ void getinstance (tilda_window *tw)
         print_and_exit ("Out of memory, exiting...", 1);
 
     /* Make the ~/.tilda/locks directory */
-    g_snprintf (tw->lock_file, lock_file_size, "%s%s", home_dir, lock_subdir);
+    g_snprintf (tw->lock_file, lock_file_size, "%s%s", tw->home_dir, lock_subdir);
     g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
 
     /* Set tw->lock_file to the lock name for this instance */
     g_snprintf (tw->lock_file, lock_file_size, "%s%s/lock_%s_%s",
-            home_dir, lock_subdir, pid, instance);
+            tw->home_dir, lock_subdir, pid, instance);
 
     /* Create the lock file */
     g_creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
@@ -181,8 +183,10 @@ gboolean islockfile (gchar *filename, gint *lock_pid)
 
 /**
  * Remove stale locks in the ~/.tilda/locks/ directory.
+ *
+ * @param tw the tilda_window structure for this instance
  */
-void clean_tmp ()
+void clean_tmp (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("clean_tmp");
@@ -229,12 +233,12 @@ void clean_tmp ()
     gint remove_file_size = 0;
     gboolean stale;
 
-    lock_dir_size = strlen (home_dir) + strlen (lock_subdir) + 1;
+    lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
 
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
         print_and_exit ("Out of memory, exiting...", 1);
 
-    g_snprintf (lock_dir, lock_dir_size, "%s%s", home_dir, lock_subdir);
+    g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
     /* For each possible lock file, check if it is a lock, and see if
@@ -257,7 +261,7 @@ void clean_tmp ()
 
                 if ((remove_file = (gchar*) malloc (remove_file_size * sizeof(gchar))) == NULL)
                     print_and_exit ("Out of memory, exiting...", 1);
-                
+
                 g_snprintf (remove_file, remove_file_size, "%s/%s", lock_dir, filename);
                 g_remove (remove_file);
 
@@ -367,12 +371,6 @@ int main (int argc, char **argv)
     tilda_window *tw;
     tilda_term *tt;
 
-    /* Get the user's home directory */
-    home_dir = (gchar*)g_get_home_dir ();
-
-    /* Gotta do this first to make sure no lock files are left over */
-    clean_tmp ();
-
     /* create new tilda window and terminal */
     tw = (tilda_window *) malloc (sizeof (tilda_window));
     tt = (tilda_term *) malloc (sizeof (tilda_term));
@@ -381,6 +379,12 @@ int main (int argc, char **argv)
      * and segfaults suck */
     if (tw == NULL || tt == NULL)
         print_and_exit ("You ran out of memory... exiting", 1);
+
+    /* Get the user's home directory */
+    tw->home_dir = strdup(g_get_home_dir ());
+
+    /* Gotta do this first to make sure no lock files are left over */
+    clean_tmp (tw);
 
     /* Set: tw->instance, tw->config_file, and parse the config file */
     init_tilda_window_instance (tw);
@@ -417,6 +421,7 @@ int main (int argc, char **argv)
 
     g_remove (tw->lock_file);
     cfg_free(tw->tc);
+    free (tw->home_dir);
     free (tw->lock_file);
     free (tw->config_file);
     free (tw);

@@ -85,9 +85,9 @@ static cfg_opt_t new_conf[] = {
 
 /**
  * Get a pointer to the config file name for this instance.
- * 
+ *
  * NOTE: you MUST call free() on the returned value!!!
- * 
+ *
  * @param tw the tilda_window structure corresponding to this instance
  * @return a pointer to a string representation of the config file's name
  */
@@ -102,14 +102,14 @@ gchar* get_config_file_name (tilda_window *tw)
     g_snprintf (instance_str, sizeof(instance_str), "%d", tw->instance);
 
     /* Calculate the config_file variable's size */
-    config_file_size = strlen (home_dir) + strlen (config_prefix) + strlen (instance_str) + 1;
+    config_file_size = strlen (tw->home_dir) + strlen (config_prefix) + strlen (instance_str) + 1;
 
     /* Allocate the config_file variable */
     if ((config_file = (gchar*) malloc (config_file_size * sizeof(gchar))) == NULL)
         print_and_exit ("Out of memory, exiting...", 1);
 
     /* Store the config file name in the allocated space */
-    g_snprintf (config_file, config_file_size, "%s%s%s", home_dir, config_prefix, instance_str);
+    g_snprintf (config_file, config_file_size, "%s%s%s", tw->home_dir, config_prefix, instance_str);
 
     return config_file;
 }
@@ -119,7 +119,7 @@ gchar* get_config_file_name (tilda_window *tw)
  * Gets the tw->instance number.
  * Sets tw->config_file.
  * Parses tw->config_file into tw->tc.
- * 
+ *
  * @param tw the tilda_window in which to store the config
  */
 void init_tilda_window_instance (tilda_window *tw)
@@ -127,7 +127,7 @@ void init_tilda_window_instance (tilda_window *tw)
 #ifdef DEBUG
     puts("init_tilda_window_instance");
 #endif
-    
+
     /* Get the instance number for this tilda, and store it in tw->instance.
      * Also create the lock file for this instance. */
     getinstance (tw);
@@ -198,7 +198,7 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
         tw->terms = g_list_remove (tw->terms, tt);
         free (tt);
     }
-    
+
     free (tc);
 }
 
@@ -224,7 +224,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Init GList of all tilda_term structures */
     tw->terms = NULL;
-    
+
     switch (cfg_getint (tw->tc, "tab_pos"))
     {
         case 0:
@@ -246,15 +246,15 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
-    
+
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool(tw->tc, "notebook_border"));
-    
+
     init_tilda_terminal (tw, tt, TRUE);
 
     /* Create Accel Group to add key codes for quit, next, prev and new tabs */
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
-    
+
     /* Exit on Ctrl-Q */
     clean = g_cclosure_new_swap ((GCallback) clean_up, tw, NULL);
     gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
@@ -266,11 +266,11 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Go to Next Tab */
     prev = g_cclosure_new_swap ((GCallback) prev_tab, tw, NULL);
     gtk_accel_group_connect (accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, prev);
-    
+
     /* Go to New Tab */
     add = g_cclosure_new_swap ((GCallback) add_tab, tw, NULL);
     gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, add);
-    
+
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 
     gtk_widget_set_size_request ((GtkWidget *) tw->window, 0, 0);
