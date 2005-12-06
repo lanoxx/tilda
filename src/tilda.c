@@ -44,6 +44,18 @@
 /* gchar *user, *display; */
 
 /**
+ * Print a message to stderr, then exit.
+ *
+ * @param message the message to print
+ * @param exitval the value to call exit with
+ */
+void print_and_exit (gchar *message, gint exitval)
+{
+    fprintf (stderr, "%s\n", message);
+    exit (exitval);
+}
+
+/**
  * Get the next instance number to use
  */
 gint getnextinstance ()
@@ -52,11 +64,22 @@ gint getnextinstance ()
     puts("getnextinstance");
 #endif
 
-    gchar lock_dir[1024];
+    gchar *lock_dir;
+    gchar *lock_subdir = "/.tilda/locks";
+    gint lock_dir_size = 0;
     gint count = 0;
     GDir *dir;
 
-    g_snprintf (lock_dir, sizeof(lock_dir), "%s/.tilda/locks", home_dir);
+    /* Figure out the size of the lock_dir variable. Make sure to
+     * account for the null-terminator at the end of the string. */
+    lock_dir_size = strlen (home_dir) + strlen (lock_subdir) + 1;
+
+    /* Make sure our allocation did not fail */
+    if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
+        print_and_exit ("You ran out of memory... exiting!", 1);
+
+    /* Get the lock directory for this user, and open the directory */
+    g_snprintf (lock_dir, lock_dir_size, "%s%s", home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
     //FIXME: check that this name corresponds to a valid lock
@@ -64,7 +87,9 @@ gint getnextinstance ()
     while (g_dir_read_name (dir))
         count++;
 
+    /* Free memory that we allocated */
     g_dir_close (dir);
+    free (lock_dir);
 
     return count;
 }
@@ -146,16 +171,18 @@ void clean_tmp ()
 #endif
 
     FILE *ptr;
-    gchar cmd[1024];
-    gchar buf[1024];
+    const gchar *cmd = "ps -C tilda -o pid=";
+    gchar buf[16]; /* Really shouldn't need more than 6 */
     gint i;
 
     gint num_pids = 0;
-    gint running_pids[128];
+    gint *running_pids;
+
+    /* Allocate just one pid, for now */
+    if ((running_pids = (gint*) malloc (1 * sizeof(gint))) == NULL)
+        print_and_exit ("Out of memory, exiting...", 1);
 
     /* Get all running tilda pids, and store them in an array */
-    g_strlcpy (cmd, "ps -C tilda -o pid=", sizeof(cmd));
-
     if ((ptr = popen (cmd, "r")) != NULL)
     {
         while (fgets (buf, sizeof(buf), ptr) != NULL)
@@ -166,18 +193,30 @@ void clean_tmp ()
             {
                 running_pids[num_pids] = i;
                 num_pids++;
+
+                /* Allocate space for the next pid */
+                if ((running_pids = (gint*) realloc (running_pids, (num_pids+1) * sizeof(gint))) == NULL)
+                    print_and_exit ("Out of memory, exiting...", 1);
             }
         }
     }
 
-    gchar lock_dir[1024];
-    gchar remove_file[1024];
+    gchar *lock_dir;
+    gchar *lock_subdir = "/.tilda/locks";
+    gchar *remove_file;
     gchar *filename;
     GDir *dir;
     gint pid;
+    gint lock_dir_size = 0;
+    gint remove_file_size = 0;
     gboolean stale;
 
-    g_snprintf (lock_dir, sizeof(lock_dir), "%s/.tilda/locks", home_dir);
+    lock_dir_size = strlen (home_dir) + strlen (lock_subdir) + 1;
+
+    if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
+        print_and_exit ("Out of memory, exiting...", 1);
+
+    g_snprintf (lock_dir, lock_dir_size, "%s%s", home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
     /* For each possible lock file, check if it is a lock, and see if
@@ -194,13 +233,25 @@ void clean_tmp ()
 
             if (stale)
             {
-                g_snprintf (remove_file, sizeof(remove_file), "%s/%s", lock_dir, filename);
+                /* Calculate the size of remove_file, but make sure to allocate space
+                 * for the null-terminator and the "/" in the g_snprintf() below. */
+                remove_file_size = strlen (lock_dir) + strlen (filename) + 2;
+
+                if ((remove_file = (gchar*) malloc (remove_file_size * sizeof(gchar))) == NULL)
+                    print_and_exit ("Out of memory, exiting...", 1);
+                
+                g_snprintf (remove_file, remove_file_size, "%s/%s", lock_dir, filename);
                 g_remove (remove_file);
+
+                /* Free the memory we just allocated, since we don't need it anymore */
+                free (remove_file);
             }
         }
     }
 
     g_dir_close (dir);
+    free (running_pids);
+    free (lock_dir);
 }
 
 /**
@@ -311,10 +362,7 @@ int main (int argc, char **argv)
     /* Check the allocations above, since they are extremely critical,
      * and segfaults suck */
     if (tw == NULL || tt == NULL)
-    {
-        fprintf (stderr, "You ran out of memory... exiting\n");
-        exit(1);
-    }
+        print_and_exit ("You ran out of memory... exiting", 1);
 
     /* Set: tw->instance, tw->config_file, and parse the config file */
     init_tilda_window_instance (tw);
