@@ -1,3 +1,5 @@
+irasnyd - add the dependency on libconfuse to the configure script.
+
 [ ] guy in forum - It works fine on a single desktop, but multimonitor
 support would be very much appreciated. In the mean time, perhaps a way
 to specify the location on the desktop?
