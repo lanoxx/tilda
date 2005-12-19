@@ -1,3 +1,4 @@
+	* Added libConfuse to configure.in.
 	* Better command-line option help generation.
 	* Switch to libConfuse for config-file parsing.
 	* Internal cleanups / documentation.
