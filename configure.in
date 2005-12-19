@@ -30,7 +30,7 @@ dnl AM_GLIB_GNU_GETTEXT
 # Checks for header files.
 AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -42,6 +42,8 @@ AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
+LIBS="$LIBS -lconfuse" 
+    
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
 AC_OUTPUT
