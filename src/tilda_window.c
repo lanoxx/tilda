@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <glib-object.h>
 #include <vte/vte.h>
 #include "config.h"
@@ -257,19 +258,19 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Exit on Ctrl-Q */
     clean = g_cclosure_new_swap ((GCallback) clean_up, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, clean);
+    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, clean);
 
     /* Go to Next Tab */
     next = g_cclosure_new_swap ((GCallback) next_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'n', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, next);
+    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, next);
 
-    /* Go to Next Tab */
+    /* Go to Prev Tab */
     prev = g_cclosure_new_swap ((GCallback) prev_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, prev);
+    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, prev);
 
     /* Go to New Tab */
     add = g_cclosure_new_swap ((GCallback) add_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, add);
+    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, add);
 
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 
