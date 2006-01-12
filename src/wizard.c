@@ -48,6 +48,7 @@ GtkWidget *slider_opacity, *spin_scrollback;
 GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
 GtkWidget *combo_scroll_pos, *check_scroll_on_keystroke;
+GtkWidget *check_animation;
 
 gboolean in_main = FALSE;
 
@@ -271,7 +272,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     char s_max_height[6], s_max_width[6];
     char s_x_pos[6], s_y_pos[6];
 
-    table = gtk_table_new (3, 8, FALSE);
+    table = gtk_table_new (3, 9, FALSE);
     label_height = gtk_label_new ("Height in Pixels:");
     label_width = gtk_label_new ("Width in Pixels:");
     label_x_pos = gtk_label_new ("X Pixel Postion to Start:");
@@ -296,6 +297,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_range_set_value (GTK_RANGE (slider_opacity), cfg_getint (tw->tc, "transparency"));
 
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
+	check_animation = gtk_check_button_new_with_label ("Animated Pulldown");
 
     image_chooser = gtk_file_chooser_dialog_new ("Open Background Image File",
                       GTK_WINDOW (wizard_window),
@@ -320,6 +322,11 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
         gtk_widget_hide (button_image);
     }
 
+	if (1)//cfg_getbool (tw->tc, "animation")
+	{
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_animation), TRUE);
+	}
+
     gtk_signal_connect (GTK_OBJECT (check_use_image), "clicked", GTK_SIGNAL_FUNC(image_select), label_image);
 
     gtk_table_set_row_spacings (GTK_TABLE (table), 5);
@@ -340,11 +347,13 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+	gtk_table_attach (GTK_TABLE (table), check_animation, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3); 
 
-    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-
+    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+ 
+    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+ 
     gtk_widget_show (entry_height);
     gtk_widget_show (label_height);
     gtk_widget_show (entry_width);
@@ -355,6 +364,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (label_x_pos);
     gtk_widget_show (entry_y_pos);
     gtk_widget_show (label_y_pos);
+    gtk_widget_show (check_animation);
     gtk_widget_show (check_use_image);
 
     return table;
