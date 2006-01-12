@@ -132,7 +132,7 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
 
     tilda_collect *collect = (tilda_collect *) data;
 
-    if (cfg_getbool (collect->tw->tc, "run_command") == FALSE)
+    if (cfg_getbool (collect->tw->tc, "run_command"))
     {
         switch (cfg_getint (collect->tw->tc, "command_exit"))
         {

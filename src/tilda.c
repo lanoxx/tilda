@@ -229,6 +229,8 @@ void clean_tmp (tilda_window *tw)
                     print_and_exit ("Out of memory, exiting...", 1);
             }
         }
+        
+        pclose (ptr);
     }
 
     gchar *lock_dir;
