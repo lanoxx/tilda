@@ -38,10 +38,18 @@
 #include "../tilda-config.h"
 #include "callback_func.h"
 #include "tilda_window.h"
+#include "key_grabber.h"
 #include "wizard.h"
 
 /* unneeded right now (not used) */
 /* gchar *user, *display; */
+
+static tilda_window *tw;
+
+void pull_no_args()
+{
+	pull(tw);
+}
 
 /**
  * Print a message to stderr, then exit.
@@ -414,6 +422,7 @@ int main (int argc, char **argv)
     signal (SIGKILL, clean_up_no_args);
     signal (SIGABRT, clean_up_no_args);
     signal (SIGTERM, clean_up_no_args);
+    signal (SIGUSR1, pull_no_args);
 
     gdk_threads_enter ();
     gtk_main();
