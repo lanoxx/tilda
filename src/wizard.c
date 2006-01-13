@@ -247,13 +247,13 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_use_image)) == TRUE)
     {
-        gtk_widget_show (label_image);
-        gtk_widget_show (button_image);
+        gtk_widget_set_sensitive ((GtkWidget *) label_image, TRUE);
+        gtk_widget_set_sensitive ((GtkWidget *) button_image, TRUE);
     }
     else
     {
-        gtk_widget_hide (label_image);
-        gtk_widget_hide (button_image);
+        gtk_widget_set_sensitive ((GtkWidget *) label_image, FALSE);
+        gtk_widget_set_sensitive ((GtkWidget *) button_image, FALSE);
     }
 }
 
@@ -307,19 +307,17 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
                       NULL);
     button_image = gtk_file_chooser_button_new_with_dialog (image_chooser);
 
-    if (!cfg_getstr(tw->tc, "image")); //FIXME
-
     if (cfg_getbool (tw->tc, "use_image"))
     {
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), TRUE);
-        gtk_widget_show (label_image);
-        gtk_widget_show (button_image);
+        gtk_widget_set_sensitive ((GtkWidget *) label_image, TRUE);
+        gtk_widget_set_sensitive ((GtkWidget *) button_image, TRUE);
     }
     else
     {
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_use_image), FALSE);
-        gtk_widget_hide (label_image);
-        gtk_widget_hide (button_image);
+        gtk_widget_set_sensitive ((GtkWidget *) label_image, FALSE);
+        gtk_widget_set_sensitive ((GtkWidget *) button_image, FALSE);
     }
 
     if (cfg_getbool (tw->tc, "animation"))
@@ -366,6 +364,8 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (label_y_pos);
     gtk_widget_show (check_animation);
     gtk_widget_show (check_use_image);
+    gtk_widget_show (label_image);
+    gtk_widget_show (button_image);
 
     return table;
 }
@@ -797,9 +797,10 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     }
 
     wizard_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_resizable (GTK_WINDOW(wizard_window), FALSE);
     gtk_window_set_position(GTK_WINDOW(wizard_window), GTK_WIN_POS_CENTER);
     gtk_widget_realize (wizard_window);
-    
+     
     g_strlcpy (title, "Tilda", sizeof (title));
     sprintf (title, "%s %i Config", title, tw->instance);
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);
