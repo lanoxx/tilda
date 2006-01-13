@@ -44,7 +44,7 @@ KeySym key;
  * The slide positions are derived from FVMW sources, file fvmm/move_resize.c,
  * to there added by Greg J. Badros, gjb@cs.washington.edu
  */
-    
+
 static float posCFV[] = {.005, .01, .02, .03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 static unsigned long slide_sleep_usec = 15000;
 
@@ -53,14 +53,14 @@ void pull (struct tilda_window_ *tw)
 #ifdef DEBUG
     puts("pull");
 #endif
-    
+
     gint i;
     gint w, h;
     static gint pos=0;
 
     static gint last_pos_y = -1;
     static gint last_height = -1;
-    
+
     static gint pos_V_in = 0;
     static gint posIV[2][16];
 
@@ -76,28 +76,28 @@ void pull (struct tilda_window_ *tw)
         pos_V_in = 0;
     }
 
-        if (!pos_V_in)
+    if (!pos_V_in)
     {
         for (i=0; i<16; i++)
         {
             posIV[1][i] = (gint)(posCFV[i]*last_height);
             posIV[0][i] = last_pos_y;
         }
-        
+
         pos_V_in = 1;
     }
 
     if (pos == 0)
     {
         gdk_threads_enter();
-        
+
         pos++;
-        
+
         if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
             gtk_window_present ((GtkWindow *) tw->window);
         else
             gtk_widget_show ((GtkWidget *) tw->window);
-            
+
         if (cfg_getbool (tw->tc, "pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
@@ -107,7 +107,7 @@ void pull (struct tilda_window_ *tw)
         if (cfg_getbool (tw->tc, ("animation")))
         {
             gdk_threads_leave();
-            
+
             for (i=0; i<16; i++)
             {
                 gdk_threads_enter();
@@ -120,32 +120,32 @@ void pull (struct tilda_window_ *tw)
             }
         }
         else
-        {	
+        {
             gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
             gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
-        		gdk_flush();
-        		gdk_threads_leave();
+            gdk_flush();
+            gdk_threads_leave();
         }
 
         gdk_threads_enter();
-     
+
         gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
-        
+
         gdk_flush ();
         gdk_threads_leave();
     }
-    else 
+    else
     {
         gdk_threads_enter();
-        
+
         pos--;
-        
+
         if (cfg_getbool (tw->tc, ("animation")))
         {
-        		gdk_threads_leave();
+            gdk_threads_leave();
             for (i=15; i>=0; i--)
             {
-            		gdk_threads_enter();
+                gdk_threads_enter();
                 gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
                 gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
 
@@ -153,14 +153,16 @@ void pull (struct tilda_window_ *tw)
                 gdk_threads_leave();
                 usleep(slide_sleep_usec);
             }
-        } else {
-        		gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
-        		gdk_flush();
+        }
+        else
+        {
+            gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
+            gdk_flush();
             gdk_threads_leave();
         }
-        
+
         gdk_threads_enter();
-        
+
         gtk_widget_hide ((GtkWidget *) tw->window);
 
         gdk_flush ();
@@ -209,9 +211,9 @@ void key_grab (tilda_window *tw)
     if (strstr(tmp_key, "None"))
         modmask = 0;
 
-    if (!strstr(tmp_key, "+")) 
+    if (!strstr(tmp_key, "+"))
         perror ("Key Incorrect -- Read the README or tilda.sf.net for info, rerun as 'tilda -C' to set keybinding\n");
-    
+
     if (strtok(tmp_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
 

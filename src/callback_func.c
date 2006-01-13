@@ -28,7 +28,7 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab",        "<Ctrl>T",      add_tab_menu_call,     0, "<Item>"                             },
+    { "/_New Tab",        "<Ctrl>T", add_tab_menu_call,     0, "<Item>"                             },
     { "/_Close Tab",      NULL,      close_tab,             0, "<Item>"                             },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
     { "/_Copy",           NULL,      copy,                  0, "<StockItem>", GTK_STOCK_COPY        },
@@ -49,7 +49,7 @@ void fix_size_settings (tilda_window *tw)
 #endif
 
     int w, h;
-    
+
     gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
     gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
     cfg_setint (tw->tc, "max_width", w);
@@ -88,7 +88,7 @@ void free_and_remove (tilda_window *tw)
 
 
 void next_tab (tilda_window *tw)
-{  
+{
 #ifdef DEBUG
     puts("next_tab");
 #endif
@@ -102,7 +102,7 @@ void prev_tab (tilda_window *tw)
     puts("prev_tab");
 #endif
 
-    gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);    
+    gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);
 }
 
 void clean_up (tilda_window *tw)
@@ -148,7 +148,7 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
                     TRUE, TRUE, TRUE);
                 break;
             default:
-                break;  
+                break;
         }
      } else
          close_tab (data, 0, widget);
@@ -161,14 +161,14 @@ char* get_window_title (GtkWidget *widget, tilda_window *tw)
 #endif
 
     const gchar *vte_title;
-    gchar *window_title;  
+    gchar *window_title;
     gchar *initial;
     gchar *title;
-    
+
     vte_title = vte_terminal_get_window_title (VTE_TERMINAL (widget));
     window_title = g_strdup (vte_title);
     initial = g_strdup (cfg_getstr (tw->tc, "title"));
-    
+
     switch (cfg_getint (tw->tc, "d_set_title"))
     {
         case 3:
@@ -203,7 +203,7 @@ char* get_window_title (GtkWidget *widget, tilda_window *tw)
 
     g_free (window_title);
     g_free (initial);
-    
+
     return title;
 }
 
@@ -219,9 +219,9 @@ void window_title_changed (GtkWidget *widget, gpointer data)
     tilda_collect *tc = (tilda_collect *) data;
     tilda_window *tw = (tilda_window *) tc->tw;
     tilda_term *tt = (tilda_term *) tc->tt;
-    
+
     title = get_window_title (widget, tw);
-    
+
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), tt->hbox);
     gtk_label_set_label ((GtkLabel *) label, title);
 }
@@ -351,7 +351,7 @@ void popup_menu (tilda_collect *tc)
     gtk_widget_show_all(menu);
 }
 
-int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data) 
+int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
 #ifdef DEBUG
     puts("add_tab_callback");
@@ -404,7 +404,7 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
         default:
             break;
     }
-    
+
     return FALSE;
 }
 

@@ -69,7 +69,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
             gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
             break;
     }
-  
+
     /* Connect to the "window_title_changed" signal to set the main
      * window's title. */
     g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
@@ -142,7 +142,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, label);
     gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
-    
+
     /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, tt);
 
@@ -150,7 +150,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
      * Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
-    
+
     gtk_widget_grab_focus (tt->vte_term);
 
     return TRUE;

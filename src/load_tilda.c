@@ -23,7 +23,7 @@
 #include "callback_func.h"
 #include "../tilda-config.h"
 
-void window_title_change_all (tilda_window *tw) 
+void window_title_change_all (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("window_title_change_all");
@@ -36,10 +36,10 @@ void window_title_change_all (tilda_window *tw)
     char *title;
     int i;
     int size, list_count;
-    
+
     size = gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook);
     list_count = size-1;
-    
+
     for (i=0;i<size;i++,list_count--)
     {
         tt = g_list_nth (tw->terms, list_count)->data;
@@ -69,11 +69,11 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     back.red   =    cfg_getint (tw->tc, "back_red");
     back.green =    cfg_getint (tw->tc, "back_green");
     back.blue  =    cfg_getint (tw->tc, "back_blue");
-    
+
     fore.red   =    cfg_getint (tw->tc, "text_red");
     fore.green =    cfg_getint (tw->tc, "text_green");
     fore.blue  =    cfg_getint (tw->tc, "text_blue");
-    
+
     highlight.red = highlight.green = highlight.blue = 0xc000;
     cursor.red = 0xffff;
     cursor.green = cursor.blue = 0x8000;
@@ -81,7 +81,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint = black;
 
     TRANS_LEVEL = ((gdouble) cfg_getint (tw->tc, "transparency"))/100;
-    
+
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bell"));
     vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !cfg_getbool (tw->tc, "bell"));
@@ -91,7 +91,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_on_key"));
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bold"));
-    
+
     switch (cfg_getint (tw->tc, "backspace_key"))
     {
         case 0:
@@ -107,7 +107,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
             break;
     }
-    
+
     switch (cfg_getint (tw->tc, "delete_key"))
     {
         case 0:
@@ -123,11 +123,11 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
             break;
     }
-    
+
     bool_use_image = cfg_getbool (tw->tc, "use_image") || image_set_clo;
     use_antialias = cfg_getbool (tw->tc, "antialias") || antialias_set_clo;
     scroll = cfg_getbool (tw->tc, "scrollbar") || scroll_set_clo;
-    
+
     if (bool_use_image)
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "image"));
     else
@@ -140,7 +140,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     }
     else
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
-        
+
     vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
     vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fore, &back, NULL, 0);
 
@@ -165,7 +165,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     {
        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
-    
+
     gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, cfg_getint (tw->tc, "scrollbar_pos"));
 
     if (!from_main)
@@ -225,7 +225,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
 
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool (tw->tc, "notebook_border"));
-    
+
     window_title_change_all (tw);
 
     return TRUE;

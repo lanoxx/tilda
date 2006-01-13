@@ -48,7 +48,7 @@ static tilda_window *tw;
 
 void pull_no_args()
 {
-	pull(tw);
+    pull(tw);
 }
 
 /**
@@ -229,7 +229,7 @@ void clean_tmp (tilda_window *tw)
                     print_and_exit ("Out of memory, exiting...", 1);
             }
         }
-        
+
         pclose (ptr);
     }
 
@@ -334,10 +334,10 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         { NULL }
     };
 
-	
-	/* If the config file doesn't exist open up the wizard */
-	if (access (tw->config_file, R_OK) == -1)
-		show_config = TRUE;
+
+    /* If the config file doesn't exist open up the wizard */
+    if (access (tw->config_file, R_OK) == -1)
+        show_config = TRUE;
 
     /* Set up the command-line parser */
     GError *error = NULL;
