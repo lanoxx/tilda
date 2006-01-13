@@ -334,6 +334,11 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         { NULL }
     };
 
+	
+	/* If the config file doesn't exist open up the wizard */
+	if (access (tw->config_file, R_OK) == -1)
+		show_config = TRUE;
+
     /* Set up the command-line parser */
     GError *error = NULL;
     GOptionContext *context = g_option_context_new (NULL);
@@ -397,7 +402,7 @@ int main (int argc, char **argv)
     clean_tmp (tw);
 
     /* Set: tw->instance, tw->config_file, and parse the config file */
-    init_tilda_window_instance (tw);
+    init_tilda_window_instance (&argc, &argv, tw, tt);
 
 #ifdef DEBUG
     /* Have to do this early. */
