@@ -402,7 +402,7 @@ int main (int argc, char **argv)
     clean_tmp (tw);
 
     /* Set: tw->instance, tw->config_file, and parse the config file */
-    init_tilda_window_instance (&argc, &argv, tw, tt);
+    init_tilda_window_instance (tw);
 
 #ifdef DEBUG
     /* Have to do this early. */

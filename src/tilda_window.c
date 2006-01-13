@@ -124,7 +124,7 @@ gchar* get_config_file_name (tilda_window *tw)
  *
  * @param tw the tilda_window in which to store the config
  */
-void init_tilda_window_instance (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
+void init_tilda_window_instance (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("init_tilda_window_instance");
