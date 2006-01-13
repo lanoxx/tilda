@@ -297,7 +297,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_range_set_value (GTK_RANGE (slider_opacity), cfg_getint (tw->tc, "transparency"));
 
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
-	check_animation = gtk_check_button_new_with_label ("Animated Pulldown");
+    check_animation = gtk_check_button_new_with_label ("Animated Pulldown");
 
     image_chooser = gtk_file_chooser_dialog_new ("Open Background Image File",
                       GTK_WINDOW (wizard_window),
@@ -322,10 +322,10 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
         gtk_widget_hide (button_image);
     }
 
-	if (1)//cfg_getbool (tw->tc, "animation")
-	{
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_animation), TRUE);
-	}
+    if (cfg_getbool (tw->tc, "animation"))
+    {
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_animation), TRUE);
+    }
 
     gtk_signal_connect (GTK_OBJECT (check_use_image), "clicked", GTK_SIGNAL_FUNC(image_select), label_image);
 
@@ -347,7 +347,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-	gtk_table_attach (GTK_TABLE (table), check_animation, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3); 
+    gtk_table_attach (GTK_TABLE (table), check_animation, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3); 
 
     gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
  
@@ -695,6 +695,7 @@ void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "scroll_on_output", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_scroll_on_output)));
     cfg_setbool (tw->tc, "scroll_background", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_scroll_background)));
     cfg_setbool (tw->tc, "notebook_border", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_notebook_border)));
+    cfg_setbool (tw->tc, "animation", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_animation)));
 
     /* Write out the config file */
     fp = fopen(tw->config_file, "w");

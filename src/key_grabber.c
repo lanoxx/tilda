@@ -44,7 +44,7 @@ KeySym key;
  * The slide positions are derived from FVMW sources, file fvmm/move_resize.c,
  * to there added by Greg J. Badros, gjb@cs.washington.edu
  */
-	
+    
 static float posCFV[] = {.005, .01, .02, .03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 static unsigned long slide_sleep_usec = 15000;
 
@@ -53,39 +53,39 @@ void pull (struct tilda_window_ *tw)
 #ifdef DEBUG
     puts("pull");
 #endif
-	
-	gint i;
+    
+    gint i;
     gint w, h;
     static gint pos=0;
 
-	static gint last_pos_y = -1;
-	static gint last_height = -1;
-	
-	static gint pos_V_in = 0;
-   	static gint posIV[2][16];
+    static gint last_pos_y = -1;
+    static gint last_height = -1;
+    
+    static gint pos_V_in = 0;
+    static gint posIV[2][16];
 
     if (cfg_getint (tw->tc, "y_pos") != last_pos_y)
-	{
-		last_pos_y = cfg_getint (tw->tc, "y_pos");
-		pos_V_in = 0;
-	}
+    {
+        last_pos_y = cfg_getint (tw->tc, "y_pos");
+        pos_V_in = 0;
+    }
 
-	if (cfg_getint (tw->tc, "max_height") != last_height)
-	{
-		last_height = cfg_getint (tw->tc, "max_height");
-		pos_V_in = 0;
-	}
+    if (cfg_getint (tw->tc, "max_height") != last_height)
+    {
+        last_height = cfg_getint (tw->tc, "max_height");
+        pos_V_in = 0;
+    }
 
-    	if (!pos_V_in)
-	{
-		for (i=0; i<16; i++)
-		{
-			posIV[1][i] = (gint)(posCFV[i]*last_height);
-			posIV[0][i] = last_pos_y;
-		}
-		
-		pos_V_in = 1;
-	}
+        if (!pos_V_in)
+    {
+        for (i=0; i<16; i++)
+        {
+            posIV[1][i] = (gint)(posCFV[i]*last_height);
+            posIV[0][i] = last_pos_y;
+        }
+        
+        pos_V_in = 1;
+    }
 
     if (pos == 0)
     {
@@ -104,32 +104,28 @@ void pull (struct tilda_window_ *tw)
         if (cfg_getbool (tw->tc, "above"))
             gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
-        //gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
-        //gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
-        
-        	if (1)//cfg_getbool (tw->tc, ("animation"))
-		{
-			gdk_threads_leave();
-	        	for (i=0; i<16; i++)
-			{
-				gdk_threads_enter();
-		    	    	gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
-	        		gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
+        if (cfg_getbool (tw->tc, ("animation")))
+        {
+            gdk_threads_leave();
+            
+            for (i=0; i<16; i++)
+            {
+                gdk_threads_enter();
+                gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
+                gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
 
-		        	gdk_flush();
-		        	gdk_threads_leave();
-		    	    	usleep(slide_sleep_usec);
-			}
-		}
-		else
-		{
-	        	//gtk_window_move ((GtkWindow *) tw->window, tw->tc->x_pos, tw->tc->x_pos);
-	        //gtk_window_resize ((GtkWindow *) tw->window, tw->tc->max_width, tw->tc->max_height);
-	        gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
-        		gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
-		}
+                gdk_flush();
+                gdk_threads_leave();
+                usleep(slide_sleep_usec);
+            }
+        }
+        else
+        {
+            gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
+            gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
+        }
 
-		gdk_threads_enter();
+        gdk_threads_enter();
      
         gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
         
@@ -142,17 +138,17 @@ void pull (struct tilda_window_ *tw)
         
         pos--;
         
-		if (1)//cfg_getbool (tw->tc, ("animation"))
-		{
-        		for (i=15; i>=0; i--)
-			{
-    	    			gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
-        			gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
+        if (cfg_getbool (tw->tc, ("animation")))
+        {
+            for (i=15; i>=0; i--)
+            {
+                gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
+                gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
 
-        			gdk_flush();
-	        		usleep(slide_sleep_usec);
-			}
-		}
+                gdk_flush();
+                usleep(slide_sleep_usec);
+            }
+        }
 
         gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
         gtk_widget_hide ((GtkWidget *) tw->window);
