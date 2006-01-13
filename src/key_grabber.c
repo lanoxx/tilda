@@ -120,9 +120,11 @@ void pull (struct tilda_window_ *tw)
             }
         }
         else
-        {
+        {	
             gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
             gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
+        		gdk_flush();
+        		gdk_threads_leave();
         }
 
         gdk_threads_enter();
@@ -140,17 +142,25 @@ void pull (struct tilda_window_ *tw)
         
         if (cfg_getbool (tw->tc, ("animation")))
         {
+        		gdk_threads_leave();
             for (i=15; i>=0; i--)
             {
+            		gdk_threads_enter();
                 gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
                 gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
 
                 gdk_flush();
+                gdk_threads_leave();
                 usleep(slide_sleep_usec);
             }
+        } else {
+        		gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
+        		gdk_flush();
+            gdk_threads_leave();
         }
-
-        gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
+        
+        gdk_threads_enter();
+        
         gtk_widget_hide ((GtkWidget *) tw->window);
 
         gdk_flush ();
