@@ -45,8 +45,7 @@ KeySym key;
  * to there added by Greg J. Badros, gjb@cs.washington.edu
  */
 
-static float posCFV[] = {.005, .01, .02, .03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
-static unsigned long slide_sleep_usec = 15000;
+static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 
 void pull (struct tilda_window_ *tw)
 {
@@ -116,7 +115,7 @@ void pull (struct tilda_window_ *tw)
 
                 gdk_flush();
                 gdk_threads_leave();
-                usleep(slide_sleep_usec);
+                usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
             }
         }
         else
@@ -151,7 +150,7 @@ void pull (struct tilda_window_ *tw)
 
                 gdk_flush();
                 gdk_threads_leave();
-                usleep(slide_sleep_usec);
+                usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
             }
         }
         else
@@ -244,10 +243,6 @@ void *wait_for_signal (tilda_window *tw)
         pull (tw);
     else
     {
-        /*gdk_threads_enter();
-        gtk_widget_hide (tw->window);
-        gdk_flush ();
-        gdk_threads_leave();*/
         pull (tw);
         pull (tw);
     }

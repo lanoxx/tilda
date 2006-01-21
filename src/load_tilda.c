@@ -21,6 +21,7 @@
 
 #include "tilda.h"
 #include "callback_func.h"
+#include "key_grabber.h"
 #include "../tilda-config.h"
 
 void window_title_change_all (tilda_window *tw)

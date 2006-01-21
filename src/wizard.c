@@ -35,7 +35,7 @@
 int exit_status=0;
 
 GtkWidget *wizard_window;
-GtkWidget *check_notebook_border;
+GtkWidget *check_notebook_border, *spin_slide_sleep_usec;
 GtkWidget *check_scroll_background, *check_scroll_on_output;
 GtkWidget *entry_title, *combo_set_title, *check_run_command, *entry_command, *combo_command_exit;
 GtkWidget *check_allow_bold, *check_cursor_blinks, *check_terminal_bell;
@@ -268,7 +268,8 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     GtkWidget *label_opacity;
     GtkWidget *label_height, *label_width;
     GtkWidget *label_x_pos, *label_y_pos;
-
+    GtkWidget *label_slide_sleep_usec;
+ 
     char s_max_height[6], s_max_width[6];
     char s_x_pos[6], s_y_pos[6];
 
@@ -295,7 +296,11 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_entry_set_text (GTK_ENTRY (entry_x_pos), s_x_pos);
     gtk_entry_set_text (GTK_ENTRY (entry_y_pos), s_y_pos);
     gtk_range_set_value (GTK_RANGE (slider_opacity), cfg_getint (tw->tc, "transparency"));
-
+    
+    label_slide_sleep_usec = gtk_label_new ("Animated Delay (in usecs):");
+    spin_slide_sleep_usec = gtk_spin_button_new_with_range (0, MAX_INT, 1);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_slide_sleep_usec), cfg_getint (tw->tc, "slide_sleep_usec"));
+    
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
     check_animation = gtk_check_button_new_with_label ("Animated Pulldown");
 
@@ -345,7 +350,9 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_animation, 0, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_animation, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_slide_sleep_usec, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), spin_slide_sleep_usec,  2, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
     gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
@@ -363,6 +370,8 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (entry_y_pos);
     gtk_widget_show (label_y_pos);
     gtk_widget_show (check_animation);
+    gtk_widget_show (label_slide_sleep_usec);
+    gtk_widget_show (spin_slide_sleep_usec);
     gtk_widget_show (check_use_image);
     gtk_widget_show (label_image);
     gtk_widget_show (button_image);
@@ -669,6 +678,7 @@ void apply_settings (tilda_window *tw)
     cfg_setint (tw->tc, "command_exit", gtk_combo_box_get_active ((GtkComboBox *) combo_command_exit));
     cfg_setint (tw->tc, "scheme", gtk_combo_box_get_active ((GtkComboBox *) combo_schemes));
     cfg_setint (tw->tc, "scrollbar_pos", gtk_combo_box_get_active ((GtkComboBox *) combo_scroll_pos));
+    cfg_setint (tw->tc, "slide_sleep_usec", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin_slide_sleep_usec)));
 
     gtk_color_button_get_color ((GtkColorButton *) text_color, &gdk_text_color);
     gtk_color_button_get_color ((GtkColorButton *) back_color, &gdk_back_color);
