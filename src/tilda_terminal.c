@@ -27,6 +27,7 @@
 #include "callback_func.h"
 #include "load_tilda.h"
 
+
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
@@ -38,7 +39,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
 
     GtkAccelGroup *accel_group;
     GClosure *close;
-    gboolean dingus = FALSE, dbuffer = TRUE;
+    gboolean dingus = FALSE;
     gint i;
     tilda_collect *t_collect;
     gchar *command;
@@ -54,8 +55,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     tt->vte_term = vte_terminal_new ();
     tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
 
-    if (!dbuffer)
-        gtk_widget_set_double_buffered (tt->vte_term, dbuffer);
+    /* Causes terminal to blink if TRUE */
+    gtk_widget_set_double_buffered (tt->vte_term, FALSE);
 
     switch (cfg_getint (tw->tc, "scrollbar_pos"))
     {

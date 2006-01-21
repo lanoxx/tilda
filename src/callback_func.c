@@ -41,7 +41,6 @@ static GtkItemFactoryEntry menu_items[] = {
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
-
 void fix_size_settings (tilda_window *tw)
 {
 #ifdef DEBUG
@@ -599,4 +598,3 @@ void decrease_font_size (GtkWidget *widget, gpointer data)
 
     adjust_font_size (widget, data, -1);
 }
-
