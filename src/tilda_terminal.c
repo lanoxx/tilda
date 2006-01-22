@@ -127,7 +127,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND1);
     }
 
-    if ((command = cfg_getstr (tw->tc, "command")) == NULL || !cfg_getbool (tw->tc, "run_command"))
+    if (strcmp((command = cfg_getstr (tw->tc, "command")), "")==0 || !cfg_getbool (tw->tc, "run_command"))
         command = getenv ("SHELL");
 
     vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),

@@ -85,7 +85,7 @@ void pull (struct tilda_window_ *tw)
 
         pos_V_in = 1;
     }
-
+    
     if (pos == 0)
     {
         gdk_threads_enter();

@@ -1,8 +1,13 @@
+version 0.09.2 (2006-1-21):
 	* Added libConfuse to configure.in.
 	* Better command-line option help generation.
 	* Switch to libConfuse for config-file parsing.
 	* Internal cleanups / documentation.
 	* Increase use of GLib.
+	* Sliding action added
+	* No more blinking terminal
+	* Added shortcuts for adding tabs and going to the next or prev tab
+	* Various bug fixes
 
 version 0.09.1 (2005-10-4):
 	* Fixed problem of tab taking other tabs title

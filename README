@@ -3,6 +3,8 @@ email questions/comments to sloutri@iit.edu
 1) Here is the software you'll need installed besides tilda:
 
 ftp://ftp.gnome.org/pub/GNOME/sources/vte/
+http://www.nongnu.org/confuse/
+glib >= 2.8
 
 2) unzip and untar the source, change directorys to the tilda dir and run:
 

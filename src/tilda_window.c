@@ -32,7 +32,7 @@ static cfg_opt_t new_conf[] = {
 
     /* strings */
     CFG_STR("image", NULL, CFGF_NONE),
-    CFG_STR("command", NULL, CFGF_NONE),
+    CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 13", CFGF_NONE),
     CFG_STR("key", NULL, CFGF_NONE),
     CFG_STR("title", "Tilda", CFGF_NONE),
@@ -43,8 +43,8 @@ static cfg_opt_t new_conf[] = {
     CFG_INT("lines", 100, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),
     CFG_INT("max_height", 150, CFGF_NONE),
-    CFG_INT("min_width", 0, CFGF_NONE),
-    CFG_INT("min_height", 0, CFGF_NONE),
+    CFG_INT("min_width", 1, CFGF_NONE),
+    CFG_INT("min_height", 1, CFGF_NONE),
     CFG_INT("transparency", 0, CFGF_NONE),
     CFG_INT("x_pos", 0, CFGF_NONE),
     CFG_INT("y_pos", 0, CFGF_NONE),
