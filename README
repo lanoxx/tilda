@@ -33,3 +33,6 @@ forground color to white and the terminal transparent.
 
 7) lock files are stored in ~/.tilda/locks now so keep an eye on that dir if Tilda
 dies in an odd way, seg fault or xkill.
+
+8) Shortcuts for tabs are: Ctrl-Shift-T (New Tab), Ctrl-Shift-PageUp (Next Tab),
+Ctrl-Shift-PageDown (Prev Tab)
