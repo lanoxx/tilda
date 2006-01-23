@@ -37,8 +37,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     puts("init_tilda_terminal");
 #endif
 
-    GtkAccelGroup *accel_group;
-    GClosure *close;
     gboolean dingus = FALSE;
     gint i;
     tilda_collect *t_collect;
@@ -146,14 +144,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, tt);
-
-    /* Create Accel Group to add key codes for closing tabs */
-    //accel_group = gtk_accel_group_new ();
-    //gtk_window_add_accel_group (GTK_WINDOW (tt->vte_term), accel_group);
-
-    /* Delete Current Tab */
-    //close = g_cclosure_new_swap ((GCallback) close_tab, t_collect, NULL);
-    //gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, close);    
 
     /* Set everything up and display the widgets.
      * Sending TRUE to let it know we are in main()
