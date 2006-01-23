@@ -172,6 +172,61 @@ void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
     add_tab (tw);
 }
 
+tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
+{
+#ifdef DEBUG
+    puts("find_tt_in_g_list");
+#endif
+    
+    GtkWidget *page, *current_page;
+    int i, list_length;
+    GList *terms = g_list_first (tw->terms);
+    tilda_term *result=NULL;
+    
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
+    
+    do
+    {
+        page = ((tilda_term *) terms->data)->hbox;
+        if (page == current_page)
+        {
+            result = terms->data;
+            break;
+        }
+    } while ((terms = terms->next) != NULL);
+    
+    return result;
+}
+
+void close_current_tab (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("close_current_tab");
+#endif
+
+    gint pos;
+    tilda_term *tt;
+
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
+    {
+        clean_up (tw);
+    }
+    else
+    {
+        pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+        if ((tt = find_tt_in_g_list (tw, pos)) != NULL)
+        {
+            gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
+
+            if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+                gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+        
+            tw->terms = g_list_remove (tw->terms, tt);
+            free (tt);
+        } 
+    }
+}
+
 void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 {
 #ifdef DEBUG
@@ -212,7 +267,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 #endif
 
     GtkAccelGroup *accel_group;
-    GClosure *clean, *next, *prev, *add;
+    GClosure *clean, *close, *next, *prev, *add;
     GError *error;
 
     /* Create a window to hold the scrolling shell, and hook its
@@ -273,6 +328,10 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Go to New Tab */
     add = g_cclosure_new_swap ((GCallback) add_tab, tw, NULL);
     gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, add);
+
+    /* Delete Current Tab */
+    close = g_cclosure_new_swap ((GCallback) close_current_tab, tw, NULL);
+    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, close);    
 
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 
