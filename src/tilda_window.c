@@ -164,12 +164,7 @@ void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
     puts("add_tab_menu_call");
 #endif
 
-    tilda_window *tw;
-    tilda_collect *tc = (tilda_collect *) data;
-
-    tw = tc->tw;
-
-    add_tab (tw);
+    add_tab (((tilda_collect *) data)->tw);
 }
 
 tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
