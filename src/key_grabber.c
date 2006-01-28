@@ -46,6 +46,57 @@ KeySym key;
  */
 
 static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
+// 0 - ypos, 1 - height, 2 - xpos, 3 - width
+static gint posIV[4][16]; 
+
+void generate_animation_positions(struct tilda_window_ *tw)
+{
+    gint i;
+
+#if DEBUG
+    printf("generate_animation_positions(): %d\n",cfg_getint (tw->tc, "animation_orientation"));
+#endif 
+
+    gint last_pos_x = cfg_getint (tw->tc, "x_pos");
+    gint last_pos_y = cfg_getint (tw->tc, "y_pos");
+    gint last_width = cfg_getint (tw->tc, "max_width");
+    gint last_height = cfg_getint (tw->tc, "max_height");
+
+    for (i=0; i<16; i++)
+    {
+        switch (cfg_getint (tw->tc, "animation_orientation"))
+        {
+        case 3: // right->left RIGHT
+            //posIV[3][i] = (gint)(posCFV[i]*last_width);
+            //posIV[2][i] = (gint)(last_pos_x+last_width-posIV[3][i]);
+            posIV[3][i] = last_width;
+            posIV[2][i] = (gint)(last_pos_x+last_width-posCFV[i]*last_width);
+            posIV[1][i] = last_height;
+            posIV[0][i] = last_pos_y;
+            break;
+        case 2: // left->right LEFT
+            //posIV[3][i] = (gint)(posCFV[i]*last_width);
+            //posIV[2][i] = last_pos_x;
+            posIV[3][i] = last_width;
+            posIV[2][i] = (gint)(last_pos_x-last_width+posCFV[i]*last_width);
+            posIV[1][i] = last_height;
+            posIV[0][i] = last_pos_y;
+            break;
+        case 1: // bottom->top BOTTOM
+            posIV[3][i] = last_width;
+            posIV[2][i] = last_pos_x;
+            posIV[1][i] = (gint)(posCFV[i]*last_height);        
+            posIV[0][i] = (gint)(last_pos_y+last_height-posIV[1][i]);
+            break;
+        case 0: // top->bottom TOP
+        default:
+            posIV[3][i] = last_width;
+            posIV[2][i] = last_pos_x;
+            posIV[1][i] = (gint)(posCFV[i]*last_height);            
+            posIV[0][i] = last_pos_y;
+        }
+    }
+}
 
 void pull (struct tilda_window_ *tw)
 {
@@ -56,35 +107,6 @@ void pull (struct tilda_window_ *tw)
     gint i;
     gint w, h;
     static gint pos=0;
-
-    static gint last_pos_y = -1;
-    static gint last_height = -1;
-
-    static gint pos_V_in = 0;
-    static gint posIV[2][16];
-
-    if (cfg_getint (tw->tc, "y_pos") != last_pos_y)
-    {
-        last_pos_y = cfg_getint (tw->tc, "y_pos");
-        pos_V_in = 0;
-    }
-
-    if (cfg_getint (tw->tc, "max_height") != last_height)
-    {
-        last_height = cfg_getint (tw->tc, "max_height");
-        pos_V_in = 0;
-    }
-
-    if (!pos_V_in)
-    {
-        for (i=0; i<16; i++)
-        {
-            posIV[1][i] = (gint)(posCFV[i]*last_height);
-            posIV[0][i] = last_pos_y;
-        }
-
-        pos_V_in = 1;
-    }
     
     if (pos == 0)
     {
@@ -110,8 +132,8 @@ void pull (struct tilda_window_ *tw)
             for (i=0; i<16; i++)
             {
                 gdk_threads_enter();
-                gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
-                gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
+                gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
+                gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
 
                 gdk_flush();
                 gdk_threads_leave();
@@ -145,8 +167,8 @@ void pull (struct tilda_window_ *tw)
             for (i=15; i>=0; i--)
             {
                 gdk_threads_enter();
-                gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), posIV[0][i]);
-                gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), posIV[1][i]);
+                gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
+                gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
 
                 gdk_flush();
                 gdk_threads_leave();

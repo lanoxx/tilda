@@ -49,6 +49,7 @@ GtkWidget *combo_backspace, *combo_delete;
 GtkWidget *button_font;
 GtkWidget *combo_scroll_pos, *check_scroll_on_keystroke;
 GtkWidget *check_animation;
+GtkWidget *label_tab_orientation, *combo_tab_orientation;
 
 gboolean in_main = FALSE;
 
@@ -297,9 +298,17 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_entry_set_text (GTK_ENTRY (entry_y_pos), s_y_pos);
     gtk_range_set_value (GTK_RANGE (slider_opacity), cfg_getint (tw->tc, "transparency"));
     
-    label_slide_sleep_usec = gtk_label_new ("Animated Delay (in usecs):");
+    label_slide_sleep_usec = gtk_label_new ("Animation Delay (in usecs):");
     spin_slide_sleep_usec = gtk_spin_button_new_with_range (0, MAX_INT, 1);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin_slide_sleep_usec), cfg_getint (tw->tc, "slide_sleep_usec"));
+
+    label_tab_orientation = gtk_label_new("Orientation:");
+    combo_tab_orientation = gtk_combo_box_new_text    ();
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_orientation, "RIGHT");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_orientation, "LEFT");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_orientation, "BOTTOM");
+    gtk_combo_box_prepend_text ((GtkComboBox *)combo_tab_orientation, "TOP");
+    gtk_combo_box_set_active ((GtkComboBox *)combo_tab_orientation, cfg_getint (tw->tc, "animation_orientation"));
     
     check_use_image = gtk_check_button_new_with_label ("Use Image for Background");
     check_animation = gtk_check_button_new_with_label ("Animated Pulldown");
@@ -353,11 +362,13 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), check_animation, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), label_slide_sleep_usec, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), spin_slide_sleep_usec,  2, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_tab_orientation, 1, 2, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_tab_orientation,  2, 3, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 6, 7, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 8, 9, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 8, 9, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
     gtk_widget_show (entry_height);
     gtk_widget_show (label_height);
@@ -375,6 +386,8 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_widget_show (check_use_image);
     gtk_widget_show (label_image);
     gtk_widget_show (button_image);
+    gtk_widget_show (label_tab_orientation);
+    gtk_widget_show (combo_tab_orientation);
 
     return table;
 }
@@ -679,6 +692,7 @@ void apply_settings (tilda_window *tw)
     cfg_setint (tw->tc, "scheme", gtk_combo_box_get_active ((GtkComboBox *) combo_schemes));
     cfg_setint (tw->tc, "scrollbar_pos", gtk_combo_box_get_active ((GtkComboBox *) combo_scroll_pos));
     cfg_setint (tw->tc, "slide_sleep_usec", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin_slide_sleep_usec)));
+    cfg_setint (tw->tc, "animation_orientation", gtk_combo_box_get_active ((GtkComboBox *) combo_tab_orientation));
 
     gtk_color_button_get_color ((GtkColorButton *) text_color, &gdk_text_color);
     gtk_color_button_get_color ((GtkColorButton *) back_color, &gdk_back_color);
@@ -733,7 +747,10 @@ gint ok (tilda_window *tw)
     gtk_widget_destroy (wizard_window);
 
     if (in_main)
+    {
         gtk_main_quit();
+        in_main = FALSE;
+    }
 
     return (TRUE);
 }

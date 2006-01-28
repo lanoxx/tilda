@@ -218,6 +218,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
 
+    // redo animation positions
+    generate_animation_positions (tw);
 
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), cfg_getbool (tw->tc, "notaskbar"));
     gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
