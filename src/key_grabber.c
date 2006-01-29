@@ -252,6 +252,7 @@ void *wait_for_signal (tilda_window *tw)
 {
     KeySym grabbed_key;
     XEvent event;
+    //unsigned int display_width, display_height;
 
     if (!(dpy = XOpenDisplay(NULL)))
         fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
@@ -259,6 +260,9 @@ void *wait_for_signal (tilda_window *tw)
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
+    //display_width = DisplayWidth(display,screen); 
+    //display_height = DisplayHeight(display,screen);
+    
     key_grab (tw);
 
     if (cfg_getbool (tw->tc, "down"))
