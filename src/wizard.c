@@ -666,7 +666,7 @@ void apply_settings (tilda_window *tw)
     FILE *fp;
     gchar *tmp_str;
     tilda_term *tt;
-    gint i;
+    guint i;
 
     cfg_setstr (tw->tc, "key", gtk_entry_get_text (GTK_ENTRY (entry_key)));
     cfg_setstr (tw->tc, "font", gtk_font_button_get_font_name (GTK_FONT_BUTTON (button_font)));
@@ -799,6 +799,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gchar title[20];
     gchar *tabs[] = {"General", "Title and Command", "Appearance", "Colors", "Scrolling", "Compatibility", "Keybindings"};
 
+    FILE *fp;
+    gint i;
+
     GtkWidget* (*contents[7])(tilda_window *, tilda_term *);
 
     contents[0] = general;
@@ -808,9 +811,6 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     contents[4] = scrolling;
     contents[5] = compatibility;
     contents[6] = keybindings;
-
-    FILE *fp;
-    gint i;
 
     if (argv != NULL)
         argv0 = argv[0];

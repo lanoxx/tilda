@@ -92,8 +92,8 @@ gint getnextinstance (tilda_window *tw)
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
-    //FIXME: check that this name corresponds to a valid lock
-    //FIXME: check the last char(s) to find out the correct next instance
+    /* FIXME: check that this name corresponds to a valid lock */
+    /* FIXME: check the last char(s) to find out the correct next instance */
     while (g_dir_read_name (dir))
         count++;
 

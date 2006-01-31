@@ -75,7 +75,7 @@ void free_and_remove (tilda_window *tw)
     puts("free_and_remove");
 #endif
 
-    int i;
+    guint i;
 
     remove (tw->lock_file);
 

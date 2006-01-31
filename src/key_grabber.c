@@ -46,7 +46,7 @@ KeySym key;
  */
 
 static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
-// 0 - ypos, 1 - height, 2 - xpos, 3 - width
+/* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
 static gint posIV[4][16]; 
 
 void generate_animation_positions(struct tilda_window_ *tw)
@@ -66,29 +66,29 @@ void generate_animation_positions(struct tilda_window_ *tw)
     {
         switch (cfg_getint (tw->tc, "animation_orientation"))
         {
-        case 3: // right->left RIGHT
-            //posIV[3][i] = (gint)(posCFV[i]*last_width);
-            //posIV[2][i] = (gint)(last_pos_x+last_width-posIV[3][i]);
+        case 3: /* right->left RIGHT */
+            /*posIV[3][i] = (gint)(posCFV[i]*last_width); */
+            /*posIV[2][i] = (gint)(last_pos_x+last_width-posIV[3][i]); */
             posIV[3][i] = last_width;
             posIV[2][i] = (gint)(last_pos_x+last_width-posCFV[i]*last_width);
             posIV[1][i] = last_height;
             posIV[0][i] = last_pos_y;
             break;
-        case 2: // left->right LEFT
-            //posIV[3][i] = (gint)(posCFV[i]*last_width);
-            //posIV[2][i] = last_pos_x;
+        case 2: /* left->right LEFT */
+            /*posIV[3][i] = (gint)(posCFV[i]*last_width); */
+            /*posIV[2][i] = last_pos_x; */
             posIV[3][i] = last_width;
             posIV[2][i] = (gint)(last_pos_x-last_width+posCFV[i]*last_width);
             posIV[1][i] = last_height;
             posIV[0][i] = last_pos_y;
             break;
-        case 1: // bottom->top BOTTOM
+        case 1: /* bottom->top BOTTOM */
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
             posIV[1][i] = (gint)(posCFV[i]*last_height);        
             posIV[0][i] = (gint)(last_pos_y+last_height-posIV[1][i]);
             break;
-        case 0: // top->bottom TOP
+        case 0: /* top->bottom TOP */
         default:
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
@@ -252,7 +252,7 @@ void *wait_for_signal (tilda_window *tw)
 {
     KeySym grabbed_key;
     XEvent event;
-    //unsigned int display_width, display_height;
+    /*unsigned int display_width, display_height;*/
 
     if (!(dpy = XOpenDisplay(NULL)))
         fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
@@ -260,8 +260,8 @@ void *wait_for_signal (tilda_window *tw)
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
-    //display_width = DisplayWidth(display,screen); 
-    //display_height = DisplayHeight(display,screen);
+    /*display_width = DisplayWidth(display,screen);*/ 
+    /*display_height = DisplayHeight(display,screen);*/
     
     key_grab (tw);
 
