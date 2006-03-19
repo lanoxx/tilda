@@ -85,6 +85,104 @@ void free_and_remove (tilda_window *tw)
     g_list_free (tw->terms);
 }
 
+void goto_tab (tilda_window *tw, int i)
+{
+#ifdef DEBUG
+    puts("goto_tab");
+#endif
+
+    gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
+}
+
+void goto_tab_1 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 1");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-1);
+}
+
+void goto_tab_2 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 2");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-2);
+}
+
+void goto_tab_3 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 3");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-3);
+}
+
+void goto_tab_4 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 4");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-4);
+}
+
+void goto_tab_5 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 5");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-5);
+}
+
+void goto_tab_6 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 6");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-6);
+}
+
+void goto_tab_7 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 7");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-7);
+}
+
+void goto_tab_8 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 8");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-8);
+}
+
+void goto_tab_9 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 9");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-9);
+}
+
+void goto_tab_10 (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("goto_tab 110");
+#endif
+
+    goto_tab (tw, g_slist_length (tw->terms)-10);
+}
 
 void next_tab (tilda_window *tw)
 {
