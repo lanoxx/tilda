@@ -28,14 +28,14 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab",        "<Ctrl><Shift>T", add_tab_menu_call,     0, "<Item>"                             },
-    { "/_Close Tab",      NULL,      close_tab,             0, "<Item>"                             },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/_New Tab", "<Ctrl><Shift>T", add_tab_menu_call,     0, "<Item>",      NULL                  },
+    { "/_Close Tab",      NULL,      close_tab,             0, "<Item>",      NULL                  },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
     { "/_Copy",           NULL,      copy,                  0, "<StockItem>", GTK_STOCK_COPY        },
     { "/_Paste",          NULL,      paste,                 0, "<StockItem>", GTK_STOCK_PASTE       },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
     { "/_Preferences...", NULL,      config_and_update,     0, "<StockItem>", GTK_STOCK_PREFERENCES },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>"                        },
+    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
     { "/_Quit",         "<Ctrl>Q",   menu_quit,             0, "<StockItem>", GTK_STOCK_QUIT        }
 };
 
@@ -85,7 +85,7 @@ void free_and_remove (tilda_window *tw)
     g_list_free (tw->terms);
 }
 
-void goto_tab (tilda_window *tw, int i)
+void goto_tab (tilda_window *tw, guint i)
 {
 #ifdef DEBUG
     puts("goto_tab");
@@ -100,7 +100,7 @@ void goto_tab_1 (tilda_window *tw)
     puts("goto_tab 1");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-1);
+    goto_tab (tw, g_list_length (tw->terms)-1);
 }
 
 void goto_tab_2 (tilda_window *tw)
@@ -109,7 +109,7 @@ void goto_tab_2 (tilda_window *tw)
     puts("goto_tab 2");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-2);
+    goto_tab (tw, g_list_length (tw->terms)-2);
 }
 
 void goto_tab_3 (tilda_window *tw)
@@ -118,7 +118,7 @@ void goto_tab_3 (tilda_window *tw)
     puts("goto_tab 3");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-3);
+    goto_tab (tw, g_list_length (tw->terms)-3);
 }
 
 void goto_tab_4 (tilda_window *tw)
@@ -127,7 +127,7 @@ void goto_tab_4 (tilda_window *tw)
     puts("goto_tab 4");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-4);
+    goto_tab (tw, g_list_length (tw->terms)-4);
 }
 
 void goto_tab_5 (tilda_window *tw)
@@ -136,7 +136,7 @@ void goto_tab_5 (tilda_window *tw)
     puts("goto_tab 5");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-5);
+    goto_tab (tw, g_list_length (tw->terms)-5);
 }
 
 void goto_tab_6 (tilda_window *tw)
@@ -145,7 +145,7 @@ void goto_tab_6 (tilda_window *tw)
     puts("goto_tab 6");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-6);
+    goto_tab (tw, g_list_length (tw->terms)-6);
 }
 
 void goto_tab_7 (tilda_window *tw)
@@ -154,7 +154,7 @@ void goto_tab_7 (tilda_window *tw)
     puts("goto_tab 7");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-7);
+    goto_tab (tw, g_list_length (tw->terms)-7);
 }
 
 void goto_tab_8 (tilda_window *tw)
@@ -163,7 +163,7 @@ void goto_tab_8 (tilda_window *tw)
     puts("goto_tab 8");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-8);
+    goto_tab (tw, g_list_length (tw->terms)-8);
 }
 
 void goto_tab_9 (tilda_window *tw)
@@ -172,7 +172,7 @@ void goto_tab_9 (tilda_window *tw)
     puts("goto_tab 9");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-9);
+    goto_tab (tw, g_list_length (tw->terms)-9);
 }
 
 void goto_tab_10 (tilda_window *tw)
@@ -181,7 +181,7 @@ void goto_tab_10 (tilda_window *tw)
     puts("goto_tab 10");
 #endif
 
-    goto_tab (tw, g_slist_length (tw->terms)-10);
+    goto_tab (tw, g_list_length (tw->terms)-10);
 }
 
 void next_tab (tilda_window *tw)
