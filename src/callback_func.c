@@ -178,7 +178,7 @@ void goto_tab_9 (tilda_window *tw)
 void goto_tab_10 (tilda_window *tw)
 {
 #ifdef DEBUG
-    puts("goto_tab 110");
+    puts("goto_tab 10");
 #endif
 
     goto_tab (tw, g_slist_length (tw->terms)-10);
