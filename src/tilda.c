@@ -94,11 +94,13 @@ gint getnextinstance (tilda_window *tw)
 
     /* FIXME: check that this name corresponds to a valid lock */
     /* FIXME: check the last char(s) to find out the correct next instance */
-    while (g_dir_read_name (dir))
+    while (dir != NULL && g_dir_read_name (dir))
         count++;
 
     /* Free memory that we allocated */
-    g_dir_close (dir);
+    if (dir != NULL)
+        g_dir_close (dir);
+
     free (lock_dir);
 
     return count;
@@ -253,7 +255,7 @@ void clean_tmp (tilda_window *tw)
 
     /* For each possible lock file, check if it is a lock, and see if
      * it matches one of the running tildas */
-    while (filename = (gchar*)g_dir_read_name (dir))
+    while (dir != NULL && (filename = (gchar*)g_dir_read_name (dir)))
     {
         if (islockfile (filename, &pid))
         {
@@ -281,7 +283,9 @@ void clean_tmp (tilda_window *tw)
         }
     }
 
-    g_dir_close (dir);
+    if (dir != NULL)
+        g_dir_close (dir);
+    
     free (running_pids);
     free (lock_dir);
 }
