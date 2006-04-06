@@ -320,6 +320,7 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
     gboolean antialias = cfg_getbool (tw->tc, "antialias");
     gboolean scrollbar = cfg_getbool (tw->tc, "scrollbar");
     gboolean show_config = FALSE;
+    gboolean version = FALSE;
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
@@ -330,6 +331,7 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             "Scrollback Lines", NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         "Use Scrollbar", NULL },
         { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      "Opaqueness: 0-100%", NULL },
+        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           "Print the version, then exit", NULL },
         { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       "Set Initial Working Directory", NULL },
         { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             "X Position", NULL },
         { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             "Y Position", NULL },
@@ -349,7 +351,34 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
     g_option_context_add_main_entries (context, cl_opts, NULL);
     g_option_context_add_group (context, gtk_get_option_group (TRUE));
     g_option_context_parse (context, argc, argv, &error);
+    g_option_context_free (context);
 
+    /* Check for unknown options, and give a nice message if there are some */
+    if (error)
+    {
+        printf ("Error parsing command-line options. Try \"tilda --help\"\n");
+        printf ("to see all possible options.\n\n");
+
+        printf ("Error message: %s\n", error->message);
+        
+        exit (1);
+    }
+    
+    /* If we need to show the version, show it then exit normally */
+    if (version)
+    {
+        printf ("%s\n\n", TILDA_VERSION);
+        
+        printf ("Copyright (c) 2005,2006 Tristan Sloughter (sloutri@iit.edu)\n");
+        printf ("Copyright (c) 2005,2006 Ira W. Snyder (tilda@irasnyder.com)\n\n");
+        
+        printf ("This program comes with ABSOLUTELY NO WARRANTY.\n");
+        printf ("This is free software, and you are welcome to redistribute it\n");
+        printf ("under certain conditions. See the file COPYING for details.\n");
+
+        exit (0);
+    }
+    
     /* Now set the options in the config, if they changed */
     if (background_color != cfg_getstr (tw->tc, "background_color"))
         cfg_setstr (tw->tc, "background_color", background_color);
