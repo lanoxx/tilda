@@ -744,7 +744,6 @@ gint ok (tilda_window *tw)
 
     apply_settings (tw);
     exit_status = 0;
-    gtk_widget_destroy (wizard_window);
 
     if (in_main)
     {
@@ -780,6 +779,16 @@ gint exit_app (GtkWidget *widget, gpointer data)
     return (FALSE);
 }
 
+static void wizard_window_response_cb(GtkDialog* wizard_window, 
+                                      int response, 
+                                      tilda_window *tw)
+{
+    if (response == GTK_RESPONSE_OK) {
+        ok (tw);
+    } 
+    
+}
+
 int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
@@ -790,6 +799,7 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     GtkWidget *table;
     GtkWidget *notebook;
     GtkWidget *label;
+    
     GtkWidget *table2;
     GtkWidget *image;
     GdkPixmap *image_pix;
@@ -823,26 +833,37 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
         gtk_init (&argc, &argv);
     }
 
-    wizard_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_resizable (GTK_WINDOW(wizard_window), FALSE);
-    gtk_window_set_position(GTK_WINDOW(wizard_window), GTK_WIN_POS_CENTER);
-    gtk_widget_realize (wizard_window);
+    wizard_window = gtk_dialog_new_with_buttons (
+      "Configure Tilda",
+      NULL,
+      0,
+      GTK_STOCK_QUIT,
+      GTK_RESPONSE_CANCEL,
+      GTK_STOCK_OK,
+      GTK_RESPONSE_OK,
+      NULL);
+      
+    gtk_dialog_set_default_response (GTK_DIALOG (wizard_window), GTK_RESPONSE_OK);
+      
+    /*gtk_window_set_resizable (GTK_WINDOW(wizard_window), FALSE);*/
+    /*gtk_window_set_position(GTK_WINDOW(wizard_window), GTK_WIN_POS_CENTER);*/
+    /*gtk_widget_realize (wizard_window);*/
 
     g_strlcpy (title, "Tilda", sizeof (title));
     sprintf (title, "%s %i Config", title, tw->instance);
     gtk_window_set_title (GTK_WINDOW (wizard_window), title);
 
-    g_signal_connect (G_OBJECT (wizard_window), "delete_event",
-                  G_CALLBACK (exit_app), NULL);
+    /*g_signal_connect (G_OBJECT (wizard_window), "delete_event",
+                  G_CALLBACK (exit_app), NULL);*/
 
     gtk_container_set_border_width (GTK_CONTAINER (wizard_window), 10);
 
     table = gtk_table_new (3, 3, FALSE);
     gtk_table_set_row_spacings (GTK_TABLE (table), 10);
     gtk_table_set_col_spacings (GTK_TABLE (table), 10);
-
-    gtk_container_add (GTK_CONTAINER (wizard_window), table);
-
+    
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (wizard_window)->vbox), GTK_WIDGET (table), TRUE, TRUE, 7);
+    
     /* Create a new notebook, place the position of the tabs */
     notebook = gtk_notebook_new ();
     gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
@@ -861,30 +882,20 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
 
-    button = gtk_button_new_with_label ("OK");
-    g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (ok), tw);
-    gtk_table_attach_defaults (GTK_TABLE (table), button, 0, 1, 2, 3);
-    gtk_widget_show (button);
 
-    button = gtk_button_new_with_label ("Apply");
-    g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (apply), tw);
-    gtk_table_attach_defaults (GTK_TABLE (table), button, 1, 2, 2, 3);
-    gtk_widget_show (button);
-
-    button = gtk_button_new_with_label ("Cancel");
-    g_signal_connect_swapped (G_OBJECT (button), "clicked",
-                  G_CALLBACK (exit_app), NULL);
-    gtk_table_attach_defaults (GTK_TABLE (table), button, 2, 3, 2, 3);
-    gtk_widget_show (button);
+    g_signal_connect (G_OBJECT (wizard_window), "response",
+      G_CALLBACK (wizard_window_response_cb), tw);
 
     gtk_widget_show (notebook);
     gtk_widget_show (table);
-    gtk_widget_show (wizard_window);
+    /*gtk_widget_show (wizard_window);*/
+    
+    exit_status = gtk_dialog_run (GTK_DIALOG (wizard_window)) != GTK_RESPONSE_OK;
+    
+    gtk_widget_destroy (GTK_WIDGET (wizard_window));
 
-    if (in_main)
-        gtk_main ();
+    /*if (in_main)
+        gtk_main ();*/
 
     return exit_status;
 }

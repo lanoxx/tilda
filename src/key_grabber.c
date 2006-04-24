@@ -269,6 +269,10 @@ void *wait_for_signal (tilda_window *tw)
         pull (tw);
     else
     {
+        /*
+         * Fixes bug that causes Tilda to eat up 100% of CPU 
+         * if set to stay hidden when started
+         */        
         pull (tw);
         pull (tw);
     }

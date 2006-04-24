@@ -63,6 +63,7 @@ void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch);
 void increase_font_size(GtkWidget *widget, gpointer data);
 void decrease_font_size (GtkWidget *widget, gpointer data);
 void focus_term (GtkWidget *widget, gpointer data);
+void start_program(tilda_collect *collect);
 
 G_END_DECLS;
 

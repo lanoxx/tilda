@@ -210,6 +210,7 @@ void clean_up (tilda_window *tw)
 
     free_and_remove (tw);
     gtk_main_quit ();
+    exit (0);
 }
 
 void clean_up_no_main (tilda_window *tw)
@@ -219,6 +220,30 @@ void clean_up_no_main (tilda_window *tw)
 #endif
 
     free_and_remove (tw);
+}
+
+void start_program(tilda_collect *collect)
+{
+    int argc;
+    char **argv;
+
+    if (g_shell_parse_argv (cfg_getstr (collect->tw->tc, "command"), &argc, &argv, NULL))
+    {
+        vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
+            argv[0], argv, NULL,
+            cfg_getstr (collect->tw->tc, "working_dir"),
+            TRUE, TRUE, TRUE);
+
+        g_strfreev (argv);
+    }
+    else
+    {
+        const gchar *command = g_getenv ("SHELL");
+        vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
+            command, NULL, NULL,
+            cfg_getstr (collect->tw->tc, "working_dir"),
+            TRUE, TRUE, TRUE);
+    }
 }
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
@@ -236,13 +261,12 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
             case 2:
                 close_tab (data, 0, widget);
                 break;
-            case 1:
-                break;
             case 0:
-                vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
-                    cfg_getstr (collect->tw->tc, "command"), NULL, NULL,
-                    cfg_getstr (collect->tw->tc, "working_dir"),
-                    TRUE, TRUE, TRUE);
+                break;
+            case 1:
+                vte_terminal_feed (VTE_TERMINAL(collect->tt->vte_term), "\r\n\r\n", 4);
+
+                start_program (collect);
                 break;
             default:
                 break;

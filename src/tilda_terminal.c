@@ -129,11 +129,8 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     if (strcmp((command = cfg_getstr (tw->tc, "command")), "")==0 || !cfg_getbool (tw->tc, "run_command"))
         command = getenv ("SHELL");
 
-    vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-            command, NULL, NULL,
-            cfg_getstr (tw->tc, "working_dir"),
-            TRUE, TRUE, TRUE);
-
+    start_program(t_collect);
+    
     gtk_widget_show (tt->vte_term);
     gtk_widget_show (tt->hbox);
 
