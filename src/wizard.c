@@ -754,15 +754,6 @@ gint ok (tilda_window *tw)
     return (TRUE);
 }
 
-void apply (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("apply");
-#endif
-
-    apply_settings (tw);
-}
-
 gint exit_app (GtkWidget *widget, gpointer data)
 {
 #ifdef DEBUG

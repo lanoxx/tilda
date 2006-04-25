@@ -1,3 +1,17 @@
+version 0.09.3 (TBA):
+	* Remove stale code (apply() function).
+	* Patch from Danny Milosavljevic (thanks!) which fixes:
+	* "tilda -C", then Cancel quits app now
+	* wizard is a gtk dialog now (modal, not sure if it's used in other
+	  places than the -C command line arg)
+	* wizard uses stock buttons now
+	* fixed the command line in the wizard to take command line arguments
+	  as well
+	* fixed the restart handling in close_tab_on_exit (combo entry order
+	  changed, but the switch statement contained the old order - it seems)
+	* fixed a strlen warning in tilda_window.c
+	* removed the apply button since it was confusing
+
 version 0.09.2 (2006-1-21):
 	* Added libConfuse to configure.in.
 	* Better command-line option help generation.
