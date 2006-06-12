@@ -271,20 +271,26 @@ int percentage_width (int current_width)
 
 void slider_height_changed ()
 {
-    char s_max_height[6];
-    
-    sprintf (s_max_height, "%d", (((int) (gtk_range_get_value (GTK_RANGE (slider_height)))  * display_height) / 100));    
+    gchar smh[6];
+    gint mh = (gint) gtk_range_get_value (GTK_RANGE (slider_height))  * (display_height) / 100;    
 
-    gtk_entry_set_text (GTK_ENTRY (entry_height), s_max_height);
+    sprintf (smh, "%d", mh);
+
+    gtk_spin_button_update(GTK_SPIN_BUTTON (entry_height));
+    
+    gtk_entry_set_text (GTK_ENTRY (entry_height), smh);
 }
 
 void slider_width_changed ()
 {
-    char s_max_width[6];
+    gchar smw[6];
+    gint mw = (gint) gtk_range_get_value (GTK_RANGE (slider_width))  * (display_width) / 100;
 
-    sprintf (s_max_width, "%d", (((int) (gtk_range_get_value (GTK_RANGE (slider_width)))  * display_width) / 100));
+    sprintf (smw, "%d", mw);
 
-    gtk_entry_set_text (GTK_ENTRY (entry_width), s_max_width);
+    gtk_spin_button_update(GTK_SPIN_BUTTON (entry_width));
+
+    gtk_entry_set_text (GTK_ENTRY (entry_width), smw);
 }
 
 void entry_height_changed ()
@@ -311,8 +317,8 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     GtkWidget *label_x_pos, *label_y_pos;
     GtkWidget *label_slide_sleep_usec;
  
-    char s_max_height[6], s_max_width[6];
-    char s_x_pos[6], s_y_pos[6];
+    gchar s_max_height[6], s_max_width[6];
+    gchar s_x_pos[6], s_y_pos[6];
 
     table = gtk_table_new (3, 12, FALSE);
     label_height = gtk_label_new ("Height in Pixels:");
@@ -322,7 +328,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     label_opacity = gtk_label_new ("Level of Transparency:");
     label_image = gtk_label_new ("Background Image:");
     label_slider_height = gtk_label_new ("Percentage of Screen Height:");
-    label_slider_width = gtk_label_new ("Percentage of Screen Height:");
+    label_slider_width = gtk_label_new ("Percentage of Screen Width:");
 
     entry_height = gtk_spin_button_new_with_range (0, MAX_INT, 1);
     entry_width = gtk_spin_button_new_with_range (0, MAX_INT, 1);;
