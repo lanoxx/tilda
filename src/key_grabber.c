@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tilda.h"
+#include "config.h"
 #include "key_grabber.h"
 #include "../tilda-config.h"
 
@@ -252,7 +253,6 @@ void *wait_for_signal (tilda_window *tw)
 {
     KeySym grabbed_key;
     XEvent event;
-    /*unsigned int display_width, display_height;*/
 
     if (!(dpy = XOpenDisplay(NULL)))
         fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
@@ -260,8 +260,8 @@ void *wait_for_signal (tilda_window *tw)
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
-    /*display_width = DisplayWidth(display,screen);*/ 
-    /*display_height = DisplayHeight(display,screen);*/
+    display_width = DisplayWidth(dpy, screen); 
+    display_height = DisplayHeight(dpy, screen);
     
     key_grab (tw);
 

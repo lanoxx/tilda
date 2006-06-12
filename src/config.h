@@ -24,6 +24,8 @@ G_BEGIN_DECLS;
 /* Whether we have Xft2 */
 #define HAVE_XFT2 1
 
+unsigned int display_width, display_height;
+
 G_END_DECLS;
 
 #endif

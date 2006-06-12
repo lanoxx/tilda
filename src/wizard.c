@@ -50,6 +50,7 @@ GtkWidget *button_font;
 GtkWidget *combo_scroll_pos, *check_scroll_on_keystroke;
 GtkWidget *check_animation;
 GtkWidget *label_tab_orientation, *combo_tab_orientation;
+GtkWidget *slider_height, *slider_width;
 
 gboolean in_main = FALSE;
 
@@ -258,6 +259,44 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
     }
 }
 
+int percentage_height (int current_height) 
+{
+    return (int) (((float) current_height) / ((float) display_height) * 100);
+}
+
+int percentage_width (int current_width) 
+{
+    return (int) (((float) current_width) / ((float) display_width) * 100);
+}
+
+void slider_height_changed ()
+{
+    char s_max_height[6];
+    
+    sprintf (s_max_height, "%d", (((int) (gtk_range_get_value (GTK_RANGE (slider_height)))  * display_height) / 100));    
+
+    gtk_entry_set_text (GTK_ENTRY (entry_height), s_max_height);
+}
+
+void slider_width_changed ()
+{
+    char s_max_width[6];
+
+    sprintf (s_max_width, "%d", (((int) (gtk_range_get_value (GTK_RANGE (slider_width)))  * display_width) / 100));
+
+    gtk_entry_set_text (GTK_ENTRY (entry_width), s_max_width);
+}
+
+void entry_height_changed ()
+{
+    gtk_range_set_value (GTK_RANGE (slider_height), percentage_height (gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry_height))));
+}
+
+void entry_width_changed ()
+{
+    gtk_range_set_value (GTK_RANGE (slider_width), percentage_width (gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry_width))));
+}
+
 GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
@@ -267,6 +306,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     GtkWidget *table;
     GtkWidget *label_image;
     GtkWidget *label_opacity;
+    GtkWidget *label_slider_height, *label_slider_width;
     GtkWidget *label_height, *label_width;
     GtkWidget *label_x_pos, *label_y_pos;
     GtkWidget *label_slide_sleep_usec;
@@ -274,29 +314,49 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     char s_max_height[6], s_max_width[6];
     char s_x_pos[6], s_y_pos[6];
 
-    table = gtk_table_new (3, 9, FALSE);
+    table = gtk_table_new (3, 12, FALSE);
     label_height = gtk_label_new ("Height in Pixels:");
     label_width = gtk_label_new ("Width in Pixels:");
     label_x_pos = gtk_label_new ("X Pixel Postion to Start:");
     label_y_pos = gtk_label_new ("Y Pixel Postion to Start:");
     label_opacity = gtk_label_new ("Level of Transparency:");
     label_image = gtk_label_new ("Background Image:");
+    label_slider_height = gtk_label_new ("Percentage of Screen Height:");
+    label_slider_width = gtk_label_new ("Percentage of Screen Height:");
 
-    entry_height = gtk_entry_new ();
-    entry_width = gtk_entry_new ();
+    entry_height = gtk_spin_button_new_with_range (0, MAX_INT, 1);
+    entry_width = gtk_spin_button_new_with_range (0, MAX_INT, 1);;
     entry_x_pos = gtk_entry_new ();
     entry_y_pos = gtk_entry_new ();
     slider_opacity = gtk_hscale_new_with_range (0, 100, 1);
+    slider_height = gtk_hscale_new_with_range (0, 100, 1);
+    slider_width = gtk_hscale_new_with_range (0, 100, 1);
 
     sprintf (s_max_height, "%d", cfg_getint (tw->tc, "max_height"));
     sprintf (s_max_width, "%d",  cfg_getint (tw->tc, "max_width"));
+    
+    gtk_range_set_value (GTK_RANGE (slider_height), percentage_height (cfg_getint (tw->tc, "max_height")));
+    gtk_range_set_value (GTK_RANGE (slider_width), percentage_width (cfg_getint (tw->tc, "max_width")));
+    
+    g_signal_connect_swapped (G_OBJECT (slider_height), "change-value",
+        G_CALLBACK (slider_height_changed), NULL);
+
+    g_signal_connect_swapped (G_OBJECT (slider_width), "change-value",
+        G_CALLBACK (slider_width_changed), NULL);        
+    
     sprintf (s_x_pos, "%d",      cfg_getint (tw->tc, "x_pos"));
     sprintf (s_y_pos, "%d",      cfg_getint (tw->tc, "y_pos"));
-    gtk_entry_set_text (GTK_ENTRY (entry_height), s_max_height);
-    gtk_entry_set_text (GTK_ENTRY (entry_width), s_max_width);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry_height), cfg_getint (tw->tc, "max_height"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (entry_width), cfg_getint (tw->tc, "max_width"));
     gtk_entry_set_text (GTK_ENTRY (entry_x_pos), s_x_pos);
     gtk_entry_set_text (GTK_ENTRY (entry_y_pos), s_y_pos);
     gtk_range_set_value (GTK_RANGE (slider_opacity), cfg_getint (tw->tc, "transparency"));
+
+    g_signal_connect_swapped (G_OBJECT (entry_height), "value-changed",
+        G_CALLBACK (entry_height_changed), NULL);  
+    
+    g_signal_connect_swapped (G_OBJECT (entry_width), "value-changed",
+        G_CALLBACK (entry_width_changed), NULL);  
     
     label_slide_sleep_usec = gtk_label_new ("Animation Delay (in usecs):");
     spin_slide_sleep_usec = gtk_spin_button_new_with_range (0, MAX_INT, 1);
@@ -347,33 +407,43 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), label_height, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), entry_height, 1, 3, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_width, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_width, 1, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_slider_height,  0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), slider_height, 1, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    
+    gtk_table_attach (GTK_TABLE (table), label_width, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_width, 1, 3, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_x_pos, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_x_pos, 1, 3, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_slider_width,  0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), slider_width, 1, 3, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_y_pos, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), entry_y_pos, 1, 3, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_x_pos, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_x_pos, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_y_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), entry_y_pos, 1, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_animation, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), label_slide_sleep_usec, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), spin_slide_sleep_usec,  2, 3, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), label_tab_orientation, 1, 2, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), combo_tab_orientation,  2, 3, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_opacity,  0, 1, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), slider_opacity, 1, 3, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 7, 8, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_animation, 0, 1, 7, 8, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_slide_sleep_usec, 1, 2, 7, 8, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), spin_slide_sleep_usec,  2, 3, 7, 8, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), label_tab_orientation, 1, 2, 9, 10, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), combo_tab_orientation,  2, 3, 9, 10, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
 
-    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 8, 9, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
-    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 8, 9, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), check_use_image, 0, 3, 10, 11, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+
+    gtk_table_attach (GTK_TABLE (table), label_image,  0, 1, 11, 12, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), button_image, 1, 3, 11, 12, GTK_EXPAND | GTK_FILL,GTK_FILL, 3, 3);
 
     gtk_widget_show (entry_height);
     gtk_widget_show (label_height);
+    gtk_widget_show (label_slider_height);
+    gtk_widget_show (slider_height);
     gtk_widget_show (entry_width);
     gtk_widget_show (label_width);
+    gtk_widget_show (label_slider_width);
+    gtk_widget_show (slider_width);
     gtk_widget_show (label_opacity);
     gtk_widget_show (slider_opacity);
     gtk_widget_show (entry_x_pos);
@@ -677,8 +747,8 @@ void apply_settings (tilda_window *tw)
     old_max_height = cfg_getint (tw->tc, "max_height");
     old_max_width =  cfg_getint (tw->tc, "max_width");
 
-    cfg_setint (tw->tc, "max_height", atoi (gtk_entry_get_text (GTK_ENTRY (entry_height))));
-    cfg_setint (tw->tc, "max_width", atoi (gtk_entry_get_text (GTK_ENTRY (entry_width))));
+    cfg_setint (tw->tc, "max_height", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry_height)));
+    cfg_setint (tw->tc, "max_width", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (entry_width)));
     cfg_setint (tw->tc, "lines", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spin_scrollback)));
     cfg_setint (tw->tc, "transparency", gtk_range_get_value (GTK_RANGE (slider_opacity)));
     cfg_setint (tw->tc, "x_pos", atoi (gtk_entry_get_text (GTK_ENTRY (entry_x_pos))));
