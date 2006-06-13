@@ -272,11 +272,11 @@ int percentage_width (int current_width)
 void slider_height_changed ()
 {
     gchar smh[6];
-    gint mh = (gint) gtk_range_get_value (GTK_RANGE (slider_height))  * (display_height) / 100;    
+    gint mh = (gint) gtk_range_get_value (GTK_RANGE (slider_height)) * (display_height) / 100;    
 
     sprintf (smh, "%d", mh);
 
-    gtk_spin_button_update(GTK_SPIN_BUTTON (entry_height));
+    gtk_spin_button_update (GTK_SPIN_BUTTON (entry_height));
     
     gtk_entry_set_text (GTK_ENTRY (entry_height), smh);
 }
@@ -284,11 +284,11 @@ void slider_height_changed ()
 void slider_width_changed ()
 {
     gchar smw[6];
-    gint mw = (gint) gtk_range_get_value (GTK_RANGE (slider_width))  * (display_width) / 100;
+    gint mw = (gint) gtk_range_get_value (GTK_RANGE (slider_width)) * (display_width) / 100;
 
     sprintf (smw, "%d", mw);
 
-    gtk_spin_button_update(GTK_SPIN_BUTTON (entry_width));
+    gtk_spin_button_update (GTK_SPIN_BUTTON (entry_width));
 
     gtk_entry_set_text (GTK_ENTRY (entry_width), smw);
 }
@@ -344,10 +344,10 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_range_set_value (GTK_RANGE (slider_height), percentage_height (cfg_getint (tw->tc, "max_height")));
     gtk_range_set_value (GTK_RANGE (slider_width), percentage_width (cfg_getint (tw->tc, "max_width")));
     
-    g_signal_connect_swapped (G_OBJECT (slider_height), "change-value",
+    g_signal_connect_swapped (G_OBJECT (slider_height), "value-changed",
         G_CALLBACK (slider_height_changed), NULL);
 
-    g_signal_connect_swapped (G_OBJECT (slider_width), "change-value",
+    g_signal_connect_swapped (G_OBJECT (slider_width), "value-changed",
         G_CALLBACK (slider_width_changed), NULL);        
     
     sprintf (s_x_pos, "%d",      cfg_getint (tw->tc, "x_pos"));

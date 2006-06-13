@@ -1,4 +1,6 @@
 version 0.09.3 (TBA):
+	* Added ability to set height/width by percentage of screen resolution
+	* All Tabs are now the same size
 	* Remove stale code (apply() function).
 	* Patch from Danny Milosavljevic (thanks!) which fixes:
 	* "tilda -C", then Cancel quits app now
