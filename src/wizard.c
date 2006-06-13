@@ -344,10 +344,10 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_range_set_value (GTK_RANGE (slider_height), percentage_height (cfg_getint (tw->tc, "max_height")));
     gtk_range_set_value (GTK_RANGE (slider_width), percentage_width (cfg_getint (tw->tc, "max_width")));
     
-    g_signal_connect_swapped (G_OBJECT (slider_height), "value-changed",
+    g_signal_connect_swapped (G_OBJECT (slider_height), "change-value",
         G_CALLBACK (slider_height_changed), NULL);
 
-    g_signal_connect_swapped (G_OBJECT (slider_width), "value-changed",
+    g_signal_connect_swapped (G_OBJECT (slider_width), "change-value",
         G_CALLBACK (slider_width_changed), NULL);        
     
     sprintf (s_x_pos, "%d",      cfg_getint (tw->tc, "x_pos"));
