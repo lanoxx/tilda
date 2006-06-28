@@ -109,7 +109,8 @@ void goto_tab_2 (tilda_window *tw)
     puts("goto_tab 2");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-2);
+    if (g_list_length (tw->terms) > 1)
+        goto_tab (tw, g_list_length (tw->terms)-2);
 }
 
 void goto_tab_3 (tilda_window *tw)
@@ -118,7 +119,8 @@ void goto_tab_3 (tilda_window *tw)
     puts("goto_tab 3");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-3);
+    if (g_list_length (tw->terms) > 2)
+        goto_tab (tw, g_list_length (tw->terms)-3);
 }
 
 void goto_tab_4 (tilda_window *tw)
@@ -127,7 +129,8 @@ void goto_tab_4 (tilda_window *tw)
     puts("goto_tab 4");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-4);
+    if (g_list_length (tw->terms) > 3)
+        goto_tab (tw, g_list_length (tw->terms)-4);
 }
 
 void goto_tab_5 (tilda_window *tw)
@@ -136,7 +139,8 @@ void goto_tab_5 (tilda_window *tw)
     puts("goto_tab 5");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-5);
+    if (g_list_length (tw->terms) > 4)
+        goto_tab (tw, g_list_length (tw->terms)-5);
 }
 
 void goto_tab_6 (tilda_window *tw)
@@ -145,7 +149,8 @@ void goto_tab_6 (tilda_window *tw)
     puts("goto_tab 6");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-6);
+    if (g_list_length (tw->terms) > 5)
+        goto_tab (tw, g_list_length (tw->terms)-6);
 }
 
 void goto_tab_7 (tilda_window *tw)
@@ -154,7 +159,8 @@ void goto_tab_7 (tilda_window *tw)
     puts("goto_tab 7");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-7);
+    if (g_list_length (tw->terms) > 6)
+        goto_tab (tw, g_list_length (tw->terms)-7);
 }
 
 void goto_tab_8 (tilda_window *tw)
@@ -163,7 +169,8 @@ void goto_tab_8 (tilda_window *tw)
     puts("goto_tab 8");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-8);
+    if (g_list_length (tw->terms) > 7)
+        goto_tab (tw, g_list_length (tw->terms)-8);
 }
 
 void goto_tab_9 (tilda_window *tw)
@@ -172,7 +179,8 @@ void goto_tab_9 (tilda_window *tw)
     puts("goto_tab 9");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-9);
+    if (g_list_length (tw->terms) > 8)    
+        goto_tab (tw, g_list_length (tw->terms)-9);
 }
 
 void goto_tab_10 (tilda_window *tw)
@@ -181,7 +189,8 @@ void goto_tab_10 (tilda_window *tw)
     puts("goto_tab 10");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-10);
+    if (g_list_length (tw->terms) > 9)
+        goto_tab (tw, g_list_length (tw->terms)-10);
 }
 
 void next_tab (tilda_window *tw)
