@@ -1,5 +1,5 @@
 version 0.09.3 (2006-6-28):
-    * ctrl-shift-# changes tab, sorry not alt-# (bash uses that)
+    * ctrl-# changes tab, sorry not alt-# (bash uses that)
     * ctrl-shift-w fix
 	* Added ability to set height/width by percentage of screen resolution
 	* All Tabs are now the same size
