@@ -100,7 +100,8 @@ void goto_tab_1 (tilda_window *tw)
     puts("goto_tab 1");
 #endif
 
-    goto_tab (tw, g_list_length (tw->terms)-1);
+    if (g_list_length (tw->terms) > 1)
+        goto_tab (tw, g_list_length (tw->terms)-1);
 }
 
 void goto_tab_2 (tilda_window *tw)
