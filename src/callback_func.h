@@ -32,6 +32,8 @@ void goto_tab_7 (tilda_window *tw);
 void goto_tab_8 (tilda_window *tw);
 void goto_tab_9 (tilda_window *tw);
 void goto_tab_10 (tilda_window *tw);
+void ccopy (tilda_window *tw);
+void cpaste (tilda_window *tw);
 void prev_tab (tilda_window *tw);
 void next_tab (tilda_window *tw);
 char* get_window_title (GtkWidget *widget, tilda_window *tw);

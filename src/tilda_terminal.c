@@ -42,7 +42,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     tilda_collect *t_collect;
     gchar *command;
     GtkWidget *label = NULL;
-
+    
     t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
     t_collect->tw = tw;
     t_collect->tt = tt;

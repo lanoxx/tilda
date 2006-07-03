@@ -31,8 +31,8 @@ static GtkItemFactoryEntry menu_items[] = {
     { "/_New Tab", "<Ctrl><Shift>T", add_tab_menu_call,     0, "<Item>",      NULL                  },
     { "/_Close Tab",      NULL,      close_tab,             0, "<Item>",      NULL                  },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
-    { "/_Copy",           NULL,      copy,                  0, "<StockItem>", GTK_STOCK_COPY        },
-    { "/_Paste",          NULL,      paste,                 0, "<StockItem>", GTK_STOCK_PASTE       },
+    { "/_Copy",    "<Ctrl><Shift>C",      copy,                  0, "<Item>", NULL        },
+    { "/_Paste",   "<Ctrl><Shift>V",      paste,                 0, "<Item>", NULL       },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
     { "/_Preferences...", NULL,      config_and_update,     0, "<StockItem>", GTK_STOCK_PREFERENCES },
     { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
@@ -402,6 +402,41 @@ void status_line_changed (GtkWidget *widget, gpointer data)
 #endif
 
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
+}
+
+
+void ccopy (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("ccopy");
+#endif
+    GtkWidget *current_page;
+    GList *list;
+    
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
+    
+    list = gtk_container_get_children ((GtkContainer *) current_page);
+    
+    vte_terminal_copy_clipboard ((VteTerminal *) list->data);
+}
+
+void cpaste (tilda_window *tw)
+{
+#ifdef DEBUG
+    puts("cpaste");
+#endif
+    GtkWidget *current_page;
+    GList *list;
+    
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
+    
+    list = gtk_container_get_children ((GtkContainer *) current_page);
+    
+    vte_terminal_paste_clipboard ((VteTerminal *) list->data);
 }
 
 void copy (gpointer data, guint callback_action, GtkWidget *w)

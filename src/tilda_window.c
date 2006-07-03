@@ -264,7 +264,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 #endif
 
     GtkAccelGroup *accel_group;
-    GClosure *clean, *close, *next, *prev, *add;
+    GClosure *clean, *close, *next, *prev, *add, *copy_closure, *paste_closure;
     GClosure *goto_tab_closure_1, *goto_tab_closure_2, *goto_tab_closure_3, *goto_tab_closure_4;
     GClosure *goto_tab_closure_5, *goto_tab_closure_6, *goto_tab_closure_7, *goto_tab_closure_8;
     GClosure *goto_tab_closure_9, *goto_tab_closure_10;
@@ -365,6 +365,12 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     
     goto_tab_closure_10 = g_cclosure_new_swap ((GCallback) goto_tab_10, tw, NULL);
     gtk_accel_group_connect (accel_group, '0', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_10);            
+    
+    copy_closure = g_cclosure_new_swap ((GCallback) ccopy, tw, NULL);
+    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, copy_closure);            
+    
+    paste_closure = g_cclosure_new_swap ((GCallback) cpaste, tw, NULL);
+    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, paste_closure);            
      
     gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
 

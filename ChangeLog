@@ -1,3 +1,6 @@
+version 0.09.4 (TBA):    
+    * Set copy/paste to ctrl-shift-c/ctrl-shift-v
+
 version 0.09.3 (2006-6-28):
     * ctrl-# changes tab, sorry not alt-# (bash uses that)
     * ctrl-shift-w fix
