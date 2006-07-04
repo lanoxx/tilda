@@ -1,9 +1,9 @@
 version 0.09.4 (TBA):    
-    * Set copy/paste to ctrl-shift-c/ctrl-shift-v
+	* Set copy/paste to ctrl-shift-c/ctrl-shift-v
 
 version 0.09.3 (2006-6-28):
-    * ctrl-# changes tab, sorry not alt-# (bash uses that)
-    * ctrl-shift-w fix
+	* ctrl-# changes tab, sorry not alt-# (bash uses that)
+	* ctrl-shift-w fix
 	* Added ability to set height/width by percentage of screen resolution
 	* All Tabs are now the same size
 	* Remove stale code (apply() function).
@@ -85,8 +85,8 @@ version 0.05 (2005-03-15):
 	* Added the environmental variable TILDA_NUM which is set to the current
 	  tilda's number to move it up and down.
 	* Fixed a bug where tilda would not clean up after itself 100%. Now each
-	  time tilda is run it will check the tmp directory and clean it up if it is not
-	  completely clean.
+	  time tilda is run it will check the tmp directory and clean it up if it
+	  is not completely clean.
 
 version 0.04 (2005-02-09):
 	* Added support for running multiple instances of tilda at the same time.
