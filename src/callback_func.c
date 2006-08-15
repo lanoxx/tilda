@@ -94,104 +94,144 @@ void goto_tab (tilda_window *tw, guint i)
     gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
 }
 
-void goto_tab_1 (tilda_window *tw)
+gboolean goto_tab_1 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 1");
 #endif
 
-    if (g_list_length (tw->terms) > 1)
+    if (g_list_length (tw->terms) > 1) {
         goto_tab (tw, g_list_length (tw->terms)-1);
+        return TRUE;
+     }
+     
+     return FALSE;
 }
 
-void goto_tab_2 (tilda_window *tw)
+gboolean goto_tab_2 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 2");
 #endif
 
-    if (g_list_length (tw->terms) > 1)
-        goto_tab (tw, g_list_length (tw->terms)-2);
+    if (g_list_length (tw->terms) > 1) {
+        goto_tab (tw, g_list_length (tw->terms)-2);    
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
-void goto_tab_3 (tilda_window *tw)
+gboolean goto_tab_3 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 3");
 #endif
 
-    if (g_list_length (tw->terms) > 2)
+    if (g_list_length (tw->terms) > 2) {
         goto_tab (tw, g_list_length (tw->terms)-3);
+        return TRUE;
+    }
+        
+    return FALSE;
 }
 
-void goto_tab_4 (tilda_window *tw)
+gboolean goto_tab_4 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 4");
 #endif
 
-    if (g_list_length (tw->terms) > 3)
+    if (g_list_length (tw->terms) > 3) {
         goto_tab (tw, g_list_length (tw->terms)-4);
+        return TRUE;
+    }
+        
+    return FALSE;
 }
 
-void goto_tab_5 (tilda_window *tw)
+gboolean goto_tab_5 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 5");
 #endif
 
-    if (g_list_length (tw->terms) > 4)
+    if (g_list_length (tw->terms) > 4) {
         goto_tab (tw, g_list_length (tw->terms)-5);
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
-void goto_tab_6 (tilda_window *tw)
+gboolean goto_tab_6 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 6");
 #endif
 
-    if (g_list_length (tw->terms) > 5)
+    if (g_list_length (tw->terms) > 5) {
         goto_tab (tw, g_list_length (tw->terms)-6);
+        return TRUE;
+    }
+        
+    return FALSE;    
 }
 
-void goto_tab_7 (tilda_window *tw)
+gboolean goto_tab_7 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 7");
 #endif
 
-    if (g_list_length (tw->terms) > 6)
+    if (g_list_length (tw->terms) > 6) {
         goto_tab (tw, g_list_length (tw->terms)-7);
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
-void goto_tab_8 (tilda_window *tw)
+gboolean goto_tab_8 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 8");
 #endif
 
-    if (g_list_length (tw->terms) > 7)
+    if (g_list_length (tw->terms) > 7) {
         goto_tab (tw, g_list_length (tw->terms)-8);
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
-void goto_tab_9 (tilda_window *tw)
+gboolean goto_tab_9 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 9");
 #endif
 
-    if (g_list_length (tw->terms) > 8)    
+    if (g_list_length (tw->terms) > 8) {   
         goto_tab (tw, g_list_length (tw->terms)-9);
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
-void goto_tab_10 (tilda_window *tw)
+gboolean goto_tab_10 (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("goto_tab 10");
 #endif
 
-    if (g_list_length (tw->terms) > 9)
+    if (g_list_length (tw->terms) > 9) {
         goto_tab (tw, g_list_length (tw->terms)-10);
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
 void next_tab (tilda_window *tw)

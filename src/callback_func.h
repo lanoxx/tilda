@@ -22,16 +22,16 @@
 
 G_BEGIN_DECLS;
 
-void goto_tab_1 (tilda_window *tw);
-void goto_tab_2 (tilda_window *tw);
-void goto_tab_3 (tilda_window *tw);
-void goto_tab_4 (tilda_window *tw);
-void goto_tab_5 (tilda_window *tw);
-void goto_tab_6 (tilda_window *tw);
-void goto_tab_7 (tilda_window *tw);
-void goto_tab_8 (tilda_window *tw);
-void goto_tab_9 (tilda_window *tw);
-void goto_tab_10 (tilda_window *tw);
+gboolean goto_tab_1 (tilda_window *tw);
+gboolean goto_tab_2 (tilda_window *tw);
+gboolean goto_tab_3 (tilda_window *tw);
+gboolean goto_tab_4 (tilda_window *tw);
+gboolean goto_tab_5 (tilda_window *tw);
+gboolean goto_tab_6 (tilda_window *tw);
+gboolean goto_tab_7 (tilda_window *tw);
+gboolean goto_tab_8 (tilda_window *tw);
+gboolean goto_tab_9 (tilda_window *tw);
+gboolean goto_tab_10 (tilda_window *tw);
 void ccopy (tilda_window *tw);
 void cpaste (tilda_window *tw);
 void prev_tab (tilda_window *tw);

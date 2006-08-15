@@ -13,3 +13,8 @@ MAINTAINER_CLEAN_FILES =  \
 maintainer-clean-generic:
 	-rm $(MAINTAINER_CLEAN_FILES)
 
+Applicationsdir = /usr/share/applications
+Applications_DATA = tilda.desktop
+
+Pixmapsdir = /usr/share/pixmaps
+Pixmaps_DATA = tilda.png

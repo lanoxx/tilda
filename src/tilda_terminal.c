@@ -37,7 +37,7 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     puts("init_tilda_terminal");
 #endif
 
-    gboolean dingus = FALSE;
+    gboolean dingus = TRUE;
     gint i;
     tilda_collect *t_collect;
     gchar *command;

@@ -74,7 +74,10 @@ gint getnextinstance (tilda_window *tw)
     puts("getnextinstance");
 #endif
 
-    gchar *lock_dir;
+    gchar *lock_dir;    
+    gchar *name;
+    gchar **tokens;
+    gint tmp, current;
     gchar *lock_subdir = "/.tilda/locks";
     gint lock_dir_size = 0;
     gint count = 0;
@@ -92,10 +95,25 @@ gint getnextinstance (tilda_window *tw)
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
-    /* FIXME: check that this name corresponds to a valid lock */
-    /* FIXME: check the last char(s) to find out the correct next instance */
-    while (dir != NULL && g_dir_read_name (dir))
-        count++;
+    while (dir != NULL && (name = g_dir_read_name (dir))) 
+    {
+        tokens = g_strsplit (name, "_", 3);
+        
+        if (tokens != NULL) 
+        {
+            current = atoi (tokens[2]);        
+            g_strfreev (tokens);
+             
+            if (current - tmp > 1) {
+                count = tmp + 1;           
+                break;           
+            }
+            
+            count++;        
+                    
+            tmp = current;        
+        }
+    }
 
     /* Free memory that we allocated */
     if (dir != NULL)
