@@ -1,9 +1,10 @@
 version 0.09.4 (TBA):
+    * Changed default slide delay to 15000	
     * Now installs .desktop file and icon
     * Set copy/paste to ctrl-shift-c/ctrl-shift-v
     * Alt-# for switching tabs now :), sorry for all the changes
     * Changed getinstance back to its old way of working,
-	so it doesn't just count locks but checks the numbers
+	so it doesn't just count locks but checks the numbers (thanks wilber)
 
 version 0.09.3 (2006-6-28):
 	* ctrl-# changes tab, sorry not alt-# (bash uses that)

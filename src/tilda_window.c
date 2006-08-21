@@ -55,7 +55,7 @@ static cfg_opt_t new_conf[] = {
     CFG_INT("d_set_title", 3, CFGF_NONE),
     CFG_INT("command_exit", 0, CFGF_NONE),
     CFG_INT("scheme", 3, CFGF_NONE),
-    CFG_INT("slide_sleep_usec", 10000, CFGF_NONE),
+    CFG_INT("slide_sleep_usec", 15000, CFGF_NONE),
     CFG_INT("animation_orientation", 0, CFGF_NONE),
 
     /* guint16 */
