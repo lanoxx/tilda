@@ -99,7 +99,7 @@ void generate_animation_positions(struct tilda_window_ *tw)
     }
 }
 
-void pull (struct tilda_window_ *tw)
+void pull_state (struct tilda_window_ *tw, int state)
 {
 #ifdef DEBUG
     puts("pull");
@@ -109,7 +109,7 @@ void pull (struct tilda_window_ *tw)
     gint w, h;
     static gint pos=0;
     
-    if (pos == 0)
+    if (pos == 0 && state != PULL_UP)
     {
         gdk_threads_enter();
 
@@ -156,7 +156,7 @@ void pull (struct tilda_window_ *tw)
         gdk_flush ();
         gdk_threads_leave();
     }
-    else
+    else if (state != PULL_DOWN)
     {
         gdk_threads_enter();
 
@@ -190,6 +190,12 @@ void pull (struct tilda_window_ *tw)
         gdk_flush ();
         gdk_threads_leave();
     }
+}
+
+//  Wrapper function so pull() calls without a state toggle like they used to
+void pull (struct tilda_window_ *tw)
+{
+    pull_state (tw, PULL_TOGGLE);
 }
 
 void key_grab (tilda_window *tw)
@@ -265,17 +271,17 @@ void *wait_for_signal (tilda_window *tw)
     
     key_grab (tw);
 
-    if (cfg_getbool (tw->tc, "down"))
-        pull (tw);
-    else
+    if (cfg_getbool (tw->tc, "hidden"))
     {
         /*
          * Fixes bug that causes Tilda to eat up 100% of CPU 
          * if set to stay hidden when started
          */        
-        pull (tw);
-        pull (tw);
+        pull_state(tw, PULL_DOWN);
+        pull_state(tw, PULL_UP);
     }
+    else
+        pull_state(tw, PULL_DOWN);
 
     for (;;)
     {
