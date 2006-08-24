@@ -40,7 +40,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     gboolean dingus = TRUE;
     gint i;
     tilda_collect *t_collect;
-    gchar *command;
     GtkWidget *label = NULL;
     
     t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
@@ -125,9 +124,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
         i = vte_terminal_match_add(VTE_TERMINAL (tt->vte_term), DINGUS2);
         vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND1);
     }
-
-    if (strcmp((command = cfg_getstr (tw->tc, "command")), "")==0 || !cfg_getbool (tw->tc, "run_command"))
-        command = getenv ("SHELL");
 
     start_program(t_collect);
     

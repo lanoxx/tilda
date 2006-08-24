@@ -158,7 +158,11 @@ void start_program(tilda_collect *collect)
     int argc;
     char **argv;
 
-    if (g_shell_parse_argv (cfg_getstr (collect->tw->tc, "command"), &argc, &argv, NULL))
+    if (!cfg_getbool (collect->tw->tc, "run_command"))
+    {
+        /* Do nothing here, we'll get taken care of later */
+    }
+    else if (g_shell_parse_argv (cfg_getstr (collect->tw->tc, "command"), &argc, &argv, NULL))
     {
         vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
             argv[0], argv, NULL,
@@ -166,15 +170,14 @@ void start_program(tilda_collect *collect)
             TRUE, TRUE, TRUE);
 
         g_strfreev (argv);
+        return; // the early way out
     }
-    else
-    {
-        const gchar *command = g_getenv ("SHELL");
-        vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
-            command, NULL, NULL,
-            cfg_getstr (collect->tw->tc, "working_dir"),
-            TRUE, TRUE, TRUE);
-    }
+
+    const gchar *command = g_getenv ("SHELL");
+    vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
+        command, NULL, NULL,
+        cfg_getstr (collect->tw->tc, "working_dir"),
+        TRUE, TRUE, TRUE);
 }
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
