@@ -36,10 +36,11 @@
 
 /* This struct will hold all of the configuration items that
  * are needed throughout this file */
-struct wizard_items items;
+static struct wizard_items items;
 
 gboolean in_main = FALSE;
-gint exit_status = 0;
+static gint exit_status = 0;
+static GStaticMutex callback_mutex = G_STATIC_MUTEX_INIT;
 
 void close_dialog (GtkWidget *widget, gpointer data)
 {
@@ -263,8 +264,13 @@ void spin_height_percentage_changed ()
 {
     const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_percentage));
     const int in_pixels = (percentage / 100.0) * display_height;
-    
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), in_pixels);
+
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), in_pixels);
+        g_static_mutex_unlock (&callback_mutex);
+    }
 }
 
 void spin_width_percentage_changed ()
@@ -272,7 +278,12 @@ void spin_width_percentage_changed ()
     const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_percentage));
     const int in_pixels = (percentage / 100.0) * display_width;
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), in_pixels);
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), in_pixels);
+        g_static_mutex_unlock (&callback_mutex);
+    }
 }
 
 void spin_height_pixels_changed ()
@@ -280,7 +291,12 @@ void spin_height_pixels_changed ()
     const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_pixels));
     const int percentage = percentage_height (pixels);
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage);
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage);
+        g_static_mutex_unlock (&callback_mutex);
+    }
 }
 
 void spin_width_pixels_changed ()
@@ -288,7 +304,12 @@ void spin_width_pixels_changed ()
     const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_pixels));
     const int percentage = percentage_width (pixels);
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage);
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage);
+        g_static_mutex_unlock (&callback_mutex);
+    }
 }
 
 GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
