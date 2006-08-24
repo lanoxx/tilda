@@ -225,22 +225,28 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
     }
 }
 
-void toggle_check_animated_pulldown (GtkWidget *widget, GtkWidget *label_animation)
+void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
 {
 #ifdef DEBUG
-    puts ("toggle_check_animated_pulldown");
+    puts ("toggle_check_animated_pulldown1");
 #endif
 
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown)))
-    {
-        gtk_widget_set_sensitive (label_animation, TRUE);
-        gtk_widget_set_sensitive (items.spin_animation_delay, TRUE);
-    }
-    else
-    {
-        gtk_widget_set_sensitive (label_animation, FALSE);
-        gtk_widget_set_sensitive (items.spin_animation_delay, FALSE);
-    }
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
+        
+    gtk_widget_set_sensitive (label_animation, active);
+    gtk_widget_set_sensitive (items.spin_animation_delay, active);
+}
+
+void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
+{
+#ifdef DEBUG
+    puts ("toggle_check_animated_pulldown2");
+#endif
+
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
+        
+    gtk_widget_set_sensitive (label_orientation, active);
+    gtk_widget_set_sensitive (items.combo_orientation, active);
 }
 
 int percentage_height (int current_height) 
@@ -419,7 +425,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.check_animated_pulldown = gtk_check_button_new_with_label ("Animated Pulldown");
     label_animation_delay = gtk_label_new ("Animation Delay (usec)");
     items.spin_animation_delay = gtk_spin_button_new_with_range (1, INT_MAX, 1);
-    label_orientation = gtk_label_new ("Orientation");
+    label_orientation = gtk_label_new ("Animation Orientation");
     items.combo_orientation = gtk_combo_box_new_text ();
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "TOP");
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "BOTTOM");
@@ -437,32 +443,25 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.button_background_image = gtk_file_chooser_button_new_with_dialog (items.chooser_background_image);
 
     /* Connect signals */
-    if (cfg_getbool (tw->tc, "use_image"))
-    {
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background), TRUE);
-        gtk_widget_set_sensitive (GTK_WIDGET(label_background_image), TRUE);
-        gtk_widget_set_sensitive (GTK_WIDGET(items.button_background_image), TRUE);
-    }
-    else
-    {
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background), FALSE);
-        gtk_widget_set_sensitive (GTK_WIDGET(label_background_image), FALSE);
-        gtk_widget_set_sensitive (GTK_WIDGET(items.button_background_image), FALSE);
-    }
 
-    //gtk_signal_connect (GTK_OBJECT (items.check_use_image_for_background), "clicked", GTK_SIGNAL_FUNC(image_select), label_background_image);
     g_signal_connect (GTK_WIDGET(items.check_use_image_for_background), "clicked", GTK_SIGNAL_FUNC(image_select), label_background_image);
-
-    //FIXME: actually need to write this callback
-    //FIXME: write it in the same style as the one above, since it will be used
-    //FIXME: to disable the spinner when the checkbox is not set.
-    //gtk_signal_connect (GTK_OBJECT(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown), label_animation_delay);
-    g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown), label_animation_delay);
+    g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown1), label_animation_delay);
+    g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown2), label_orientation);
 
 
     /* Get the current values */
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_level_of_transparency), cfg_getint (tw->tc, "transparency"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_animated_pulldown), cfg_getbool (tw->tc, "animation"));
-    //FIXME: I must've forgotten something here!
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), cfg_getint (tw->tc, "slide_sleep_usec"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_orientation), cfg_getint (tw->tc, "animation_orientation"));
+    gtk_widget_set_sensitive (GTK_WIDGET(label_animation_delay), cfg_getbool (tw->tc, "animation"));
+    gtk_widget_set_sensitive (GTK_WIDGET(items.spin_animation_delay), cfg_getbool (tw->tc, "animation"));
+    gtk_widget_set_sensitive (GTK_WIDGET(label_orientation), cfg_getbool (tw->tc, "animation"));
+    gtk_widget_set_sensitive (GTK_WIDGET(items.combo_orientation), cfg_getbool (tw->tc, "animation"));
+
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), cfg_getbool (tw->tc, "use_image"));
+    gtk_widget_set_sensitive (GTK_WIDGET(label_background_image), cfg_getbool (tw->tc, "use_image"));
+    gtk_widget_set_sensitive (GTK_WIDGET(items.button_background_image), cfg_getbool (tw->tc, "use_image"));
 
     /* Attach everything to the Extras frame */
     gtk_table_attach (GTK_TABLE(table_extras), label_level_of_transparency, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
