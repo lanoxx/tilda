@@ -32,6 +32,11 @@
 #include <fontconfig/fontconfig.h>
 #endif
 
+#include <X11/Xlib.h>
+#include <X11/Xlibint.h>
+#include <X11/Xproto.h>
+#include <X11/extensions/Xrandr.h>
+
 #include <vte/vte.h>
 #include "config.h"
 #include "tilda.h"
@@ -433,6 +438,51 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
         if ((wizard (*argc, *argv, tw, tt)) == 1) { 
           clean_up(tw); 
         }
+}
+
+int get_display_dimension (int dimension)
+{    
+    Display                 *dpy;
+    XRRScreenSize           *sizes;
+    XRRScreenConfiguration  *sc;
+    Window                  root;
+    int                     nsize;
+    int                     screen = -1;
+    char                    *display_name = NULL;
+
+    dpy = XOpenDisplay (display_name);
+
+    if (dpy == NULL)
+    {
+        /* We can't just exit, so print a message and don't attempt to
+         * do anything since we won't know what to do! */
+        fprintf (stderr, "Can't open display %s\n", XDisplayName(display_name));
+        return;
+    }
+
+    screen = DefaultScreen (dpy);
+    root = RootWindow (dpy, screen);
+    sc = XRRGetScreenInfo (dpy, root);
+
+    if (sc == NULL)
+    {
+        /* We can't just exit, so print a message and don't attempt to
+         * do anything since we don't know what to do. */
+        fprintf (stderr, "Can't get screen info\n");
+    }
+
+    sizes = XRRConfigSizes(sc, &nsize);
+  
+    XRRFreeScreenConfigInfo(sc);
+    XCloseDisplay (dpy);
+
+    if (dimension == HEIGHT)
+        return sizes->height;
+
+    if (dimension == WIDTH)
+        return sizes->width;
+
+    return -1; // bad choice
 }
 
 /*

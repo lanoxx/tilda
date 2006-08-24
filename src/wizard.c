@@ -115,20 +115,21 @@ void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label_custom
     gtk_widget_set_sensitive (items.entry_custom_command, active);
 }
 
-int percentage_height (int current_height) 
+static int percentage_dimension (int current_size, int dimension)
 {
-    return (int) (((float) current_height) / ((float) display_height) * 100.0);
+    if (dimension == HEIGHT)
+        return (int) (((float) current_size) / ((float) get_physical_height_pixels ()) * 100.0);
+
+    return (int) (((float) current_size) / ((float) get_physical_width_pixels ()) * 100.0);
 }
 
-int percentage_width (int current_width) 
-{
-    return (int) (((float) current_width) / ((float) display_width) * 100.0);
-}
+#define percentage_height(current_height) percentage_dimension(current_height, HEIGHT)
+#define percentage_width(current_width)   percentage_dimension(current_width, WIDTH)
 
-void spin_height_percentage_changed ()
+static void spin_height_percentage_changed ()
 {
     const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_percentage));
-    const int in_pixels = (percentage / 100.0) * display_height;
+    const int in_pixels = (percentage / 100.0) * get_physical_height_pixels();
 
     /* Check if we're already running a callback. If we are, do nothing! */
     if (g_static_mutex_trylock (&callback_mutex))
@@ -138,10 +139,10 @@ void spin_height_percentage_changed ()
     }
 }
 
-void spin_width_percentage_changed ()
+static void spin_width_percentage_changed ()
 {
     const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_percentage));
-    const int in_pixels = (percentage / 100.0) * display_width;
+    const int in_pixels = (percentage / 100.0) * get_physical_width_pixels();
 
     /* Check if we're already running a callback. If we are, do nothing! */
     if (g_static_mutex_trylock (&callback_mutex))
@@ -393,11 +394,11 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     label_height_percentage = gtk_label_new ("Percentage");
     items.spin_height_percentage = gtk_spin_button_new_with_range (0, 100, 1);
     label_height_pixels = gtk_label_new ("In Pixels");
-    items.spin_height_pixels = gtk_spin_button_new_with_range (0, display_height, 1);
+    items.spin_height_pixels = gtk_spin_button_new_with_range (0, get_physical_height_pixels(), 1);
 
     /* Get the current values */
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels),
-            percentage_height (cfg_getint (tw->tc, "max_height")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), cfg_getint (tw->tc, "max_height"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage_height (cfg_getint (tw->tc, "max_height")));
 
     /* Connect signals */
     g_signal_connect_swapped (G_OBJECT (items.spin_height_percentage), "value-changed",
@@ -420,11 +421,11 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     label_width_percentage = gtk_label_new ("Percentage");
     items.spin_width_percentage = gtk_spin_button_new_with_range (0, 100, 1);
     label_width_pixels = gtk_label_new ("In Pixels");
-    items.spin_width_pixels = gtk_spin_button_new_with_range (0, display_width, 1);
+    items.spin_width_pixels = gtk_spin_button_new_with_range (0, get_physical_width_pixels(), 1);
 
     /* Get the current values */
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), 
-            percentage_width (cfg_getint (tw->tc, "max_width")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), cfg_getint (tw->tc, "max_width"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage_width (cfg_getint (tw->tc, "max_width")));
 
     /* Connect signals */
     g_signal_connect_swapped (G_OBJECT (items.spin_width_percentage), "value-changed",
@@ -454,20 +455,12 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     /* Get the current values */
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position), cfg_getint (tw->tc, "x_pos"));
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position), cfg_getint (tw->tc, "y_pos"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), cfg_getbool (tw->tc, "centered_horizontally"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_vertically), cfg_getbool (tw->tc, "centered_vertically"));
 
-    if (cfg_getbool (tw->tc, "centered_horizontally"))
-    {
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), TRUE);
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position),
-                find_centering_coordinate (display_width, cfg_getint (tw->tc, "max_width")));
-    }
-
-    if (cfg_getbool (tw->tc, "centered_vertically"))
-    {
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically), TRUE);
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position),
-                find_centering_coordinate (display_height, cfg_getint (tw->tc, "max_height")));
-    }
+    /* Force callbacks for visibility */
+    toggle_centered_horizontally (items.check_centered_horizontally, label_x_pos);
+    toggle_centered_vertically (items.check_centered_vertically, label_y_pos);
 
     /* Connect signals */
     g_signal_connect (GTK_WIDGET(items.check_centered_horizontally), "clicked", GTK_SIGNAL_FUNC(toggle_centered_horizontally), label_x_pos);
@@ -513,20 +506,17 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown1), label_animation_delay);
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown2), label_orientation);
 
-
     /* Get the current values */
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_level_of_transparency), cfg_getint (tw->tc, "transparency"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_animated_pulldown), cfg_getbool (tw->tc, "animation"));
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), cfg_getint (tw->tc, "slide_sleep_usec"));
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_orientation), cfg_getint (tw->tc, "animation_orientation"));
-    gtk_widget_set_sensitive (GTK_WIDGET(label_animation_delay), cfg_getbool (tw->tc, "animation"));
-    gtk_widget_set_sensitive (GTK_WIDGET(items.spin_animation_delay), cfg_getbool (tw->tc, "animation"));
-    gtk_widget_set_sensitive (GTK_WIDGET(label_orientation), cfg_getbool (tw->tc, "animation"));
-    gtk_widget_set_sensitive (GTK_WIDGET(items.combo_orientation), cfg_getbool (tw->tc, "animation"));
-
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), cfg_getbool (tw->tc, "use_image"));
-    gtk_widget_set_sensitive (GTK_WIDGET(label_background_image), cfg_getbool (tw->tc, "use_image"));
-    gtk_widget_set_sensitive (GTK_WIDGET(items.button_background_image), cfg_getbool (tw->tc, "use_image"));
+
+    /* Force callbacks for visibility purposes */
+    image_select (items.check_use_image_for_background, label_background_image);
+    toggle_check_animated_pulldown1 (items.check_animated_pulldown, label_animation_delay);
+    toggle_check_animated_pulldown2 (items.check_animated_pulldown, label_orientation);
 
     /* Attach everything to the Extras frame */
     gtk_table_attach (GTK_TABLE(table_extras), label_level_of_transparency, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -828,7 +818,7 @@ void apply_settings (tilda_window *tw)
     cfg_setint (tw->tc, "scheme", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_schemes)));
     cfg_setint (tw->tc, "scrollbar_pos", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_scrollbar_position)));
     cfg_setint (tw->tc, "slide_sleep_usec", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_animation_delay)));
-    cfg_setint (tw->tc, "animation_orientation", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_tab_position)));
+    cfg_setint (tw->tc, "animation_orientation", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_orientation)));
 
     gtk_color_button_get_color (GTK_COLOR_BUTTON(items.button_text_color), &gdk_text_color);
     gtk_color_button_get_color (GTK_COLOR_BUTTON(items.button_background_color), &gdk_back_color);
@@ -856,6 +846,8 @@ void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "scroll_background", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_background)));
     cfg_setbool (tw->tc, "notebook_border", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border)));
     cfg_setbool (tw->tc, "animation", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown)));
+    cfg_setbool (tw->tc, "centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
+    cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
 
     /* Write out the config file */
     fp = fopen(tw->config_file, "w");

@@ -34,6 +34,13 @@ gint old_max_height, old_max_width;
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 
+#define HEIGHT 0
+#define WIDTH  1
+
+int get_display_dimension (int dimension);
+#define get_physical_height_pixels() get_display_dimension(HEIGHT)
+#define get_physical_width_pixels()  get_display_dimension(WIDTH)
+
 G_END_DECLS;
 
 #endif

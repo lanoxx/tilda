@@ -22,11 +22,6 @@
 #include "tilda_terminal.h"
 #include "wizard.h"
 
-#include <X11/Xlib.h>
-#include <X11/Xlibint.h>
-#include <X11/Xproto.h>
-#include <X11/extensions/Xrandr.h>
-
 
 void copy (gpointer data, guint callback_action, GtkWidget *w);
 void paste (gpointer data, guint callback_action, GtkWidget *w);
@@ -256,76 +251,6 @@ void prev_tab (tilda_window *tw)
 #endif
 
     gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);
-}
-
-void center_window (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("center window");
-#endif
-
-    /* NOTE: the compile now needs -lX11 and -lXrandr on the command
-     * NOTE: in order to work with this stuff. Hopefully it's automatically
-     * NOTE: there because of gtk, but maybe we need to modify the autotools
-     * NOTE: stuff. (Hopefully not) */
-
-    Display                 *dpy;
-    XRRScreenSize           *sizes;
-    XRRScreenConfiguration  *sc;
-    Window                  root;
-    int                     nsize;
-    int                     screen = -1;
-    char                    *display_name = NULL;
-
-    const int screen_orientation = cfg_getint (tw->tc, "animation_orientation");
-    int screen_size;
-    int tilda_size;
-    int new_position;
-
-
-    dpy = XOpenDisplay (display_name);
-
-    if (dpy == NULL)
-    {
-        /* We can't just exit, so print a message and don't attempt to
-         * do anything since we won't know what to do! */
-        fprintf (stderr, "Can't open display %s\n", XDisplayName(display_name));
-        return;
-    }
-
-    screen = DefaultScreen (dpy);
-    root = RootWindow (dpy, screen);
-    sc = XRRGetScreenInfo (dpy, root);
-
-    if (sc == NULL)
-    {
-        /* We can't just exit, so print a message and don't attempt to
-         * do anything since we don't know what to do. */
-        fprintf (stderr, "Can't get screen info\n");
-    }
-
-    sizes = XRRConfigSizes(sc, &nsize);
-
-    if (screen_orientation < 2) /* TOP or BOTTOM */
-    {
-        screen_size = sizes->width;
-        tilda_size  = cfg_getint (tw->tc, "max_width");
-        
-        new_position = find_centering_coordinate (screen_size, tilda_size);
-
-        /* update x position: (I dunno how to do this!) */
-        // UPDATE_X_POSITION (new_position);
-    }
-    else /* LEFT or RIGHT */
-    {
-        screen_size = sizes->height;
-        tilda_size  = cfg_getint (tw->tc, "max_height");
-
-        new_position = find_centering_coordinate (screen_size, tilda_size);
-
-        /* update y position: (I dunno how to do this!) */
-        // UPDATE_Y_POSITION (new_position);
-    }
 }
 
 void clean_up (tilda_window *tw)

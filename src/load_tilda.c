@@ -224,6 +224,13 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     generate_animation_positions (tw);
 
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), cfg_getbool (tw->tc, "notaskbar"));
+
+    if (cfg_getbool (tw->tc, "centered_horizontally"))
+        cfg_setint (tw->tc, "x_pos", find_centering_coordinate (get_physical_width_pixels(), cfg_getint (tw->tc, "max_width")));
+
+    if (cfg_getbool (tw->tc, "centered_vertically"))
+        cfg_setint (tw->tc, "y_pos", find_centering_coordinate (get_physical_height_pixels(), cfg_getint (tw->tc, "max_height")));
+
     gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
 
     gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
