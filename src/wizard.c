@@ -526,7 +526,9 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), cfg_getint (tw->tc, "slide_sleep_usec"));
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_orientation), cfg_getint (tw->tc, "animation_orientation"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), cfg_getbool (tw->tc, "use_image"));
-    gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(items.chooser_background_image), cfg_getstr (tw->tc, "image"));
+    if (cfg_getstr (tw->tc, "image") != NULL)
+        gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(items.chooser_background_image),
+                cfg_getstr (tw->tc, "image"));
 
     /* Force callbacks for visibility purposes */
     toggle_check_enable_transparency (items.check_enable_transparency, label_level_of_transparency);

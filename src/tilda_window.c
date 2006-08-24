@@ -384,8 +384,17 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /*  Set a window icon! */
     window_icon = gdk_pixbuf_new_from_file (window_icon_file, NULL);
-    gtk_window_set_icon (GTK_WINDOW(tw->window), window_icon);
-    g_object_unref (window_icon);
+
+    if (window_icon == NULL)
+    {
+        perror("tilda error");
+        fprintf (stderr, "Unable to set tilda's icon: %s\n", window_icon_file);
+    }
+    else
+    {
+        gtk_window_set_icon (GTK_WINDOW(tw->window), window_icon);
+        g_object_unref (window_icon);
+    }
 
     gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
 
