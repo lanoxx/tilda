@@ -99,7 +99,7 @@ static cfg_opt_t new_conf[] = {
  * @param tw the tilda_window structure corresponding to this instance
  * @return a pointer to a string representation of the config file's name
  */
-gchar* get_config_file_name (tilda_window *tw)
+static gchar* get_config_file_name (tilda_window *tw)
 {
     gchar *config_file;
     gchar instance_str[6];
@@ -172,7 +172,7 @@ void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
     add_tab (((tilda_collect *) data)->tw);
 }
 
-tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
+static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 {
 #ifdef DEBUG
     puts("find_tt_in_g_list");

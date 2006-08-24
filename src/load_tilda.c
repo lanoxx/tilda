@@ -24,7 +24,7 @@
 #include "key_grabber.h"
 #include "../tilda-config.h"
 
-void window_title_change_all (tilda_window *tw)
+static void window_title_change_all (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("window_title_change_all");

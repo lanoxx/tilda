@@ -33,13 +33,15 @@
 #include "key_grabber.h"
 #include "../tilda-config.h"
 
-Display *dpy;
-Window root;
-Window win;
-Window termwin;
-Window last_focused;
-int screen;
-KeySym key;
+static Display *dpy;
+static Window root;
+static Window win;
+static Window termwin;
+static Window last_focused;
+static int screen;
+static KeySym key;
+
+static unsigned int display_width, display_height;
 
 /*
  * The slide positions are derived from FVMW sources, file fvmm/move_resize.c,
@@ -99,7 +101,7 @@ void generate_animation_positions(struct tilda_window_ *tw)
     }
 }
 
-void pull_state (struct tilda_window_ *tw, int state)
+static void pull_state (struct tilda_window_ *tw, int state)
 {
 #ifdef DEBUG
     puts("pull");
@@ -198,7 +200,7 @@ void pull (struct tilda_window_ *tw)
     pull_state (tw, PULL_TOGGLE);
 }
 
-void key_grab (tilda_window *tw)
+static void key_grab (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("key_grab");

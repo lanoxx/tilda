@@ -42,7 +42,6 @@ void window_title_changed (GtkWidget *widget, gpointer data);
 void clean_up_no_args ();
 void free_and_remove (tilda_window *tw);
 void clean_up (tilda_window *tw);
-void clean_up_no_main (tilda_window *tw);
 void close_tab_on_exit (GtkWidget *widget, gpointer data);
 void icon_title_changed (GtkWidget *widget, gpointer win);
 void commit (VteTerminal *vteterminal, gpointer user_data);

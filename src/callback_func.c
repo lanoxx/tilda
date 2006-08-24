@@ -42,7 +42,7 @@ static GtkItemFactoryEntry menu_items[] = {
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
-void fix_size_settings (tilda_window *tw)
+static void fix_size_settings (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("fix_size_settings");
@@ -70,7 +70,7 @@ void clean_up_no_args ()
     gtk_main_quit ();
 }
 
-void free_and_remove (tilda_window *tw)
+static void free_and_remove (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("free_and_remove");
@@ -95,145 +95,34 @@ void goto_tab (tilda_window *tw, guint i)
     gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
 }
 
-gboolean goto_tab_1 (tilda_window *tw)
+static gboolean goto_tab_generic (tilda_window *tw, gint tab_number)
 {
 #ifdef DEBUG
-    puts("goto_tab 1");
+    puts ("goto_tab_%d\n", tab_number);
 #endif
 
-    if (g_list_length (tw->terms) > 1) {
-        goto_tab (tw, g_list_length (tw->terms)-1);
-        return TRUE;
-     }
-     
-     return FALSE;
-}
-
-gboolean goto_tab_2 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 2");
-#endif
-
-    if (g_list_length (tw->terms) > 1) {
-        goto_tab (tw, g_list_length (tw->terms)-2);    
+    if (g_list_length (tw->terms) > (tab_number-1))
+    {
+        goto_tab (tw, g_list_length (tw->terms) - tab_number);
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
-gboolean goto_tab_3 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 3");
-#endif
-
-    if (g_list_length (tw->terms) > 2) {
-        goto_tab (tw, g_list_length (tw->terms)-3);
-        return TRUE;
-    }
-        
-    return FALSE;
-}
-
-gboolean goto_tab_4 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 4");
-#endif
-
-    if (g_list_length (tw->terms) > 3) {
-        goto_tab (tw, g_list_length (tw->terms)-4);
-        return TRUE;
-    }
-        
-    return FALSE;
-}
-
-gboolean goto_tab_5 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 5");
-#endif
-
-    if (g_list_length (tw->terms) > 4) {
-        goto_tab (tw, g_list_length (tw->terms)-5);
-        return TRUE;
-    }
-    
-    return FALSE;
-}
-
-gboolean goto_tab_6 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 6");
-#endif
-
-    if (g_list_length (tw->terms) > 5) {
-        goto_tab (tw, g_list_length (tw->terms)-6);
-        return TRUE;
-    }
-        
-    return FALSE;    
-}
-
-gboolean goto_tab_7 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 7");
-#endif
-
-    if (g_list_length (tw->terms) > 6) {
-        goto_tab (tw, g_list_length (tw->terms)-7);
-        return TRUE;
-    }
-    
-    return FALSE;
-}
-
-gboolean goto_tab_8 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 8");
-#endif
-
-    if (g_list_length (tw->terms) > 7) {
-        goto_tab (tw, g_list_length (tw->terms)-8);
-        return TRUE;
-    }
-    
-    return FALSE;
-}
-
-gboolean goto_tab_9 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 9");
-#endif
-
-    if (g_list_length (tw->terms) > 8) {   
-        goto_tab (tw, g_list_length (tw->terms)-9);
-        return TRUE;
-    }
-    
-    return FALSE;
-}
-
-gboolean goto_tab_10 (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("goto_tab 10");
-#endif
-
-    if (g_list_length (tw->terms) > 9) {
-        goto_tab (tw, g_list_length (tw->terms)-10);
-        return TRUE;
-    }
-    
-    return FALSE;
-}
+/* These all just call the generic function since they're all basically the same
+ * anyway. Unfortunately, they can't just be macros, since we need to be able to
+ * create a pointer to them for callbacks. */
+gboolean goto_tab_1  (tilda_window *tw) { return goto_tab_generic (tw, 1);  }
+gboolean goto_tab_2  (tilda_window *tw) { return goto_tab_generic (tw, 2);  }
+gboolean goto_tab_3  (tilda_window *tw) { return goto_tab_generic (tw, 3);  }
+gboolean goto_tab_4  (tilda_window *tw) { return goto_tab_generic (tw, 4);  }
+gboolean goto_tab_5  (tilda_window *tw) { return goto_tab_generic (tw, 5);  }
+gboolean goto_tab_6  (tilda_window *tw) { return goto_tab_generic (tw, 6);  }
+gboolean goto_tab_7  (tilda_window *tw) { return goto_tab_generic (tw, 7);  }
+gboolean goto_tab_8  (tilda_window *tw) { return goto_tab_generic (tw, 8);  }
+gboolean goto_tab_9  (tilda_window *tw) { return goto_tab_generic (tw, 9);  }
+gboolean goto_tab_10 (tilda_window *tw) { return goto_tab_generic (tw, 10); }
 
 void next_tab (tilda_window *tw)
 {
@@ -262,15 +151,6 @@ void clean_up (tilda_window *tw)
     free_and_remove (tw);
     gtk_main_quit ();
     exit (0);
-}
-
-void clean_up_no_main (tilda_window *tw)
-{
-#ifdef DEBUG
-    puts("clean_up_no_main");
-#endif
-
-    free_and_remove (tw);
 }
 
 void start_program(tilda_collect *collect)
@@ -806,3 +686,4 @@ void decrease_font_size (GtkWidget *widget, gpointer data)
 
     adjust_font_size (widget, data, -1);
 }
+

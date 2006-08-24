@@ -39,7 +39,7 @@ gboolean in_main = FALSE;
 static gint exit_status = 0;
 static GStaticMutex callback_mutex = G_STATIC_MUTEX_INIT;
 
-void close_dialog (GtkWidget *widget, gpointer data)
+static void close_dialog (GtkWidget *widget, gpointer data)
 {
 #ifdef DEBUG
     puts("close_dialog");
@@ -49,7 +49,7 @@ void close_dialog (GtkWidget *widget, gpointer data)
     gtk_widget_destroy (GTK_WIDGET (data));
 }
 
-void image_select (GtkWidget *widget, GtkWidget *label_image)
+static void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
 #ifdef DEBUG
     puts("image_select");
@@ -67,7 +67,7 @@ void image_select (GtkWidget *widget, GtkWidget *label_image)
     }
 }
 
-void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
+static void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
 {
 #ifdef DEBUG
     puts ("toggle_check_animated_pulldown1");
@@ -79,7 +79,7 @@ void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animat
     gtk_widget_set_sensitive (items.spin_animation_delay, active);
 }
 
-void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
+static void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
 {
 #ifdef DEBUG
     puts ("toggle_check_animated_pulldown2");
@@ -91,7 +91,7 @@ void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orient
     gtk_widget_set_sensitive (items.combo_orientation, active);
 }
 
-void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
+static void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
 {
     const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally));
 
@@ -99,7 +99,7 @@ void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
     gtk_widget_set_sensitive (items.spin_x_position, active);
 }
 
-void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
+static void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
 {
     const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically));
 
@@ -107,7 +107,7 @@ void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
     gtk_widget_set_sensitive (items.spin_y_position, active);
 }
 
-void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label_custom_command)
+static void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label_custom_command)
 {
     const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget));
 
@@ -152,7 +152,7 @@ static void spin_width_percentage_changed ()
     }
 }
 
-void spin_height_pixels_changed ()
+static void spin_height_pixels_changed ()
 {
     const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_pixels));
     const int percentage = percentage_height (pixels);
@@ -165,7 +165,7 @@ void spin_height_pixels_changed ()
     }
 }
 
-void spin_width_pixels_changed ()
+static void spin_width_pixels_changed ()
 {
     const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_pixels));
     const int percentage = percentage_width (pixels);
@@ -178,7 +178,7 @@ void spin_width_pixels_changed ()
     }
 }
 
-GtkWidget* general (tilda_window *tw, tilda_term *tt)
+static GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("general");
@@ -249,7 +249,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
+static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("title_command");
@@ -340,7 +340,7 @@ GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
     return vtable;
 }
 
-GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
+static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("appearance");
@@ -534,7 +534,7 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     return vtable;
 }
 
-void scheme_colors_changed (tilda_window *tw)
+static void scheme_colors_changed (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("scheme_colors_changed");
@@ -568,7 +568,7 @@ void scheme_colors_changed (tilda_window *tw)
     gtk_color_button_set_color (GTK_COLOR_BUTTON(items.button_background_color), &gdk_back);
 }
 
-void button_colors_changed (tilda_window *tw)
+static void button_colors_changed (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("button_colors_changed");
@@ -577,7 +577,7 @@ void button_colors_changed (tilda_window *tw)
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_schemes), 0);
 }
 
-GtkWidget* colors (tilda_window *tw, tilda_term *tt)
+static GtkWidget* colors (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("colors");
@@ -637,7 +637,7 @@ GtkWidget* colors (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
+static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("scrolling");
@@ -687,7 +687,7 @@ GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-void revert_default_compatability (tilda_window *tw)
+static void revert_default_compatability (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("revert_default_compatability");
@@ -700,7 +700,7 @@ void revert_default_compatability (tilda_window *tw)
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_delete_key), cfg_getint (tw->tc, "delete_key"));
 }
 
-GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
+static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("compatibility");
@@ -746,7 +746,7 @@ GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
+static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("keybindings");
@@ -781,7 +781,7 @@ GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
-void apply_settings (tilda_window *tw)
+static void apply_settings (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("apply_settings");
@@ -864,7 +864,7 @@ void apply_settings (tilda_window *tw)
     }
 }
 
-gint ok (tilda_window *tw)
+static gint ok (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("ok");
@@ -882,7 +882,7 @@ gint ok (tilda_window *tw)
     return (TRUE);
 }
 
-gint exit_app (GtkWidget *widget, gpointer data)
+static gint exit_app (GtkWidget *widget, gpointer data)
 {
 #ifdef DEBUG
     puts("exit_app");

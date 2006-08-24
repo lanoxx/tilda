@@ -46,12 +46,9 @@
 #include "key_grabber.h"
 #include "wizard.h"
 
-/* unneeded right now (not used) */
-/* gchar *user, *display; */
-
 static tilda_window *tw;
 
-void pull_no_args()
+static void pull_no_args()
 {
     pull(tw);
 }
@@ -73,7 +70,7 @@ void print_and_exit (gchar *message, gint exitval)
  *
  * @param tw the tilda_window structure for this instance
  */
-gint getnextinstance (tilda_window *tw)
+static gint getnextinstance (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("getnextinstance");
@@ -183,7 +180,7 @@ void getinstance (tilda_window *tw)
  * @param lock_pid the pid of the lock file (if it was valid)
  * @return TRUE if this is a lockfile, FALSE otherwise
  */
-gboolean islockfile (gchar *filename, gint *lock_pid)
+static gboolean islockfile (gchar *filename, gint *lock_pid)
 {
 #ifdef DEBUG
     puts("islockfile");
@@ -220,7 +217,7 @@ gboolean islockfile (gchar *filename, gint *lock_pid)
  *
  * @param tw the tilda_window structure for this instance
  */
-void clean_tmp (tilda_window *tw)
+static void clean_tmp (tilda_window *tw)
 {
 #ifdef DEBUG
     puts("clean_tmp");
@@ -323,7 +320,7 @@ void clean_tmp (tilda_window *tw)
  * @param tw the tilda_window from main. Used for setting values in tw->tc.
  * @param tt the tilda_term, from main. Used for calling the wizard.
  */
-void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
+static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
     puts("parse_cli");

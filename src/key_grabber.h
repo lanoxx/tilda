@@ -27,7 +27,6 @@ G_BEGIN_DECLS;
 #define PULL_DOWN 1
 #define PULL_UP 2
 
-void pull_state (tilda_window *tw, int state);
 void pull (tilda_window *tw);
 void *wait_for_signal (tilda_window *tw);
 void generate_animation_positions (tilda_window *tw);
