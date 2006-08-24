@@ -70,6 +70,11 @@ struct wizard_items
     GtkWidget *button_background_image;
     GtkWidget *chooser_background_image;
 
+    gulong    cid_height_pixels;
+    gulong    cid_height_percentage;
+    gulong    cid_width_pixels;
+    gulong    cid_width_percentage;
+
     /* Colors Notebook Tab */
     GtkWidget *combo_schemes;
     GtkWidget *button_text_color;
