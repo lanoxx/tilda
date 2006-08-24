@@ -49,6 +49,134 @@ void close_dialog (GtkWidget *widget, gpointer data)
     gtk_widget_destroy (GTK_WIDGET (data));
 }
 
+void image_select (GtkWidget *widget, GtkWidget *label_image)
+{
+#ifdef DEBUG
+    puts("image_select");
+#endif
+
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)) == TRUE)
+    {
+        gtk_widget_set_sensitive (label_image, TRUE);
+        gtk_widget_set_sensitive (items.button_background_image, TRUE);
+    }
+    else
+    {
+        gtk_widget_set_sensitive (label_image, FALSE);
+        gtk_widget_set_sensitive (items.button_background_image, FALSE);
+    }
+}
+
+void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
+{
+#ifdef DEBUG
+    puts ("toggle_check_animated_pulldown1");
+#endif
+
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
+        
+    gtk_widget_set_sensitive (label_animation, active);
+    gtk_widget_set_sensitive (items.spin_animation_delay, active);
+}
+
+void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
+{
+#ifdef DEBUG
+    puts ("toggle_check_animated_pulldown2");
+#endif
+
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
+        
+    gtk_widget_set_sensitive (label_orientation, active);
+    gtk_widget_set_sensitive (items.combo_orientation, active);
+}
+
+void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
+{
+    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally));
+
+    gtk_widget_set_sensitive (label_position, active);
+    gtk_widget_set_sensitive (items.spin_x_position, active);
+}
+
+void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
+{
+    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically));
+
+    gtk_widget_set_sensitive (label_position, active);
+    gtk_widget_set_sensitive (items.spin_y_position, active);
+}
+
+void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label_custom_command)
+{
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget));
+
+    gtk_widget_set_sensitive (label_custom_command, active);
+    gtk_widget_set_sensitive (items.entry_custom_command, active);
+}
+
+int percentage_height (int current_height) 
+{
+    return (int) (((float) current_height) / ((float) display_height) * 100.0);
+}
+
+int percentage_width (int current_width) 
+{
+    return (int) (((float) current_width) / ((float) display_width) * 100.0);
+}
+
+void spin_height_percentage_changed ()
+{
+    const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_percentage));
+    const int in_pixels = (percentage / 100.0) * display_height;
+
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), in_pixels);
+        g_static_mutex_unlock (&callback_mutex);
+    }
+}
+
+void spin_width_percentage_changed ()
+{
+    const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_percentage));
+    const int in_pixels = (percentage / 100.0) * display_width;
+
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), in_pixels);
+        g_static_mutex_unlock (&callback_mutex);
+    }
+}
+
+void spin_height_pixels_changed ()
+{
+    const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_pixels));
+    const int percentage = percentage_height (pixels);
+
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage);
+        g_static_mutex_unlock (&callback_mutex);
+    }
+}
+
+void spin_width_pixels_changed ()
+{
+    const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_pixels));
+    const int percentage = percentage_width (pixels);
+
+    /* Check if we're already running a callback. If we are, do nothing! */
+    if (g_static_mutex_trylock (&callback_mutex))
+    {
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage);
+        g_static_mutex_unlock (&callback_mutex);
+    }
+}
+
 GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
 #ifdef DEBUG
@@ -190,6 +318,12 @@ GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command), cfg_getbool (tw->tc, "run_command"));
     gtk_combo_box_set_active   (GTK_COMBO_BOX(items.combo_command_exit), cfg_getint(tw->tc, "command_exit"));
 
+    /* Connect signals */
+    g_signal_connect (GTK_WIDGET (items.check_run_custom_command), "clicked", GTK_SIGNAL_FUNC(toggle_check_run_custom_command), label_custom_command); //TODO
+
+    /* Set sensitivity (force a callback, essentially) */
+    toggle_check_run_custom_command (items.check_run_custom_command, label_custom_command);
+
     /* Attach everything into the table inside the command frame */
     gtk_table_attach (GTK_TABLE(table_command), items.check_run_custom_command, 0, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_command), label_custom_command, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -203,126 +337,6 @@ GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
 
     /* Return this entire tree of widgets, which will become the Title and Command Notebook tab */
     return vtable;
-}
-
-void image_select (GtkWidget *widget, GtkWidget *label_image)
-{
-#ifdef DEBUG
-    puts("image_select");
-#endif
-
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)) == TRUE)
-    {
-        gtk_widget_set_sensitive (label_image, TRUE);
-        gtk_widget_set_sensitive (items.button_background_image, TRUE);
-    }
-    else
-    {
-        gtk_widget_set_sensitive (label_image, FALSE);
-        gtk_widget_set_sensitive (items.button_background_image, FALSE);
-    }
-}
-
-void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
-{
-#ifdef DEBUG
-    puts ("toggle_check_animated_pulldown1");
-#endif
-
-    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
-        
-    gtk_widget_set_sensitive (label_animation, active);
-    gtk_widget_set_sensitive (items.spin_animation_delay, active);
-}
-
-void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
-{
-#ifdef DEBUG
-    puts ("toggle_check_animated_pulldown2");
-#endif
-
-    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown));
-        
-    gtk_widget_set_sensitive (label_orientation, active);
-    gtk_widget_set_sensitive (items.combo_orientation, active);
-}
-
-void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
-{
-    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally));
-
-    gtk_widget_set_sensitive (label_position, active);
-    gtk_widget_set_sensitive (items.spin_x_position, active);
-}
-
-void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
-{
-    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically));
-
-    gtk_widget_set_sensitive (label_position, active);
-    gtk_widget_set_sensitive (items.spin_y_position, active);
-}
-
-int percentage_height (int current_height) 
-{
-    return (int) (((float) current_height) / ((float) display_height) * 100.0);
-}
-
-int percentage_width (int current_width) 
-{
-    return (int) (((float) current_width) / ((float) display_width) * 100.0);
-}
-
-void spin_height_percentage_changed ()
-{
-    const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_percentage));
-    const int in_pixels = (percentage / 100.0) * display_height;
-
-    /* Check if we're already running a callback. If we are, do nothing! */
-    if (g_static_mutex_trylock (&callback_mutex))
-    {
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), in_pixels);
-        g_static_mutex_unlock (&callback_mutex);
-    }
-}
-
-void spin_width_percentage_changed ()
-{
-    const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_percentage));
-    const int in_pixels = (percentage / 100.0) * display_width;
-
-    /* Check if we're already running a callback. If we are, do nothing! */
-    if (g_static_mutex_trylock (&callback_mutex))
-    {
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), in_pixels);
-        g_static_mutex_unlock (&callback_mutex);
-    }
-}
-
-void spin_height_pixels_changed ()
-{
-    const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_height_pixels));
-    const int percentage = percentage_height (pixels);
-
-    /* Check if we're already running a callback. If we are, do nothing! */
-    if (g_static_mutex_trylock (&callback_mutex))
-    {
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage);
-        g_static_mutex_unlock (&callback_mutex);
-    }
-}
-
-void spin_width_pixels_changed ()
-{
-    const int pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(items.spin_width_pixels));
-    const int percentage = percentage_width (pixels);
-
-    /* Check if we're already running a callback. If we are, do nothing! */
-    if (g_static_mutex_trylock (&callback_mutex))
-    {
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage);
-        g_static_mutex_unlock (&callback_mutex);
-    }
 }
 
 GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
