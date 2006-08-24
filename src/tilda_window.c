@@ -273,6 +273,9 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     GClosure *goto_tab_closure_9, *goto_tab_closure_10;
     GError *error;
 
+    GdkPixbuf *window_icon;
+    const gchar window_icon_file[] = "/usr/share/pixmaps/tilda.png"; // A better way to get this path?
+
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -375,9 +378,14 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     paste_closure = g_cclosure_new_swap ((GCallback) cpaste, tw, NULL);
     gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, paste_closure);            
      
-    gtk_window_set_decorated ((GtkWindow *) tw->window, FALSE);
+    gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
 
-    gtk_widget_set_size_request ((GtkWidget *) tw->window, 0, 0);
+    /*  Set a window icon! */
+    window_icon = gdk_pixbuf_new_from_file (window_icon_file, NULL);
+    gtk_window_set_icon (GTK_WINDOW(tw->window), window_icon);
+    g_object_unref (window_icon);
+
+    gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
 
     if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
        perror ("Fuck that thread!!!");
