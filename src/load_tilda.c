@@ -58,7 +58,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     puts("update_tilda");
 #endif
 
-    gdouble TRANS_LEVEL = 0;       /* how transparent the window is, percent from 0-100 */
+    gdouble transparency_level = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
     gboolean scroll = FALSE, scroll_background = FALSE, highlight_set = FALSE, cursor_set = FALSE,
              use_antialias = FALSE, bool_use_image = FALSE, allow_bold=FALSE;
@@ -81,7 +81,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint.red = tint.green = tint.blue = 0;
     tint = black;
 
-    TRANS_LEVEL = ((gdouble) cfg_getint (tw->tc, "transparency"))/100;
+    transparency_level = ((gdouble) cfg_getint (tw->tc, "transparency"))/100;
 
     /* Set some defaults. */
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bell"));
@@ -134,13 +134,15 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
-    if (TRANS_LEVEL > 0)
+    if (transparency_level > 0)
     {
-        vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), TRANS_LEVEL);
+        vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);
     }
     else
+    {
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
+    }
 
     vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
     vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fore, &back, NULL, 0);
