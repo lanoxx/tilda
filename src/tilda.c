@@ -77,10 +77,11 @@ gint getnextinstance (tilda_window *tw)
     gchar *lock_dir;    
     gchar *name;
     gchar **tokens;
-    gint tmp, current;
     gchar *lock_subdir = "/.tilda/locks";
     gint lock_dir_size = 0;
     gint count = 0;
+    gint current = 0;
+    gint tmp = 0;
     GDir *dir;
 
     /* Figure out the size of the lock_dir variable. Make sure to
