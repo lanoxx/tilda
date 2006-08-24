@@ -71,7 +71,6 @@ static cfg_opt_t new_conf[] = {
     CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
     CFG_BOOL("scroll_on_output", FALSE, CFGF_NONE),
     CFG_BOOL("notebook_border", FALSE, CFGF_NONE),
-    CFG_BOOL("down", TRUE, CFGF_NONE),
     CFG_BOOL("antialias", TRUE, CFGF_NONE),
     CFG_BOOL("scrollbar", FALSE, CFGF_NONE),
     CFG_BOOL("use_image", FALSE, CFGF_NONE),

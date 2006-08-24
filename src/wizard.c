@@ -831,7 +831,7 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "antialias", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias)));
     cfg_setbool (tw->tc, "scrollbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar)));
     cfg_setbool (tw->tc, "use_image", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)));
-    cfg_setbool (tw->tc, "down", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden)));
+    cfg_setbool (tw->tc, "hidden", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden)));
     cfg_setbool (tw->tc, "bold", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text)));
     cfg_setbool (tw->tc, "blinks", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks)));
     cfg_setbool (tw->tc, "bell", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell)));
