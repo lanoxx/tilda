@@ -35,6 +35,7 @@ struct tilda_window_
     gchar *home_dir;
     gchar *lock_file;
     gchar *config_file;
+    gboolean config_writing_disabled;
     gint instance;
 
     /* Stores all configuration */

@@ -37,6 +37,10 @@ void clean_up_no_args ();
 #define HEIGHT 0
 #define WIDTH  1
 
+#define CONFIG1_OLDER -1
+#define CONFIGS_SAME   0
+#define CONFIG1_NEWER  1
+
 int get_display_dimension (int dimension);
 #define get_physical_height_pixels() get_display_dimension(HEIGHT)
 #define get_physical_width_pixels()  get_display_dimension(WIDTH)

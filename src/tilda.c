@@ -76,7 +76,7 @@ static gint getnextinstance (tilda_window *tw)
     puts("getnextinstance");
 #endif
 
-    gchar *lock_dir;    
+    gchar *lock_dir;
     gchar *name;
     gchar **tokens;
     gchar *lock_subdir = "/.tilda/locks";
@@ -98,23 +98,23 @@ static gint getnextinstance (tilda_window *tw)
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
-    while (dir != NULL && (name = (gchar*)g_dir_read_name (dir))) 
+    while (dir != NULL && (name = (gchar*)g_dir_read_name (dir)))
     {
         tokens = g_strsplit (name, "_", 3);
-        
-        if (tokens != NULL) 
+
+        if (tokens != NULL)
         {
-            current = atoi (tokens[2]);        
+            current = atoi (tokens[2]);
             g_strfreev (tokens);
-             
+
             if (current - tmp > 1) {
-                count = tmp + 1;           
-                break;           
+                count = tmp + 1;
+                break;
             }
-            
-            count++;        
-                    
-            tmp = current;        
+
+            count++;
+
+            tmp = current;
         }
     }
 
@@ -306,7 +306,7 @@ static void clean_tmp (tilda_window *tw)
 
     if (dir != NULL)
         g_dir_close (dir);
-    
+
     free (running_pids);
     free (lock_dir);
 }
@@ -383,25 +383,25 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
         printf ("to see all possible options.\n\n");
 
         printf ("Error message: %s\n", error->message);
-        
+
         exit (1);
     }
-    
+
     /* If we need to show the version, show it then exit normally */
     if (version)
     {
         printf ("%s\n\n", TILDA_VERSION);
-        
+
         printf ("Copyright (c) 2005,2006 Tristan Sloughter (sloutri@iit.edu)\n");
         printf ("Copyright (c) 2005,2006 Ira W. Snyder (tilda@irasnyder.com)\n\n");
-        
+
         printf ("This program comes with ABSOLUTELY NO WARRANTY.\n");
         printf ("This is free software, and you are welcome to redistribute it\n");
         printf ("under certain conditions. See the file COPYING for details.\n");
 
         exit (0);
     }
-    
+
     /* Now set the options in the config, if they changed */
     if (background_color != cfg_getstr (tw->tc, "background_color"))
         cfg_setstr (tw->tc, "background_color", background_color);
@@ -435,13 +435,13 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
 
     /* Show the config wizard, if it was requested */
     if (show_config)
-        if ((wizard (*argc, *argv, tw, tt)) == 1) { 
-          clean_up(tw); 
+        if ((wizard (*argc, *argv, tw, tt)) == 1) {
+          clean_up(tw);
         }
 }
 
 int get_display_dimension (int dimension)
-{    
+{
     Display                 *dpy;
     XRRScreenSize           *sizes;
     XRRScreenConfiguration  *sc;
@@ -472,7 +472,7 @@ int get_display_dimension (int dimension)
     }
 
     sizes = XRRConfigSizes(sc, &nsize);
-  
+
     XRRFreeScreenConfigInfo(sc);
     XCloseDisplay (dpy);
 
@@ -508,6 +508,134 @@ int find_centering_coordinate (const int screen_dimension, const int tilda_dimen
     return screen_center - tilda_center;
 }
 
+int write_config_file (tilda_window *tw)
+{
+    FILE *fp;
+
+    /* Check to see if writing is disabled. Leave early if it is. */
+    if (tw->config_writing_disabled)
+        return 1;
+
+    fp = fopen(tw->config_file, "w");
+
+    if (fp != NULL)
+    {
+        cfg_print (tw->tc, fp);
+
+        if (fclose (fp) != 0)
+        {
+            // An error occurred
+            perror ("tilda error");
+            fprintf (stderr, "Unable to close the config file\n");
+        }
+
+    }
+    else
+    {
+        perror ("tilda error");
+        fprintf (stderr, "Unable to write the config file to %s\n", tw->config_file);
+    }
+
+    return 0;
+}
+
+/*
+ * Compares two config versions together.
+ *
+ * Returns -1 if config1 is older than config2 (UPDATE REQUIRED)
+ * Returns  0 if config1 is equal to   config2 (NORMAL USAGE)
+ * Returns  1 if config1 is newer than config2 (DISABLE WRITE)
+ */
+static gboolean compare_config_versions (const gchar *config1, const gchar *config2)
+{
+    /*
+     * 1) Split apart both strings using the .'s
+     * 2) Compare the major-major version
+     * 3) Compare the major version
+     * 4) Compare the minor version
+     */
+
+    gchar **config1_tokens;
+    gchar **config2_tokens;
+    gint  config1_version[3];
+    gint  config2_version[3];
+    gint  i;
+
+    config1_tokens = g_strsplit (config1, ".", 3);
+    config2_tokens = g_strsplit (config2, ".", 3);
+
+    for (i=0; i<3; i++)
+    {
+        config1_version[i] = atoi (config1_tokens[i]);
+        config2_version[i] = atoi (config2_tokens[i]);
+    }
+
+    g_strfreev (config1_tokens);
+    g_strfreev (config2_tokens);
+
+    /* We're done splitting things, so compare now */
+    for (i=0; i<3; i++)
+    {
+        if (config1_version[i] > config2_version[i])
+            return CONFIG1_NEWER;
+
+        if (config1_version[i] < config2_version[i])
+            return CONFIG1_OLDER;
+    }
+
+    return CONFIGS_SAME;
+}
+
+/*
+ * Compare config file versions and see if we know about a new version.
+ *
+ * If we have a version newer than what we know about, we need to stop
+ * anything from writing to the config file.
+ *
+ * If we are at the same config version, we're done, so exit early.
+ *
+ * If the config is older than we are now, update it and then write
+ * it to disk.
+ */
+static void try_to_update_config_file (tilda_window *tw)
+{
+    gchar *current_config = cfg_getstr (tw->tc, "tilda_config_version");
+
+    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)
+        return; // Same version as ourselves, we're done!
+
+    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIG1_NEWER)
+    {
+        // We have a version newer than ourselves!
+        // Disable writing to the config for safety.
+        tw->config_writing_disabled = TRUE;
+        return; // Out early, since we won't be able to update anyway!
+    }
+
+    /* NOTE: Start with the oldest config version first, and work our way up to the
+     * NOTE: newest that we support, updating our current version each time. */
+
+    /* Below is a template for creating new entries in the updater. If you ever
+     * change anything between versions, copy this, replacing YOUR_VERSION
+     * with the new version that you are making. */
+#if 0
+    if (compare_config_versions (current_config, YOUR_VERSION) == CONFIG1_OLDER)
+    {
+        // TODO: Add things here to migrate from whatever we are to YOUR_VERSION
+        current_config = YOUR_VERSION;
+    }
+#endif
+
+    /* We've run through all the updates, so set our config file version to the
+     * version we're at now, then write out the config file.
+     *
+     * NOTE: this only happens if we upgraded the config, due to some early-exit
+     * logic above.
+     */
+    cfg_setstr (tw->tc, "tilda_config_version", current_config);
+    write_config_file (tw);
+}
+
 int main (int argc, char **argv)
 {
 #ifdef DEBUG
@@ -534,6 +662,9 @@ int main (int argc, char **argv)
 
     /* Set: tw->instance, tw->config_file, and parse the config file */
     init_tilda_window_instance (tw);
+
+    /* Check if the config file is old. If it is, update it */
+    try_to_update_config_file (tw);
 
 #ifdef DEBUG
     /* Have to do this early. */

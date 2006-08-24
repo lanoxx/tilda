@@ -805,7 +805,6 @@ static void apply_settings (tilda_window *tw)
 #endif
 
     GdkColor gdk_text_color, gdk_back_color;
-    FILE *fp;
     gchar *tmp_str;
     tilda_term *tt;
     guint i;
@@ -863,10 +862,7 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
     cfg_setbool (tw->tc, "enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
 
-    /* Write out the config file */
-    fp = fopen(tw->config_file, "w");
-    cfg_print (tw->tc, fp);
-    fclose (fp);
+    write_config_file (tw);
 
     if (!in_main)
     {
@@ -944,7 +940,6 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     GtkWidget *contents[7];
     gchar *tabs[] = {"General", "Title and Command", "Appearance", "Colors", "Scrolling", "Compatibility", "Keybindings"};
 
-    FILE *fp;
     gint i;
 
     contents[0] = general (tw, tt);

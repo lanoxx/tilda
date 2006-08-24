@@ -32,6 +32,7 @@
 static cfg_opt_t new_conf[] = {
 
     /* strings */
+    CFG_STR("tilda_config_version", PACKAGE_VERSION, CFGF_NONE),
     CFG_STR("image", NULL, CFGF_NONE),
     CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 13", CFGF_NONE),
@@ -142,6 +143,7 @@ void init_tilda_window_instance (tilda_window *tw)
 
     /* Get and store the config file's name */
     tw->config_file = get_config_file_name (tw);
+    tw->config_writing_disabled = FALSE;
 
     /* Set up the default config dictionary */
     tw->tc = cfg_init (new_conf, 0);
