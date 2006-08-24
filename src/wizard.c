@@ -24,9 +24,6 @@
 /* INT_MAX */
 #include <limits.h>
 
-/* strstr() and friends */
-#include <string.h>
-
 #include "tilda.h"
 #include "../tilda-config.h"
 #include "config.h"
@@ -250,6 +247,22 @@ void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orient
     gtk_widget_set_sensitive (items.combo_orientation, active);
 }
 
+void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
+{
+    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally));
+
+    gtk_widget_set_sensitive (label_position, active);
+    gtk_widget_set_sensitive (items.spin_x_position, active);
+}
+
+void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
+{
+    const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically));
+
+    gtk_widget_set_sensitive (label_position, active);
+    gtk_widget_set_sensitive (items.spin_y_position, active);
+}
+
 int percentage_height (int current_height) 
 {
     return (int) (((float) current_height) / ((float) display_height) * 100.0);
@@ -362,67 +375,65 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     /* ========== HEIGHT FRAME ========== */
 
     /* Create everything to fill the Height frame */
-    table_height = gtk_table_new (2, 4, FALSE);
-    items.check_centered_vertically = gtk_check_button_new_with_label ("Centered Vertically");
+    table_height = gtk_table_new (1, 4, FALSE);
     label_height_percentage = gtk_label_new ("Percentage");
     items.spin_height_percentage = gtk_spin_button_new_with_range (0, 100, 1);
     label_height_pixels = gtk_label_new ("In Pixels");
     items.spin_height_pixels = gtk_spin_button_new_with_range (0, display_height, 1);
 
     /* Get the current values */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically), cfg_getbool (tw->tc, "centered_vertically"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), percentage_height (cfg_getint (tw->tc, "max_height")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels),
+            percentage_height (cfg_getint (tw->tc, "max_height")));
 
     /* Connect signals */
     g_signal_connect_swapped (G_OBJECT (items.spin_height_percentage), "value-changed",
-            G_CALLBACK(spin_height_percentage_changed), NULL); //FIXME: check this callback function
+            G_CALLBACK(spin_height_percentage_changed), NULL);
 
     g_signal_connect_swapped (G_OBJECT (items.spin_height_pixels), "value-changed",
-            G_CALLBACK(spin_height_pixels_changed), NULL); //FIXME; check this callback function
+            G_CALLBACK(spin_height_pixels_changed), NULL);
     
     /* Attach everything into the Height frame */
-    gtk_table_attach (GTK_TABLE(table_height), items.check_centered_vertically, 0, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_height), label_height_percentage, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_height), items.spin_height_percentage, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_height), label_height_pixels, 2, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_height), items.spin_height_pixels, 3, 4, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_height), label_height_percentage, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_height), items.spin_height_percentage, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_height), label_height_pixels, 2, 3, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_height), items.spin_height_pixels, 3, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_container_add (GTK_CONTAINER (frame_height), table_height);
 
     /* ========== WIDTH FRAME ========== */
 
     /* Create everything to fill the Width frame */
-    table_width = gtk_table_new (2, 4, FALSE);
-    items.check_centered_horizontally = gtk_check_button_new_with_label ("Centered Horizontally");
+    table_width = gtk_table_new (1, 4, FALSE);
     label_width_percentage = gtk_label_new ("Percentage");
     items.spin_width_percentage = gtk_spin_button_new_with_range (0, 100, 1);
     label_width_pixels = gtk_label_new ("In Pixels");
     items.spin_width_pixels = gtk_spin_button_new_with_range (0, display_width, 1);
 
     /* Get the current values */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), cfg_getbool (tw->tc, "centered_horizontally"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), percentage_width (cfg_getint (tw->tc, "max_width")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), 
+            percentage_width (cfg_getint (tw->tc, "max_width")));
 
     /* Connect signals */
     g_signal_connect_swapped (G_OBJECT (items.spin_width_percentage), "value-changed",
-            G_CALLBACK(spin_width_percentage_changed), NULL); //FIXME: check this callback function
+            G_CALLBACK(spin_width_percentage_changed), NULL);
 
     g_signal_connect_swapped (G_OBJECT (items.spin_width_pixels), "value-changed",
-            G_CALLBACK(spin_width_pixels_changed), NULL); //FIXME: check this callback function
+            G_CALLBACK(spin_width_pixels_changed), NULL);
 
     /* Attach everything into the Width frame */
-    gtk_table_attach (GTK_TABLE(table_width), items.check_centered_horizontally, 0, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_width), label_width_percentage, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_width), items.spin_width_percentage, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_width), label_width_pixels, 2, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_width), items.spin_width_pixels, 3, 4, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_width), label_width_percentage, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_width), items.spin_width_percentage, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_width), label_width_pixels, 2, 3, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_width), items.spin_width_pixels, 3, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_container_add (GTK_CONTAINER (frame_width), table_width);
 
     /* ========== POSITION FRAME ========== */
 
     /* Create everything to fill the Position frame */
-    table_position = gtk_table_new (1, 4, FALSE);
+    table_position = gtk_table_new (2, 4, FALSE);
+    items.check_centered_vertically = gtk_check_button_new_with_label ("Centered Vertically");
     label_x_pos = gtk_label_new ("X Position");
     items.spin_x_position = gtk_spin_button_new_with_range (INT_MIN, INT_MAX, 1);
+    items.check_centered_horizontally = gtk_check_button_new_with_label ("Centered Horizontally");
     label_y_pos = gtk_label_new ("Y Position");
     items.spin_y_position = gtk_spin_button_new_with_range (INT_MIN, INT_MAX, 1);
 
@@ -430,11 +441,31 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position), cfg_getint (tw->tc, "x_pos"));
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position), cfg_getint (tw->tc, "y_pos"));
 
+    if (cfg_getbool (tw->tc, "centered_horizontally"))
+    {
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), TRUE);
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position),
+                find_centering_coordinate (display_width, cfg_getint (tw->tc, "max_width")));
+    }
+
+    if (cfg_getbool (tw->tc, "centered_vertically"))
+    {
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically), TRUE);
+        gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position),
+                find_centering_coordinate (display_height, cfg_getint (tw->tc, "max_height")));
+    }
+
+    /* Connect signals */
+    g_signal_connect (GTK_WIDGET(items.check_centered_horizontally), "clicked", GTK_SIGNAL_FUNC(toggle_centered_horizontally), label_x_pos);
+    g_signal_connect (GTK_WIDGET(items.check_centered_vertically), "clicked", GTK_SIGNAL_FUNC(toggle_centered_vertically), label_y_pos);
+
     /* Attach everything into the Position frame */
-    gtk_table_attach (GTK_TABLE(table_position), label_x_pos, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_position), items.spin_x_position, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_position), label_y_pos, 2, 3, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_position), items.spin_y_position, 3, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), items.check_centered_horizontally, 0, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), items.check_centered_vertically, 2, 4, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), label_x_pos, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), items.spin_x_position, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), label_y_pos, 2, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_position), items.spin_y_position, 3, 4, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_container_add (GTK_CONTAINER (frame_position), table_position);
 
     /* ========== EXTRAS FRAME ========== */
@@ -464,7 +495,6 @@ GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.button_background_image = gtk_file_chooser_button_new_with_dialog (items.chooser_background_image);
 
     /* Connect signals */
-
     g_signal_connect (GTK_WIDGET(items.check_use_image_for_background), "clicked", GTK_SIGNAL_FUNC(image_select), label_background_image);
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown1), label_animation_delay);
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown2), label_orientation);
