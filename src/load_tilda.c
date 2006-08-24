@@ -134,7 +134,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
-    if (transparency_level > 0)
+    if (cfg_getbool (tw->tc, "enable_transparency") && transparency_level > 0)
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);

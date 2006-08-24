@@ -87,6 +87,7 @@ static cfg_opt_t new_conf[] = {
     CFG_BOOL("hidden", FALSE, CFGF_NONE),
     CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
     CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
+    CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),
     CFG_END()
 };
 

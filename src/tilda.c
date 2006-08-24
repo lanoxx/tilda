@@ -417,7 +417,10 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     if (lines != cfg_getint (tw->tc, "lines"))
         cfg_setint (tw->tc, "lines", lines);
     if (transparency != cfg_getint (tw->tc, "transparency"))
+    {
+        cfg_setbool (tw->tc, "enable_transparency", transparency);
         cfg_setint (tw->tc, "transparency", transparency);
+    }
     if (x_pos != cfg_getint (tw->tc, "x_pos"))
         cfg_setint (tw->tc, "x_pos", x_pos);
     if (y_pos != cfg_getint (tw->tc, "y_pos"))

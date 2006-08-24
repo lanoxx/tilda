@@ -66,6 +66,18 @@ static void image_select (GtkWidget *widget, GtkWidget *label_image)
     }
 }
 
+static void toggle_check_enable_transparency (GtkWidget *widget, GtkWidget *label_level_of_transparency)
+{
+#ifdef DEBUG
+    puts ("toggle_check_enable_transparency");
+#endif
+
+    const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+
+    gtk_widget_set_sensitive (label_level_of_transparency, active);
+    gtk_widget_set_sensitive (items.spin_level_of_transparency, active);
+}
+
 static void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
 {
 #ifdef DEBUG
@@ -478,6 +490,7 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 
     /* Create everyting to fill the Extras frame */
     table_extras = gtk_table_new (4, 3, FALSE);
+    items.check_enable_transparency = gtk_check_button_new_with_label ("Enable Transparency");
     label_level_of_transparency = gtk_label_new ("Level of Transparency");
     items.spin_level_of_transparency = gtk_spin_button_new_with_range (0, 100, 1);
     items.check_animated_pulldown = gtk_check_button_new_with_label ("Animated Pulldown");
@@ -501,11 +514,13 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.button_background_image = gtk_file_chooser_button_new_with_dialog (items.chooser_background_image);
 
     /* Connect signals */
+    g_signal_connect (GTK_WIDGET(items.check_enable_transparency), "clicked", GTK_SIGNAL_FUNC(toggle_check_enable_transparency), label_level_of_transparency);
     g_signal_connect (GTK_WIDGET(items.check_use_image_for_background), "clicked", GTK_SIGNAL_FUNC(image_select), label_background_image);
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown1), label_animation_delay);
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown2), label_orientation);
 
     /* Get the current values */
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_enable_transparency), cfg_getbool (tw->tc, "enable_transparency"));
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_level_of_transparency), cfg_getint (tw->tc, "transparency"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_animated_pulldown), cfg_getbool (tw->tc, "animation"));
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), cfg_getint (tw->tc, "slide_sleep_usec"));
@@ -513,12 +528,14 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), cfg_getbool (tw->tc, "use_image"));
 
     /* Force callbacks for visibility purposes */
+    toggle_check_enable_transparency (items.check_enable_transparency, label_level_of_transparency);
     image_select (items.check_use_image_for_background, label_background_image);
     toggle_check_animated_pulldown1 (items.check_animated_pulldown, label_animation_delay);
     toggle_check_animated_pulldown2 (items.check_animated_pulldown, label_orientation);
 
     /* Attach everything to the Extras frame */
-    gtk_table_attach (GTK_TABLE(table_extras), label_level_of_transparency, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_extras), items.check_enable_transparency, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_extras), label_level_of_transparency, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_extras), items.spin_level_of_transparency, 2, 3, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_extras), items.check_animated_pulldown, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_extras), label_animation_delay, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -843,6 +860,7 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "animation", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown)));
     cfg_setbool (tw->tc, "centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
     cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
+    cfg_setbool (tw->tc, "enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
 
     /* Write out the config file */
     fp = fopen(tw->config_file, "w");

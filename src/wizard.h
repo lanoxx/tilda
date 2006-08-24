@@ -62,6 +62,7 @@ struct wizard_items
     GtkWidget *spin_width_pixels;
     GtkWidget *spin_x_position;
     GtkWidget *spin_y_position;
+    GtkWidget *check_enable_transparency;
     GtkWidget *spin_level_of_transparency;
     GtkWidget *check_animated_pulldown;
     GtkWidget *spin_animation_delay;
