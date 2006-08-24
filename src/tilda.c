@@ -340,12 +340,14 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
     gboolean scrollbar = cfg_getbool (tw->tc, "scrollbar");
     gboolean show_config = FALSE;
     gboolean version = FALSE;
+    gboolean hidden = cfg_getbool (tw->tc, "hidden");
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
         { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         "Use Antialiased Fonts", NULL },
         { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  "Set the background color", NULL },
         { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           "Run a command at startup", NULL },
+        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            "Start Tilda hidden", NULL },
         { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              "Set the font to the following string", NULL },
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             "Scrollback Lines", NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         "Use Scrollbar", NULL },
@@ -421,6 +423,8 @@ void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 
     if (antialias != cfg_getbool (tw->tc, "antialias"))
         cfg_setbool (tw->tc, "antialias", antialias);
+    if (hidden != cfg_getbool (tw->tc, "hidden"))
+        cfg_setbool (tw->tc, "hidden", hidden);
     if (scrollbar != cfg_getbool (tw->tc, "scrollbar"))
         cfg_setbool (tw->tc, "scrollbar", scrollbar);
 

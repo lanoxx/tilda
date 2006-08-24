@@ -70,7 +70,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.check_display_on_all_workspaces = gtk_check_button_new_with_label ("Display on all workspaces");
     items.check_always_on_top = gtk_check_button_new_with_label ("Always on top");
     items.check_do_not_show_in_taskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
-    items.check_display_pulled_down = gtk_check_button_new_with_label ("Display pulled down on start");
+    items.check_start_tilda_hidden = gtk_check_button_new_with_label ("Start Tilda hidden");
     items.check_terminal_bell = gtk_check_button_new_with_label ("Terminal Bell");
     items.check_cursor_blinks = gtk_check_button_new_with_label ("Cursor blinks");
     items.check_enable_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
@@ -87,7 +87,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces), cfg_getbool (tw->tc, "pinned"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_always_on_top), cfg_getbool (tw->tc, "above"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), cfg_getbool (tw->tc, "notaskbar"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_pulled_down), cfg_getbool (tw->tc, "down"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), cfg_getbool (tw->tc, "hidden"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell), cfg_getbool (tw->tc, "bell"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks), cfg_getbool (tw->tc, "blinks"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), cfg_getbool (tw->tc, "antialias"));
@@ -102,7 +102,7 @@ GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE (table), items.check_always_on_top,  1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
     gtk_table_attach (GTK_TABLE (table), items.check_do_not_show_in_taskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.check_display_pulled_down, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE (table), items.check_start_tilda_hidden, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
     gtk_table_attach (GTK_TABLE (table), items.check_terminal_bell, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE (table), items.check_cursor_blinks, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -781,7 +781,7 @@ void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "antialias", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias)));
     cfg_setbool (tw->tc, "scrollbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar)));
     cfg_setbool (tw->tc, "use_image", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)));
-    cfg_setbool (tw->tc, "down", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_display_pulled_down)));
+    cfg_setbool (tw->tc, "down", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden)));
     cfg_setbool (tw->tc, "bold", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text)));
     cfg_setbool (tw->tc, "blinks", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks)));
     cfg_setbool (tw->tc, "bell", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell)));

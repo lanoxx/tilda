@@ -37,7 +37,7 @@ struct wizard_items
     GtkWidget *check_display_on_all_workspaces;
     GtkWidget *check_always_on_top;
     GtkWidget *check_do_not_show_in_taskbar;
-    GtkWidget *check_display_pulled_down;
+    GtkWidget *check_start_tilda_hidden;
     GtkWidget *check_terminal_bell;
     GtkWidget *check_cursor_blinks;
     GtkWidget *check_enable_antialias;
