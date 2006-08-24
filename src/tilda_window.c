@@ -85,6 +85,8 @@ static cfg_opt_t new_conf[] = {
     CFG_BOOL("run_command", FALSE, CFGF_NONE),
     CFG_BOOL("pinned", TRUE, CFGF_NONE),
     CFG_BOOL("animation", TRUE, CFGF_NONE),
+    CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
+    CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
     CFG_END()
 };
 

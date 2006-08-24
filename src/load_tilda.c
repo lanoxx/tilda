@@ -224,8 +224,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), cfg_getbool (tw->tc, "notaskbar"));
     gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
 
-    if (cfg_getint (tw->tc, "max_height") != old_max_height || cfg_getint (tw->tc, "max_width") != old_max_width)
-        gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
+    gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
 
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool (tw->tc, "notebook_border"));
 
