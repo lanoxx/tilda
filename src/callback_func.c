@@ -98,7 +98,7 @@ void goto_tab (tilda_window *tw, guint i)
 static gboolean goto_tab_generic (tilda_window *tw, gint tab_number)
 {
 #ifdef DEBUG
-    puts ("goto_tab_%d\n", tab_number);
+    printf ("goto_tab_%d\n", tab_number);
 #endif
 
     if (g_list_length (tw->terms) > (tab_number-1))
