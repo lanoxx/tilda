@@ -280,7 +280,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Create notebook to hold all terminal widgets */
     tw->notebook = gtk_notebook_new ();
-    gtk_notebook_set_homogeneous_tabs (tw->notebook, TRUE);
+    gtk_notebook_set_homogeneous_tabs (GTK_NOTEBOOK(tw->notebook), TRUE);
     g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
 
     /* Init GList of all tilda_term structures */

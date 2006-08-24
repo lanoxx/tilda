@@ -96,7 +96,7 @@ gint getnextinstance (tilda_window *tw)
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
 
-    while (dir != NULL && (name = g_dir_read_name (dir))) 
+    while (dir != NULL && (name = (gchar*)g_dir_read_name (dir))) 
     {
         tokens = g_strsplit (name, "_", 3);
         
