@@ -498,10 +498,10 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.spin_animation_delay = gtk_spin_button_new_with_range (1, INT_MAX, 1);
     label_orientation = gtk_label_new ("Animation Orientation");
     items.combo_orientation = gtk_combo_box_new_text ();
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "TOP");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "BOTTOM");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "LEFT");
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "RIGHT");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "LEFT");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "BOTTOM");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "TOP");
     items.check_use_image_for_background = gtk_check_button_new_with_label ("Use Image for Background");
     label_background_image = gtk_label_new ("Background Image");
 
@@ -863,6 +863,8 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
     cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
     cfg_setbool (tw->tc, "enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
+
+    generate_animation_positions (tw);
 
     write_config_file (tw);
 
