@@ -173,7 +173,11 @@ void start_program(tilda_collect *collect)
         return; // the early way out
     }
 
-    const gchar *command = g_getenv ("SHELL");
+    gchar *command = g_getenv ("SHELL");
+
+    if (command == NULL)
+        command = "/bin/sh";
+
     vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
         command, NULL, NULL,
         cfg_getstr (collect->tw->tc, "working_dir"),
@@ -336,13 +340,13 @@ void ccopy (tilda_window *tw)
 #endif
     GtkWidget *current_page;
     GList *list;
-    
+
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    
+
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-    
+
     list = gtk_container_get_children ((GtkContainer *) current_page);
-    
+
     vte_terminal_copy_clipboard ((VteTerminal *) list->data);
 }
 
@@ -353,13 +357,13 @@ void cpaste (tilda_window *tw)
 #endif
     GtkWidget *current_page;
     GList *list;
-    
+
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    
+
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-    
+
     list = gtk_container_get_children ((GtkContainer *) current_page);
-    
+
     vte_terminal_paste_clipboard ((VteTerminal *) list->data);
 }
 
