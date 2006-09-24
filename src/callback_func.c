@@ -173,7 +173,7 @@ void start_program(tilda_collect *collect)
         return; // the early way out
     }
 
-    gchar *command = g_getenv ("SHELL");
+    gchar *command = (gchar *) g_getenv ("SHELL");
 
     if (command == NULL)
         command = "/bin/sh";

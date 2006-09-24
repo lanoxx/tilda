@@ -450,6 +450,21 @@ int get_display_dimension (int dimension)
     int                     screen = -1;
     char                    *display_name = NULL;
 
+    static int height = -1;
+    static int width  = -1;
+
+/* Turn this on by default, if we need to turn if off for some people, we
+ * should probably add a configure option, such as
+ * --enable-cache-display-dimensions or something similar. */
+#define CACHE_DISPLAY_DIMENSIONS
+#ifdef CACHE_DISPLAY_DIMENSIONS
+    if (height != -1 && dimension == HEIGHT)
+        return height;
+
+    if (width != -1 && dimension == WIDTH)
+        return width;
+#endif
+
     dpy = XOpenDisplay (display_name);
 
     if (dpy == NULL)
@@ -476,11 +491,14 @@ int get_display_dimension (int dimension)
     XRRFreeScreenConfigInfo(sc);
     XCloseDisplay (dpy);
 
+    height = sizes->height;
+    width  = sizes->width;
+
     if (dimension == HEIGHT)
-        return sizes->height;
+        return height;
 
     if (dimension == WIDTH)
-        return sizes->width;
+        return width;
 
     return -1; // bad choice
 }
