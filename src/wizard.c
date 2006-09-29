@@ -201,69 +201,105 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     puts("general");
 #endif
 
-    GtkWidget *table;
+    GtkWidget *vtable;
+    GtkWidget *frame_wdisplay;
+    GtkWidget *frame_tdisplay;
+    GtkWidget *frame_font;
+
+    GtkWidget *table_wdisplay;
+    GtkWidget *table_tdisplay;
+    GtkWidget *table_font;
+
     GtkWidget *label_tab_pos;
 
-    /* Create table to hold all items */
-    table = gtk_table_new (7, 2, FALSE);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+    /* Create the table that will hold the 3 frames */
+    vtable = gtk_table_new (3, 1, FALSE);
+    frame_wdisplay = gtk_frame_new ("Window Display");
+    gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_wdisplay))), "<b>Window Display</b>");
+    frame_tdisplay = gtk_frame_new ("Terminal Display");
+    gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_tdisplay))), "<b>Terminal Display</b>");
+    frame_font = gtk_frame_new ("Font");
+    gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_font))), "<b>Font</b>");
 
-    /* Create all items */
-    label_tab_pos = gtk_label_new ("Position of Tabs: ");
+    /* Attach frames to the table */
+    gtk_table_attach (GTK_TABLE(vtable), frame_wdisplay, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(vtable), frame_tdisplay, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(vtable), frame_font , 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+
+    /* =========== WINDOW DISPLAY FRAME ============= */
+
+    /* Create everything to fill the Window Display frame */
+    table_wdisplay = gtk_table_new (3, 2, FALSE);
     items.check_display_on_all_workspaces = gtk_check_button_new_with_label ("Display on all workspaces");
     items.check_always_on_top = gtk_check_button_new_with_label ("Always on top");
     items.check_do_not_show_in_taskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
     items.check_start_tilda_hidden = gtk_check_button_new_with_label ("Start Tilda hidden");
-    items.check_terminal_bell = gtk_check_button_new_with_label ("Terminal Bell");
-    items.check_cursor_blinks = gtk_check_button_new_with_label ("Cursor blinks");
-    items.check_enable_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
-    items.check_allow_bold_text = gtk_check_button_new_with_label ("Allow bold text");
     items.check_show_notebook_border = gtk_check_button_new_with_label ("Show Notebook Border");
 
-    items.combo_tab_position = gtk_combo_box_new_text    ();
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "RIGHT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "LEFT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "BOTTOM");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "TOP");
-
-    /* Get current values */
+    /* Get the current values */
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces), cfg_getbool (tw->tc, "pinned"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_always_on_top), cfg_getbool (tw->tc, "above"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), cfg_getbool (tw->tc, "notaskbar"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), cfg_getbool (tw->tc, "hidden"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell), cfg_getbool (tw->tc, "bell"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks), cfg_getbool (tw->tc, "blinks"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), cfg_getbool (tw->tc, "antialias"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text), cfg_getbool (tw->tc, "bold"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border), cfg_getbool (tw->tc, "notebook_border"));
 
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_tab_position), cfg_getint (tw->tc, "tab_pos"));
+    /* Attach everything inside the frame */
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_display_on_all_workspaces, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_always_on_top, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_do_not_show_in_taskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_start_tilda_hidden, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_show_notebook_border, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+
+    gtk_container_add (GTK_CONTAINER(frame_wdisplay), table_wdisplay);
+
+    /* ============ TERMINAL DISPLAY FRAME ============= */
+
+    /* Create everything to fill the Terminal Display frame */
+    table_tdisplay = gtk_table_new (2, 1, FALSE);
+    items.check_terminal_bell = gtk_check_button_new_with_label ("Terminal Bell");
+    items.check_cursor_blinks = gtk_check_button_new_with_label ("Cursor blinks");
+
+    /* Get the current values */
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell), cfg_getbool (tw->tc, "bell"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks), cfg_getbool (tw->tc, "blinks"));
+
+    /* Attach everything inside the frame */
+    gtk_table_attach (GTK_TABLE(table_tdisplay), items.check_terminal_bell, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_tdisplay), items.check_cursor_blinks, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+
+    gtk_container_add (GTK_CONTAINER(frame_tdisplay), table_tdisplay);
+    
+
+    /* ============== FONT FRAME =============== */
+
+    /* Create everything to fill the Font frame */
+    table_font = gtk_table_new (3, 2, FALSE);
+    label_tab_pos = gtk_label_new ("Position of Tabs: ");
+    items.check_enable_antialias = gtk_check_button_new_with_label ("Enable anti-aliasing");
+    items.check_allow_bold_text = gtk_check_button_new_with_label ("Allow bold text");
+    items.combo_tab_position = gtk_combo_box_new_text    ();
     items.button_font = gtk_font_button_new_with_font (cfg_getstr(tw->tc, "font"));
 
+    /* Get the current values */
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "RIGHT");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "LEFT");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "BOTTOM");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "TOP");
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_tab_position), cfg_getint (tw->tc, "tab_pos"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), cfg_getbool (tw->tc, "antialias"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text), cfg_getbool (tw->tc, "bold"));
+
     /* Attach everything to the table */
-    gtk_table_attach (GTK_TABLE (table), items.check_display_on_all_workspaces, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.check_always_on_top,  1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), items.check_enable_antialias, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), items.check_allow_bold_text, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), label_tab_pos, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), items.combo_tab_position, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), items.button_font, 0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
-    gtk_table_attach (GTK_TABLE (table), items.check_do_not_show_in_taskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.check_start_tilda_hidden, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_container_add (GTK_CONTAINER(frame_font), table_font);
 
-    gtk_table_attach (GTK_TABLE (table), items.check_terminal_bell, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.check_cursor_blinks, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-
-    gtk_table_attach (GTK_TABLE (table), items.check_enable_antialias, 0, 1, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.check_allow_bold_text, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-
-    gtk_table_attach (GTK_TABLE (table), items.check_show_notebook_border, 0, 1, 4, 5, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-
-    gtk_table_attach (GTK_TABLE (table), label_tab_pos, 0, 1, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE (table), items.combo_tab_position, 1, 2, 5, 6, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-
-    gtk_table_attach (GTK_TABLE (table), items.button_font, 0, 2, 6, 7, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-
-    gtk_widget_show_all (table);
-
-    return table;
+    gtk_widget_show_all (vtable);
+    return vtable;
 }
 
 static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
