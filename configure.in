@@ -42,7 +42,7 @@ AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
-LIBS="$LIBS -lconfuse" 
+LIBS="$LIBS" 
     
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
