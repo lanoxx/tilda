@@ -211,6 +211,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     GtkWidget *table_font;
 
     GtkWidget *label_tab_pos;
+    GtkWidget *label_font;    
 
     /* Create the table that will hold the 3 frames */
     vtable = gtk_table_new (3, 1, FALSE);
@@ -220,6 +221,8 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_tdisplay))), "<b>Terminal Display</b>");
     frame_font = gtk_frame_new ("Font");
     gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_font))), "<b>Font</b>");
+    
+    label_font = gtk_label_new("Font:");
 
     /* Attach frames to the table */
     gtk_table_attach (GTK_TABLE(vtable), frame_wdisplay, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -281,10 +284,10 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.button_font = gtk_font_button_new_with_font (cfg_getstr(tw->tc, "font"));
 
     /* Get the current values */
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "RIGHT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "LEFT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "BOTTOM");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "TOP");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "Right");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "Left");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "Bottom");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), "Top");
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_tab_position), cfg_getint (tw->tc, "tab_pos"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), cfg_getbool (tw->tc, "antialias"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text), cfg_getbool (tw->tc, "bold"));
@@ -294,7 +297,8 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE(table_font), items.check_allow_bold_text, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_font), label_tab_pos, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_font), items.combo_tab_position, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
-    gtk_table_attach (GTK_TABLE(table_font), items.button_font, 0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), label_font, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_font), items.button_font, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
     gtk_container_add (GTK_CONTAINER(frame_font), table_font);
 
@@ -534,10 +538,10 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.spin_animation_delay = gtk_spin_button_new_with_range (1, INT_MAX, 1);
     label_orientation = gtk_label_new ("Animation Orientation");
     items.combo_orientation = gtk_combo_box_new_text ();
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "RIGHT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "LEFT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "BOTTOM");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "TOP");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "Right");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "Left");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "Bottom");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_orientation), "Top");
     items.check_use_image_for_background = gtk_check_button_new_with_label ("Use Image for Background");
     label_background_image = gtk_label_new ("Background Image");
 
@@ -705,8 +709,8 @@ static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     table = gtk_table_new (3, 4, FALSE);
 
     items.combo_scrollbar_position = gtk_combo_box_new_text ();
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), "RIGHT");
-    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), "LEFT");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), "Right");
+    gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), "Left");
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_scrollbar_position), cfg_getint (tw->tc, "scrollbar_pos"));
 
     label_scrollback = gtk_label_new("Scrollback:");
