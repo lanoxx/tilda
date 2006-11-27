@@ -277,8 +277,11 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     GError *error;
 
     GdkPixbuf *window_icon;
-    const gchar *window_icon_file = g_build_filename (INSTALL_PREFIX, "share",
-            "pixmaps", "tilda.png", NULL);
+    const gchar *window_icon_file;
+	if (strcmp (INSTALL_PREFIX, "NONE") == 0)
+		window_icon_file = g_build_filename ("/", "usr", "share",  "pixmaps", "tilda.png", NULL);
+	else
+		window_icon_file = g_build_filename (INSTALL_PREFIX, "share",  "pixmaps", "tilda.png", NULL);
 
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
