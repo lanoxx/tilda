@@ -238,6 +238,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.check_do_not_show_in_taskbar = gtk_check_button_new_with_label ("Do not show in taskbar");
     items.check_start_tilda_hidden = gtk_check_button_new_with_label ("Start Tilda hidden");
     items.check_show_notebook_border = gtk_check_button_new_with_label ("Show Notebook Border");
+    items.check_enable_double_buffering = gtk_check_button_new_with_label ("Enable Double Buffering");
 
     /* Get the current values */
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces), cfg_getbool (tw->tc, "pinned"));
@@ -245,6 +246,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), cfg_getbool (tw->tc, "notaskbar"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), cfg_getbool (tw->tc, "hidden"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border), cfg_getbool (tw->tc, "notebook_border"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering), cfg_getbool (tw->tc, "double_buffer"));
 
     /* Attach everything inside the frame */
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_display_on_all_workspaces, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -252,6 +254,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_do_not_show_in_taskbar, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_start_tilda_hidden, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_show_notebook_border, 0, 1, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
+    gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_enable_double_buffering, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
     gtk_container_add (GTK_CONTAINER(frame_wdisplay), table_wdisplay);
 
@@ -903,6 +906,7 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
     cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
     cfg_setbool (tw->tc, "enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
+    cfg_setbool (tw->tc, "double_buffer", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering)));
 
     generate_animation_positions (tw);
 

@@ -93,6 +93,12 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bold"));
 
+    /* Causes terminal to blink if TRUE */
+	if (cfg_getbool (tw->tc, "double_buffer") == TRUE)
+		gtk_widget_set_double_buffered (tt->vte_term, TRUE);
+	else
+    	gtk_widget_set_double_buffered (tt->vte_term, FALSE);
+
     switch (cfg_getint (tw->tc, "backspace_key"))
     {
         case 0:
