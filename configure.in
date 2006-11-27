@@ -43,6 +43,10 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
 LIBS="$LIBS" 
+
+# Figure out the prefix we are installing in, so we can install icons in the
+# correct place. There is probably an easier way to do this.
+AC_DEFINE_UNQUOTED(INSTALL_PREFIX, "$prefix", [The prefix where tilda will be installed])
     
 AC_CONFIG_FILES([Makefile
                  src/Makefile])

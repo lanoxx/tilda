@@ -1,6 +1,7 @@
 version 0.09.4 (TBA):
-	* Double Buffering is now in the Preferences. Enable or disable to fix problems with blinking on your system
-	* (REMOVED) Add support for a window icon. (REMOVED)
+	* Double Buffering is now in the Preferences. Enable or disable to fix
+	  problems with blinking on your system
+	* Add support for a window icon.
 	* Add a --hidden command line option.
 	* Change "Display pulled down on start" to "Start Tilda hidden".
 	* Updated the Preferences window.
