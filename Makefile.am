@@ -13,8 +13,8 @@ MAINTAINER_CLEAN_FILES =  \
 maintainer-clean-generic:
 	-rm $(MAINTAINER_CLEAN_FILES)
 
-Applicationsdir = @prefix@/share/applications
+Applicationsdir = ${datadir}/applications
 Applications_DATA = tilda.desktop
 
-Pixmapsdir = @prefix@/share/pixmaps
+Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png

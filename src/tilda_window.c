@@ -180,14 +180,14 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 #ifdef DEBUG
     puts("find_tt_in_g_list");
 #endif
-    
+
     GtkWidget *page, *current_page;
     int i, list_length;
     GList *terms = g_list_first (tw->terms);
     tilda_term *result=NULL;
-    
+
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-    
+
     do
     {
         page = ((tilda_term *) terms->data)->hbox;
@@ -197,7 +197,7 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
             break;
         }
     } while ((terms = terms->next) != NULL);
-    
+
     return result;
 }
 
@@ -223,10 +223,10 @@ void close_current_tab (tilda_window *tw)
 
             if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
                 gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-        
+
             tw->terms = g_list_remove (tw->terms, tt);
             free (tt);
-        } 
+        }
     }
 }
 
@@ -277,11 +277,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     GError *error;
 
     GdkPixbuf *window_icon;
-    const gchar *window_icon_file;
-	if (strcmp (INSTALL_PREFIX, "NONE") == 0)
-		window_icon_file = g_build_filename ("/", "usr", "share",  "pixmaps", "tilda.png", NULL);
-	else
-		window_icon_file = g_build_filename (INSTALL_PREFIX, "share",  "pixmaps", "tilda.png", NULL);
+    const gchar *window_icon_file = g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL);
 
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
@@ -345,46 +341,46 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Delete Current Tab */
     close = g_cclosure_new_swap ((GCallback) close_current_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, close);    
+    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, close);
 
     /* Goto Tab # */
     /* Know a better way? Then you do. */
     goto_tab_closure_1 = g_cclosure_new_swap ((GCallback) goto_tab_1, tw, NULL);
-    gtk_accel_group_connect (accel_group, '1', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_1);            
-    
+    gtk_accel_group_connect (accel_group, '1', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_1);
+
     goto_tab_closure_2 = g_cclosure_new_swap ((GCallback) goto_tab_2, tw, NULL);
-    gtk_accel_group_connect (accel_group, '2', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_2);            
-    
+    gtk_accel_group_connect (accel_group, '2', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_2);
+
     goto_tab_closure_3 = g_cclosure_new_swap ((GCallback) goto_tab_3, tw, NULL);
-    gtk_accel_group_connect (accel_group, '3', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_3);            
-    
+    gtk_accel_group_connect (accel_group, '3', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_3);
+
     goto_tab_closure_4 = g_cclosure_new_swap ((GCallback) goto_tab_4, tw, NULL);
-    gtk_accel_group_connect (accel_group, '4', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_4);            
-    
+    gtk_accel_group_connect (accel_group, '4', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_4);
+
     goto_tab_closure_5 = g_cclosure_new_swap ((GCallback) goto_tab_5, tw, NULL);
-    gtk_accel_group_connect (accel_group, '5', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_5);            
-    
+    gtk_accel_group_connect (accel_group, '5', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_5);
+
     goto_tab_closure_6 = g_cclosure_new_swap ((GCallback) goto_tab_6, tw, NULL);
-    gtk_accel_group_connect (accel_group, '6', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_6);            
-    
+    gtk_accel_group_connect (accel_group, '6', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_6);
+
     goto_tab_closure_7 = g_cclosure_new_swap ((GCallback) goto_tab_7, tw, NULL);
-    gtk_accel_group_connect (accel_group, '7', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_7);            
-    
+    gtk_accel_group_connect (accel_group, '7', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_7);
+
     goto_tab_closure_8 = g_cclosure_new_swap ((GCallback) goto_tab_8, tw, NULL);
-    gtk_accel_group_connect (accel_group, '8', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_8);            
-    
+    gtk_accel_group_connect (accel_group, '8', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_8);
+
     goto_tab_closure_9 = g_cclosure_new_swap ((GCallback) goto_tab_9, tw, NULL);
-    gtk_accel_group_connect (accel_group, '9', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_9);            
-    
+    gtk_accel_group_connect (accel_group, '9', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_9);
+
     goto_tab_closure_10 = g_cclosure_new_swap ((GCallback) goto_tab_10, tw, NULL);
-    gtk_accel_group_connect (accel_group, '0', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_10);            
-    
+    gtk_accel_group_connect (accel_group, '0', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_10);
+
     copy_closure = g_cclosure_new_swap ((GCallback) ccopy, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, copy_closure);            
-    
+    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, copy_closure);
+
     paste_closure = g_cclosure_new_swap ((GCallback) cpaste, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, paste_closure);            
-     
+    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, paste_closure);
+
     gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
 
     /*  Set a window icon! */

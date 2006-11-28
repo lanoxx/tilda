@@ -10,6 +10,7 @@ AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
 
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 
 # Checks for libraries.
 
@@ -42,12 +43,14 @@ AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
-LIBS="$LIBS" 
+LIBS="$LIBS"
 
 # Figure out the prefix we are installing in, so we can install icons in the
-# correct place. There is probably an easier way to do this.
-AC_DEFINE_UNQUOTED(INSTALL_PREFIX, "$prefix", [The prefix where tilda will be installed])
-    
+# correct place. There is probably an easier way to do this, but this is almost
+# exactly what is recommended in the GNU Autoconf Standards.
+# See: http://www.gnu.org/software/autoconf/manual/autoconf-2.60/html_node/Defining-Directories.html
+CPPFLAGS="$CPPFLAGS -DDATADIR='\"$datadir\"'"
+
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
 AC_OUTPUT
