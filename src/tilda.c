@@ -631,7 +631,11 @@ static void try_to_update_config_file (tilda_window *tw)
     }
 
     /* NOTE: Start with the oldest config version first, and work our way up to the
-     * NOTE: newest that we support, updating our current version each time. */
+     * NOTE: newest that we support, updating our current version each time.
+     *
+     * NOTE: You may need to re-read the config each time! Probably not though,
+     * NOTE: since you should be updating VALUES not names directly in the config.
+     * NOTE: Try to rely on libconfuse to generate the configs :) */
 
     /* Below is a template for creating new entries in the updater. If you ever
      * change anything between versions, copy this, replacing YOUR_VERSION
@@ -644,12 +648,21 @@ static void try_to_update_config_file (tilda_window *tw)
     }
 #endif
 
+    if (compare_config_versions (current_config, "0.09.4") == CONFIG1_OLDER)
+    {
+        /* Nothing to update here. All we did was add an option, there is no
+         * need to rewrite the config file here, since the writer at the end
+         * will automatically add the default value of the new option. */
+        current_config = "0.09.4";
+    }
+
     /* We've run through all the updates, so set our config file version to the
      * version we're at now, then write out the config file.
      *
      * NOTE: this only happens if we upgraded the config, due to some early-exit
      * logic above.
      */
+
     cfg_setstr (tw->tc, "tilda_config_version", current_config);
     write_config_file (tw);
 }
