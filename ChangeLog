@@ -1,4 +1,4 @@
-version 0.09.4 (TBA):
+version 0.09.4 (11-28-06):
 	* Double Buffering is now in the Preferences. Enable or disable to fix
 	  problems with blinking on your system
 	* Add support for a window icon.
