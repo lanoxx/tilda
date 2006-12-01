@@ -78,10 +78,12 @@ static void free_and_remove (tilda_window *tw)
 
     guint i;
 
-    remove (tw->lock_file);
+    /* Remove lock file */
+    if (g_remove (tw->lock_file))
+        fprintf (stderr, "Error removing lock file: %s\n", tw->lock_file);
 
     for (i=0; i<g_list_length(tw->terms); i++)
-        free (g_list_nth_data (tw->terms, i));
+        g_free (g_list_nth_data (tw->terms, i));
 
     g_list_free (tw->terms);
 }
@@ -172,6 +174,11 @@ void start_program(tilda_collect *collect)
         g_strfreev (argv);
         return; // the early way out
     }
+    else /* An error in g_shell_parse_argv ??? */
+    {
+        perror ("tilda error");
+        exit (1);
+    }
 
     gchar *command = (gchar *) g_getenv ("SHELL");
 
@@ -209,7 +216,8 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
             default:
                 break;
         }
-     } else
+    }
+    else
          close_tab (data, 0, widget);
 }
 

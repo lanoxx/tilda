@@ -6,7 +6,7 @@ version 0.09.4 (11-28-06):
 	* Change "Display pulled down on start" to "Start Tilda hidden".
 	* Updated the Preferences window.
 	* Add "centered horizontally" and "centered vertically" options.
-	* Enable double buffering by default. 
+	* Enable double buffering by default.
 	* Fix getnextinstance() function.
 	* Changed default slide delay to 15000
 	* Now installs .desktop file and icon
