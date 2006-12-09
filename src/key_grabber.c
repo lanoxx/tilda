@@ -201,6 +201,46 @@ void pull (struct tilda_window_ *tw)
     pull_state (tw, PULL_TOGGLE);
 }
 
+static int parse_key (tilda_window *tw, gchar *key_str, KeySym *key_ret)
+{
+    DEBUG_FUNCTION ("parse_key");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (key_str != NULL);
+    DEBUG_ASSERT (key_ret != NULL);
+
+    gchar tmp_key[32];
+    KeySym key = NoSymbol;
+    gchar *key_ptr = key_str;
+
+    /* Exceptions to "normal" keys go here, such as the "grave" key */
+    if (g_strrstr (key_str, "`"))        { key_ptr = "grave"; }
+
+    /* Now, try to have XStringToKeysym() parse it */
+    key = XStringToKeysym (key_ptr);
+
+    /* Check for failure */
+    if (key == NoSymbol)
+    {
+        /* Use default */
+        fprintf (stderr, "Bad key: \"%s\" not recognized. Using default of F%d "
+                         " (leaving your modifiers as-is).\n", key_ptr, tw->instance+1);
+        g_snprintf (tmp_key, sizeof(tmp_key), "F%d", tw->instance+1);
+
+        /* Re-parse the default key */
+        key = XStringToKeysym (tmp_key);
+
+        if (key == NoSymbol)
+        {
+            fprintf (stderr, "Using the default failed, bailing out...\n");
+            exit (EXIT_FAILURE);
+        }
+    }
+
+    *key_ret = key;
+
+    return 0;
+}
+
 static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_ret)
 {
     DEBUG_FUNCTION ("parse_keybinding");
@@ -210,77 +250,33 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
 
     guint modmask = 0;
     KeySym key = NoSymbol;
-    gchar tmp_key[32];
+    gchar *key_str;
     gchar *key_ptr;
+    gchar **key_split;
+    gint i;
 
-    g_strlcpy (tmp_key, cfg_getstr (tw->tc, "key"), sizeof(tmp_key));
+    key_str = g_strdup (cfg_getstr (tw->tc, "key"));
+    key_str = g_strstrip (key_str);
+    key_split = g_strsplit (key_str, "+", 3);
 
-    if (!strstr(tmp_key, "+"))
+    for (i=0; i<g_strv_length(key_split); i++)
     {
-        DEBUG_ERROR ("No plus sign in keybinding");
-        fprintf (stderr, "Keybinding has incorrect format. Please see the "
-                         "README file for more information.\n\nYou probably "
-                         "want to use \"None+%s\" as the keybinding.\n", tmp_key);
-
-        /* Bad keybinding, prepend the string "None+" to the given key */
-        g_strlcpy (tmp_key, "None+", sizeof (tmp_key));
-        g_strlcat (tmp_key, cfg_getstr (tw->tc, "key"), sizeof (tmp_key));
-    }
-
-    if (strstr(tmp_key, "Control"))
-        modmask = modmask | ControlMask;
-
-    if (strstr(tmp_key, "Alt"))
-        modmask = modmask | Mod1Mask;
-
-    if (strstr(tmp_key, "Win"))
-        modmask = modmask | Mod4Mask;
-
-    if (strstr(tmp_key, "None"))
-        modmask = 0;
-
-    if (strtok(tmp_key, "+"))
-    {
-        key_ptr = strtok (NULL, "+");
-
-        /* Fix the "`" to be "grave" as expected */
-        if (strstr (key_ptr, "`"))
+        /* Now each key_split[i] can be either a mask or a key */
+        if      (g_strrstr (key_split[i], "None"))    { modmask = 0; }
+        else if (g_strrstr (key_split[i], "Control")) { modmask |= ControlMask; }
+        else if (g_strrstr (key_split[i], "Alt"))     { modmask |= Mod1Mask; }
+        else if (g_strrstr (key_split[i], "Win"))     { modmask |= Mod4Mask; }
+        else /* Must be a key */
         {
-            key_ptr = "grave";
-
-            DEBUG_ERROR ("Should be using \"grave\"!");
-            fprintf (stderr, "Keybinding has incorrect format. Please see the "
-                             "README file for more information.\n\nYou probably "
-                             "want to use \"grave\" instead of \"`\"\n");
-        }
-
-        key = XStringToKeysym (key_ptr);
-
-        /* Check to make sure that the key was found successfully */
-        if (key == NoSymbol)
-        {
-            DEBUG_ERROR ("Bad keysym");
-            fprintf (stderr, "Keybinding has incorrect format. Please see the "
-                             "README file for more information.\n\nUsing the default "
-                             "key \"None+F%i\"\n", tw->instance+1);
-
-            /* Try with the default key */
-            modmask = 0;
-            g_snprintf (tmp_key, sizeof(tmp_key), "F%i", tw->instance+1);
-            key = XStringToKeysym (tmp_key);
-
-            if (key == NoSymbol)
-            {
-                DEBUG_ERROR ("Fatally bad keysym");
-                fprintf (stderr, "Using \"None+%s\" for the keybinding failed.\n"
-                                 "Giving up ...\n", tmp_key);
-                exit (EXIT_FAILURE);
-            }
+            parse_key (tw, key_split[i], &key);
         }
     }
 
-    *modmask_ret = modmask;
+    g_free (key_str);
+    g_strfreev (key_split);
+
     *key_ret = key;
+    *modmask_ret = modmask;
 
     return 0;
 }
@@ -297,23 +293,30 @@ static void key_grab (tilda_window *tw)
 
     /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
     modmap = XGetModifierMapping(dpy);
+
     for (i = 0; i < 8; i++)
-    {
         for (j = 0; j < modmap->max_keypermod; j++)
-        {
             if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock))
-            {
                 numlockmask = (1 << i);
-            }
-        }
-    }
 
     XFreeModifiermap(modmap);
 
-    /* Parse the keybinding from the config file */
+    /* Parse the keybinding from the config file.
+     *
+     * NOTE: the variable "key" is global, so it can be used here and
+     * in the wait_for_signal() function below.
+     */
     parse_keybinding (tw, &modmask, &key);
 
-    /* Bind the key(s) appropriately */
+    /* Bind the key(s) appropriately.
+     *
+     * NOTE: If you're getting BadAccess errors from here in the code, then
+     * something in your environment has already bound this key! Use a different
+     * keybinding.
+     *
+     * Unfortunately, we can't report this to the user, since X kills the program
+     * automatically when it recieves a BadAccess error. :(
+     */
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
 
