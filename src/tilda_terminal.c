@@ -33,9 +33,9 @@
 
 gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main)
 {
-#ifdef DEBUG
-    puts("init_tilda_terminal");
-#endif
+    DEBUG_FUNCTION ("init_tilda_terminal");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
 
     gboolean dingus = TRUE;
     gint i;

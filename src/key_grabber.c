@@ -52,14 +52,12 @@ static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97
 /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
 static gint posIV[4][16]; 
 
-void generate_animation_positions(struct tilda_window_ *tw)
+void generate_animation_positions (struct tilda_window_ *tw)
 {
+    DEBUG_FUNCTION ("generate_animation_positions");
+    DEBUG_ASSERT (tw != NULL);
+
     gint i;
-
-#if DEBUG
-    printf("generate_animation_positions(): %d\n",cfg_getint (tw->tc, "animation_orientation"));
-#endif 
-
     gint last_pos_x = cfg_getint (tw->tc, "x_pos");
     gint last_pos_y = cfg_getint (tw->tc, "y_pos");
     gint last_width = cfg_getint (tw->tc, "max_width");
@@ -88,14 +86,14 @@ void generate_animation_positions(struct tilda_window_ *tw)
         case 1: /* bottom->top BOTTOM */
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
-            posIV[1][i] = (gint)(posCFV[i]*last_height);        
+            posIV[1][i] = (gint)(posCFV[i]*last_height);
             posIV[0][i] = (gint)(last_pos_y+last_height-posIV[1][i]);
             break;
         case 0: /* top->bottom TOP */
         default:
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
-            posIV[1][i] = (gint)(posCFV[i]*last_height);            
+            posIV[1][i] = (gint)(posCFV[i]*last_height);
             posIV[0][i] = last_pos_y;
         }
     }
@@ -103,14 +101,14 @@ void generate_animation_positions(struct tilda_window_ *tw)
 
 static void pull_state (struct tilda_window_ *tw, int state)
 {
-#ifdef DEBUG
-    puts("pull");
-#endif
+    DEBUG_FUNCTION ("pull_state");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
     gint w, h;
     static gint pos=0;
-    
+
     if (pos == 0 && state != PULL_UP)
     {
         gdk_threads_enter();
@@ -197,14 +195,16 @@ static void pull_state (struct tilda_window_ *tw, int state)
 //  Wrapper function so pull() calls without a state toggle like they used to
 void pull (struct tilda_window_ *tw)
 {
+    DEBUG_FUNCTION ("pull");
+    DEBUG_ASSERT (tw != NULL);
+
     pull_state (tw, PULL_TOGGLE);
 }
 
 static void key_grab (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("key_grab");
-#endif
+    DEBUG_FUNCTION ("key_grab");
+    DEBUG_ASSERT (tw != NULL);
 
     XModifierKeymap *modmap;
     gchar tmp_key[32];
@@ -242,7 +242,12 @@ static void key_grab (tilda_window *tw)
         modmask = 0;
 
     if (!strstr(tmp_key, "+"))
-        perror ("Key Incorrect -- Read the README or tilda.sf.net for info, rerun as 'tilda -C' to set keybinding\n");
+    {
+        fprintf (stderr, "Key Incorrect -- Read the README or tilda.sf.net for info, "
+                         "rerun as 'tilda -C' to set keybinding\n");
+        DEBUG_ERROR ("no plus sign");
+        exit (1);
+    }
 
     if (strtok(tmp_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
@@ -259,26 +264,33 @@ static void key_grab (tilda_window *tw)
 
 void *wait_for_signal (tilda_window *tw)
 {
+    DEBUG_FUNCTION ("wait_for_signal");
+    DEBUG_ASSERT (tw != NULL);
+
     KeySym grabbed_key;
     XEvent event;
 
     if (!(dpy = XOpenDisplay(NULL)))
-        fprintf (stderr, "Shit -- can't open Display %s", XDisplayName(NULL));
+    {
+        DEBUG_ERROR ("Cannot open display");
+        fprintf (stderr, "Cannot open Display %s", XDisplayName(NULL));
+        exit (EXIT_FAILURE);
+    }
 
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
 
-    display_width = DisplayWidth(dpy, screen); 
+    display_width = DisplayWidth(dpy, screen);
     display_height = DisplayHeight(dpy, screen);
-    
+
     key_grab (tw);
 
     if (cfg_getbool (tw->tc, "hidden"))
     {
         /*
-         * Fixes bug that causes Tilda to eat up 100% of CPU 
+         * Fixes bug that causes Tilda to eat up 100% of CPU
          * if set to stay hidden when started
-         */        
+         */
         pull_state(tw, PULL_DOWN);
         pull_state(tw, PULL_UP);
     }

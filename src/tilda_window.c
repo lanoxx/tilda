@@ -103,6 +103,9 @@ static cfg_opt_t new_conf[] = {
  */
 static gchar* get_config_file_name (tilda_window *tw)
 {
+    DEBUG_FUNCTION ("get_config_file_name");
+    DEBUG_ASSERT (tw != NULL);
+
     gchar *config_file;
     gchar instance_str[6];
     gchar *config_prefix = "/.tilda/config_";
@@ -116,7 +119,7 @@ static gchar* get_config_file_name (tilda_window *tw)
 
     /* Allocate the config_file variable */
     if ((config_file = (gchar*) malloc (config_file_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", 1);
+        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
 
     /* Store the config file name in the allocated space */
     g_snprintf (config_file, config_file_size, "%s%s%s", tw->home_dir, config_prefix, instance_str);
@@ -134,9 +137,8 @@ static gchar* get_config_file_name (tilda_window *tw)
  */
 void init_tilda_window_instance (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("init_tilda_window_instance");
-#endif
+    DEBUG_FUNCTION ("init_tilda_window_instance");
+    DEBUG_ASSERT (tw != NULL);
 
     /* Get the instance number for this tilda, and store it in tw->instance.
      * Also create the lock file for this instance. */
@@ -155,31 +157,36 @@ void init_tilda_window_instance (tilda_window *tw)
 
 void add_tab (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("add_tab");
-#endif
+    DEBUG_FUNCTION ("add_tab");
+    DEBUG_ASSERT (tw != NULL);
 
     tilda_term *tt;
 
     tt = (tilda_term *) malloc (sizeof (tilda_term));
+
+    if (tt == NULL)
+    {
+        TILDA_PERROR ();
+        fprintf (stderr, "Out of memory, cannot create tab\n");
+        return;
+    }
 
     init_tilda_terminal (tw, tt, FALSE);
 }
 
 void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("add_tab_menu_call");
-#endif
+    DEBUG_FUNCTION ("add_tab_menu_call");
+    DEBUG_ASSERT (data != NULL);
 
     add_tab (((tilda_collect *) data)->tw);
 }
 
 static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 {
-#ifdef DEBUG
-    puts("find_tt_in_g_list");
-#endif
+    DEBUG_FUNCTION ("find_tt_in_g_list");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->terms != NULL);
 
     GtkWidget *page, *current_page;
     int i, list_length;
@@ -203,9 +210,8 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 
 void close_current_tab (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("close_current_tab");
-#endif
+    DEBUG_FUNCTION ("close_current_tab");
+    DEBUG_ASSERT (tw != NULL);
 
     gint pos;
     tilda_term *tt;
@@ -232,9 +238,8 @@ void close_current_tab (tilda_window *tw)
 
 void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("close_tab");
-#endif
+    DEBUG_FUNCTION ("close_tab");
+    DEBUG_ASSERT (data != NULL);
 
     gint pos;
     tilda_term *tt;
@@ -265,9 +270,10 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w)
 
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("init_tilda_window");
-#endif
+    DEBUG_FUNCTION ("init_tilda_window");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkAccelGroup *accel_group;
     GClosure *clean, *close, *next, *prev, *add, *copy_closure, *paste_closure;
@@ -308,6 +314,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
             break;
         default:
+            DEBUG_ERROR ("Tab position");
             fprintf (stderr, "Bad tab_pos, not changing anything...\n");
             break;
     }
@@ -388,7 +395,8 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     if (window_icon == NULL)
     {
-        perror("tilda error");
+        TILDA_PERROR ();
+        DEBUG_ERROR ("Cannot open window icon");
         fprintf (stderr, "Unable to set tilda's icon: %s\n", window_icon_file);
     }
     else
@@ -400,7 +408,12 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
 
     if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
-       perror ("Fuck that thread!!!");
+    {
+        TILDA_PERROR ();
+        DEBUG_ERROR ("Could not create thread");
+        fprintf (stderr, "Unable to create window thread\n");
+        exit (2);
+    }
 
     return TRUE;
 }

@@ -21,6 +21,10 @@
 #include <confuse.h>
 #include "tilda_window.h"
 
+#ifdef DEBUG
+    #include <assert.h>
+#endif
+
 G_BEGIN_DECLS;
 
 #define TILDA_VERSION PACKAGE_NAME " " PACKAGE_VERSION
@@ -44,6 +48,18 @@ void clean_up_no_args ();
 int get_display_dimension (int dimension);
 #define get_physical_height_pixels() get_display_dimension(HEIGHT)
 #define get_physical_width_pixels()  get_display_dimension(WIDTH)
+
+#ifdef DEBUG
+    #define DEBUG_ERROR(ERRMSG) fprintf (stderr, "ERROR AT %s:%d -> %s\n", __FILE__, __LINE__, (ERRMSG))
+    #define DEBUG_FUNCTION(NAME) fprintf (stderr, "FUNCTION ENTERED: %s\n", (NAME))
+    #define DEBUG_ASSERT assert
+#else
+    #define DEBUG_ERROR(ERR) {}
+    #define DEBUG_FUNCTION(NAME) {}
+    #define DEBUG_ASSERT (ASSERTION) {}
+#endif
+
+#define TILDA_PERROR() perror("tilda")
 
 G_END_DECLS;
 

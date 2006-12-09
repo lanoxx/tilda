@@ -50,7 +50,10 @@ static tilda_window *tw;
 
 static void pull_no_args()
 {
-    pull(tw);
+    DEBUG_FUNCTION ("pull_no_args");
+    DEBUG_ASSERT (tw != NULL);
+
+    pull (tw);
 }
 
 /**
@@ -61,6 +64,9 @@ static void pull_no_args()
  */
 void print_and_exit (gchar *message, gint exitval)
 {
+    DEBUG_FUNCTION ("print_and_exit");
+    DEBUG_ASSERT (message != NULL);
+
     fprintf (stderr, "%s\n", message);
     exit (exitval);
 }
@@ -72,9 +78,8 @@ void print_and_exit (gchar *message, gint exitval)
  */
 static gint getnextinstance (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("getnextinstance");
-#endif
+    DEBUG_FUNCTION ("getnextinstance");
+    DEBUG_ASSERT (tw != NULL);
 
     gchar *lock_dir;
     gchar *name;
@@ -92,7 +97,7 @@ static gint getnextinstance (tilda_window *tw)
 
     /* Make sure our allocation did not fail */
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        print_and_exit ("You ran out of memory... exiting!", 1);
+        print_and_exit ("You ran out of memory... exiting!", EXIT_FAILURE);
 
     /* Get the lock directory for this user, and open the directory */
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
@@ -134,9 +139,8 @@ static gint getnextinstance (tilda_window *tw)
  */
 void getinstance (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("getinstance");
-#endif
+    DEBUG_FUNCTION ("getinstance");
+    DEBUG_ASSERT (tw != NULL);
 
     gchar pid[6];
     gchar instance[6];
@@ -157,7 +161,7 @@ void getinstance (tilda_window *tw)
                    + strlen (instance) + 1;
 
     if ((tw->lock_file = (gchar*) malloc (lock_file_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", 1);
+        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
 
     /* Make the ~/.tilda/locks directory */
     g_snprintf (tw->lock_file, lock_file_size, "%s%s", tw->home_dir, lock_subdir);
@@ -182,9 +186,9 @@ void getinstance (tilda_window *tw)
  */
 static gboolean islockfile (gchar *filename, gint *lock_pid)
 {
-#ifdef DEBUG
-    puts("islockfile");
-#endif
+    DEBUG_FUNCTION ("islockfile");
+    DEBUG_ASSERT (filename != NULL);
+    DEBUG_ASSERT (lock_pid != NULL);
 
     gboolean matches = g_str_has_prefix (filename, "lock_");
     gboolean islock = FALSE;
@@ -219,9 +223,8 @@ static gboolean islockfile (gchar *filename, gint *lock_pid)
  */
 static void clean_tmp (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("clean_tmp");
-#endif
+    DEBUG_FUNCTION ("clean_tmp");
+    DEBUG_ASSERT (tw != NULL);
 
     FILE *ptr;
     const gchar *cmd = "ps -C tilda -o pid=";
@@ -233,7 +236,7 @@ static void clean_tmp (tilda_window *tw)
 
     /* Allocate just one pid, for now */
     if ((running_pids = (gint*) malloc (1 * sizeof(gint))) == NULL)
-        print_and_exit ("Out of memory, exiting...", 1);
+        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
 
     /* Get all running tilda pids, and store them in an array */
     if ((ptr = popen (cmd, "r")) != NULL)
@@ -249,7 +252,7 @@ static void clean_tmp (tilda_window *tw)
 
                 /* Allocate space for the next pid */
                 if ((running_pids = (gint*) realloc (running_pids, (num_pids+1) * sizeof(gint))) == NULL)
-                    print_and_exit ("Out of memory, exiting...", 1);
+                    print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
             }
         }
 
@@ -269,7 +272,7 @@ static void clean_tmp (tilda_window *tw)
     lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
 
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", 1);
+        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
 
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
@@ -293,7 +296,7 @@ static void clean_tmp (tilda_window *tw)
                 remove_file_size = strlen (lock_dir) + strlen (filename) + 2;
 
                 if ((remove_file = (gchar*) malloc (remove_file_size * sizeof(gchar))) == NULL)
-                    print_and_exit ("Out of memory, exiting...", 1);
+                    print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
 
                 g_snprintf (remove_file, remove_file_size, "%s/%s", lock_dir, filename);
                 g_remove (remove_file);
@@ -322,9 +325,12 @@ static void clean_tmp (tilda_window *tw)
  */
 static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("parse_cli");
-#endif
+    DEBUG_FUNCTION ("parse_cli");
+    DEBUG_ASSERT (argc != NULL);
+    DEBUG_ASSERT (argv != NULL);
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     /* Set default values */
     gchar *background_color = cfg_getstr (tw->tc, "background_color");
@@ -379,12 +385,11 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
     {
-        printf ("Error parsing command-line options. Try \"tilda --help\"\n");
-        printf ("to see all possible options.\n\n");
+        fprintf (stderr, "Error parsing command-line options. Try \"tilda --help\"\n"
+                         "to see all possible options.\n\n"
+                         "Error message: %s\n", error->message);
 
-        printf ("Error message: %s\n", error->message);
-
-        exit (1);
+        exit (EXIT_FAILURE);
     }
 
     /* If we need to show the version, show it then exit normally */
@@ -399,7 +404,7 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
         printf ("This is free software, and you are welcome to redistribute it\n");
         printf ("under certain conditions. See the file COPYING for details.\n");
 
-        exit (0);
+        exit (EXIT_SUCCESS);
     }
 
     /* Now set the options in the config, if they changed */
@@ -442,6 +447,9 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
 
 int get_display_dimension (int dimension)
 {
+    DEBUG_FUNCTION ("get_display_dimension");
+    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
+
     Display                 *dpy;
     XRRScreenSize           *sizes;
     XRRScreenConfiguration  *sc;
@@ -471,6 +479,7 @@ int get_display_dimension (int dimension)
     {
         /* We can't just exit, so print a message and don't attempt to
          * do anything since we won't know what to do! */
+        DEBUG_ERROR ("Cannot open dislay");
         fprintf (stderr, "Can't open display %s\n", XDisplayName(display_name));
         return;
     }
@@ -483,6 +492,7 @@ int get_display_dimension (int dimension)
     {
         /* We can't just exit, so print a message and don't attempt to
          * do anything since we don't know what to do. */
+        DEBUG_ERROR ("Cannot get screen info");
         fprintf (stderr, "Can't get screen info\n");
     }
 
@@ -516,9 +526,7 @@ int get_display_dimension (int dimension)
  */
 int find_centering_coordinate (const int screen_dimension, const int tilda_dimension)
 {
-#ifdef DEBUG
-    puts ("find_centering_coordinate");
-#endif
+    DEBUG_FUNCTION ("find_centering_coordinate");
 
     const float screen_center = screen_dimension / 2.0;
     const float tilda_center  = tilda_dimension  / 2.0;
@@ -528,6 +536,10 @@ int find_centering_coordinate (const int screen_dimension, const int tilda_dimen
 
 int write_config_file (tilda_window *tw)
 {
+    DEBUG_FUNCTION ("write_config_file");
+    DEBUG_ASSERT (tw!= NULL);
+    DEBUG_ASSERT (tw->config_file != NULL);
+
     FILE *fp;
 
     /* Check to see if writing is disabled. Leave early if it is. */
@@ -543,14 +555,16 @@ int write_config_file (tilda_window *tw)
         if (fclose (fp) != 0)
         {
             // An error occurred
-            perror ("tilda error");
+            TILDA_PERROR ();
+            DEBUG_ERROR ("Unable to close config file");
             fprintf (stderr, "Unable to close the config file\n");
         }
 
     }
     else
     {
-        perror ("tilda error");
+        TILDA_PERROR ();
+        DEBUG_ERROR ("Unable to write config file");
         fprintf (stderr, "Unable to write the config file to %s\n", tw->config_file);
     }
 
@@ -566,6 +580,10 @@ int write_config_file (tilda_window *tw)
  */
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2)
 {
+    DEBUG_FUNCTION ("compare_config_versions");
+    DEBUG_ASSERT (config1 != NULL);
+    DEBUG_ASSERT (config2 != NULL);
+
     /*
      * 1) Split apart both strings using the .'s
      * 2) Compare the major-major version
@@ -617,6 +635,10 @@ static gboolean compare_config_versions (const gchar *config1, const gchar *conf
  */
 static void try_to_update_config_file (tilda_window *tw)
 {
+    DEBUG_FUNCTION ("try_to_update_config_file");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
+
     gchar *current_config = cfg_getstr (tw->tc, "tilda_config_version");
 
     if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)
@@ -669,9 +691,7 @@ static void try_to_update_config_file (tilda_window *tw)
 
 int main (int argc, char **argv)
 {
-#ifdef DEBUG
-    puts("main");
-#endif
+    DEBUG_FUNCTION ("main");
 
     tilda_window *tw;
     tilda_term *tt;
@@ -683,7 +703,13 @@ int main (int argc, char **argv)
     /* Check the allocations above, since they are extremely critical,
      * and segfaults suck */
     if (tw == NULL || tt == NULL)
-        print_and_exit ("You ran out of memory... exiting", 1);
+    {
+        DEBUG_ERROR ("Out of memory");
+        DEBUG_ASSERT (tw != NULL);
+        DEBUG_ASSERT (tt != NULL);
+
+        print_and_exit ("You ran out of memory... exiting", EXIT_FAILURE);
+    }
 
     /* Get the user's home directory */
     tw->home_dir = strdup(g_get_home_dir ());

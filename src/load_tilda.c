@@ -26,9 +26,8 @@
 
 static void window_title_change_all (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("window_title_change_all");
-#endif
+    DEBUG_FUNCTION ("window_title_change_all");
+    DEBUG_ASSERT (tw != NULL);
 
     GtkWidget *page;
     GtkWidget *label;
@@ -54,9 +53,10 @@ static void window_title_change_all (tilda_window *tw)
 
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 {
-#ifdef DEBUG
-    puts("update_tilda");
-#endif
+    DEBUG_FUNCTION ("update_tilda");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     gdouble transparency_level = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
@@ -219,6 +219,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
             break;
         default:
+            DEBUG_ERROR ("Tab position");
             fprintf (stderr, "Bad tab_pos, not changing\n");
             break;
     }

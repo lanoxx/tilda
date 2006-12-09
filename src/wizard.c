@@ -40,9 +40,9 @@ static gint exit_status = 0;
 
 static void close_dialog (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("close_dialog");
-#endif
+    DEBUG_FUNCTION ("close_dialog");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     gtk_grab_remove (GTK_WIDGET (widget));
     gtk_widget_destroy (GTK_WIDGET (data));
@@ -50,9 +50,9 @@ static void close_dialog (GtkWidget *widget, gpointer data)
 
 static void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
-#ifdef DEBUG
-    puts("image_select");
-#endif
+    DEBUG_FUNCTION ("image_select");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_image != NULL);
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
     {
@@ -68,9 +68,9 @@ static void image_select (GtkWidget *widget, GtkWidget *label_image)
 
 static void toggle_check_enable_transparency (GtkWidget *widget, GtkWidget *label_level_of_transparency)
 {
-#ifdef DEBUG
-    puts ("toggle_check_enable_transparency");
-#endif
+    DEBUG_FUNCTION ("toggle_check_enable_transparency");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_level_of_transparency != NULL);
 
     const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
@@ -80,9 +80,9 @@ static void toggle_check_enable_transparency (GtkWidget *widget, GtkWidget *labe
 
 static void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label_animation)
 {
-#ifdef DEBUG
-    puts ("toggle_check_animated_pulldown1");
-#endif
+    DEBUG_FUNCTION ("toggle_check_animated_pulldown1");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_animation != NULL);
 
     const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
@@ -92,9 +92,9 @@ static void toggle_check_animated_pulldown1 (GtkWidget *widget, GtkWidget *label
 
 static void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label_orientation)
 {
-#ifdef DEBUG
-    puts ("toggle_check_animated_pulldown2");
-#endif
+    DEBUG_FUNCTION ("toggle_check_animated_pulldown2");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_orientation != NULL);
 
     const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
@@ -104,6 +104,10 @@ static void toggle_check_animated_pulldown2 (GtkWidget *widget, GtkWidget *label
 
 static void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_position)
 {
+    DEBUG_FUNCTION ("toggle_centered_horizontally");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_position != NULL);
+
     const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
     gtk_widget_set_sensitive (label_position, active);
@@ -112,6 +116,10 @@ static void toggle_centered_horizontally (GtkWidget *widget, GtkWidget *label_po
 
 static void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_position)
 {
+    DEBUG_FUNCTION ("toggle_centered_vertically");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_position != NULL);
+
     const int active = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 
     gtk_widget_set_sensitive (label_position, active);
@@ -120,6 +128,10 @@ static void toggle_centered_vertically (GtkWidget *widget, GtkWidget *label_posi
 
 static void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label_custom_command)
 {
+    DEBUG_FUNCTION ("toggle_check_run_custom_command");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (label_custom_command != NULL);
+
     const int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget));
 
     gtk_widget_set_sensitive (label_custom_command, active);
@@ -128,6 +140,9 @@ static void toggle_check_run_custom_command (GtkWidget *widget, GtkWidget *label
 
 static int percentage_dimension (int current_size, int dimension)
 {
+    DEBUG_FUNCTION ("percentage_dimension");
+    DEBUG_ASSERT (dimension == WIDTH || dimension == HEIGHT);
+
     if (dimension == HEIGHT)
         return (int) (((float) current_size) / ((float) get_physical_height_pixels ()) * 100.0);
 
@@ -137,8 +152,13 @@ static int percentage_dimension (int current_size, int dimension)
 #define percentage_height(current_height) percentage_dimension(current_height, HEIGHT)
 #define percentage_width(current_width)   percentage_dimension(current_width, WIDTH)
 
-static void generic_spin_percentage_changed (GtkWidget *event_spinner, GtkWidget *change_spinner, gulong callback_id, int dimension)
+static void generic_spin_percentage_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner, gulong callback_id, int dimension)
 {
+    DEBUG_FUNCTION ("generic_spin_percentage_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
+
     /*
      * 1) Calculate new values
      * 2) Disable signal handler on target object
@@ -149,25 +169,38 @@ static void generic_spin_percentage_changed (GtkWidget *event_spinner, GtkWidget
     const int percentage = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (event_spinner));
     const int in_pixels = (percentage / 100.0) * get_display_dimension (dimension);
 
-    g_signal_handler_block (change_spinner, callback_id);
+    g_signal_handler_block (changed_spinner, callback_id);
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(change_spinner), in_pixels);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(changed_spinner), in_pixels);
 
-    g_signal_handler_unblock (change_spinner, callback_id);
+    g_signal_handler_unblock (changed_spinner, callback_id);
 }
 
-static void spin_height_percentage_changed (GtkWidget *event_spinner, GtkWidget *change_spinner)
+static void spin_height_percentage_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner)
 {
-    generic_spin_percentage_changed (event_spinner, change_spinner, items.cid_height_pixels, HEIGHT);
+    DEBUG_FUNCTION ("spin_height_percentage_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+
+    generic_spin_percentage_changed (event_spinner, changed_spinner, items.cid_height_pixels, HEIGHT);
 }
 
-static void spin_width_percentage_changed (GtkWidget *event_spinner, GtkWidget *change_spinner)
+static void spin_width_percentage_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner)
 {
-    generic_spin_percentage_changed (event_spinner, change_spinner, items.cid_width_pixels, WIDTH);
+    DEBUG_FUNCTION ("spin_width_percentage_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+
+    generic_spin_percentage_changed (event_spinner, changed_spinner, items.cid_width_pixels, WIDTH);
 }
 
 static void generic_spin_pixels_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner, gulong callback_id, int dimension)
 {
+    DEBUG_FUNCTION ("generic_spin_pixels_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
+
     /*
      * 1) Calculate new values
      * 2) Disable signal handler on target object
@@ -185,21 +218,30 @@ static void generic_spin_pixels_changed (GtkWidget *event_spinner, GtkWidget *ch
     g_signal_handler_unblock (changed_spinner, callback_id);
 }
 
-static void spin_height_pixels_changed (GtkWidget *event_spinner, GtkWidget *change_spinner)
+static void spin_height_pixels_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner)
 {
-    generic_spin_pixels_changed (event_spinner, change_spinner, items.cid_height_percentage, HEIGHT);
+    DEBUG_FUNCTION ("spin_height_pixels_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+
+    generic_spin_pixels_changed (event_spinner, changed_spinner, items.cid_height_percentage, HEIGHT);
 }
 
-static void spin_width_pixels_changed (GtkWidget *event_spinner, GtkWidget *change_spinner)
+static void spin_width_pixels_changed (GtkWidget *event_spinner, GtkWidget *changed_spinner)
 {
-    generic_spin_pixels_changed (event_spinner, change_spinner, items.cid_width_percentage, WIDTH);
+    DEBUG_FUNCTION ("spin_width_pixels_changed");
+    DEBUG_ASSERT (event_spinner != NULL);
+    DEBUG_ASSERT (changed_spinner != NULL);
+
+    generic_spin_pixels_changed (event_spinner, changed_spinner, items.cid_width_percentage, WIDTH);
 }
 
 static GtkWidget* general (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("general");
-#endif
+    DEBUG_FUNCTION ("general");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *frame_wdisplay;
@@ -211,7 +253,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     GtkWidget *table_font;
 
     GtkWidget *label_tab_pos;
-    GtkWidget *label_font;    
+    GtkWidget *label_font;
 
     /* Create the table that will hold the 3 frames */
     vtable = gtk_table_new (3, 1, FALSE);
@@ -221,7 +263,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_tdisplay))), "<b>Terminal Display</b>");
     frame_font = gtk_frame_new ("Font");
     gtk_label_set_markup (GTK_LABEL(gtk_frame_get_label_widget (GTK_FRAME(frame_font))), "<b>Font</b>");
-    
+
     label_font = gtk_label_new("Font:");
 
     /* Attach frames to the table */
@@ -246,7 +288,7 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), cfg_getbool (tw->tc, "notaskbar"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), cfg_getbool (tw->tc, "hidden"));
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border), cfg_getbool (tw->tc, "notebook_border"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering), cfg_getbool (tw->tc, "double_buffer"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering), cfg_getbool (tw->tc, "double_buffer"));
 
     /* Attach everything inside the frame */
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_display_on_all_workspaces, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -274,7 +316,6 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     gtk_table_attach (GTK_TABLE(table_tdisplay), items.check_cursor_blinks, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
 
     gtk_container_add (GTK_CONTAINER(frame_tdisplay), table_tdisplay);
-    
 
     /* ============== FONT FRAME =============== */
 
@@ -311,9 +352,10 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
 
 static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("title_command");
-#endif
+    DEBUG_FUNCTION ("title_command");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *table_title;
@@ -402,9 +444,10 @@ static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
 
 static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("appearance");
-#endif
+    DEBUG_FUNCTION ("appearance");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *frame_height;
@@ -598,9 +641,8 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
 
 static void scheme_colors_changed (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("scheme_colors_changed");
-#endif
+    DEBUG_FUNCTION ("scheme_colors_changed");
+    DEBUG_ASSERT (tw != NULL);
 
     GdkColor gdk_text, gdk_back;
 
@@ -632,18 +674,18 @@ static void scheme_colors_changed (tilda_window *tw)
 
 static void button_colors_changed (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("button_colors_changed");
-#endif
+    DEBUG_FUNCTION ("button_colors_changed");
+    DEBUG_ASSERT (tw != NULL);
 
     gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_schemes), 0);
 }
 
 static GtkWidget* colors (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("colors");
-#endif
+    DEBUG_FUNCTION ("colors");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_color;
@@ -701,9 +743,10 @@ static GtkWidget* colors (tilda_window *tw, tilda_term *tt)
 
 static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("scrolling");
-#endif
+    DEBUG_FUNCTION ("scrolling");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_scrollback;
@@ -751,9 +794,9 @@ static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
 
 static void revert_default_compatability (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("revert_default_compatability");
-#endif
+    DEBUG_FUNCTION ("revert_default_compatability");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     cfg_setint (tw->tc, "backspace_key", 0);
     cfg_setint (tw->tc, "delete_key", 1);
@@ -764,9 +807,10 @@ static void revert_default_compatability (tilda_window *tw)
 
 static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("compatibility");
-#endif
+    DEBUG_FUNCTION ("compatibility");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_backspace;
@@ -810,9 +854,10 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
 
 static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("keybindings");
-#endif
+    DEBUG_FUNCTION ("keybindings");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_key;
@@ -845,9 +890,9 @@ static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 
 static void apply_settings (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("apply_settings");
-#endif
+    DEBUG_FUNCTION ("apply_settings");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     GdkColor gdk_text_color, gdk_back_color;
     gchar *tmp_str;
@@ -924,9 +969,8 @@ static void apply_settings (tilda_window *tw)
 
 static gint ok (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("ok");
-#endif
+    DEBUG_FUNCTION ("ok");
+    DEBUG_ASSERT (tw != NULL);
 
     apply_settings (tw);
     exit_status = 0;
@@ -942,9 +986,7 @@ static gint ok (tilda_window *tw)
 
 static gint exit_app (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("exit_app");
-#endif
+    DEBUG_FUNCTION ("exit_app");
 
     gtk_widget_destroy (items.wizard_window);
 
@@ -953,24 +995,23 @@ static gint exit_app (GtkWidget *widget, gpointer data)
 
     exit_status = 1;
 
-    return (FALSE);
+    return FALSE;
 }
 
-static void wizard_window_response_cb(GtkDialog* wizard_window,
-                                      int response,
-                                      tilda_window *tw)
+static void wizard_window_response_cb (GtkDialog* wizard_window, int response, tilda_window *tw)
 {
-    if (response == GTK_RESPONSE_OK) {
-        ok (tw);
-    }
+    DEBUG_FUNCTION ("wizard_window_response_cb");
+    DEBUG_ASSERT (tw != NULL);
 
+    if (response == GTK_RESPONSE_OK)
+        ok (tw);
 }
 
 int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 {
-#ifdef DEBUG
-    puts("wizard");
-#endif
+    DEBUG_FUNCTION ("wizard");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tt != NULL);
 
     GtkWidget *button;
     GtkWidget *table;

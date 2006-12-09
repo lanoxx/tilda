@@ -44,9 +44,8 @@ static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 static void fix_size_settings (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("fix_size_settings");
-#endif
+    DEBUG_FUNCTION ("fix size settings");
+    DEBUG_ASSERT (tw != NULL);
 
     int w, h;
 
@@ -63,24 +62,25 @@ static void fix_size_settings (tilda_window *tw)
 
 void clean_up_no_args ()
 {
-#ifdef DEBUG
-    puts("clean_up_no_args");
-#endif
+    DEBUG_FUNCTION ("clean_up_no_args");
 
     gtk_main_quit ();
 }
 
 static void free_and_remove (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("free_and_remove");
-#endif
+    DEBUG_FUNCTION ("free_and_remove");
+    DEBUG_ASSERT (tw != NULL);
 
     guint i;
 
     /* Remove lock file */
     if (g_remove (tw->lock_file))
+    {
+        TILDA_PERROR ();
+        DEBUG_ERROR ("Error removing lock file");
         fprintf (stderr, "Error removing lock file: %s\n", tw->lock_file);
+    }
 
     for (i=0; i<g_list_length(tw->terms); i++)
         g_free (g_list_nth_data (tw->terms, i));
@@ -90,18 +90,16 @@ static void free_and_remove (tilda_window *tw)
 
 void goto_tab (tilda_window *tw, guint i)
 {
-#ifdef DEBUG
-    puts("goto_tab");
-#endif
+    DEBUG_FUNCTION ("goto_tab");
+    DEBUG_ASSERT (tw != NULL);
 
     gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
 }
 
 static gboolean goto_tab_generic (tilda_window *tw, gint tab_number)
 {
-#ifdef DEBUG
-    printf ("goto_tab_%d\n", tab_number);
-#endif
+    DEBUG_FUNCTION ("goto_tab_generic");
+    DEBUG_ASSERT (tw != NULL);
 
     if (g_list_length (tw->terms) > (tab_number-1))
     {
@@ -128,35 +126,37 @@ gboolean goto_tab_10 (tilda_window *tw) { return goto_tab_generic (tw, 10); }
 
 void next_tab (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("next_tab");
-#endif
+    DEBUG_FUNCTION ("next_tab");
+    DEBUG_ASSERT (tw != NULL);
 
     gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
 }
 
 void prev_tab (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("prev_tab");
-#endif
+    DEBUG_FUNCTION ("prev_tab");
+    DEBUG_ASSERT (tw != NULL);
 
     gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);
 }
 
 void clean_up (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("clean_up");
-#endif
+    DEBUG_FUNCTION ("clean_up");
+    DEBUG_ASSERT (tw != NULL);
 
     free_and_remove (tw);
     gtk_main_quit ();
     exit (0);
 }
 
-void start_program(tilda_collect *collect)
+void start_program (tilda_collect *collect)
 {
+    DEBUG_FUNCTION ("start_program");
+    DEBUG_ASSERT (collect != NULL);
+    DEBUG_ASSERT (collect->tw != NULL);
+    DEBUG_ASSERT (collect->tw->tc != NULL);
+
     int argc;
     char **argv;
 
@@ -176,7 +176,8 @@ void start_program(tilda_collect *collect)
     }
     else /* An error in g_shell_parse_argv ??? */
     {
-        perror ("tilda error");
+        TILDA_PERROR ();
+        DEBUG_ERROR ("argv parse");
         exit (1);
     }
 
@@ -193,9 +194,9 @@ void start_program(tilda_collect *collect)
 
 void close_tab_on_exit (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("close_tab_on_exit");
-#endif
+    DEBUG_FUNCTION ("close_tab_on_exit");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     tilda_collect *collect = (tilda_collect *) data;
 
@@ -223,9 +224,10 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
 
 char* get_window_title (GtkWidget *widget, tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("get_window_title");
-#endif
+    DEBUG_FUNCTION ("get_window_title");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->tc != NULL);
 
     const gchar *vte_title;
     gchar *window_title;
@@ -276,9 +278,9 @@ char* get_window_title (GtkWidget *widget, tilda_window *tw)
 
 void window_title_changed (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("window_title_changed");
-#endif
+    DEBUG_FUNCTION ("window_title_changed");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     GtkWidget *page, *label;
     gchar *title;
@@ -295,9 +297,10 @@ void window_title_changed (GtkWidget *widget, gpointer data)
 
 void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-#ifdef DEBUG
-    puts("deleted_and_quit");
-#endif
+    DEBUG_FUNCTION ("deleted_and_quit");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (event != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     gtk_widget_destroy (GTK_WIDGET(data));
     gtk_main_quit();
@@ -305,9 +308,9 @@ void deleted_and_quit (GtkWidget *widget, GdkEvent *event, gpointer data)
 
 void destroy_and_quit (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("destroy_and_quit");
-#endif
+    DEBUG_FUNCTION ("destroy_and_quit");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     gtk_widget_destroy (GTK_WIDGET(data));
     gtk_main_quit ();
@@ -315,27 +318,27 @@ void destroy_and_quit (GtkWidget *widget, gpointer data)
 
 void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("destroy_and_quit_eof");
-#endif
+    DEBUG_FUNCTION ("destroy_and_quit_eof");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     close_tab_on_exit (widget, data);
 }
 
 void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("destroy_and_quit_exited");
-#endif
+    DEBUG_FUNCTION ("destroy_and_quit_exited");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     destroy_and_quit (widget, data);
 }
 
 void status_line_changed (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("status_line_changed");
-#endif
+    DEBUG_FUNCTION ("status_line_changed");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
 }
@@ -343,43 +346,38 @@ void status_line_changed (GtkWidget *widget, gpointer data)
 
 void ccopy (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("ccopy");
-#endif
+    DEBUG_FUNCTION ("ccopy");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->notebook != NULL);
+
     GtkWidget *current_page;
     GList *list;
 
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-
     list = gtk_container_get_children ((GtkContainer *) current_page);
-
     vte_terminal_copy_clipboard ((VteTerminal *) list->data);
 }
 
 void cpaste (tilda_window *tw)
 {
-#ifdef DEBUG
-    puts("cpaste");
-#endif
+    DEBUG_FUNCTION ("cpaste");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->notebook != NULL);
+
     GtkWidget *current_page;
     GList *list;
 
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-
     list = gtk_container_get_children ((GtkContainer *) current_page);
-
     vte_terminal_paste_clipboard ((VteTerminal *) list->data);
 }
 
 void copy (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("copy");
-#endif
+    DEBUG_FUNCTION ("copy");
+    DEBUG_ASSERT (data != NULL);
 
     tilda_window *tw;
     tilda_term *tt;
@@ -393,9 +391,8 @@ void copy (gpointer data, guint callback_action, GtkWidget *w)
 
 void paste (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("paste");
-#endif
+    DEBUG_FUNCTION ("paste");
+    DEBUG_ASSERT (data != NULL);
 
     tilda_window *tw;
     tilda_term *tt;
@@ -409,9 +406,8 @@ void paste (gpointer data, guint callback_action, GtkWidget *w)
 
 void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("config_and_update");
-#endif
+    DEBUG_FUNCTION ("config_and_update");
+    DEBUG_ASSERT (data != NULL);
 
     tilda_window *tw;
     tilda_term *tt;
@@ -425,28 +421,22 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
 
 void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
 {
-#ifdef DEBUG
-    puts("menu_quit");
-#endif
+    DEBUG_FUNCTION ("menu_quit");
 
     gtk_main_quit ();
 }
 
 void popup_menu (tilda_collect *tc)
 {
-#ifdef DEBUG
-    puts("popup_menu");
-#endif
+    DEBUG_FUNCTION ("popup_menu");
+    DEBUG_ASSERT (tc != NULL);
 
     GtkItemFactory *item_factory;
     GtkWidget *menu;
 
     item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", NULL);
-
     gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, tc);
-
     menu = gtk_item_factory_get_widget (item_factory, "<main>");
-
     gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
                    NULL, NULL, 3, gtk_get_current_event_time());
 
@@ -455,9 +445,8 @@ void popup_menu (tilda_collect *tc)
 
 int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-#ifdef DEBUG
-    puts("add_tab_callback");
-#endif
+    DEBUG_FUNCTION ("add_tab_callback");
+    DEBUG_ASSERT (data != NULL);
 
     add_tab ((tilda_window *) data);
     return 0;
@@ -465,9 +454,8 @@ int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
 
 int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-#ifdef DEBUG
-    puts("button_pressed");
-#endif
+    DEBUG_FUNCTION ("button_pressed");
+    DEBUG_ASSERT (data != NULL);
 
     VteTerminal *terminal;
     tilda_term *tt;
@@ -512,9 +500,8 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
 
 void iconify_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("iconify_window");
-#endif
+    DEBUG_FUNCTION ("iconify_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -523,9 +510,8 @@ void iconify_window (GtkWidget *widget, gpointer data)
 
 void deiconify_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("deiconify_window");
-#endif
+    DEBUG_FUNCTION ("deiconify_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -534,9 +520,8 @@ void deiconify_window (GtkWidget *widget, gpointer data)
 
 void raise_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("raise_window");
-#endif
+    DEBUG_FUNCTION ("raise_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -545,9 +530,8 @@ void raise_window (GtkWidget *widget, gpointer data)
 
 void lower_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("lower_window");
-#endif
+    DEBUG_FUNCTION ("lower_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -556,9 +540,8 @@ void lower_window (GtkWidget *widget, gpointer data)
 
 void maximize_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("maximize_window");
-#endif
+    DEBUG_FUNCTION ("maximize_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -567,9 +550,8 @@ void maximize_window (GtkWidget *widget, gpointer data)
 
 void restore_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("restore_window");
-#endif
+    DEBUG_FUNCTION ("restore_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -578,9 +560,8 @@ void restore_window (GtkWidget *widget, gpointer data)
 
 void refresh_window (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("refresh_window");
-#endif
+    DEBUG_FUNCTION ("refresh_window");
+    DEBUG_ASSERT (data != NULL);
 
     GdkRectangle rect;
     if (GTK_IS_WIDGET(data))
@@ -590,17 +571,18 @@ void refresh_window (GtkWidget *widget, gpointer data)
             rect.x = rect.y = 0;
             rect.width = (GTK_WIDGET(data))->allocation.width;
             rect.height = (GTK_WIDGET(data))->allocation.height;
-            gdk_window_invalidate_rect ((GTK_WIDGET(data))->window,
-                           &rect, TRUE);
+            gdk_window_invalidate_rect ((GTK_WIDGET(data))->window, &rect, TRUE);
         }
     }
 }
 
 void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 {
-#ifdef DEBUG
-    puts("resize_window");
-#endif
+    DEBUG_FUNCTION ("resize_window");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (width >= 0);
+    DEBUG_ASSERT (height >= 0);
+    DEBUG_ASSERT (data != NULL);
 
     VteTerminal *terminal;
     gint owidth, oheight, xpad, ypad;
@@ -624,9 +606,8 @@ void resize_window (GtkWidget *widget, guint width, guint height, gpointer data)
 
 void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
 {
-#ifdef DEBUG
-    puts("move_window");
-#endif
+    DEBUG_FUNCTION ("move_window");
+    DEBUG_ASSERT (data != NULL);
 
     if (GTK_IS_WIDGET(data))
         if ((GTK_WIDGET(data))->window)
@@ -634,9 +615,9 @@ void move_window (GtkWidget *widget, guint x, guint y, gpointer data)
 }
 void focus_term (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("focus_term");
-#endif
+    DEBUG_FUNCTION ("focus_term");
+    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (widget != NULL);
 
     GList *list;
     GtkWidget *box;
@@ -649,9 +630,9 @@ void focus_term (GtkWidget *widget, gpointer data)
 
 void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
 {
-#ifdef DEBUG
-    puts("adjust_font_size");
-#endif
+    DEBUG_FUNCTION ("adjust_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     VteTerminal *terminal;
     PangoFontDescription *desired;
@@ -686,18 +667,18 @@ void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
 
 void increase_font_size(GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("increase_font_size");
-#endif
+    DEBUG_FUNCTION ("increase_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     adjust_font_size (widget, data, 1);
 }
 
 void decrease_font_size (GtkWidget *widget, gpointer data)
 {
-#ifdef DEBUG
-    puts("decrease_font_size");
-#endif
+    DEBUG_FUNCTION ("decrease_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
     adjust_font_size (widget, data, -1);
 }
