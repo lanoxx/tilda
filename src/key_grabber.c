@@ -201,34 +201,19 @@ void pull (struct tilda_window_ *tw)
     pull_state (tw, PULL_TOGGLE);
 }
 
-static void key_grab (tilda_window *tw)
+static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_ret)
 {
-    DEBUG_FUNCTION ("key_grab");
+    DEBUG_FUNCTION ("parse_keybinding");
     DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (modmask_ret != NULL);
+    DEBUG_ASSERT (key_ret != NULL);
 
-    XModifierKeymap *modmap;
+    guint modmask = 0;
+    KeySym key = NoSymbol;
     gchar tmp_key[32];
     gchar *key_ptr;
-    unsigned int numlockmask = 0;
-    unsigned int modmask = 0;
-    gint i, j;
 
-    g_strlcpy (tmp_key, cfg_getstr (tw->tc, "key"), sizeof (tmp_key));
-
-    /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
-    modmap = XGetModifierMapping(dpy);
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < modmap->max_keypermod; j++)
-        {
-            if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock))
-            {
-                numlockmask = (1 << i);
-            }
-        }
-    }
-
-    XFreeModifiermap(modmap);
+    g_strlcpy (tmp_key, cfg_getstr (tw->tc, "key"), sizeof(tmp_key));
 
     if (!strstr(tmp_key, "+"))
     {
@@ -294,6 +279,41 @@ static void key_grab (tilda_window *tw)
         }
     }
 
+    *modmask_ret = modmask;
+    *key_ret = key;
+
+    return 0;
+}
+
+static void key_grab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("key_grab");
+    DEBUG_ASSERT (tw != NULL);
+
+    XModifierKeymap *modmap;
+    guint numlockmask = 0;
+    guint modmask = 0;
+    gint i, j;
+
+    /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
+    modmap = XGetModifierMapping(dpy);
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < modmap->max_keypermod; j++)
+        {
+            if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock))
+            {
+                numlockmask = (1 << i);
+            }
+        }
+    }
+
+    XFreeModifiermap(modmap);
+
+    /* Parse the keybinding from the config file */
+    parse_keybinding (tw, &modmask, &key);
+
+    /* Bind the key(s) appropriately */
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
 
