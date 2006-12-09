@@ -208,6 +208,7 @@ static void key_grab (tilda_window *tw)
 
     XModifierKeymap *modmap;
     gchar tmp_key[32];
+    gchar *key_ptr;
     unsigned int numlockmask = 0;
     unsigned int modmask = 0;
     gint i, j;
@@ -254,7 +255,22 @@ static void key_grab (tilda_window *tw)
         modmask = 0;
 
     if (strtok(tmp_key, "+"))
-        key = XStringToKeysym(strtok(NULL, "+"));
+    {
+        key_ptr = strtok (NULL, "+");
+
+        /* Fix the "`" to be "grave" as expected */
+        if (strstr (key_ptr, "`"))
+        {
+            key_ptr = "grave";
+
+            DEBUG_ERROR ("Should be using \"grave\"!");
+            fprintf (stderr, "Keybinding has incorrect format. Please see the "
+                             "README file for more information.\n\nYou probably "
+                             "want to use \"grave\" instead of \"`\"\n");
+        }
+
+        key = XStringToKeysym (key_ptr);
+    }
 
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
