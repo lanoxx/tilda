@@ -229,6 +229,18 @@ static void key_grab (tilda_window *tw)
 
     XFreeModifiermap(modmap);
 
+    if (!strstr(tmp_key, "+"))
+    {
+        DEBUG_ERROR ("No plus sign in keybinding");
+        fprintf (stderr, "Keybinding has incorrect format. Please see the "
+                         "README file for more information.\n\nYou probably "
+                         "want to use \"None+%s\" as the keybinding.\n", tmp_key);
+
+        /* Bad keybinding, prepend the string "None+" to the given key */
+        g_strlcpy (tmp_key, "None+", sizeof (tmp_key));
+        g_strlcat (tmp_key, cfg_getstr (tw->tc, "key"), sizeof (tmp_key));
+    }
+
     if (strstr(tmp_key, "Control"))
         modmask = modmask | ControlMask;
 
@@ -240,14 +252,6 @@ static void key_grab (tilda_window *tw)
 
     if (strstr(tmp_key, "None"))
         modmask = 0;
-
-    if (!strstr(tmp_key, "+"))
-    {
-        fprintf (stderr, "Key Incorrect -- Read the README or tilda.sf.net for info, "
-                         "rerun as 'tilda -C' to set keybinding\n");
-        DEBUG_ERROR ("no plus sign");
-        exit (1);
-    }
 
     if (strtok(tmp_key, "+"))
         key = XStringToKeysym(strtok(NULL, "+"));
