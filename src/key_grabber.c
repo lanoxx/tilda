@@ -270,6 +270,28 @@ static void key_grab (tilda_window *tw)
         }
 
         key = XStringToKeysym (key_ptr);
+
+        /* Check to make sure that the key was found successfully */
+        if (key == NoSymbol)
+        {
+            DEBUG_ERROR ("Bad keysym");
+            fprintf (stderr, "Keybinding has incorrect format. Please see the "
+                             "README file for more information.\n\nUsing the default "
+                             "key \"None+F%i\"\n", tw->instance+1);
+
+            /* Try with the default key */
+            modmask = 0;
+            g_snprintf (tmp_key, sizeof(tmp_key), "F%i", tw->instance+1);
+            key = XStringToKeysym (tmp_key);
+
+            if (key == NoSymbol)
+            {
+                DEBUG_ERROR ("Fatally bad keysym");
+                fprintf (stderr, "Using \"None+%s\" for the keybinding failed.\n"
+                                 "Giving up ...\n", tmp_key);
+                exit (EXIT_FAILURE);
+            }
+        }
     }
 
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
