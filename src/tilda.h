@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <confuse.h>
 #include <assert.h>
+#include "../tilda-config.h"
 #include "tilda_window.h"
 
 G_BEGIN_DECLS;
