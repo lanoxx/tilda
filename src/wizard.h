@@ -32,6 +32,7 @@ G_BEGIN_DECLS;
 struct wizard_items
 {
     GtkWidget *wizard_window;
+    GtkWidget *wizard_notebook;
 
     /* General Notebook Tab */
     GtkWidget *check_display_on_all_workspaces;
@@ -97,6 +98,7 @@ struct wizard_items
 
     /* Keybindings Notebook Tab */
     GtkWidget *entry_keybinding;
+    GtkWidget *button_grab_keybinding;
 };
 
 int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt);

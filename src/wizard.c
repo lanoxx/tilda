@@ -15,6 +15,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -852,6 +853,67 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     return table;
 }
 
+/*
+ * The functions key_grab() and setup_key_grab() are totally inspired by
+ * the custom keybindings dialog in denemo. See http://denemo.sourceforge.net/
+ *
+ * Thanks for the help! :)
+ */
+
+/*
+ * This function gets called once per key that is pressed. This means we have to
+ * manually ignore all modifier keys, and only register "real" keys.
+ *
+ * We return when the first "real" key is pressed.
+ */
+static void key_grab (GtkWidget *wizard_window, GdkEventKey *event, tilda_window *tw)
+{
+    DEBUG_FUNCTION ("key_grab");
+    DEBUG_ASSERT (wizard_window != NULL);
+    DEBUG_ASSERT (event != NULL);
+    DEBUG_ASSERT (tw != NULL);
+
+    gchar s[64] = "";
+
+    if ((event->keyval < GDK_Shift_L || event->keyval > GDK_Hyper_R))
+    {
+        if (event->state & GDK_CONTROL_MASK)    { g_strlcat (s, "Control+", sizeof(s)); }
+        //if (event->state & GDK_SHIFT_MASK)      { g_strlcat (s, "Shift+", sizeof(s)); }
+        if (event->state & GDK_MOD1_MASK)       { g_strlcat (s, "Alt+", sizeof(s)); }
+        if (event->state & GDK_MOD4_MASK)       { g_strlcat (s, "Win+", sizeof(s)); }
+
+        g_strlcat (s, gdk_keyval_name (event->keyval), sizeof(s));
+
+#ifdef DEBUG
+        fprintf (stderr, "KEY GRABBED: %s\n", s);
+#endif
+
+        /* Re-enable widgets */
+        gtk_widget_set_sensitive (items.button_grab_keybinding, TRUE);
+        gtk_widget_set_sensitive (items.wizard_notebook, TRUE);
+
+        /* Disconnect the key grabber */
+        gtk_signal_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(key_grab), tw);
+
+        /* Copy the pressed key to the text entry */
+        gtk_entry_set_text (GTK_ENTRY(items.entry_keybinding), s);
+    }
+}
+
+static void setup_key_grab (GtkWidget *button_grab_keybinding, tilda_window *tw)
+{
+    DEBUG_FUNCTION ("setup_key_grab");
+    DEBUG_ASSERT (button_grab_keybinding != NULL);
+    DEBUG_ASSERT (tw != NULL);
+
+    /* Make the preferences window non-sensitive while we are grabbing keys */
+    gtk_widget_set_sensitive (items.button_grab_keybinding, FALSE);
+    gtk_widget_set_sensitive (items.wizard_notebook, FALSE);
+
+    /* Connect the key grabber to the preferences window */
+    gtk_signal_connect (GTK_OBJECT (items.wizard_window), "key_press_event", GTK_SIGNAL_FUNC (key_grab), tw);
+}
+
 static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
 {
     DEBUG_FUNCTION ("keybindings");
@@ -870,16 +932,19 @@ static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
         cfg_setstr (tw->tc, "key", s_temp);
     }
 
-    table = gtk_table_new (2, 3, FALSE);
+    table = gtk_table_new (3, 3, FALSE);
 
     items.entry_keybinding = gtk_entry_new ();
     gtk_entry_set_text (GTK_ENTRY (items.entry_keybinding), cfg_getstr (tw->tc, "key"));
 
     label_key = gtk_label_new ("Key Bindings");
     label_warning = gtk_label_new ("Note: You must restart Tilda for the change in keybinding to take affect");
+    items.button_grab_keybinding = gtk_button_new_with_label ("Grab Keybinding");
+    gtk_signal_connect (GTK_OBJECT (items.button_grab_keybinding), "clicked", GTK_SIGNAL_FUNC(setup_key_grab), tw);
 
     gtk_table_attach (GTK_TABLE (table), label_key, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), items.entry_keybinding, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
+    gtk_table_attach (GTK_TABLE (table), items.button_grab_keybinding, 2, 3, 0, 1, GTK_FILL, GTK_FILL, 3, 3);
 
     gtk_table_attach (GTK_TABLE (table), label_warning, 0, 2, 1, 2, GTK_FILL, GTK_FILL, 3, 3);
 
@@ -1015,7 +1080,6 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     GtkWidget *button;
     GtkWidget *table;
-    GtkWidget *notebook;
     GtkWidget *label;
 
     GtkWidget *table2;
@@ -1062,15 +1126,8 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
 
     gtk_dialog_set_default_response (GTK_DIALOG (items.wizard_window), GTK_RESPONSE_OK);
 
-    /*gtk_window_set_resizable (GTK_WINDOW(wizard_window), FALSE);*/
-    /*gtk_window_set_position(GTK_WINDOW(wizard_window), GTK_WIN_POS_CENTER);*/
-    /*gtk_widget_realize (wizard_window);*/
-
     g_snprintf (title, sizeof(title), "Tilda %i Config", tw->instance);
     gtk_window_set_title (GTK_WINDOW (items.wizard_window), title);
-
-    /*g_signal_connect (G_OBJECT (wizard_window), "delete_event",
-                  G_CALLBACK (exit_app), NULL);*/
 
     gtk_container_set_border_width (GTK_CONTAINER (items.wizard_window), 10);
 
@@ -1081,41 +1138,29 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (items.wizard_window)->vbox), GTK_WIDGET (table), TRUE, TRUE, 7);
 
     /* Create a new notebook, place the position of the tabs */
-    notebook = gtk_notebook_new ();
-    gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
-    gtk_table_attach_defaults (GTK_TABLE (table), notebook, 0, 3, 1, 2);
-    gtk_widget_show (notebook);
+    items.wizard_notebook = gtk_notebook_new ();
+    gtk_notebook_set_tab_pos (GTK_NOTEBOOK (items.wizard_notebook), GTK_POS_TOP);
+    gtk_table_attach_defaults (GTK_TABLE (table), items.wizard_notebook, 0, 3, 1, 2);
+    gtk_widget_show (items.wizard_notebook);
 
     /* Let's append a bunch of pages to the notebook */
     for (i = 0; i < 7; i++)
     {
         label = gtk_label_new (tabs[i]);
-        gtk_notebook_append_page (GTK_NOTEBOOK(notebook), contents[i], label);
-        /*
-        table2 = (*contents[i])(tw, tt);
-
-        gtk_widget_show (table2);
-        label = gtk_label_new (tabs[i]);
-        gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table2, label);
-        */
+        gtk_notebook_append_page (GTK_NOTEBOOK(items.wizard_notebook), contents[i], label);
     }
 
-    gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), 0);
-
+    gtk_notebook_set_current_page (GTK_NOTEBOOK (items.wizard_notebook), 0);
 
     g_signal_connect (G_OBJECT (items.wizard_window), "response",
       G_CALLBACK (wizard_window_response_cb), tw);
 
-    gtk_widget_show (notebook);
+    gtk_widget_show (items.wizard_notebook);
     gtk_widget_show (table);
-    /*gtk_widget_show (wizard_window);*/
 
     exit_status = gtk_dialog_run (GTK_DIALOG (items.wizard_window)) != GTK_RESPONSE_OK;
 
     gtk_widget_destroy (GTK_WIDGET (items.wizard_window));
-
-    /*if (in_main)
-        gtk_main ();*/
 
     return exit_status;
 }
