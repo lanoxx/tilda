@@ -854,7 +854,7 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
 }
 
 /*
- * The functions key_grab() and setup_key_grab() are totally inspired by
+ * The functions wizard_key_grab() and setup_key_grab() are totally inspired by
  * the custom keybindings dialog in denemo. See http://denemo.sourceforge.net/
  *
  * Thanks for the help! :)
@@ -866,9 +866,9 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
  *
  * We return when the first "real" key is pressed.
  */
-static void key_grab (GtkWidget *wizard_window, GdkEventKey *event, tilda_window *tw)
+static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event, tilda_window *tw)
 {
-    DEBUG_FUNCTION ("key_grab");
+    DEBUG_FUNCTION ("wizard_key_grab");
     DEBUG_ASSERT (wizard_window != NULL);
     DEBUG_ASSERT (event != NULL);
     DEBUG_ASSERT (tw != NULL);
@@ -891,9 +891,10 @@ static void key_grab (GtkWidget *wizard_window, GdkEventKey *event, tilda_window
         /* Re-enable widgets */
         gtk_widget_set_sensitive (items.button_grab_keybinding, TRUE);
         gtk_widget_set_sensitive (items.wizard_notebook, TRUE);
+        key_grab (tw);
 
         /* Disconnect the key grabber */
-        gtk_signal_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(key_grab), tw);
+        gtk_signal_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), tw);
 
         /* Copy the pressed key to the text entry */
         gtk_entry_set_text (GTK_ENTRY(items.entry_keybinding), s);
@@ -909,9 +910,10 @@ static void setup_key_grab (GtkWidget *button_grab_keybinding, tilda_window *tw)
     /* Make the preferences window non-sensitive while we are grabbing keys */
     gtk_widget_set_sensitive (items.button_grab_keybinding, FALSE);
     gtk_widget_set_sensitive (items.wizard_notebook, FALSE);
+    key_ungrab (tw);
 
     /* Connect the key grabber to the preferences window */
-    gtk_signal_connect (GTK_OBJECT (items.wizard_window), "key_press_event", GTK_SIGNAL_FUNC (key_grab), tw);
+    gtk_signal_connect (GTK_OBJECT (items.wizard_window), "key_press_event", GTK_SIGNAL_FUNC (wizard_key_grab), tw);
 }
 
 static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
@@ -938,7 +940,8 @@ static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     gtk_entry_set_text (GTK_ENTRY (items.entry_keybinding), cfg_getstr (tw->tc, "key"));
 
     label_key = gtk_label_new ("Key Bindings");
-    label_warning = gtk_label_new ("Note: You must restart Tilda for the change in keybinding to take affect");
+    label_warning = gtk_label_new ("Note: You must restart Tilda for the change in\n"
+                                   "keybinding to take effect.");
     items.button_grab_keybinding = gtk_button_new_with_label ("Grab Keybinding");
     gtk_signal_connect (GTK_OBJECT (items.button_grab_keybinding), "clicked", GTK_SIGNAL_FUNC(setup_key_grab), tw);
 

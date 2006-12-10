@@ -281,7 +281,11 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
     return 0;
 }
 
-static void key_grab (tilda_window *tw)
+/*
+ * This will grab the key from the X server for exclusive use by
+ * our application.
+ */
+void key_grab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("key_grab");
     DEBUG_ASSERT (tw != NULL);
@@ -325,6 +329,57 @@ static void key_grab (tilda_window *tw)
         XGrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | modmask, root, True, GrabModeAsync, GrabModeAsync);
         XGrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
     }
+
+    /* Make absolutely sure that these are grabbed at this point. */
+    XFlush (dpy);
+}
+
+/*
+ * This will "ungrab" the key that is currently being used by the application
+ * to toggle the window state.
+ *
+ * This should be used in the wizard just before the key grabber button is
+ * pressed, so that the user can press the same key that they are using.
+ */
+void key_ungrab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("key_ungrab");
+    DEBUG_ASSERT (tw != NULL);
+
+    XModifierKeymap *modmap;
+    guint numlockmask = 0;
+    guint modmask = 0;
+    gint i, j;
+
+    /* Key grabbing stuff taken from yeahconsole who took it from evilwm */
+    modmap = XGetModifierMapping(dpy);
+
+    for (i = 0; i < 8; i++)
+        for (j = 0; j < modmap->max_keypermod; j++)
+            if (modmap->modifiermap[i * modmap->max_keypermod + j] == XKeysymToKeycode(dpy, XK_Num_Lock))
+                numlockmask = (1 << i);
+
+    XFreeModifiermap(modmap);
+
+    /* Parse the keybinding from the config file.
+     *
+     * NOTE: the variable "key" is global, so it can be used here and
+     * in the wait_for_signal() function below.
+     */
+    parse_keybinding (tw, &modmask, &key);
+
+    /* Unbind the key(s) appropriately. */
+    XUngrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root);
+    XUngrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root);
+
+    if (numlockmask)
+    {
+        XUngrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | modmask, root);
+        XUngrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | LockMask | modmask, root);
+    }
+
+    /* Make absolutely sure that the keys are unbound by now */
+    XFlush (dpy);
 }
 
 void *wait_for_signal (tilda_window *tw)
