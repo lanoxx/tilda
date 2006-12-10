@@ -251,7 +251,6 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
     guint modmask = 0;
     KeySym key = NoSymbol;
     gchar *key_str;
-    gchar *key_ptr;
     gchar **key_split;
     gint i;
 
@@ -261,6 +260,8 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
 
     for (i=0; i<g_strv_length(key_split); i++)
     {
+        g_strstrip (key_split[i]);
+
         /* Now each key_split[i] can be either a mask or a key */
         if      (g_strrstr (key_split[i], "None"))    { modmask = 0; }
         else if (g_strrstr (key_split[i], "Control")) { modmask |= ControlMask; }
