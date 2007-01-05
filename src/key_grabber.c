@@ -143,8 +143,8 @@ static void pull_state (struct tilda_window_ *tw, int state)
         }
         else
         {
-            gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
-            gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
+            //gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
+            //gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
             gdk_flush();
             gdk_threads_leave();
         }
@@ -178,7 +178,7 @@ static void pull_state (struct tilda_window_ *tw, int state)
         }
         else
         {
-            gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
+            //gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
             gdk_flush();
             gdk_threads_leave();
         }
