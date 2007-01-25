@@ -11,11 +11,18 @@ AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
 # Add optional debugging features
 AC_ARG_ENABLE([debug],
 		[AC_HELP_STRING([--enable-debug], [enable extra debugging output])],
-		[AC_DEFINE([DEBUG], [1], [Enable extra debugging output]) CFLAGS="$CFLAGS -g -ggdb"])
+		[if test "x$enableval" = "xyes"
+		 then
+			AC_DEFINE([DEBUG], [1], [Enable extra debugging output])
+			CFLAGS="$CFLAGS -g -ggdb"
+		 fi])
 
 AC_ARG_ENABLE([debug-functions],
 		[AC_HELP_STRING([--enable-debug-functions], [enable function call tracing])],
-		[AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])])
+		[if test "x$enableval" = "xyes"
+		 then
+			AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
+		 fi])
 
 # Checks for programs.
 AC_PROG_CC
