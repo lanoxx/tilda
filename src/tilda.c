@@ -45,6 +45,7 @@
 #include "tilda_window.h"
 #include "key_grabber.h"
 #include "wizard.h"
+#include "xerror.h"
 
 static tilda_window *tw;
 
@@ -732,6 +733,9 @@ int main (int argc, char **argv)
 
     /* Parse all of the command-line options */
     parse_cli (&argc, &argv, tw, tt);
+
+    /* We're about to startup X, so set the error handler. */
+    XSetErrorHandler (xerror_handler);
 
     if (!g_thread_supported ())
         g_thread_init(NULL);

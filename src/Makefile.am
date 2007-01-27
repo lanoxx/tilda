@@ -11,7 +11,8 @@ tilda_headers = tilda.h \
 		tilda_terminal.h \
 		wizard.h \
 		key_grabber.h \
-		tilda_window.h
+		tilda_window.h \
+		xerror.h
 
 
 tilda_SOURCES = $(tilda_headers) \
@@ -21,7 +22,8 @@ tilda_SOURCES = $(tilda_headers) \
 		callback_func.c \
 		key_grabber.c \
 		load_tilda.c  \
-		tilda.c
+		tilda.c \
+		xerror.c
 
 tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \

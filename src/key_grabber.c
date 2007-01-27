@@ -31,8 +31,13 @@
 #include "tilda.h"
 #include "config.h"
 #include "key_grabber.h"
+#include "xerror.h"
 #include "../tilda-config.h"
 
+/* Define function prototypes here */
+void key_ungrab (tilda_window *);
+
+/* Define local variables here */
 static Display *dpy;
 static Window root;
 static Window win;
@@ -322,17 +327,32 @@ void key_grab (tilda_window *tw)
      * Unfortunately, we can't report this to the user, since X kills the program
      * automatically when it recieves a BadAccess error. :(
      */
+
+    /* We are ignoring errors from X here, since we can get BadAccess errors. These will be
+     * reported, but we'll check them later. */
+    xerror_set_ignore (dpy, TRUE);
+
+    /* NOTE: This grabs the key defined for both the Caps-Lock on and Caps-Lock off case. */
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
 
     if (numlockmask)
     {
+        /* NOTE: This grabs the key defined for both the Num-Lock on and Num-Lock off case. */
         XGrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | modmask, root, True, GrabModeAsync, GrabModeAsync);
         XGrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | LockMask | modmask, root, True, GrabModeAsync, GrabModeAsync);
     }
 
-    /* Make absolutely sure that these are grabbed at this point. */
-    XFlush (dpy);
+    xerror_set_ignore (dpy, FALSE);
+
+    if (xerror_occurred)
+    {
+        /* An error occurred, so we need to BE NOISY */
+        fprintf (stderr, "Error: key grabbing failed!\n");
+        key_ungrab (tw); /* Try to ungrab the keys */
+
+        /* TODO: call the wizard ??? */
+    }
 }
 
 /*
@@ -369,6 +389,8 @@ void key_ungrab (tilda_window *tw)
      */
     parse_keybinding (tw, &modmask, &key);
 
+    xerror_set_ignore (dpy, TRUE);
+
     /* Unbind the key(s) appropriately. */
     XUngrabKey(dpy, XKeysymToKeycode(dpy, key), modmask, root);
     XUngrabKey(dpy, XKeysymToKeycode(dpy, key), LockMask | modmask, root);
@@ -379,8 +401,13 @@ void key_ungrab (tilda_window *tw)
         XUngrabKey(dpy, XKeysymToKeycode(dpy, key), numlockmask | LockMask | modmask, root);
     }
 
-    /* Make absolutely sure that the keys are unbound by now */
-    XFlush (dpy);
+    xerror_set_ignore (dpy, FALSE);
+
+    if (xerror_occurred)
+    {
+        /* FIXME: Be NOISY */
+        fprintf (stderr, "Error: key ungrabbing failed!\n");
+    }
 }
 
 void *wait_for_signal (tilda_window *tw)
