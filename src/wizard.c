@@ -30,6 +30,7 @@
 #include "config.h"
 #include "wizard.h"
 #include "load_tilda.h"
+#include "key_grabber.h"
 
 
 /* This struct will hold all of the configuration items that
@@ -965,7 +966,16 @@ static void apply_settings (tilda_window *tw)
     GdkColor gdk_text_color, gdk_back_color;
     gchar *tmp_str;
     tilda_term *tt;
-    guint i;
+    guint i, error;
+
+    /* Unbind the currently set keybinding. We'll re-grab it later, if we need to. */
+    error = key_ungrab (tw);
+
+    if (error)
+    {
+        /* Key ungrabbing failed, this is really bad */
+        /* WTF do we do here ??? */
+    }
 
     cfg_setstr (tw->tc, "key", gtk_entry_get_text (GTK_ENTRY (items.entry_keybinding)));
     cfg_setstr (tw->tc, "font", gtk_font_button_get_font_name (GTK_FONT_BUTTON (items.button_font)));
@@ -1022,6 +1032,13 @@ static void apply_settings (tilda_window *tw)
     cfg_setbool (tw->tc, "double_buffer", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering)));
 
     generate_animation_positions (tw);
+    error = key_grab (tw);
+
+    if (error)
+    {
+        /* Key grabbing failed, this is really bad */
+        /* WTF do we do here ??? */
+    }
 
     write_config_file (tw);
 

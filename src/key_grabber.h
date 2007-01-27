@@ -31,6 +31,9 @@ void pull (tilda_window *tw);
 void *wait_for_signal (tilda_window *tw);
 void generate_animation_positions (tilda_window *tw);
 
+gint key_grab (tilda_window *tw);
+gint key_ungrab (tilda_window *tw);
+
 G_END_DECLS;
 
 #endif

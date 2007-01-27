@@ -34,9 +34,6 @@
 #include "xerror.h"
 #include "../tilda-config.h"
 
-/* Define function prototypes here */
-void key_ungrab (tilda_window *);
-
 /* Define local variables here */
 static Display *dpy;
 static Window root;
@@ -291,7 +288,7 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
  * This will grab the key from the X server for exclusive use by
  * our application.
  */
-void key_grab (tilda_window *tw)
+gint key_grab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("key_grab");
     DEBUG_ASSERT (tw != NULL);
@@ -347,12 +344,18 @@ void key_grab (tilda_window *tw)
 
     if (xerror_occurred)
     {
+        /* Clear the error */
+        xerror_occurred = FALSE;
+
         /* An error occurred, so we need to BE NOISY */
         fprintf (stderr, "Error: key grabbing failed!\n");
         key_ungrab (tw); /* Try to ungrab the keys */
 
         /* TODO: call the wizard ??? */
+        return 1;
     }
+
+    return 0;
 }
 
 /*
@@ -362,7 +365,7 @@ void key_grab (tilda_window *tw)
  * This should be used in the wizard just before the key grabber button is
  * pressed, so that the user can press the same key that they are using.
  */
-void key_ungrab (tilda_window *tw)
+gint key_ungrab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("key_ungrab");
     DEBUG_ASSERT (tw != NULL);
@@ -405,9 +408,15 @@ void key_ungrab (tilda_window *tw)
 
     if (xerror_occurred)
     {
+        /* Clear the error */
+        xerror_occurred = FALSE;
+
         /* FIXME: Be NOISY */
         fprintf (stderr, "Error: key ungrabbing failed!\n");
+        return 1;
     }
+
+    return 0;
 }
 
 void *wait_for_signal (tilda_window *tw)
