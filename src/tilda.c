@@ -553,7 +553,16 @@ int write_config_file (tilda_window *tw)
     {
         cfg_print (tw->tc, fp);
 
-        if (fclose (fp) != 0)
+        if (fsync (fp))
+        {
+            // Error occurred during sync
+            TILDA_PERROR ();
+            DEBUG_ERROR ("Unable to sync file");
+
+            fprintf (stderr, "Unable to sync the config file to disk\n");
+        }
+
+        if (fclose (fp))
         {
             // An error occurred
             TILDA_PERROR ();
