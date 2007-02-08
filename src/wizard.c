@@ -42,18 +42,6 @@ static struct wizard_items items;
 gboolean in_main = FALSE;
 static gint exit_status = 0;
 
-#if 0
-static void close_dialog (GtkWidget *widget, gpointer data)
-{
-    DEBUG_FUNCTION ("close_dialog");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
-
-    gtk_grab_remove (GTK_WIDGET (widget));
-    gtk_widget_destroy (GTK_WIDGET (data));
-}
-#endif
-
 static void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
     DEBUG_FUNCTION ("image_select");
@@ -1070,22 +1058,6 @@ static gint ok (tilda_window *tw)
 
     return (TRUE);
 }
-
-#if 0
-static gint exit_app (GtkWidget *widget, gpointer data)
-{
-    DEBUG_FUNCTION ("exit_app");
-
-    gtk_widget_destroy (items.wizard_window);
-
-    if (in_main)
-        gtk_main_quit();
-
-    exit_status = 1;
-
-    return FALSE;
-}
-#endif
 
 static void wizard_window_response_cb (GtkDialog* wizard_window, int response, tilda_window *tw)
 {

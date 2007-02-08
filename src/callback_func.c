@@ -46,26 +46,6 @@ static GtkItemFactoryEntry menu_items[] = {
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
-#if 0
-static void fix_size_settings (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("fix size settings");
-    DEBUG_ASSERT (tw != NULL);
-
-    int w, h;
-
-    gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
-    gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
-    cfg_setint (tw->tc, "max_width", w);
-    cfg_setint (tw->tc, "max_height", h);
-
-    gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
-    gtk_window_get_size ((GtkWindow *) tw->window, &w, &h);
-    cfg_setint (tw->tc, "min_width", w);
-    cfg_setint (tw->tc, "min_height", h);
-}
-#endif
-
 void clean_up_no_args ()
 {
     DEBUG_FUNCTION ("clean_up_no_args");
