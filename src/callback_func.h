@@ -22,7 +22,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <confuse.h>
+#include <vte/vte.h>
 
 G_BEGIN_DECLS
 
