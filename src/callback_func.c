@@ -20,6 +20,7 @@
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <wizard.h>
+#include <callback_func.h>
 
 #include <glib.h>
 #include <glib/gstdio.h> /* for g_remove */
@@ -74,7 +75,7 @@ static void free_and_remove (tilda_window *tw)
     g_list_free (tw->terms);
 }
 
-void goto_tab (tilda_window *tw, guint i)
+static void goto_tab (tilda_window *tw, guint i)
 {
     DEBUG_FUNCTION ("goto_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -412,7 +413,7 @@ void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
     gtk_main_quit ();
 }
 
-void popup_menu (tilda_collect *tc)
+static void popup_menu (tilda_collect *tc)
 {
     DEBUG_FUNCTION ("popup_menu");
     DEBUG_ASSERT (tc != NULL);
@@ -429,7 +430,7 @@ void popup_menu (tilda_collect *tc)
     gtk_widget_show_all(menu);
 }
 
-int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
+static int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
     DEBUG_FUNCTION ("add_tab_callback");
     DEBUG_ASSERT (data != NULL);

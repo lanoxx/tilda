@@ -16,6 +16,7 @@
 
 #include <tilda-config.h>
 
+#include <load_tilda.h>
 #include <debug.h>
 #include <callback_func.h>
 #include <key_grabber.h>

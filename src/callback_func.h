@@ -48,7 +48,6 @@ extern char* get_window_title (GtkWidget *widget, tilda_window *tw);
 extern void fix_size_settings (tilda_window *tw);
 extern void window_title_changed (GtkWidget *widget, gpointer data);
 extern void clean_up_no_args ();
-extern void free_and_remove (tilda_window *tw);
 extern void clean_up (tilda_window *tw);
 extern void close_tab_on_exit (GtkWidget *widget, gpointer data);
 extern void icon_title_changed (GtkWidget *widget, gpointer win);
