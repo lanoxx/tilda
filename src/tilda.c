@@ -46,16 +46,6 @@
 #include <vte/vte.h>
 #include <glib/gstdio.h>
 
-static tilda_window *tw;
-
-static void pull_no_args()
-{
-    DEBUG_FUNCTION ("pull_no_args");
-    DEBUG_ASSERT (tw != NULL);
-
-    pull (tw);
-}
-
 /**
  * Print a message to stderr, then exit.
  *
@@ -760,7 +750,6 @@ int main (int argc, char **argv)
     signal (SIGKILL, clean_up_no_args);
     signal (SIGABRT, clean_up_no_args);
     signal (SIGTERM, clean_up_no_args);
-    signal (SIGUSR1, pull_no_args);
 
     gdk_threads_enter ();
     gtk_main();
