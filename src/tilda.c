@@ -14,6 +14,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <tilda.h>
+#include <callback_func.h>
+#include <tilda_window.h>
+#include <key_grabber.h> /* for pull */
+#include <wizard.h>
+#include <xerror.h>
+
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/dir.h>
@@ -34,13 +43,7 @@
 #include <X11/extensions/Xrandr.h>
 
 #include <vte/vte.h>
-#include "tilda.h"
-#include "../tilda-config.h"
-#include "callback_func.h"
-#include "tilda_window.h"
-#include "key_grabber.h"
-#include "wizard.h"
-#include "xerror.h"
+#include <glib/gstdio.h>
 
 static tilda_window *tw;
 
@@ -477,7 +480,7 @@ int get_display_dimension (int dimension)
          * do anything since we won't know what to do! */
         DEBUG_ERROR ("Cannot open dislay");
         fprintf (stderr, "Can't open display %s\n", XDisplayName(display_name));
-        return;
+        return -1;
     }
 
     screen = DefaultScreen (dpy);
@@ -717,7 +720,7 @@ int main (int argc, char **argv)
     }
 
     /* Get the user's home directory */
-    tw->home_dir = strdup(g_get_home_dir ());
+    tw->home_dir = g_strdup(g_get_home_dir ());
 
     /* Gotta do this first to make sure no lock files are left over */
     clean_tmp (tw);

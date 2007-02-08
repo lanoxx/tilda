@@ -26,7 +26,7 @@
  * FIXME: debug.h on their own. */
 #include <debug.h>
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
 #define TILDA_VERSION PACKAGE_NAME " " PACKAGE_VERSION
 #define QUICK_STRCMP(a, b) (*(a)!=*(b)? \
@@ -52,6 +52,6 @@ int get_display_dimension (int dimension);
 #define get_physical_height_pixels() get_display_dimension(HEIGHT)
 #define get_physical_width_pixels()  get_display_dimension(WIDTH)
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif
