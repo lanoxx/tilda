@@ -5,17 +5,7 @@ AUTOMAKE_OPTIONS = gnu
 
 bin_PROGRAMS = tilda
 
-tilda_headers = tilda.h \
-		callback_func.h \
-		tilda_terminal.h \
-		wizard.h \
-		key_grabber.h \
-		tilda_window.h \
-		xerror.h
-
-
-tilda_SOURCES = $(tilda_headers) \
-		tilda_window.c \
+tilda_SOURCES = tilda_window.c \
 		tilda_terminal.c \
 		wizard.c \
 		callback_func.c \
