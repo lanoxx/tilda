@@ -16,6 +16,7 @@
 
 #include <tilda-config.h>
 
+#include <debug.h>
 #include <tilda.h>
 #include <wizard.h>
 #include <load_tilda.h>

@@ -21,10 +21,6 @@
 
 #include <gtk/gtk.h>
 
-/* FIXME: temporary until all files are switched to include
- * FIXME: debug.h on their own. */
-#include <debug.h>
-
 G_BEGIN_DECLS
 
 #define TILDA_VERSION PACKAGE_NAME " " PACKAGE_VERSION

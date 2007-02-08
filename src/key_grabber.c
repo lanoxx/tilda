@@ -19,6 +19,7 @@
 
 #include <tilda-config.h>
 
+#include <debug.h>
 #include <key_grabber.h>
 #include <tilda.h>
 #include <xerror.h>
