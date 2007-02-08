@@ -18,8 +18,11 @@
    See the COPYING file for a copy of the GNU General Public License.
 */
 
-#include "../tilda-config.h"
-#include "tilda.h"
+#include <tilda-config.h>
+
+#include <xerror.h>
+#include <debug.h>
+
 #include <glib.h>
 #include <X11/Xlib.h>
 
@@ -58,3 +61,4 @@ void xerror_set_ignore(Display *dpy, gboolean ignore)
     XSync(dpy, FALSE);
     xerror_ignore = ignore;
 }
+
