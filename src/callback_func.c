@@ -28,10 +28,10 @@
 #include <vte/vte.h>
 
 
-void copy (gpointer data, guint callback_action, GtkWidget *w);
-void paste (gpointer data, guint callback_action, GtkWidget *w);
-void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
-void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
+static void copy (gpointer data, guint callback_action, GtkWidget *w);
+static void paste (gpointer data, guint callback_action, GtkWidget *w);
+static void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
+static void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 static GtkItemFactoryEntry menu_items[] = {
     { "/_New Tab", "<Ctrl><Shift>T", add_tab_menu_call,     0, "<Item>",      NULL                  },
@@ -312,15 +312,6 @@ void destroy_and_quit_eof (GtkWidget *widget, gpointer data)
     close_tab_on_exit (widget, data);
 }
 
-void destroy_and_quit_exited (GtkWidget *widget, gpointer data)
-{
-    DEBUG_FUNCTION ("destroy_and_quit_exited");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
-
-    destroy_and_quit (widget, data);
-}
-
 void status_line_changed (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("status_line_changed");
@@ -361,7 +352,7 @@ void cpaste (tilda_window *tw)
     vte_terminal_paste_clipboard ((VteTerminal *) list->data);
 }
 
-void copy (gpointer data, guint callback_action, GtkWidget *w)
+static void copy (gpointer data, guint callback_action, GtkWidget *w)
 {
     DEBUG_FUNCTION ("copy");
     DEBUG_ASSERT (data != NULL);
@@ -376,7 +367,7 @@ void copy (gpointer data, guint callback_action, GtkWidget *w)
     vte_terminal_copy_clipboard ((VteTerminal *) tt->vte_term);
 }
 
-void paste (gpointer data, guint callback_action, GtkWidget *w)
+static void paste (gpointer data, guint callback_action, GtkWidget *w)
 {
     DEBUG_FUNCTION ("paste");
     DEBUG_ASSERT (data != NULL);
@@ -391,7 +382,7 @@ void paste (gpointer data, guint callback_action, GtkWidget *w)
     vte_terminal_paste_clipboard ((VteTerminal *) tt->vte_term);
 }
 
-void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
+static void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
 {
     DEBUG_FUNCTION ("config_and_update");
     DEBUG_ASSERT (data != NULL);
@@ -406,7 +397,7 @@ void config_and_update (gpointer data, guint callback_action, GtkWidget *w)
     wizard (-1, NULL, tw, tt);
 }
 
-void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
+static void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
 {
     DEBUG_FUNCTION ("menu_quit");
 
@@ -428,15 +419,6 @@ static void popup_menu (tilda_collect *tc)
                    NULL, NULL, 3, gtk_get_current_event_time());
 
     gtk_widget_show_all(menu);
-}
-
-static int add_tab_callback (GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-    DEBUG_FUNCTION ("add_tab_callback");
-    DEBUG_ASSERT (data != NULL);
-
-    add_tab ((tilda_window *) data);
-    return 0;
 }
 
 int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -615,7 +597,7 @@ void focus_term (GtkWidget *widget, gpointer data)
     gtk_widget_grab_focus (list->data);
 }
 
-void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
+static void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
 {
     DEBUG_FUNCTION ("adjust_font_size");
     DEBUG_ASSERT (widget != NULL);
