@@ -14,17 +14,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <tilda.h>
+#include <tilda_window.h>
+#include <tilda_terminal.h>
+#include <callback_func.h>
+#include <load_tilda.h>
+
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <vte/vte.h>
 #include <string.h>
-#include "tilda.h"
-#include "../tilda-config.h"
-#include "tilda_window.h"
-#include "tilda_terminal.h"
-#include "callback_func.h"
-#include "load_tilda.h"
 
 
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
