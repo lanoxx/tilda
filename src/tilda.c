@@ -552,7 +552,7 @@ int write_config_file (tilda_window *tw)
     {
         cfg_print (tw->tc, fp);
 
-        if (fsync (fp))
+        if (fsync (fileno(fp)))
         {
             // Error occurred during sync
             TILDA_PERROR ();
