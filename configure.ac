@@ -9,20 +9,27 @@ AC_CONFIG_SRCDIR([src/tilda.c])
 AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
 
 # Add optional debugging features
-AC_ARG_ENABLE([debug],
-		[AC_HELP_STRING([--enable-debug], [enable extra debugging output])],
-		[if test "x$enableval" = "xyes"
-		 then
-			AC_DEFINE([DEBUG], [1], [Enable extra debugging output])
-			CFLAGS="$CFLAGS -g -ggdb"
-		 fi])
+AC_ARG_ENABLE([maintainer-flags],
+		[AC_HELP_STRING([--enable-maintainer-flags], [enable extra debugging (don't use as user)])])
 
-AC_ARG_ENABLE([debug-functions],
-		[AC_HELP_STRING([--enable-debug-functions], [enable function call tracing])],
-		[if test "x$enableval" = "xyes"
-		 then
-			AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
-		 fi])
+if test "x$enable_maintainer_flags" = "xyes"; then
+	enable_debug="yes"
+	enable_debug_functions="yes"
+	CFLAGS="$CFLAGS -Wall -Wextra -pedantic -fno-common -Wstrict-aliasing=2"
+fi
+
+AC_ARG_ENABLE([debug], [AC_HELP_STRING([--enable-debug], [enable extra debugging output])])
+
+if test "x$enable_debug" = "xyes"; then
+	AC_DEFINE([DEBUG], [1], [Enable extra debugging output])
+	CFLAGS="$CFLAGS -g -ggdb"
+fi
+
+AC_ARG_ENABLE([debug-functions], [AC_HELP_STRING([--enable-debug-functions], [enable function call tracing])])
+
+if test "x$enable_debug_functions" = "xyes"; then
+	AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
+fi
 
 # Checks for programs.
 AC_PROG_CC
