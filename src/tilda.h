@@ -17,10 +17,9 @@
 #ifndef TILDA_H
 #define TILDA_H
 
+#include <tilda_window.h>
+
 #include <gtk/gtk.h>
-#include <confuse.h>
-#include "../tilda-config.h"
-#include "tilda_window.h"
 
 /* FIXME: temporary until all files are switched to include
  * FIXME: debug.h on their own. */
@@ -40,6 +39,8 @@ void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 
 extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
+extern void print_and_exit (gchar *message, gint exitval);
+extern void getinstance (tilda_window *tw);
 
 #define HEIGHT 0
 #define WIDTH  1

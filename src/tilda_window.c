@@ -14,18 +14,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <tilda.h>
+#include <callback_func.h>
+#include <tilda_window.h>
+#include <tilda_terminal.h>
+#include <key_grabber.h>
+
+#include <confuse.h>
 #include <stdio.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib-object.h>
 #include <vte/vte.h>
-#include "../tilda-config.h"
-#include "tilda.h"
-#include "callback_func.h"
-#include "tilda_window.h"
-#include "tilda_terminal.h"
-#include "key_grabber.h"
 
 /* CONFIGURATION OPTIONS */
 static cfg_opt_t new_conf[] = {
@@ -188,7 +191,6 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
     DEBUG_ASSERT (tw->terms != NULL);
 
     GtkWidget *page, *current_page;
-    int i, list_length;
     GList *terms = g_list_first (tw->terms);
     tilda_term *result=NULL;
 

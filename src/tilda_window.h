@@ -17,12 +17,13 @@
 #ifndef TILDA_WINDOW_H
 #define TILDA_WINDOW_H
 
-#include <gtk/gtk.h>
+#include <tilda_window.h>
+#include <tilda_terminal.h>
 
-#include "tilda_terminal.h"
+#include <gtk/gtk.h>
 #include <confuse.h>
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
 typedef struct tilda_window_ tilda_window;
 
@@ -48,6 +49,6 @@ void close_tab (gpointer data, guint callback_action, GtkWidget *w);
 gboolean init_tilda_window (tilda_window *tw, tilda_term *tt);
 void init_tilda_window_instance (tilda_window *tw);
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif
