@@ -20,7 +20,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <glib-object.h>
 #include <vte/vte.h>
-#include "config.h"
 #include "../tilda-config.h"
 #include "tilda.h"
 #include "callback_func.h"

@@ -15,10 +15,7 @@
  *
  */
 
- /*
- * Some stolen from yeahconsole -- loving that open source :)
- *
- */
+/* Some stolen from yeahconsole -- loving that open source :) */
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
@@ -29,7 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tilda.h"
-#include "config.h"
 #include "key_grabber.h"
 #include "xerror.h"
 #include "../tilda-config.h"

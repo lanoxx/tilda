@@ -27,7 +27,6 @@
 
 #include "tilda.h"
 #include "../tilda-config.h"
-#include "config.h"
 #include "wizard.h"
 #include "load_tilda.h"
 #include "key_grabber.h"

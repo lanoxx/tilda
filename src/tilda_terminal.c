@@ -19,7 +19,6 @@
 #include <glib-object.h>
 #include <vte/vte.h>
 #include <string.h>
-#include "config.h"
 #include "tilda.h"
 #include "../tilda-config.h"
 #include "tilda_window.h"

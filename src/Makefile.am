@@ -7,7 +7,6 @@ bin_PROGRAMS = tilda
 
 tilda_headers = tilda.h \
 		callback_func.h \
-		config.h \
 		tilda_terminal.h \
 		wizard.h \
 		key_grabber.h \

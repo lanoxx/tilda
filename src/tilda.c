@@ -28,17 +28,12 @@
 #include <signal.h>
 #include <pwd.h>
 
-#ifdef HAVE_XFT2
-#include <fontconfig/fontconfig.h>
-#endif
-
 #include <X11/Xlib.h>
 #include <X11/Xlibint.h>
 #include <X11/Xproto.h>
 #include <X11/extensions/Xrandr.h>
 
 #include <vte/vte.h>
-#include "config.h"
 #include "tilda.h"
 #include "../tilda-config.h"
 #include "callback_func.h"
