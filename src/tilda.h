@@ -28,9 +28,6 @@ G_BEGIN_DECLS
     (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
     strcmp ((a), (b)))
 
-gboolean image_set_clo, antialias_set_clo, scroll_set_clo;
-gint old_max_height, old_max_width;
-
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 

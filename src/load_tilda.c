@@ -129,9 +129,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
 
-    bool_use_image = cfg_getbool (tw->tc, "use_image") || image_set_clo;
-    use_antialias = cfg_getbool (tw->tc, "antialias") || antialias_set_clo;
-    scroll = cfg_getbool (tw->tc, "scrollbar") || scroll_set_clo;
+    bool_use_image = cfg_getbool (tw->tc, "use_image");
+    use_antialias = cfg_getbool (tw->tc, "antialias");
+    scroll = cfg_getbool (tw->tc, "scrollbar");
 
     if (bool_use_image)
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "image"));
