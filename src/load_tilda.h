@@ -17,12 +17,15 @@
 #ifndef LOAD_TILDA_H
 #define LOAD_TILDA_H
 
-#include <gtk/gtk.h>
+#include <tilda_window.h>
+#include <tilda_terminal.h>
 
-G_BEGIN_DECLS;
+#include <glib.h>
+
+G_BEGIN_DECLS
 
 gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main);
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif

@@ -39,6 +39,8 @@ gint old_max_height, old_max_width;
 void clean_up (tilda_window *tw);
 void clean_up_no_args ();
 
+extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
+
 #define HEIGHT 0
 #define WIDTH  1
 

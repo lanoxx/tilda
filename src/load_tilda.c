@@ -14,15 +14,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <callback_func.h>
+#include <key_grabber.h>
+#include <tilda.h>
+
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 #include <string.h>
 #include <strings.h>
-
-#include "tilda.h"
-#include "callback_func.h"
-#include "key_grabber.h"
-#include "../tilda-config.h"
 
 static void window_title_change_all (tilda_window *tw)
 {
@@ -60,9 +61,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     gdouble transparency_level = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
-    gboolean scroll = FALSE, scroll_background = FALSE, highlight_set = FALSE, cursor_set = FALSE,
-             use_antialias = FALSE, bool_use_image = FALSE, allow_bold=FALSE;
-    gboolean audible = FALSE, blink = FALSE, scroll_on_output = FALSE, scroll_on_keystroke = FALSE;
+    gboolean scroll = FALSE, highlight_set = FALSE, cursor_set = FALSE,
+             use_antialias = FALSE, bool_use_image = FALSE;
     GdkColor fore, back, tint, highlight, cursor, black;
 
     black.red = black.green = black.blue = 0x0000;
