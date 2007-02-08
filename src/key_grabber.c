@@ -35,11 +35,6 @@
 /* Define local variables here */
 static Display *dpy;
 static Window root;
-#if 0
-static Window win;
-static Window termwin;
-static Window last_focused;
-#endif
 static int screen;
 static KeySym key;
 
@@ -108,9 +103,6 @@ static void pull_state (struct tilda_window_ *tw, int state)
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
-#if 0
-    gint w, h;
-#endif
     static gint pos=0;
 
     if (pos == 0 && state != PULL_UP)
