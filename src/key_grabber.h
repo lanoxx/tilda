@@ -17,23 +17,22 @@
 #ifndef TILDA_KEY_GRABBER_C
 #define TILDA_KEY_GRABBER_C
 
-#include <gtk/gtk.h>
-#include <confuse.h>
-#include "tilda_window.h"
+#include <tilda_window.h>
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
 #define PULL_TOGGLE 0
 #define PULL_DOWN 1
 #define PULL_UP 2
 
-void pull (tilda_window *tw);
-void *wait_for_signal (tilda_window *tw);
-void generate_animation_positions (tilda_window *tw);
+extern void pull (tilda_window *tw);
+extern void *wait_for_signal (tilda_window *tw);
+extern void generate_animation_positions (tilda_window *tw);
 
-gint key_grab (tilda_window *tw);
-gint key_ungrab (tilda_window *tw);
+/* Functions for grabbing keys */
+extern gint key_grab (tilda_window *tw);
+extern gint key_ungrab (tilda_window *tw);
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif

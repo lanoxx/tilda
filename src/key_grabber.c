@@ -17,6 +17,12 @@
 
 /* Some stolen from yeahconsole -- loving that open source :) */
 
+#include <tilda-config.h>
+
+#include <key_grabber.h>
+#include <tilda.h>
+#include <xerror.h>
+
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
@@ -25,17 +31,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tilda.h"
-#include "key_grabber.h"
-#include "xerror.h"
-#include "../tilda-config.h"
 
 /* Define local variables here */
 static Display *dpy;
 static Window root;
+#if 0
 static Window win;
 static Window termwin;
 static Window last_focused;
+#endif
 static int screen;
 static KeySym key;
 
@@ -48,7 +52,7 @@ static unsigned int display_width, display_height;
 
 static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
-static gint posIV[4][16]; 
+static gint posIV[4][16];
 
 void generate_animation_positions (struct tilda_window_ *tw)
 {
@@ -104,7 +108,9 @@ static void pull_state (struct tilda_window_ *tw, int state)
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
+#if 0
     gint w, h;
+#endif
     static gint pos=0;
 
     if (pos == 0 && state != PULL_UP)
@@ -136,7 +142,7 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
                 gdk_flush();
                 gdk_threads_leave();
-                usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
+                g_usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
             }
         }
         else
@@ -171,7 +177,7 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
                 gdk_flush();
                 gdk_threads_leave();
-                usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
+                g_usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
             }
         }
         else
