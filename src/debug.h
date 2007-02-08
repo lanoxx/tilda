@@ -44,7 +44,7 @@
 #else
 
     /* Disable asserts */
-    #define NDEBUG 1
+    #define NDEBUG
     #include <assert.h>
 
     #define DEBUG_ASSERT assert

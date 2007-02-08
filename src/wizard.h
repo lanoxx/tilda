@@ -17,6 +17,9 @@
 #ifndef WIZARD_H
 #define WIZARD_H
 
+#include <tilda_window.h>
+#include <tilda_terminal.h>
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS

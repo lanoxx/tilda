@@ -20,6 +20,7 @@
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <confuse.h>
 
