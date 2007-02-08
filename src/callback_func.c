@@ -14,13 +14,17 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <debug.h>
+#include <tilda_window.h>
+#include <tilda_terminal.h>
+#include <wizard.h>
+
+#include <glib.h>
+#include <glib/gstdio.h> /* for g_remove */
 #include <gtk/gtk.h>
 #include <vte/vte.h>
-#include "tilda.h"
-#include "../tilda-config.h"
-#include "tilda_window.h"
-#include "tilda_terminal.h"
-#include "wizard.h"
 
 
 void copy (gpointer data, guint callback_action, GtkWidget *w);
@@ -42,6 +46,7 @@ static GtkItemFactoryEntry menu_items[] = {
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
+#if 0
 static void fix_size_settings (tilda_window *tw)
 {
     DEBUG_FUNCTION ("fix size settings");
@@ -59,6 +64,7 @@ static void fix_size_settings (tilda_window *tw)
     cfg_setint (tw->tc, "min_width", w);
     cfg_setint (tw->tc, "min_height", h);
 }
+#endif
 
 void clean_up_no_args ()
 {
@@ -282,9 +288,9 @@ void window_title_changed (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (data != NULL);
 
-    GtkWidget *page, *label;
+    GtkWidget /* TODO: *page, */ *label;
     gchar *title;
-    gint current_page_num;
+    /* TODO: gint current_page_num; */
     tilda_collect *tc = (tilda_collect *) data;
     tilda_window *tw = (tilda_window *) tc->tw;
     tilda_term *tt = (tilda_term *) tc->tt;
