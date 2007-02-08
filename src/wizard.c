@@ -14,6 +14,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <tilda-config.h>
+
+#include <tilda.h>
+#include <wizard.h>
+#include <load_tilda.h>
+#include <key_grabber.h>
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdio.h>
@@ -21,15 +28,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <confuse.h>
 
 /* INT_MAX */
 #include <limits.h>
-
-#include "tilda.h"
-#include "../tilda-config.h"
-#include "wizard.h"
-#include "load_tilda.h"
-#include "key_grabber.h"
 
 
 /* This struct will hold all of the configuration items that
@@ -39,6 +41,7 @@ static struct wizard_items items;
 gboolean in_main = FALSE;
 static gint exit_status = 0;
 
+#if 0
 static void close_dialog (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("close_dialog");
@@ -48,6 +51,7 @@ static void close_dialog (GtkWidget *widget, gpointer data)
     gtk_grab_remove (GTK_WIDGET (widget));
     gtk_widget_destroy (GTK_WIDGET (data));
 }
+#endif
 
 static void image_select (GtkWidget *widget, GtkWidget *label_image)
 {
@@ -816,7 +820,6 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     GtkWidget *table;
     GtkWidget *label_backspace;
     GtkWidget *label_delete;
-    GtkWidget *button_defaults;
 
     table = gtk_table_new (2, 3, FALSE);
 
@@ -963,7 +966,6 @@ static void apply_settings (tilda_window *tw)
     DEBUG_ASSERT (tw->tc != NULL);
 
     GdkColor gdk_text_color, gdk_back_color;
-    gchar *tmp_str;
     tilda_term *tt;
     guint i, error;
 
@@ -1068,6 +1070,7 @@ static gint ok (tilda_window *tw)
     return (TRUE);
 }
 
+#if 0
 static gint exit_app (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("exit_app");
@@ -1081,6 +1084,7 @@ static gint exit_app (GtkWidget *widget, gpointer data)
 
     return FALSE;
 }
+#endif
 
 static void wizard_window_response_cb (GtkDialog* wizard_window, int response, tilda_window *tw)
 {
@@ -1097,15 +1101,9 @@ int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
-    GtkWidget *button;
     GtkWidget *table;
     GtkWidget *label;
 
-    GtkWidget *table2;
-    GtkWidget *image;
-    GdkPixmap *image_pix;
-    GdkBitmap *image_pix_mask;
-    GtkStyle   *style;
     gchar *argv0 = NULL;
     gchar title[20];
 

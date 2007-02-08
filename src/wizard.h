@@ -18,9 +18,8 @@
 #define WIZARD_H
 
 #include <gtk/gtk.h>
-#include <confuse.h>
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
 /* This struct will hold things that we need in all the functions in
  * wizard.c.
@@ -103,6 +102,6 @@ struct wizard_items
 
 int wizard (int argc, char **argv, tilda_window *tw, tilda_term *tt);
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif

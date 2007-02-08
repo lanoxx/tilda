@@ -41,6 +41,7 @@ void clean_up_no_args ();
 extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
 extern void print_and_exit (gchar *message, gint exitval);
 extern void getinstance (tilda_window *tw);
+extern int write_config_file (tilda_window *tw);
 
 #define HEIGHT 0
 #define WIDTH  1
