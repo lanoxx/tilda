@@ -16,6 +16,7 @@ if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
 	enable_debug_functions="yes"
 	CFLAGS="$CFLAGS -Wall -Wextra -pedantic -fno-common -Wstrict-aliasing=2"
+	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations"
 fi
 
 AC_ARG_ENABLE([debug], [AC_HELP_STRING([--enable-debug], [enable extra debugging output])])
