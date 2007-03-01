@@ -1,4 +1,5 @@
 version 0.9.5 (TBA) :
+	* Fixed another bug in getting the new lock file (Thanks Wilberding)
 	* Removed resize/move from hide when 
 		animation is turned off. This will 
 		fix the closing of certain program 
