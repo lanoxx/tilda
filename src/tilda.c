@@ -71,6 +71,8 @@ static gint getnextinstance (tilda_window *tw)
     DEBUG_FUNCTION ("getnextinstance");
     DEBUG_ASSERT (tw != NULL);
 
+    GArray *list = NULL;
+
     gchar *lock_dir;
     gchar *name;
     gchar **tokens;
@@ -78,8 +80,12 @@ static gint getnextinstance (tilda_window *tw)
     gint lock_dir_size = 0;
     gint count = 0;
     gint current = 0;
-    gint tmp = 0;
+    gint i;
     GDir *dir;
+
+    /* We create a new array to store gint values.
+     * We don't want it zero-terminated or cleared to 0's. */
+    list = g_array_new (FALSE, FALSE, sizeof(gint));
 
     /* Figure out the size of the lock_dir variable. Make sure to
      * account for the null-terminator at the end of the string. */
@@ -102,24 +108,30 @@ static gint getnextinstance (tilda_window *tw)
             current = atoi (tokens[2]);
             g_strfreev (tokens);
 
-            if (current - tmp > 1) {
-                count = tmp + 1;
-                break;
-            }
+            /* Do a sorted insert into the GArray */
+            for (i=0; i<count; i++)
+                if (g_array_index (list, gint, i) != i)
+                    break;
 
+            g_array_insert_val (list, i, current);
             count++;
-
-            tmp = current;
         }
     }
+
+    /* Find the lowest non-consecutive available place in the array. This
+     * will be this tilda's number. */
+    for (i=0; i<count; i++)
+        if (g_array_index (list, gint, i) != i)
+            break;
 
     /* Free memory that we allocated */
     if (dir != NULL)
         g_dir_close (dir);
 
+    g_array_free (list, TRUE);
     free (lock_dir);
 
-    return count;
+    return i;
 }
 
 /**
