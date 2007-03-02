@@ -96,6 +96,28 @@ static cfg_opt_t new_conf[] = {
     CFG_END()
 };
 
+static void
+initialize_alpha_mode (tilda_window *tw)
+{
+    GdkScreen *screen;
+    GdkColormap *colormap;
+
+    screen = gtk_widget_get_screen (GTK_WIDGET (tw->window));
+    colormap = gdk_screen_get_rgba_colormap (screen);
+    if (colormap != NULL && gdk_screen_is_composited (screen))
+	{
+		/* Set RGBA colormap if possible so VTE can use real alpha
+		 * channels for transparency. */
+
+		gtk_widget_set_colormap(GTK_WIDGET (tw->window), colormap);
+		tw->have_argb_visual = TRUE;
+	}
+	else
+	{
+		tw->have_argb_visual = FALSE;
+	}
+}
+
 /**
  * Get a pointer to the config file name for this instance.
  *
@@ -290,6 +312,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    initialize_alpha_mode (tw);
     gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
     g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(deleted_and_quit), tw->window);
 

@@ -39,6 +39,7 @@ struct tilda_window_
     gchar *config_file;
     gboolean config_writing_disabled;
     gint instance;
+    gboolean have_argb_visual;
 
     /* Stores all configuration */
     cfg_t *tc;

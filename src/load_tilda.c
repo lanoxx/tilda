@@ -142,11 +142,8 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     if (cfg_getbool (tw->tc, "enable_transparency") && transparency_level > 0)
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
-        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), TRUE);
-    }
-    else
-    {
-        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), FALSE);
+        vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
+        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), !tw->have_argb_visual);
     }
 
     vte_terminal_set_background_tint_color (VTE_TERMINAL(tt->vte_term), &tint);
