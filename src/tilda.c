@@ -75,15 +75,11 @@ static gint getnextinstance (tilda_window *tw)
     gchar *name;
     gchar **tokens;
     gchar *lock_subdir = "/.tilda/locks";
-    gchar *file_name;
-    gchar *command;
     gint lock_dir_size = 0;
     gint count = 0;
-	gint file_name_size;
-	gint command_size;
-	gchar path[PATH_MAX];
-	FILE *fp;
-
+    gint current = 0;
+    gint tmp = 0;
+    GDir *dir;
 
     /* Figure out the size of the lock_dir variable. Make sure to
      * account for the null-terminator at the end of the string. */
@@ -95,43 +91,31 @@ static gint getnextinstance (tilda_window *tw)
 
     /* Get the lock directory for this user, and open the directory */
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
+    dir = g_dir_open (lock_dir, 0, NULL);
 
-    while (1)
-	{
-		file_name_size = lock_dir_size + 12;
-		command_size = file_name_size + 14;
-		
-		if (count > 9999)
-			print_and_exit ("TOO MANY TILDA's. I'm lazy, only allow 10000 of these things. Are you insane?!", 1);			
-		
-		if ((file_name = (gchar*) malloc (file_name_size * sizeof(gchar))) == NULL)
-        	print_and_exit ("You ran out of memory... exiting!", 1);
-        
-        if ((command = (gchar*) malloc (command_size * sizeof(gchar))) == NULL)
+    while (dir != NULL && (name = (gchar*)g_dir_read_name (dir)))
+    {
+        tokens = g_strsplit (name, "_", 3);
+
+        if (tokens != NULL)
         {
-        	print_and_exit ("You ran out of memory... exiting!", 1);
+            current = atoi (tokens[2]);
+            g_strfreev (tokens);
+
+            if (current - tmp > 1) {
+                count = tmp + 1;
+                break;
+            }
+
+            count++;
+
+            tmp = current;
         }
-        	        	
-		g_snprintf (file_name, file_name_size, "%s/lock_*_%i", lock_dir, count);			
-		g_snprintf (command, command_size, "ls %s 2> /dev/null", file_name);
-		
-		fp = popen(command, "r");  																				
-  		
-		free (file_name);
-		free (command);
-  		
-  		if (fp == NULL)
-    		print_and_exit ("popen failed, exiting!", 1);
-		
-  		if (fgets(path, PATH_MAX, fp) == NULL) {
-  			pclose(fp);
-    		break;
-  		}
-  		
-		pclose(fp);
-		
-		count++;
-	}	
+    }
+
+    /* Free memory that we allocated */
+    if (dir != NULL)
+        g_dir_close (dir);
 
     free (lock_dir);
 
