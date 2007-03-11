@@ -29,9 +29,12 @@ echo
 echo "Generating configuration files for tilda, please wait..."
 echo;
 
-aclocal $ACLOCAL_FLAGS || exit;
-autoheader || exit;
-automake --add-missing --copy;
-autoconf || exit;
-automake || exit;
+# Gettext
+autopoint --force || exit;
+
+# "Normal" Autoconf
+aclocal -I m4 || exit;
+autoconf --force || exit;
+autoheader --force || exit;
+automake --add-missing --force-missing || exit;
 

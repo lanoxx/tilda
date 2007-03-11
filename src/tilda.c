@@ -734,7 +734,7 @@ int main (int argc, char **argv)
         oom_exit ();
     }
 
-#if HAVE_LIBINTL_H
+#if ENABLE_NLS
     /* Gettext Initialization */
     setlocale (LC_ALL, "");
     bindtextdomain (PACKAGE, LOCALEDIR);

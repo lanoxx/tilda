@@ -3,7 +3,7 @@
 
 AUTOMAKE_OPTIONS = gnu
 
-SUBDIRS = src
+SUBDIRS = po m4 src
 
 MAINTAINER_CLEAN_FILES = Makefile \
 		src/Makefile \
@@ -20,3 +20,5 @@ Applications_DATA = tilda.desktop
 
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
+
+ACLOCAL_AMFLAGS = -I m4

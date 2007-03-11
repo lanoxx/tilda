@@ -3,10 +3,13 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([tilda], [0.09.4], [sloutri@iit.edu])
-AM_INIT_AUTOMAKE
+AC_INIT([tilda], [0.9.5pre], [sloutri@iit.edu])
+AM_INIT_AUTOMAKE([tilda], [0.9.5pre])
 AC_CONFIG_SRCDIR([src/tilda.c])
 AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
+
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.16.1])
 
 # Add optional debugging features
 AC_ARG_ENABLE([maintainer-flags],
@@ -43,19 +46,11 @@ PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
 PKG_CHECK_MODULES([VTE], [vte])
 PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 
-dnl uncomment following lines to add gettext support
-dnl GETTEXT_PACKAGE=tilda
-dnl AC_SUBST(GETTEXT_PACKAGE)
-dnl AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
-
-dnl Add the languages which your application supports here.
-dnl ALL_LINGUAS=""
-dnl AM_GLIB_GNU_GETTEXT
-
 # Checks for header files.
 AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
+AC_CHECK_HEADERS([libintl.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -67,14 +62,8 @@ AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
-LIBS="$LIBS"
-
-# Figure out the prefix we are installing in, so we can install icons in the
-# correct place. There is probably an easier way to do this, but this is almost
-# exactly what is recommended in the GNU Autoconf Standards.
-# See: http://www.gnu.org/software/autoconf/manual/autoconf-2.60/html_node/Defining-Directories.html
-CPPFLAGS="$CPPFLAGS -DDATADIR='\"$datadir\"'"
-
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+                 m4/Makefile
+                 po/Makefile.in])
 AC_OUTPUT

@@ -22,8 +22,11 @@ G_BEGIN_DECLS
 #include <tilda-config.h>
 
 /* Things for translations */
-#if HAVE_LIBINTL_H
-	#include <libintl.h>
+#if ENABLE_NLS
+	#if HAVE_LIBINTL_H
+		#include <libintl.h>
+	#endif
+
 	#define _(STR) gettext(STR)
 #else
 	#define _(STR) STR

@@ -3,6 +3,11 @@
 
 AUTOMAKE_OPTIONS = gnu
 
+# Define a C macro LOCALEDIR indicating where catalogs 
+# will be installed.
+#localedir = $(datadir)/locale
+DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(datadir)\" @DEFS@
+
 bin_PROGRAMS = tilda
 
 tilda_SOURCES = tilda_window.c \
@@ -30,7 +35,8 @@ tilda_LDADD = $(AM_LDADD) \
 		$(GTK_LIBS) \
 		$(GTHREAD_LIBS) \
 		$(VTE_LIBS) \
-		$(LIBCONFUSE_LIBS)
+		$(LIBCONFUSE_LIBS) \
+		$(LTLIBINTL)
 
 maintainer-clean-generic:
 	-rm Makefile.in

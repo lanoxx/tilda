@@ -1,0 +1,14 @@
+How to do a new translation:
+cd po
+msginit -l it_IT         # (for italian; creates it.po)
+
+# ... do the translation in your editor of choice ...
+
+# add your translation to the LINGUAS file, without the .po
+# extension.
+#
+# That would be "it" for the above examples
+
+make update-po
+make update-gmo
+

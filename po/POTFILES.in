@@ -1,0 +1,10 @@
+# List of source files which contain translatable strings.
+
+src/callback_func.c
+src/key_grabber.c
+src/load_tilda.c 
+src/tilda.c
+src/tilda_window.c
+src/wizard.c
+src/xerror.c
+
