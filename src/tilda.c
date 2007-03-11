@@ -52,7 +52,7 @@
  * @param message the message to print
  * @param exitval the value to call exit with
  */
-void print_and_exit (gchar *message, gint exitval)
+void print_and_exit (const gchar *message, gint exitval)
 {
     DEBUG_FUNCTION ("print_and_exit");
     DEBUG_ASSERT (message != NULL);
@@ -76,7 +76,7 @@ static gint getnextinstance (tilda_window *tw)
     gchar *lock_dir;
     gchar *name;
     gchar **tokens;
-    gchar *lock_subdir = "/.tilda/locks";
+    const gchar lock_subdir[] = "/.tilda/locks";
     gint lock_dir_size = 0;
     gint count = 0;
     gint current = 0;
@@ -146,7 +146,7 @@ void getinstance (tilda_window *tw)
 
     gchar pid[6];
     gchar instance[6];
-    gchar *lock_subdir = "/.tilda/locks";
+    const gchar lock_subdir[] = "/.tilda/locks";
     gint lock_file_size = 0;
 
     /* Get the number of existing locks */
@@ -186,7 +186,7 @@ void getinstance (tilda_window *tw)
  * @param lock_pid the pid of the lock file (if it was valid)
  * @return TRUE if this is a lockfile, FALSE otherwise
  */
-static gboolean islockfile (gchar *filename, gint *lock_pid)
+static gboolean islockfile (const gchar *filename, gint *lock_pid)
 {
     DEBUG_FUNCTION ("islockfile");
     DEBUG_ASSERT (filename != NULL);
@@ -229,7 +229,7 @@ static void clean_tmp (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     FILE *ptr;
-    const gchar *cmd = "ps -C tilda -o pid=";
+    const gchar cmd[] = "ps -C tilda -o pid=";
     gchar buf[16]; /* Really shouldn't need more than 6 */
     gint i;
 
@@ -262,7 +262,7 @@ static void clean_tmp (tilda_window *tw)
     }
 
     gchar *lock_dir;
-    gchar *lock_subdir = "/.tilda/locks";
+    const gchar lock_subdir[] = "/.tilda/locks";
     gchar *remove_file;
     gchar *filename;
     GDir *dir;
