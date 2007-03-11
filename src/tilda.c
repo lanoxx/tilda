@@ -662,7 +662,8 @@ static void try_to_update_config_file (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->tc != NULL);
 
-    gchar *current_config = cfg_getstr (tw->tc, "tilda_config_version");
+    gboolean changed = FALSE;
+    gchar *current_config = strdup (cfg_getstr (tw->tc, "tilda_config_version"));
 
     if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)
         return; // Same version as ourselves, we're done!
@@ -690,6 +691,7 @@ static void try_to_update_config_file (tilda_window *tw)
     {
         // TODO: Add things here to migrate from whatever we are to YOUR_VERSION
         current_config = YOUR_VERSION;
+        changed = TRUE;
     }
 #endif
 
@@ -699,6 +701,7 @@ static void try_to_update_config_file (tilda_window *tw)
          * need to rewrite the config file here, since the writer at the end
          * will automatically add the default value of the new option. */
         current_config = "0.09.4";
+        changed = TRUE;
     }
 
     /* We've run through all the updates, so set our config file version to the
@@ -708,8 +711,11 @@ static void try_to_update_config_file (tilda_window *tw)
      * logic above.
      */
 
-    cfg_setstr (tw->tc, "tilda_config_version", current_config);
-    write_config_file (tw);
+    if (changed)
+    {
+        cfg_setstr (tw->tc, "tilda_config_version", current_config);
+        write_config_file (tw);
+    }
 }
 
 int main (int argc, char **argv)
