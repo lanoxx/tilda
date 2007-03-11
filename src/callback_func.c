@@ -1,3 +1,5 @@
+/* vim: set ts=4 sts=4 sw=4 noexpandtab nowrap : */
+
 /*
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by
@@ -21,6 +23,7 @@
 #include <tilda_terminal.h>
 #include <wizard.h>
 #include <callback_func.h>
+#include <translation.h>
 
 #include <glib.h>
 #include <glib/gstdio.h> /* for g_remove */
@@ -33,16 +36,17 @@ static void paste (gpointer data, guint callback_action, GtkWidget *w);
 static void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
 static void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
+
 static GtkItemFactoryEntry menu_items[] = {
-    { "/_New Tab", "<Ctrl><Shift>T", add_tab_menu_call,     0, "<Item>",      NULL                  },
-    { "/_Close Tab",      NULL,      close_tab,             0, "<Item>",      NULL                  },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
-    { "/_Copy",    "<Ctrl><Shift>C",      copy,                  0, "<Item>", NULL        },
-    { "/_Paste",   "<Ctrl><Shift>V",      paste,                 0, "<Item>", NULL       },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
-    { "/_Preferences...", NULL,      config_and_update,     0, "<StockItem>", GTK_STOCK_PREFERENCES },
-    { "/sep1",            NULL,      NULL,                  0, "<Separator>", NULL                  },
-    { "/_Quit",         "<Ctrl>Q",   menu_quit,             0, "<StockItem>", GTK_STOCK_QUIT        }
+    { _("/_New Tab"),		"<Ctrl><Shift>T",	add_tab_menu_call,	0, "<Item>",		NULL					},
+    { _("/_Close Tab"),		NULL,				close_tab,			0, "<Item>",		NULL					},
+    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+    { _("/_Copy"),			"<Ctrl><Shift>C",	copy,				0, "<Item>",		NULL					},
+    { _("/_Paste"),			"<Ctrl><Shift>V",	paste,				0, "<Item>",		NULL					},
+    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+    { _("/_Preferences..."),NULL,				config_and_update,	0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
+    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+    { _("/_Quit"),			"<Ctrl>Q",			menu_quit,			0, "<StockItem>",	GTK_STOCK_QUIT			}
 };
 
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -66,7 +70,7 @@ static void free_and_remove (tilda_window *tw)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Error removing lock file");
-        fprintf (stderr, "Error removing lock file: %s\n", tw->lock_file);
+        fprintf (stderr, _("Error removing lock file: %s\n"), tw->lock_file);
     }
 
     for (i=0; i<g_list_length(tw->terms); i++)

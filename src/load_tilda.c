@@ -21,6 +21,7 @@
 #include <callback_func.h>
 #include <key_grabber.h>
 #include <tilda.h>
+#include <translation.h>
 
 #include <gtk/gtk.h>
 #include <vte/vte.h>
@@ -219,7 +220,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
         default:
             DEBUG_ERROR ("Tab position");
-            fprintf (stderr, "Bad tab_pos, not changing\n");
+            fprintf (stderr, _("Bad tab_pos, not changing\n"));
             break;
     }
 

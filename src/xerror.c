@@ -22,6 +22,7 @@
 
 #include <xerror.h>
 #include <debug.h>
+#include <translation.h>
 
 #include <glib.h>
 #include <X11/Xlib.h>
@@ -44,7 +45,7 @@ gint xerror_handler(Display *d, XErrorEvent *e)
             if (e->error_code == BadWindow)
                 /*g_warning("X Error: %s", errtxt)*/;
             else
-                g_error("X Error: %s", errtxt);
+                g_error(_("X Error: %s"), errtxt);
         }
     }
 #else

@@ -23,6 +23,7 @@
 #include <key_grabber.h> /* for pull */
 #include <wizard.h>
 #include <xerror.h>
+#include <translation.h>
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -62,6 +63,18 @@ void print_and_exit (const gchar *message, gint exitval)
 }
 
 /**
+ * Exit on OOM condition.
+ *
+ * Always terminates with EXIT_FAILURE.
+ */
+void oom_exit ()
+{
+	DEBUG_FUNCTION ("oom_exit");
+
+	print_and_exit (_("Out of memory, exiting ..."), EXIT_FAILURE);
+}
+
+/**
  * Get the next instance number to use
  *
  * @param tw the tilda_window structure for this instance
@@ -93,7 +106,7 @@ static gint getnextinstance (tilda_window *tw)
 
     /* Make sure our allocation did not fail */
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        print_and_exit ("You ran out of memory... exiting!", EXIT_FAILURE);
+        oom_exit ();
 
     /* Get the lock directory for this user, and open the directory */
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
@@ -163,7 +176,7 @@ void getinstance (tilda_window *tw)
                    + strlen (instance) + 1;
 
     if ((tw->lock_file = (gchar*) malloc (lock_file_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+        oom_exit ();
 
     /* Make the ~/.tilda/locks directory */
     g_snprintf (tw->lock_file, lock_file_size, "%s%s", tw->home_dir, lock_subdir);
@@ -238,7 +251,7 @@ static void clean_tmp (tilda_window *tw)
 
     /* Allocate just one pid, for now */
     if ((running_pids = (gint*) malloc (1 * sizeof(gint))) == NULL)
-        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+        oom_exit ();
 
     /* Get all running tilda pids, and store them in an array */
     if ((ptr = popen (cmd, "r")) != NULL)
@@ -254,7 +267,7 @@ static void clean_tmp (tilda_window *tw)
 
                 /* Allocate space for the next pid */
                 if ((running_pids = (gint*) realloc (running_pids, (num_pids+1) * sizeof(gint))) == NULL)
-                    print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+                    oom_exit ();
             }
         }
 
@@ -274,7 +287,7 @@ static void clean_tmp (tilda_window *tw)
     lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
 
     if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+        oom_exit ();
 
     g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
     dir = g_dir_open (lock_dir, 0, NULL);
@@ -298,7 +311,7 @@ static void clean_tmp (tilda_window *tw)
                 remove_file_size = strlen (lock_dir) + strlen (filename) + 2;
 
                 if ((remove_file = (gchar*) malloc (remove_file_size * sizeof(gchar))) == NULL)
-                    print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+                    oom_exit ();
 
                 g_snprintf (remove_file, remove_file_size, "%s/%s", lock_dir, filename);
                 g_remove (remove_file);
@@ -354,20 +367,20 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
-        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         "Use Antialiased Fonts", NULL },
-        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  "Set the background color", NULL },
-        { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           "Run a command at startup", NULL },
-        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            "Start Tilda hidden", NULL },
-        { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              "Set the font to the following string", NULL },
-        { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             "Scrollback Lines", NULL },
-        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         "Use Scrollbar", NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      "Opaqueness: 0-100%", NULL },
-        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           "Print the version, then exit", NULL },
-        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       "Set Initial Working Directory", NULL },
-        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             "X Position", NULL },
-        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             "Y Position", NULL },
-        { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             "Set Background Image", NULL },
-        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       "Show Configuration Wizard", NULL },
+        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         _("Use Antialiased Fonts"), NULL },
+        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  _("Set the background color"), NULL },
+        { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           _("Run a command at startup"), NULL },
+        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            _("Start Tilda hidden"), NULL },
+        { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              _("Set the font to the following string"), NULL },
+        { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             _("Scrollback Lines"), NULL },
+        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         _("Use Scrollbar"), NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      _("Opaqueness: 0-100%"), NULL },
+        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           _("Print the version, then exit"), NULL },
+        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       _("Set Initial Working Directory"), NULL },
+        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             _("X Position"), NULL },
+        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             _("Y Position"), NULL },
+        { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             _("Set Background Image"), NULL },
+        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       _("Show Configuration Wizard"), NULL },
         { NULL }
     };
 
@@ -387,9 +400,8 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
     {
-        fprintf (stderr, "Error parsing command-line options. Try \"tilda --help\"\n"
-                         "to see all possible options.\n\n"
-                         "Error message: %s\n", error->message);
+        const char msg[] = _("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n");
+        fprintf (stderr, msg, error->message);
 
         exit (EXIT_FAILURE);
     }
@@ -482,7 +494,7 @@ int get_display_dimension (int dimension)
         /* We can't just exit, so print a message and don't attempt to
          * do anything since we won't know what to do! */
         DEBUG_ERROR ("Cannot open dislay");
-        fprintf (stderr, "Can't open display %s\n", XDisplayName(display_name));
+        fprintf (stderr, _("Can't open display %s\n"), XDisplayName(display_name));
         return -1;
     }
 
@@ -495,7 +507,7 @@ int get_display_dimension (int dimension)
         /* We can't just exit, so print a message and don't attempt to
          * do anything since we don't know what to do. */
         DEBUG_ERROR ("Cannot get screen info");
-        fprintf (stderr, "Can't get screen info\n");
+        fprintf (stderr, _("Can't get screen info\n"));
     }
 
     sizes = XRRConfigSizes(sc, &nsize);
@@ -560,7 +572,7 @@ int write_config_file (tilda_window *tw)
             TILDA_PERROR ();
             DEBUG_ERROR ("Unable to sync file");
 
-            fprintf (stderr, "Unable to sync the config file to disk\n");
+            fprintf (stderr, _("Unable to sync the config file to disk\n"));
         }
 
         if (fclose (fp))
@@ -568,7 +580,7 @@ int write_config_file (tilda_window *tw)
             // An error occurred
             TILDA_PERROR ();
             DEBUG_ERROR ("Unable to close config file");
-            fprintf (stderr, "Unable to close the config file\n");
+            fprintf (stderr, _("Unable to close the config file\n"));
         }
 
     }
@@ -576,7 +588,7 @@ int write_config_file (tilda_window *tw)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Unable to write config file");
-        fprintf (stderr, "Unable to write the config file to %s\n", tw->config_file);
+        fprintf (stderr, _("Unable to write the config file to %s\n"), tw->config_file);
     }
 
     return 0;
@@ -719,8 +731,15 @@ int main (int argc, char **argv)
         DEBUG_ASSERT (tw != NULL);
         DEBUG_ASSERT (tt != NULL);
 
-        print_and_exit ("You ran out of memory... exiting", EXIT_FAILURE);
+        oom_exit ();
     }
+
+#if HAVE_LIBINTL_H
+    /* Gettext Initialization */
+    setlocale (LC_ALL, "");
+    bindtextdomain (PACKAGE, LOCALEDIR);
+    textdomain (PACKAGE);
+#endif
 
     /* Get the user's home directory */
     tw->home_dir = g_strdup(g_get_home_dir ());

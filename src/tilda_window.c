@@ -22,6 +22,7 @@
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <key_grabber.h>
+#include <translation.h>
 
 #include <confuse.h>
 #include <stdio.h>
@@ -133,7 +134,7 @@ static gchar* get_config_file_name (tilda_window *tw)
 
     gchar *config_file;
     gchar instance_str[6];
-    gchar *config_prefix = "/.tilda/config_";
+    const gchar config_prefix[] = "/.tilda/config_";
     gint config_file_size = 0;
 
     /* Get a string form of the instance */
@@ -144,7 +145,7 @@ static gchar* get_config_file_name (tilda_window *tw)
 
     /* Allocate the config_file variable */
     if ((config_file = (gchar*) malloc (config_file_size * sizeof(gchar))) == NULL)
-        print_and_exit ("Out of memory, exiting...", EXIT_FAILURE);
+        print_and_exit (_("Out of memory, exiting ..."), EXIT_FAILURE);
 
     /* Store the config file name in the allocated space */
     g_snprintf (config_file, config_file_size, "%s%s%s", tw->home_dir, config_prefix, instance_str);
@@ -192,7 +193,7 @@ void add_tab (tilda_window *tw)
     if (tt == NULL)
     {
         TILDA_PERROR ();
-        fprintf (stderr, "Out of memory, cannot create tab\n");
+        fprintf (stderr, _("Out of memory, cannot create tab\n"));
         return;
     }
 
@@ -340,7 +341,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
             break;
         default:
             DEBUG_ERROR ("Tab position");
-            fprintf (stderr, "Bad tab_pos, not changing anything...\n");
+            fprintf (stderr, _("Bad tab_pos, not changing anything...\n"));
             break;
     }
 
@@ -422,7 +423,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Cannot open window icon");
-        fprintf (stderr, "Unable to set tilda's icon: %s\n", window_icon_file);
+        fprintf (stderr, _("Unable to set tilda's icon: %s\n"), window_icon_file);
     }
     else
     {
@@ -436,7 +437,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Could not create thread");
-        fprintf (stderr, "Unable to create window thread\n");
+        fprintf (stderr, _("Unable to create window thread\n"));
         exit (2);
     }
 

@@ -23,6 +23,7 @@
 #include <key_grabber.h>
 #include <tilda.h>
 #include <xerror.h>
+#include <translation.h>
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
@@ -219,8 +220,8 @@ static int parse_key (tilda_window *tw, gchar *key_str, KeySym *key_ret)
     if (key == NoSymbol)
     {
         /* Use default */
-        fprintf (stderr, "Bad key: \"%s\" not recognized. Using default of F%d "
-                         " (leaving your modifiers as-is).\n", key_ptr, tw->instance+1);
+        const char msg[] = _("Bad key: \"%s\" not recognized. Using default of F%d (leaving your modifiers unmodified)\n");
+        fprintf (stderr, msg, key_ptr, tw->instance+1);
         g_snprintf (tmp_key, sizeof(tmp_key), "F%d", tw->instance+1);
 
         /* Re-parse the default key */
@@ -343,7 +344,7 @@ gint key_grab (tilda_window *tw)
         xerror_occurred = FALSE;
 
         /* An error occurred, so we need to BE NOISY */
-        fprintf (stderr, "Error: key grabbing failed!\n");
+        fprintf (stderr, _("Error: key grabbing failed!\n"));
         key_ungrab (tw); /* Try to ungrab the keys */
 
         /* TODO: call the wizard ??? */
@@ -407,7 +408,7 @@ gint key_ungrab (tilda_window *tw)
         xerror_occurred = FALSE;
 
         /* FIXME: Be NOISY */
-        fprintf (stderr, "Error: key ungrabbing failed!\n");
+        fprintf (stderr, _("Error: key ungrabbing failed!\n"));
         return 1;
     }
 
@@ -425,7 +426,7 @@ void *wait_for_signal (tilda_window *tw)
     if (!(dpy = XOpenDisplay(NULL)))
     {
         DEBUG_ERROR ("Cannot open display");
-        fprintf (stderr, "Cannot open Display %s", XDisplayName(NULL));
+        fprintf (stderr, _("Cannot open Display %s"), XDisplayName(NULL));
         exit (EXIT_FAILURE);
     }
 
