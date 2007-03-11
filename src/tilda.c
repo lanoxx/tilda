@@ -400,7 +400,7 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
     {
-        const char msg[] = _("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n");
+        const char *msg = _("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n");
         fprintf (stderr, msg, error->message);
 
         exit (EXIT_FAILURE);

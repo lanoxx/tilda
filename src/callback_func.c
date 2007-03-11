@@ -37,20 +37,6 @@ static void config_and_update (gpointer data, guint callback_action, GtkWidget *
 static void menu_quit (gpointer data, guint callback_action, GtkWidget *w);
 
 
-static GtkItemFactoryEntry menu_items[] = {
-    { _("/_New Tab"),		"<Ctrl><Shift>T",	add_tab_menu_call,	0, "<Item>",		NULL					},
-    { _("/_Close Tab"),		NULL,				close_tab,			0, "<Item>",		NULL					},
-    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-    { _("/_Copy"),			"<Ctrl><Shift>C",	copy,				0, "<Item>",		NULL					},
-    { _("/_Paste"),			"<Ctrl><Shift>V",	paste,				0, "<Item>",		NULL					},
-    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-    { _("/_Preferences..."),NULL,				config_and_update,	0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
-    { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-    { _("/_Quit"),			"<Ctrl>Q",			menu_quit,			0, "<StockItem>",	GTK_STOCK_QUIT			}
-};
-
-static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
-
 void clean_up_no_args ()
 {
     DEBUG_FUNCTION ("clean_up_no_args");
@@ -415,6 +401,20 @@ static void popup_menu (tilda_collect *tc)
 
     GtkItemFactory *item_factory;
     GtkWidget *menu;
+
+    const GtkItemFactoryEntry menu_items[] = {
+        { _("/_New Tab"),		"<Ctrl><Shift>T",	add_tab_menu_call,	0, "<Item>",		NULL					},
+        { _("/_Close Tab"),		NULL,				close_tab,			0, "<Item>",		NULL					},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Copy"),			"<Ctrl><Shift>C",	copy,				0, "<Item>",		NULL					},
+        { _("/_Paste"),			"<Ctrl><Shift>V",	paste,				0, "<Item>",		NULL					},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Preferences..."),NULL,				config_and_update,	0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Quit"),			"<Ctrl>Q",			menu_quit,			0, "<StockItem>",	GTK_STOCK_QUIT			}
+    };
+
+    const gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
     item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", NULL);
     gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, tc);

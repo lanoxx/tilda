@@ -220,7 +220,7 @@ static int parse_key (tilda_window *tw, gchar *key_str, KeySym *key_ret)
     if (key == NoSymbol)
     {
         /* Use default */
-        const char msg[] = _("Bad key: \"%s\" not recognized. Using default of F%d (leaving your modifiers unmodified)\n");
+        const char *msg = _("Bad key: \"%s\" not recognized. Using default of F%d (leaving your modifiers unmodified)\n");
         fprintf (stderr, msg, key_ptr, tw->instance+1);
         g_snprintf (tmp_key, sizeof(tmp_key), "F%d", tw->instance+1);
 
