@@ -30,6 +30,7 @@ extern void *wait_for_signal (tilda_window *tw);
 extern void generate_animation_positions (tilda_window *tw);
 
 /* Functions for grabbing keys */
+extern gint init_key_grabber ();
 extern gint key_grab (tilda_window *tw);
 extern gint key_ungrab (tilda_window *tw);
 

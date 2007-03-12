@@ -40,21 +40,19 @@ static Window root;
 static int screen;
 static KeySym key;
 
-static unsigned int display_width, display_height;
 
-/*
- * The slide positions are derived from FVMW sources, file fvmm/move_resize.c,
- * to there added by Greg J. Badros, gjb@cs.washington.edu
- */
-
-static float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
-/* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
-static gint posIV[4][16];
+static gint posIV[4][16]; /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
 
 void generate_animation_positions (struct tilda_window_ *tw)
 {
     DEBUG_FUNCTION ("generate_animation_positions");
     DEBUG_ASSERT (tw != NULL);
+
+    /*
+     * The slide positions are derived from FVWM sources, file fvwm/move_resize.c,
+     * to there added by Greg J. Badros, gjb@cs.washington.edu
+     */
+    const float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 
     gint i;
     gint last_pos_x = cfg_getint (tw->tc, "x_pos");
@@ -423,19 +421,6 @@ void *wait_for_signal (tilda_window *tw)
     KeySym grabbed_key;
     XEvent event;
 
-    if (!(dpy = XOpenDisplay(NULL)))
-    {
-        DEBUG_ERROR ("Cannot open display");
-        fprintf (stderr, _("Cannot open Display %s"), XDisplayName(NULL));
-        exit (EXIT_FAILURE);
-    }
-
-    screen = DefaultScreen(dpy);
-    root = RootWindow(dpy, screen);
-
-    display_width = DisplayWidth(dpy, screen);
-    display_height = DisplayHeight(dpy, screen);
-
     key_grab (tw);
 
     if (cfg_getbool (tw->tc, "hidden"))
@@ -471,4 +456,27 @@ void *wait_for_signal (tilda_window *tw)
 
     return 0;
 }
+
+/**
+ * Initialize the global variables needed by all of the key grabber stuff.
+ *
+ * We have global variables so that we don't have to keep creating connections
+ * to the X Server.
+ */
+gint init_key_grabber ()
+{
+    if (!(dpy = XOpenDisplay (NULL)))
+    {
+        DEBUG_ERROR ("Cannot open display");
+        fprintf (stderr, _("Cannot open Display %s"), XDisplayName (NULL));
+        exit (EXIT_FAILURE);
+    }
+
+    screen = DefaultScreen (dpy);
+    root = RootWindow (dpy, screen);
+
+    return 0; /* success */
+}
+
+/* vim: set ts=4 sts=4 sw=4 expandtab: */
 

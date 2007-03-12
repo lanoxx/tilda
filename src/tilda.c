@@ -747,6 +747,9 @@ int main (int argc, char **argv)
     textdomain (PACKAGE);
 #endif
 
+    /* Initialize the connection to the X server for the key grabbing code */
+    init_key_grabber ();
+
     /* Get the user's home directory */
     tw->home_dir = g_strdup(g_get_home_dir ());
 
