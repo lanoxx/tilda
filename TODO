@@ -26,3 +26,10 @@ coNP (irc) - the default key (F1) doesn't work on ubuntu, since it is already bo
 Is it possible to prompt for keybinding on first run of tilda, or perhaps check if the keybinding
 is already in use during the first run, and prompt only if it /is/ in use?
 
+Markus Nagler (irc) - Change "Animation Delay" to "Animation Duration"
+
+Markus Nagler (irc) - "Leaving modifiers unmodified" is unclear
+
+Markus Nagler (irc) - "Notebook" should be changed to "Window", probably
+
+Markus Nagler (irc) - "tab_pos" error msg (in a switch stmt) should be changed.
