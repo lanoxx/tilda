@@ -459,72 +459,36 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
         }
 }
 
-int get_display_dimension (int dimension)
+gint get_physical_height_pixels ()
+{
+    DEBUG_FUNCTION ("get_physical_height_pixels");
+
+    const GdkScreen *screen = gdk_screen_get_default ();
+
+    return gdk_screen_get_height (screen);
+}
+
+gint get_physical_width_pixels ()
+{
+    DEBUG_FUNCTION ("get_physical_width_pixels");
+
+    const GdkScreen *screen = gdk_screen_get_default ();
+
+    return gdk_screen_get_width (screen);
+}
+
+gint get_display_dimension (const gint dimension)
 {
     DEBUG_FUNCTION ("get_display_dimension");
     DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
 
-    Display                 *dpy;
-    XRRScreenSize           *sizes;
-    XRRScreenConfiguration  *sc;
-    Window                  root;
-    int                     nsize;
-    int                     screen = -1;
-    char                    *display_name = NULL;
-
-    static int height = -1;
-    static int width  = -1;
-
-/* Turn this on by default, if we need to turn if off for some people, we
- * should probably add a configure option, such as
- * --enable-cache-display-dimensions or something similar. */
-#define CACHE_DISPLAY_DIMENSIONS
-#ifdef CACHE_DISPLAY_DIMENSIONS
-    if (height != -1 && dimension == HEIGHT)
-        return height;
-
-    if (width != -1 && dimension == WIDTH)
-        return width;
-#endif
-
-    dpy = XOpenDisplay (display_name);
-
-    if (dpy == NULL)
-    {
-        /* We can't just exit, so print a message and don't attempt to
-         * do anything since we won't know what to do! */
-        DEBUG_ERROR ("Cannot open dislay");
-        fprintf (stderr, _("Can't open display %s\n"), XDisplayName(display_name));
-        return -1;
-    }
-
-    screen = DefaultScreen (dpy);
-    root = RootWindow (dpy, screen);
-    sc = XRRGetScreenInfo (dpy, root);
-
-    if (sc == NULL)
-    {
-        /* We can't just exit, so print a message and don't attempt to
-         * do anything since we don't know what to do. */
-        DEBUG_ERROR ("Cannot get screen info");
-        fprintf (stderr, _("Can't get screen info\n"));
-    }
-
-    sizes = XRRConfigSizes(sc, &nsize);
-
-    XRRFreeScreenConfigInfo(sc);
-    XCloseDisplay (dpy);
-
-    height = sizes->height;
-    width  = sizes->width;
-
     if (dimension == HEIGHT)
-        return height;
+        return get_physical_height_pixels ();
 
     if (dimension == WIDTH)
-        return width;
+        return get_physical_width_pixels ();
 
-    return -1; // bad choice
+    return -1;
 }
 
 /*
