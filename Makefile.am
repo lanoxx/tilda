@@ -21,4 +21,8 @@ Applications_DATA = tilda.desktop
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
+tilda.desktop: tilda.desktop.in
+	sed -e 's|\@BINDIR\@|$(bindir)|' \
+	    -e 's|\@PIXMAPSDIR\@|$(datadir)/applications|' $< > $@
+
 ACLOCAL_AMFLAGS = -I m4
