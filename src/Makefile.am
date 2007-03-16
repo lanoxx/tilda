@@ -17,7 +17,8 @@ tilda_SOURCES = tilda_window.c \
 		key_grabber.c \
 		load_tilda.c  \
 		tilda.c \
-		xerror.c
+		xerror.c \
+		configsys.c
 
 tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \

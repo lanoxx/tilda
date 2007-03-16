@@ -70,13 +70,13 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
     black.red = black.green = black.blue = 0x0000;
 
-    back.red   =    cfg_getint (tw->tc, "back_red");
-    back.green =    cfg_getint (tw->tc, "back_green");
-    back.blue  =    cfg_getint (tw->tc, "back_blue");
+    back.red   =    config_getint ("back_red");
+    back.green =    config_getint ("back_green");
+    back.blue  =    config_getint ("back_blue");
 
-    fore.red   =    cfg_getint (tw->tc, "text_red");
-    fore.green =    cfg_getint (tw->tc, "text_green");
-    fore.blue  =    cfg_getint (tw->tc, "text_blue");
+    fore.red   =    config_getint ("text_red");
+    fore.green =    config_getint ("text_green");
+    fore.blue  =    config_getint ("text_blue");
 
     highlight.red = highlight.green = highlight.blue = 0xc000;
     cursor.red = 0xffff;
@@ -84,22 +84,22 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     tint.red = tint.green = tint.blue = 0;
     tint = black;
 
-    transparency_level = ((gdouble) cfg_getint (tw->tc, "transparency"))/100;
+    transparency_level = ((gdouble) config_getint ("transparency"))/100;
 
     /* Set some defaults. */
-    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bell"));
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !cfg_getbool (tw->tc, "bell"));
-    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "blinks"));
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_background"));
-    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_on_output"));
-    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "scroll_on_key"));
+    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !config_getbool ("bell"));
+    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), config_getbool ("blinks"));
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_output"));
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_key"));
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE);
-    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), cfg_getbool (tw->tc, "bold"));
+    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
 
     /* Causes terminal to blink if TRUE for some people */
-    gtk_widget_set_double_buffered (tt->vte_term, cfg_getbool(tw->tc, "double_buffer"));
+    gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
 
-    switch (cfg_getint (tw->tc, "backspace_key"))
+    switch (config_getint ("backspace_key"))
     {
         case 0:
             vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -115,7 +115,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
 
-    switch (cfg_getint (tw->tc, "delete_key"))
+    switch (config_getint ("delete_key"))
     {
         case 0:
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -131,16 +131,16 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
 
-    bool_use_image = cfg_getbool (tw->tc, "use_image");
-    use_antialias = cfg_getbool (tw->tc, "antialias");
-    scroll = cfg_getbool (tw->tc, "scrollbar");
+    bool_use_image = config_getbool ("use_image");
+    use_antialias = config_getbool ("antialias");
+    scroll = config_getbool ("scrollbar");
 
     if (bool_use_image)
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "image"));
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), config_getstr ("image"));
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
-    if (cfg_getbool (tw->tc, "enable_transparency") && transparency_level > 0)
+    if (config_getbool ("enable_transparency") && transparency_level > 0)
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
         vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
@@ -157,9 +157,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "font"), antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr (antialias);
     else
-        vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), cfg_getstr (tw->tc, "font"));
+        vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), config_getstr ("font"));
 
     if (gtk_notebook_get_n_pages ((GtkNotebook *) tw->notebook) > 1)
     {
@@ -172,7 +172,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
 
-    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, cfg_getint (tw->tc, "scrollbar_pos"));
+    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, config_getint ("scrollbar_pos"));
 
     if (!from_main)
     {
@@ -189,10 +189,10 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
 
         refresh_window (tw->window, tw->window);
 
-        if (cfg_getbool (tw->tc, "pinned"))
+        if (config_getbool ("pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-        gtk_window_set_keep_above (GTK_WINDOW (tw->window), cfg_getbool (tw->tc, "above"));
+        gtk_window_set_keep_above (GTK_WINDOW (tw->window), config_getbool ("above"));
     }
     else
     {
@@ -202,9 +202,9 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             gtk_widget_hide (tt->scrollbar);
     }
 
-    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), cfg_getint (tw->tc, "lines"));
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getint ("lines"));
 
-    switch (cfg_getint (tw->tc, "tab_pos"))
+    switch (config_getint ("tab_pos"))
     {
         case 0:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
@@ -224,22 +224,22 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
             break;
     }
 
-    if (cfg_getbool (tw->tc, "centered_horizontally"))
-        cfg_setint (tw->tc, "x_pos", find_centering_coordinate (get_physical_width_pixels(), cfg_getint (tw->tc, "max_width")));
+    if (config_getbool ("centered_horizontally"))
+        config_setint (find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
 
-    if (cfg_getbool (tw->tc, "centered_vertically"))
-        cfg_setint (tw->tc, "y_pos", find_centering_coordinate (get_physical_height_pixels(), cfg_getint (tw->tc, "max_height")));
+    if (config_getbool ("centered_vertically"))
+        config_setint (find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
 
     /* redo animation positions */
     generate_animation_positions (tw);
 
-    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), cfg_getbool (tw->tc, "notaskbar"));
+    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), config_getbool ("notaskbar"));
 
-    gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
+    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
 
-    gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
+    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool (tw->tc, "notebook_border"));
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool ("notebook_border"));
 
     window_title_change_all (tw);
 

@@ -56,9 +56,9 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
 
     /* Causes terminal to blink if TRUE */
-    gtk_widget_set_double_buffered (tt->vte_term, cfg_getbool (tw->tc, "double_buffer"));
+    gtk_widget_set_double_buffered (tt->vte_term, config_getbool ("double_buffer"));
 
-    switch (cfg_getint (tw->tc, "scrollbar_pos"))
+    switch (config_getint ("scrollbar_pos"))
     {
         case 1: /* scrollbar on left */
             gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */

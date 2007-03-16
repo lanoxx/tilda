@@ -22,6 +22,7 @@
 #include <load_tilda.h>
 #include <key_grabber.h>
 #include <translation.h>
+#include <configsys.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -30,7 +31,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <confuse.h>
 
 /* INT_MAX */
 #include <limits.h>
@@ -278,12 +278,12 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.check_enable_double_buffering = gtk_check_button_new_with_label (_("Enable Double Buffering"));
 
     /* Get the current values */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces), cfg_getbool (tw->tc, "pinned"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_always_on_top), cfg_getbool (tw->tc, "above"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), cfg_getbool (tw->tc, "notaskbar"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), cfg_getbool (tw->tc, "hidden"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border), cfg_getbool (tw->tc, "notebook_border"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering), cfg_getbool (tw->tc, "double_buffer"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces), config_getbool ("pinned"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_always_on_top), config_getbool ("above"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar), config_getbool ("notaskbar"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden), config_getbool ("hidden"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border), config_getbool ("notebook_border"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering), config_getbool ("double_buffer"));
 
     /* Attach everything inside the frame */
     gtk_table_attach (GTK_TABLE(table_wdisplay), items.check_display_on_all_workspaces, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -303,8 +303,8 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.check_cursor_blinks = gtk_check_button_new_with_label (_("Cursor blinks"));
 
     /* Get the current values */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell), cfg_getbool (tw->tc, "bell"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks), cfg_getbool (tw->tc, "blinks"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell), config_getbool ("bell"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks), config_getbool ("blinks"));
 
     /* Attach everything inside the frame */
     gtk_table_attach (GTK_TABLE(table_tdisplay), items.check_terminal_bell, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -320,16 +320,16 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     items.check_enable_antialias = gtk_check_button_new_with_label (_("Enable anti-aliasing"));
     items.check_allow_bold_text = gtk_check_button_new_with_label (_("Allow bold text"));
     items.combo_tab_position = gtk_combo_box_new_text    ();
-    items.button_font = gtk_font_button_new_with_font (cfg_getstr(tw->tc, "font"));
+    items.button_font = gtk_font_button_new_with_font (config_getstr("font"));
 
     /* Get the current values */
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), _("Right"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), _("Left"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), _("Bottom"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_tab_position), _("Top"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_tab_position), cfg_getint (tw->tc, "tab_pos"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), cfg_getbool (tw->tc, "antialias"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text), cfg_getbool (tw->tc, "bold"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_tab_position), config_getint ("tab_pos"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias), config_getbool ("antialias"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text), config_getbool ("bold"));
 
     /* Attach everything to the table */
     gtk_table_attach (GTK_TABLE(table_font), items.check_enable_antialias, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -388,8 +388,8 @@ static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_dynamically_set_title), _("Isn't displayed"));
 
     /* Get the current values from the config file */
-    gtk_entry_set_text (GTK_ENTRY (items.entry_title), cfg_getstr (tw->tc, "title"));
-    gtk_combo_box_set_active   (GTK_COMBO_BOX(items.combo_dynamically_set_title), cfg_getint (tw->tc, "d_set_title"));
+    gtk_entry_set_text (GTK_ENTRY (items.entry_title), config_getstr ("title"));
+    gtk_combo_box_set_active   (GTK_COMBO_BOX(items.combo_dynamically_set_title), config_getint ("d_set_title"));
 
     /* Attach everything into the table inside the title frame */
     gtk_table_attach (GTK_TABLE(table_title), label_initial_title, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 4, 4);
@@ -411,10 +411,10 @@ static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_command_exit), _("Hold the terminal open"));
 
     /* Get the current values from the config file */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command), cfg_getbool (tw->tc, "run_command"));
-    gtk_entry_set_text (GTK_ENTRY (items.entry_custom_command), cfg_getstr (tw->tc, "command"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command), cfg_getbool (tw->tc, "run_command"));
-    gtk_combo_box_set_active   (GTK_COMBO_BOX(items.combo_command_exit), cfg_getint(tw->tc, "command_exit"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command), config_getbool ("run_command"));
+    gtk_entry_set_text (GTK_ENTRY (items.entry_custom_command), config_getstr ("command"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command), config_getbool ("run_command"));
+    gtk_combo_box_set_active   (GTK_COMBO_BOX(items.combo_command_exit), config_getint("command_exit"));
 
     /* Connect signals */
     g_signal_connect (GTK_WIDGET (items.check_run_custom_command), "clicked", GTK_SIGNAL_FUNC(toggle_check_run_custom_command), label_custom_command);
@@ -495,8 +495,8 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.spin_height_pixels = gtk_spin_button_new_with_range (0, get_physical_height_pixels(), 1);
 
     /* Get the current values */
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), cfg_getint (tw->tc, "max_height"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage_height (cfg_getint (tw->tc, "max_height")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_pixels), config_getint ("max_height"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_height_percentage), percentage_height (config_getint ("max_height")));
 
     /* Connect signals */
     items.cid_height_percentage = g_signal_connect (G_OBJECT(items.spin_height_percentage), "value-changed", G_CALLBACK(spin_height_percentage_changed), items.spin_height_pixels);
@@ -519,8 +519,8 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.spin_width_pixels = gtk_spin_button_new_with_range (0, get_physical_width_pixels(), 1);
 
     /* Get the current values */
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), cfg_getint (tw->tc, "max_width"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage_width (cfg_getint (tw->tc, "max_width")));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_pixels), config_getint ("max_width"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_width_percentage), percentage_width (config_getint ("max_width")));
 
     /* Connect signals */
     items.cid_width_percentage = g_signal_connect (G_OBJECT(items.spin_width_percentage), "value-changed", G_CALLBACK(spin_width_percentage_changed), items.spin_width_pixels);
@@ -545,10 +545,10 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     items.spin_y_position = gtk_spin_button_new_with_range (INT_MIN, INT_MAX, 1);
 
     /* Get the current values */
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position), cfg_getint (tw->tc, "x_pos"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position), cfg_getint (tw->tc, "y_pos"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), cfg_getbool (tw->tc, "centered_horizontally"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_vertically), cfg_getbool (tw->tc, "centered_vertically"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_x_position), config_getint ("x_pos"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_y_position), config_getint ("y_pos"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_horizontally), config_getbool ("centered_horizontally"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_centered_vertically), config_getbool ("centered_vertically"));
 
     /* Force callbacks for visibility */
     toggle_centered_horizontally (items.check_centered_horizontally, label_x_pos);
@@ -601,15 +601,15 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     g_signal_connect (GTK_WIDGET(items.check_animated_pulldown), "clicked", GTK_SIGNAL_FUNC(toggle_check_animated_pulldown2), label_orientation);
 
     /* Get the current values */
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_enable_transparency), cfg_getbool (tw->tc, "enable_transparency"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_level_of_transparency), cfg_getint (tw->tc, "transparency"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_animated_pulldown), cfg_getbool (tw->tc, "animation"));
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), cfg_getint (tw->tc, "slide_sleep_usec"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_orientation), cfg_getint (tw->tc, "animation_orientation"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), cfg_getbool (tw->tc, "use_image"));
-    if (cfg_getstr (tw->tc, "image") != NULL)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_enable_transparency), config_getbool ("enable_transparency"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_level_of_transparency), config_getint ("transparency"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_animated_pulldown), config_getbool ("animation"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON(items.spin_animation_delay), config_getint ("slide_sleep_usec"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_orientation), config_getint ("animation_orientation"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(items.check_use_image_for_background), config_getbool ("use_image"));
+    if (config_getstr ("image") != NULL)
         gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(items.chooser_background_image),
-                cfg_getstr (tw->tc, "image"));
+                config_getstr ("image"));
 
     /* Force callbacks for visibility purposes */
     toggle_check_enable_transparency (items.check_enable_transparency, label_level_of_transparency);
@@ -702,14 +702,14 @@ static GtkWidget* colors (tilda_window *tw, tilda_term *tt)
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_schemes), _("Black on White"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_schemes), _("Green on Black"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_schemes), _("Custom"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_schemes), cfg_getint (tw->tc, "scheme"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_schemes), config_getint ("scheme"));
 
-    text.red   =    cfg_getint (tw->tc, "text_red");
-    text.green =    cfg_getint (tw->tc, "text_green");
-    text.blue  =    cfg_getint (tw->tc, "text_blue");
-    back.red   =    cfg_getint (tw->tc, "back_red");
-    back.green =    cfg_getint (tw->tc, "back_green");
-    back.blue  =    cfg_getint (tw->tc, "back_blue");
+    text.red   =    config_getint ("text_red");
+    text.green =    config_getint ("text_green");
+    text.blue  =    config_getint ("text_blue");
+    back.red   =    config_getint ("back_red");
+    back.green =    config_getint ("back_green");
+    back.blue  =    config_getint ("back_blue");
 
     items.button_text_color = gtk_color_button_new_with_color (&text);
     items.button_background_color = gtk_color_button_new_with_color (&back);
@@ -752,7 +752,7 @@ static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     items.combo_scrollbar_position = gtk_combo_box_new_text ();
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), _("Right"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_scrollbar_position), _("Left"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_scrollbar_position), cfg_getint (tw->tc, "scrollbar_pos"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_scrollbar_position), config_getint ("scrollbar_pos"));
 
     label_scrollback = gtk_label_new(_("Scrollback:"));
     label_scroll_pos = gtk_label_new(_("Scrollbar is:"));
@@ -763,12 +763,12 @@ static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
 
     items.spin_scrollback_amount = gtk_spin_button_new_with_range (0, INT_MAX, 1);
 
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar), cfg_getbool (tw->tc, "scrollbar"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_keystroke), cfg_getbool (tw->tc, "scroll_on_key"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_background), cfg_getbool (tw->tc, "scroll_background"));
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_output), cfg_getbool (tw->tc, "scroll_on_output"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar), config_getbool ("scrollbar"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_keystroke), config_getbool ("scroll_on_key"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_background), config_getbool ("scroll_background"));
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_output), config_getbool ("scroll_on_output"));
 
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (items.spin_scrollback_amount), cfg_getint (tw->tc, "lines"));
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (items.spin_scrollback_amount), config_getint ("lines"));
 
     gtk_table_attach (GTK_TABLE (table), items.check_show_scrollbar, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
     gtk_table_attach (GTK_TABLE (table), items.check_scroll_on_keystroke, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 3, 3);
@@ -793,11 +793,11 @@ static void revert_default_compatability (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->tc != NULL);
 
-    cfg_setint (tw->tc, "backspace_key", 0);
-    cfg_setint (tw->tc, "delete_key", 1);
+    config_setint ("backspace_key", 0);
+    config_setint ("delete_key", 1);
 
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_backspace_key), cfg_getint (tw->tc, "backspace_key"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_delete_key), cfg_getint (tw->tc, "delete_key"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_backspace_key), config_getint ("backspace_key"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_delete_key), config_getint ("delete_key"));
 }
 
 static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
@@ -819,7 +819,7 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_backspace_key), _("Control-H"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_backspace_key), _("Escape Sequence"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_backspace_key), _("ASCII DEL"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_backspace_key), cfg_getint (tw->tc, "backspace_key"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_backspace_key), config_getint ("backspace_key"));
 
     label_delete = gtk_label_new (_("Delete key generates: "));
 
@@ -827,7 +827,7 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_delete_key), _("Control-H"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_delete_key), _("Escape Sequence"));
     gtk_combo_box_prepend_text (GTK_COMBO_BOX(items.combo_delete_key), _("ASCII DEL"));
-    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_delete_key), cfg_getint (tw->tc, "delete_key"));
+    gtk_combo_box_set_active (GTK_COMBO_BOX(items.combo_delete_key), config_getint ("delete_key"));
 
     items.button_revert_to_defaults = gtk_button_new_with_label (_("Revert to Defaults"));
     g_signal_connect_swapped (G_OBJECT (items.button_revert_to_defaults), "clicked",
@@ -921,16 +921,16 @@ static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     GtkWidget *label_warning;
     gchar s_temp[128];
 
-    if (!cfg_getstr (tw->tc, "key"))
+    if (!config_getstr ("key"))
     {
         g_snprintf (s_temp, sizeof(s_temp), "None+F%i", tw->instance+1);
-        cfg_setstr (tw->tc, "key", s_temp);
+        config_setstr ("key", s_temp);
     }
 
     table = gtk_table_new (3, 3, FALSE);
 
     items.entry_keybinding = gtk_entry_new ();
-    gtk_entry_set_text (GTK_ENTRY (items.entry_keybinding), cfg_getstr (tw->tc, "key"));
+    gtk_entry_set_text (GTK_ENTRY (items.entry_keybinding), config_getstr ("key"));
 
     label_key = gtk_label_new (_("Key Bindings"));
     label_warning = gtk_label_new (_("Note: You must restart Tilda for the change in\nkeybinding to take effect."));
@@ -967,59 +967,59 @@ static void apply_settings (tilda_window *tw)
         /* WTF do we do here ??? */
     }
 
-    cfg_setstr (tw->tc, "key", gtk_entry_get_text (GTK_ENTRY (items.entry_keybinding)));
-    cfg_setstr (tw->tc, "font", gtk_font_button_get_font_name (GTK_FONT_BUTTON (items.button_font)));
-    cfg_setstr (tw->tc, "title", gtk_entry_get_text (GTK_ENTRY (items.entry_title)));
-    cfg_setstr (tw->tc, "command", gtk_entry_get_text (GTK_ENTRY (items.entry_custom_command)));
-    cfg_setstr (tw->tc, "image", gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (items.chooser_background_image)));
+    config_setstr ("key", gtk_entry_get_text (GTK_ENTRY (items.entry_keybinding)));
+    config_setstr ("font", gtk_font_button_get_font_name (GTK_FONT_BUTTON (items.button_font)));
+    config_setstr ("title", gtk_entry_get_text (GTK_ENTRY (items.entry_title)));
+    config_setstr ("command", gtk_entry_get_text (GTK_ENTRY (items.entry_custom_command)));
+    config_setstr ("image", gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (items.chooser_background_image)));
 
-    cfg_setint (tw->tc, "max_height", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_height_pixels)));
-    cfg_setint (tw->tc, "max_width", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_width_pixels)));
-    cfg_setint (tw->tc, "lines", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_scrollback_amount)));
-    cfg_setint (tw->tc, "transparency", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_level_of_transparency)));
-    cfg_setint (tw->tc, "x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_x_position)));
-    cfg_setint (tw->tc, "y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_y_position)));
+    config_setint ("max_height", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_height_pixels)));
+    config_setint ("max_width", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_width_pixels)));
+    config_setint ("lines", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_scrollback_amount)));
+    config_setint ("transparency", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_level_of_transparency)));
+    config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_x_position)));
+    config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_y_position)));
 
-    cfg_setint (tw->tc, "tab_pos", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_tab_position)));
-    cfg_setint (tw->tc, "backspace_key", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_backspace_key)));
-    cfg_setint (tw->tc, "delete_key", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_delete_key)));
-    cfg_setint (tw->tc, "d_set_title", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_dynamically_set_title)));
-    cfg_setint (tw->tc, "command_exit", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_command_exit)));
-    cfg_setint (tw->tc, "scheme", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_schemes)));
-    cfg_setint (tw->tc, "scrollbar_pos", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_scrollbar_position)));
-    cfg_setint (tw->tc, "slide_sleep_usec", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_animation_delay)));
-    cfg_setint (tw->tc, "animation_orientation", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_orientation)));
+    config_setint ("tab_pos", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_tab_position)));
+    config_setint ("backspace_key", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_backspace_key)));
+    config_setint ("delete_key", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_delete_key)));
+    config_setint ("d_set_title", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_dynamically_set_title)));
+    config_setint ("command_exit", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_command_exit)));
+    config_setint ("scheme", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_schemes)));
+    config_setint ("scrollbar_pos", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_scrollbar_position)));
+    config_setint ("slide_sleep_usec", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (items.spin_animation_delay)));
+    config_setint ("animation_orientation", gtk_combo_box_get_active (GTK_COMBO_BOX(items.combo_orientation)));
 
     gtk_color_button_get_color (GTK_COLOR_BUTTON(items.button_text_color), &gdk_text_color);
     gtk_color_button_get_color (GTK_COLOR_BUTTON(items.button_background_color), &gdk_back_color);
 
-    cfg_setint (tw->tc, "text_red", gdk_text_color.red);
-    cfg_setint (tw->tc, "text_green", gdk_text_color.green);
-    cfg_setint (tw->tc, "text_blue", gdk_text_color.blue);
-    cfg_setint (tw->tc, "back_red", gdk_back_color.red);
-    cfg_setint (tw->tc, "back_green", gdk_back_color.green);
-    cfg_setint (tw->tc, "back_blue", gdk_back_color.blue);
+    config_setint ("text_red", gdk_text_color.red);
+    config_setint ("text_green", gdk_text_color.green);
+    config_setint ("text_blue", gdk_text_color.blue);
+    config_setint ("back_red", gdk_back_color.red);
+    config_setint ("back_green", gdk_back_color.green);
+    config_setint ("back_blue", gdk_back_color.blue);
 
-    cfg_setbool (tw->tc, "notaskbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar)));
-    cfg_setbool (tw->tc, "pinned", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces)));
-    cfg_setbool (tw->tc, "above", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_always_on_top)));
-    cfg_setbool (tw->tc, "antialias", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias)));
-    cfg_setbool (tw->tc, "scrollbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar)));
-    cfg_setbool (tw->tc, "use_image", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)));
-    cfg_setbool (tw->tc, "hidden", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden)));
-    cfg_setbool (tw->tc, "bold", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text)));
-    cfg_setbool (tw->tc, "blinks", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks)));
-    cfg_setbool (tw->tc, "bell", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell)));
-    cfg_setbool (tw->tc, "run_command", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command)));
-    cfg_setbool (tw->tc, "scroll_on_key", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_keystroke)));
-    cfg_setbool (tw->tc, "scroll_on_output", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_output)));
-    cfg_setbool (tw->tc, "scroll_background", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_background)));
-    cfg_setbool (tw->tc, "notebook_border", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border)));
-    cfg_setbool (tw->tc, "animation", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown)));
-    cfg_setbool (tw->tc, "centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
-    cfg_setbool (tw->tc, "centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
-    cfg_setbool (tw->tc, "enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
-    cfg_setbool (tw->tc, "double_buffer", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering)));
+    config_setbool ("notaskbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_do_not_show_in_taskbar)));
+    config_setbool ("pinned", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_display_on_all_workspaces)));
+    config_setbool ("above", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_always_on_top)));
+    config_setbool ("antialias", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_antialias)));
+    config_setbool ("scrollbar", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_scrollbar)));
+    config_setbool ("use_image", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_use_image_for_background)));
+    config_setbool ("hidden", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_start_tilda_hidden)));
+    config_setbool ("bold", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_allow_bold_text)));
+    config_setbool ("blinks", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_cursor_blinks)));
+    config_setbool ("bell", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_terminal_bell)));
+    config_setbool ("run_command", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_run_custom_command)));
+    config_setbool ("scroll_on_key", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_keystroke)));
+    config_setbool ("scroll_on_output", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_on_output)));
+    config_setbool ("scroll_background", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_scroll_background)));
+    config_setbool ("notebook_border", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_show_notebook_border)));
+    config_setbool ("animation", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_animated_pulldown)));
+    config_setbool ("centered_horizontally", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_horizontally)));
+    config_setbool ("centered_vertically", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_centered_vertically)));
+    config_setbool ("enable_transparency", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_transparency)));
+    config_setbool ("double_buffer", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (items.check_enable_double_buffering)));
 
     generate_animation_positions (tw);
     error = key_grab (tw);

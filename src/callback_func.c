@@ -137,15 +137,15 @@ void start_program (tilda_collect *collect)
     int argc;
     char **argv;
 
-    if (!cfg_getbool (collect->tw->tc, "run_command"))
+    if (!config_getbool ("run_command"))
     {
         /* Do nothing here, we'll get taken care of later */
     }
-    else if (g_shell_parse_argv (cfg_getstr (collect->tw->tc, "command"), &argc, &argv, NULL))
+    else if (g_shell_parse_argv (config_getstr ("command"), &argc, &argv, NULL))
     {
         vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
             argv[0], argv, NULL,
-            cfg_getstr (collect->tw->tc, "working_dir"),
+            config_getstr ("working_dir"),
             TRUE, TRUE, TRUE);
 
         g_strfreev (argv);
@@ -165,7 +165,7 @@ void start_program (tilda_collect *collect)
 
     vte_terminal_fork_command (VTE_TERMINAL(collect->tt->vte_term),
         command, NULL, NULL,
-        cfg_getstr (collect->tw->tc, "working_dir"),
+        config_getstr ("working_dir"),
         TRUE, TRUE, TRUE);
 }
 
@@ -177,9 +177,9 @@ void close_tab_on_exit (GtkWidget *widget, gpointer data)
 
     tilda_collect *collect = (tilda_collect *) data;
 
-    if (cfg_getbool (collect->tw->tc, "run_command"))
+    if (config_getbool ("run_command"))
     {
-        switch (cfg_getint (collect->tw->tc, "command_exit"))
+        switch (config_getint ("command_exit"))
         {
             case 2:
                 close_tab (data, 0, widget);
@@ -213,9 +213,9 @@ char* get_window_title (GtkWidget *widget, tilda_window *tw)
 
     vte_title = vte_terminal_get_window_title (VTE_TERMINAL (widget));
     window_title = g_strdup (vte_title);
-    initial = g_strdup (cfg_getstr (tw->tc, "title"));
+    initial = g_strdup (config_getstr ("title"));
 
-    switch (cfg_getint (tw->tc, "d_set_title"))
+    switch (config_getint ("d_set_title"))
     {
         case 3:
             if (window_title != NULL)

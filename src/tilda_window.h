@@ -22,7 +22,6 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <confuse.h>
 
 G_BEGIN_DECLS
 
@@ -40,9 +39,6 @@ struct tilda_window_
     gboolean config_writing_disabled;
     gint instance;
     gboolean have_argb_visual;
-
-    /* Stores all configuration */
-    cfg_t *tc;
 };
 
 void add_tab (tilda_window *tw);

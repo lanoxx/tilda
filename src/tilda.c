@@ -348,22 +348,22 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     DEBUG_ASSERT (tw->tc != NULL);
 
     /* Set default values */
-    gchar *background_color = cfg_getstr (tw->tc, "background_color");
-    gchar *command = cfg_getstr (tw->tc, "command");
-    gchar *font = cfg_getstr (tw->tc, "font");
-    gchar *image = cfg_getstr (tw->tc, "image");
-    gchar *working_dir = cfg_getstr (tw->tc, "working_dir");
+    gchar *background_color = config_getstr ("background_color");
+    gchar *command = config_getstr ("command");
+    gchar *font = config_getstr ("font");
+    gchar *image = config_getstr ("image");
+    gchar *working_dir = config_getstr ("working_dir");
 
-    gint lines = cfg_getint (tw->tc, "lines");
-    gint transparency = cfg_getint (tw->tc, "transparency");
-    gint x_pos = cfg_getint (tw->tc, "x_pos");
-    gint y_pos = cfg_getint (tw->tc, "y_pos");
+    gint lines = config_getint ("lines");
+    gint transparency = config_getint ("transparency");
+    gint x_pos = config_getint ("x_pos");
+    gint y_pos = config_getint ("y_pos");
 
-    gboolean antialias = cfg_getbool (tw->tc, "antialias");
-    gboolean scrollbar = cfg_getbool (tw->tc, "scrollbar");
+    gboolean antialias = config_getbool ("antialias");
+    gboolean scrollbar = config_getbool ("scrollbar");
     gboolean show_config = FALSE;
     gboolean version = FALSE;
-    gboolean hidden = cfg_getbool (tw->tc, "hidden");
+    gboolean hidden = config_getbool ("hidden");
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
@@ -422,35 +422,35 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     }
 
     /* Now set the options in the config, if they changed */
-    if (background_color != cfg_getstr (tw->tc, "background_color"))
-        cfg_setstr (tw->tc, "background_color", background_color);
-    if (command != cfg_getstr (tw->tc, "command"))
-        cfg_setstr (tw->tc, "command", command);
-    if (font != cfg_getstr (tw->tc, "font"))
-        cfg_setstr (tw->tc, "font", font);
-    if (image != cfg_getstr (tw->tc, "image"))
-        cfg_setstr (tw->tc, "image", image);
-    if (working_dir != cfg_getstr (tw->tc, "working_dir"))
-        cfg_setstr (tw->tc, "working_dir", working_dir);
+    if (background_color != config_getstr ("background_color"))
+        config_setstr ("background_color", background_color);
+    if (command != config_getstr ("command"))
+        config_setstr ("command", command);
+    if (font != config_getstr ("font"))
+        config_setstr ("font", font);
+    if (image != config_getstr ("image"))
+        config_setstr ("image", image);
+    if (working_dir != config_getstr ("working_dir"))
+        config_setstr ("working_dir", working_dir);
 
-    if (lines != cfg_getint (tw->tc, "lines"))
-        cfg_setint (tw->tc, "lines", lines);
-    if (transparency != cfg_getint (tw->tc, "transparency"))
+    if (lines != config_getint ("lines"))
+        config_setint ("lines", lines);
+    if (transparency != config_getint ("transparency"))
     {
-        cfg_setbool (tw->tc, "enable_transparency", transparency);
-        cfg_setint (tw->tc, "transparency", transparency);
+        config_setbool ("enable_transparency", transparency);
+        config_setint ("transparency", transparency);
     }
-    if (x_pos != cfg_getint (tw->tc, "x_pos"))
-        cfg_setint (tw->tc, "x_pos", x_pos);
-    if (y_pos != cfg_getint (tw->tc, "y_pos"))
-        cfg_setint (tw->tc, "y_pos", y_pos);
+    if (x_pos != config_getint ("x_pos"))
+        config_setint ("x_pos", x_pos);
+    if (y_pos != config_getint ("y_pos"))
+        config_setint ("y_pos", y_pos);
 
-    if (antialias != cfg_getbool (tw->tc, "antialias"))
-        cfg_setbool (tw->tc, "antialias", antialias);
-    if (hidden != cfg_getbool (tw->tc, "hidden"))
-        cfg_setbool (tw->tc, "hidden", hidden);
-    if (scrollbar != cfg_getbool (tw->tc, "scrollbar"))
-        cfg_setbool (tw->tc, "scrollbar", scrollbar);
+    if (antialias != config_getbool ("antialias"))
+        config_setbool ("antialias", antialias);
+    if (hidden != config_getbool ("hidden"))
+        config_setbool ("hidden", hidden);
+    if (scrollbar != config_getbool ("scrollbar"))
+        config_setbool ("scrollbar", scrollbar);
 
     /* Show the config wizard, if it was requested */
     if (show_config)
@@ -512,176 +512,6 @@ int find_centering_coordinate (const int screen_dimension, const int tilda_dimen
     return screen_center - tilda_center;
 }
 
-int write_config_file (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("write_config_file");
-    DEBUG_ASSERT (tw!= NULL);
-    DEBUG_ASSERT (tw->config_file != NULL);
-
-    FILE *fp;
-
-    /* Check to see if writing is disabled. Leave early if it is. */
-    if (tw->config_writing_disabled)
-        return 1;
-
-    fp = fopen(tw->config_file, "w");
-
-    if (fp != NULL)
-    {
-        cfg_print (tw->tc, fp);
-
-        if (fsync (fileno(fp)))
-        {
-            // Error occurred during sync
-            TILDA_PERROR ();
-            DEBUG_ERROR ("Unable to sync file");
-
-            fprintf (stderr, _("Unable to sync the config file to disk\n"));
-        }
-
-        if (fclose (fp))
-        {
-            // An error occurred
-            TILDA_PERROR ();
-            DEBUG_ERROR ("Unable to close config file");
-            fprintf (stderr, _("Unable to close the config file\n"));
-        }
-
-    }
-    else
-    {
-        TILDA_PERROR ();
-        DEBUG_ERROR ("Unable to write config file");
-        fprintf (stderr, _("Unable to write the config file to %s\n"), tw->config_file);
-    }
-
-    return 0;
-}
-
-/*
- * Compares two config versions together.
- *
- * Returns -1 if config1 is older than config2 (UPDATE REQUIRED)
- * Returns  0 if config1 is equal to   config2 (NORMAL USAGE)
- * Returns  1 if config1 is newer than config2 (DISABLE WRITE)
- */
-static gboolean compare_config_versions (const gchar *config1, const gchar *config2)
-{
-    DEBUG_FUNCTION ("compare_config_versions");
-    DEBUG_ASSERT (config1 != NULL);
-    DEBUG_ASSERT (config2 != NULL);
-
-    /*
-     * 1) Split apart both strings using the .'s
-     * 2) Compare the major-major version
-     * 3) Compare the major version
-     * 4) Compare the minor version
-     */
-
-    gchar **config1_tokens;
-    gchar **config2_tokens;
-    gint  config1_version[3];
-    gint  config2_version[3];
-    gint  i;
-
-    config1_tokens = g_strsplit (config1, ".", 3);
-    config2_tokens = g_strsplit (config2, ".", 3);
-
-    for (i=0; i<3; i++)
-    {
-        config1_version[i] = atoi (config1_tokens[i]);
-        config2_version[i] = atoi (config2_tokens[i]);
-    }
-
-    g_strfreev (config1_tokens);
-    g_strfreev (config2_tokens);
-
-    /* We're done splitting things, so compare now */
-    for (i=0; i<3; i++)
-    {
-        if (config1_version[i] > config2_version[i])
-            return CONFIG1_NEWER;
-
-        if (config1_version[i] < config2_version[i])
-            return CONFIG1_OLDER;
-    }
-
-    return CONFIGS_SAME;
-}
-
-/*
- * Compare config file versions and see if we know about a new version.
- *
- * If we have a version newer than what we know about, we need to stop
- * anything from writing to the config file.
- *
- * If we are at the same config version, we're done, so exit early.
- *
- * If the config is older than we are now, update it and then write
- * it to disk.
- */
-static void try_to_update_config_file (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("try_to_update_config_file");
-    DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
-
-    gboolean changed = FALSE;
-    gchar *current_config = strdup (cfg_getstr (tw->tc, "tilda_config_version"));
-
-    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)
-        return; // Same version as ourselves, we're done!
-
-    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIG1_NEWER)
-    {
-        // We have a version newer than ourselves!
-        // Disable writing to the config for safety.
-        tw->config_writing_disabled = TRUE;
-        return; // Out early, since we won't be able to update anyway!
-    }
-
-    /* NOTE: Start with the oldest config version first, and work our way up to the
-     * NOTE: newest that we support, updating our current version each time.
-     *
-     * NOTE: You may need to re-read the config each time! Probably not though,
-     * NOTE: since you should be updating VALUES not names directly in the config.
-     * NOTE: Try to rely on libconfuse to generate the configs :) */
-
-    /* Below is a template for creating new entries in the updater. If you ever
-     * change anything between versions, copy this, replacing YOUR_VERSION
-     * with the new version that you are making. */
-#if 0
-    if (compare_config_versions (current_config, YOUR_VERSION) == CONFIG1_OLDER)
-    {
-        // TODO: Add things here to migrate from whatever we are to YOUR_VERSION
-        current_config = YOUR_VERSION;
-        changed = TRUE;
-    }
-#endif
-
-    if (compare_config_versions (current_config, "0.09.4") == CONFIG1_OLDER)
-    {
-        /* Nothing to update here. All we did was add an option, there is no
-         * need to rewrite the config file here, since the writer at the end
-         * will automatically add the default value of the new option. */
-        current_config = "0.09.4";
-        changed = TRUE;
-    }
-
-    /* We've run through all the updates, so set our config file version to the
-     * version we're at now, then write out the config file.
-     *
-     * NOTE: this only happens if we upgraded the config, due to some early-exit
-     * logic above.
-     */
-
-    if (changed)
-    {
-        cfg_setstr (tw->tc, "tilda_config_version", current_config);
-        write_config_file (tw);
-    }
-}
-
 int main (int argc, char **argv)
 {
     DEBUG_FUNCTION ("main");
@@ -723,9 +553,6 @@ int main (int argc, char **argv)
     /* Set: tw->instance, tw->config_file, and parse the config file */
     init_tilda_window_instance (tw);
 
-    /* Check if the config file is old. If it is, update it */
-    try_to_update_config_file (tw);
-
 #ifdef DEBUG
     /* Have to do this early. */
     if (getenv ("VTE_PROFILE_MEMORY"))
@@ -760,7 +587,7 @@ int main (int argc, char **argv)
     gdk_threads_leave ();
 
     g_remove (tw->lock_file);
-    cfg_free(tw->tc);
+    config_free (tw->config_file);
     free (tw->home_dir);
     free (tw->lock_file);
     free (tw->config_file);

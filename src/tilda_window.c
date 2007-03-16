@@ -19,83 +19,18 @@
 #include <debug.h>
 #include <tilda.h>
 #include <callback_func.h>
+#include <configsys.h>
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <key_grabber.h>
 #include <translation.h>
 
-#include <confuse.h>
 #include <stdio.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib-object.h>
 #include <vte/vte.h>
-
-/* CONFIGURATION OPTIONS */
-static cfg_opt_t new_conf[] = {
-
-    /* strings */
-    CFG_STR("tilda_config_version", PACKAGE_VERSION, CFGF_NONE),
-    CFG_STR("image", NULL, CFGF_NONE),
-    CFG_STR("command", "", CFGF_NONE),
-    CFG_STR("font", "Monospace 13", CFGF_NONE),
-    CFG_STR("key", NULL, CFGF_NONE),
-    CFG_STR("title", "Tilda", CFGF_NONE),
-    CFG_STR("background_color", "white", CFGF_NONE),
-    CFG_STR("working_dir", NULL, CFGF_NONE),
-
-    /* ints */
-    CFG_INT("lines", 100, CFGF_NONE),
-    CFG_INT("max_width", 600, CFGF_NONE),
-    CFG_INT("max_height", 150, CFGF_NONE),
-    CFG_INT("min_width", 1, CFGF_NONE),
-    CFG_INT("min_height", 1, CFGF_NONE),
-    CFG_INT("transparency", 0, CFGF_NONE),
-    CFG_INT("x_pos", 0, CFGF_NONE),
-    CFG_INT("y_pos", 0, CFGF_NONE),
-    CFG_INT("tab_pos", 0, CFGF_NONE),
-    CFG_INT("backspace_key", 0, CFGF_NONE),
-    CFG_INT("delete_key", 1, CFGF_NONE),
-    CFG_INT("d_set_title", 3, CFGF_NONE),
-    CFG_INT("command_exit", 0, CFGF_NONE),
-    CFG_INT("scheme", 3, CFGF_NONE),
-    CFG_INT("slide_sleep_usec", 15000, CFGF_NONE),
-    CFG_INT("animation_orientation", 0, CFGF_NONE),
-
-    /* guint16 */
-    CFG_INT("scrollbar_pos", 1, CFGF_NONE),
-    CFG_INT("back_red", 0x0000, CFGF_NONE),
-    CFG_INT("back_green", 0x0000, CFGF_NONE),
-    CFG_INT("back_blue", 0x0000, CFGF_NONE),
-    CFG_INT("text_red", 0xffff, CFGF_NONE),
-    CFG_INT("text_green", 0xffff, CFGF_NONE),
-    CFG_INT("text_blue", 0xffff, CFGF_NONE),
-
-    /* booleans */
-    CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
-    CFG_BOOL("scroll_on_output", FALSE, CFGF_NONE),
-    CFG_BOOL("notebook_border", FALSE, CFGF_NONE),
-    CFG_BOOL("antialias", TRUE, CFGF_NONE),
-    CFG_BOOL("scrollbar", FALSE, CFGF_NONE),
-    CFG_BOOL("use_image", FALSE, CFGF_NONE),
-    CFG_BOOL("grab_focus", TRUE, CFGF_NONE),
-    CFG_BOOL("above", TRUE, CFGF_NONE),
-    CFG_BOOL("notaskbar", TRUE, CFGF_NONE),
-    CFG_BOOL("bold", TRUE, CFGF_NONE),
-    CFG_BOOL("blinks", TRUE, CFGF_NONE),
-    CFG_BOOL("scroll_on_key", TRUE, CFGF_NONE),
-    CFG_BOOL("bell", FALSE, CFGF_NONE),
-    CFG_BOOL("run_command", FALSE, CFGF_NONE),
-    CFG_BOOL("pinned", TRUE, CFGF_NONE),
-    CFG_BOOL("animation", TRUE, CFGF_NONE),
-    CFG_BOOL("hidden", FALSE, CFGF_NONE),
-    CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
-    CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
-    CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),
-    CFG_BOOL("double_buffer", FALSE, CFGF_NONE),
-    CFG_END()
-};
 
 static void
 initialize_alpha_mode (tilda_window *tw)
@@ -172,13 +107,9 @@ void init_tilda_window_instance (tilda_window *tw)
 
     /* Get and store the config file's name */
     tw->config_file = get_config_file_name (tw);
-    tw->config_writing_disabled = FALSE;
 
-    /* Set up the default config dictionary */
-    tw->tc = cfg_init (new_conf, 0);
-
-    /* Parse the config file */
-    cfg_parse (tw->tc, tw->config_file);
+    /* Start up the configuration system */
+    config_init (tw->config_file);
 }
 
 void add_tab (tilda_window *tw)
@@ -325,7 +256,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     /* Init GList of all tilda_term structures */
     tw->terms = NULL;
 
-    switch (cfg_getint (tw->tc, "tab_pos"))
+    switch (config_getint ("tab_pos"))
     {
         case 0:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
@@ -348,7 +279,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
     gtk_widget_show (tw->notebook);
 
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), cfg_getbool(tw->tc, "notebook_border"));
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
 
     init_tilda_terminal (tw, tt, TRUE);
 

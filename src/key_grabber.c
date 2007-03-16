@@ -55,14 +55,14 @@ void generate_animation_positions (struct tilda_window_ *tw)
     const float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 
     gint i;
-    gint last_pos_x = cfg_getint (tw->tc, "x_pos");
-    gint last_pos_y = cfg_getint (tw->tc, "y_pos");
-    gint last_width = cfg_getint (tw->tc, "max_width");
-    gint last_height = cfg_getint (tw->tc, "max_height");
+    gint last_pos_x = config_getint ("x_pos");
+    gint last_pos_y = config_getint ("y_pos");
+    gint last_width = config_getint ("max_width");
+    gint last_height = config_getint ("max_height");
 
     for (i=0; i<16; i++)
     {
-        switch (cfg_getint (tw->tc, "animation_orientation"))
+        switch (config_getint ("animation_orientation"))
         {
         case 3: /* right->left RIGHT */
             /*posIV[3][i] = (gint)(posCFV[i]*last_width); */
@@ -116,13 +116,13 @@ static void pull_state (struct tilda_window_ *tw, int state)
         else
             gtk_widget_show ((GtkWidget *) tw->window);
 
-        if (cfg_getbool (tw->tc, "pinned"))
+        if (config_getbool ("pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-        if (cfg_getbool (tw->tc, "above"))
+        if (config_getbool ("above"))
             gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
 
-        if (cfg_getbool (tw->tc, ("animation")))
+        if (config_getbool ("animation"))
         {
             gdk_threads_leave();
 
@@ -134,13 +134,11 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
                 gdk_flush();
                 gdk_threads_leave();
-                g_usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
+                g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
         else
         {
-            //gtk_window_move ((GtkWindow *) tw->window, cfg_getint (tw->tc, "x_pos"), cfg_getint (tw->tc, "y_pos"));
-            //gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "max_width"), cfg_getint (tw->tc, "max_height"));
             gdk_flush();
             gdk_threads_leave();
         }
@@ -158,7 +156,7 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
         pos--;
 
-        if (cfg_getbool (tw->tc, ("animation")))
+        if (config_getbool ("animation"))
         {
             gdk_threads_leave();
             for (i=15; i>=0; i--)
@@ -169,12 +167,11 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
                 gdk_flush();
                 gdk_threads_leave();
-                g_usleep (cfg_getint (tw->tc, "slide_sleep_usec"));
+                g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
         else
         {
-            //gtk_window_resize ((GtkWindow *) tw->window, cfg_getint (tw->tc, "min_width"), cfg_getint (tw->tc, "min_height"));
             gdk_flush();
             gdk_threads_leave();
         }
@@ -250,7 +247,7 @@ static int parse_keybinding (tilda_window *tw, guint *modmask_ret, KeySym *key_r
     gchar **key_split;
     gint i;
 
-    key_str = g_strdup (cfg_getstr (tw->tc, "key"));
+    key_str = g_strdup (config_getstr ("key"));
     key_str = g_strstrip (key_str);
     key_split = g_strsplit (key_str, "+", 3);
 
@@ -423,7 +420,7 @@ void *wait_for_signal (tilda_window *tw)
 
     key_grab (tw);
 
-    if (cfg_getbool (tw->tc, "hidden"))
+    if (config_getbool ("hidden"))
     {
         /*
          * Fixes bug that causes Tilda to eat up 100% of CPU
