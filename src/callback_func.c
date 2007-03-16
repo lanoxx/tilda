@@ -19,6 +19,7 @@
 #include <tilda-config.h>
 
 #include <debug.h>
+#include <configsys.h>
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <wizard.h>
@@ -132,7 +133,6 @@ void start_program (tilda_collect *collect)
     DEBUG_FUNCTION ("start_program");
     DEBUG_ASSERT (collect != NULL);
     DEBUG_ASSERT (collect->tw != NULL);
-    DEBUG_ASSERT (collect->tw->tc != NULL);
 
     int argc;
     char **argv;
@@ -204,7 +204,6 @@ char* get_window_title (GtkWidget *widget, tilda_window *tw)
     DEBUG_FUNCTION ("get_window_title");
     DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     const gchar *vte_title;
     gchar *window_title;

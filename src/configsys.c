@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include <configsys.h>
+#include <translation.h>
 
 
 static cfg_t *tc;
@@ -90,6 +91,10 @@ static gboolean config_writing_disabled = FALSE;
 	#define config_mutex_unlock()
 #endif
 
+#define CONFIG1_OLDER -1
+#define CONFIGS_SAME   0
+#define CONFIG1_NEWER  1
+
 static void try_to_update_config_file (const gchar *config_file);
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2);
 
@@ -104,7 +109,7 @@ gint config_init (const gchar *config_file)
 {
 	gint ret = 0;
 
-	cfg_init (config_opts, t);
+	tc = cfg_init (config_opts, 0);
 
 	/* I know that this is racy, but I can't think of a good
 	 * way to fix it ... */
@@ -122,7 +127,7 @@ gint config_init (const gchar *config_file)
 	}
 	else {
 		/* Write out the defaults */
-		write_config (config_file);
+		config_write (config_file);
 	}
 
 	return 0;
@@ -379,7 +384,7 @@ static void try_to_update_config_file (const gchar *config_file)
     if (changed)
     {
         config_setstr ("tilda_config_version", current_config);
-        write_config (config_file);
+        config_write (config_file);
     }
 }
 

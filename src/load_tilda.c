@@ -17,6 +17,7 @@
 #include <tilda-config.h>
 
 #include <load_tilda.h>
+#include <configsys.h>
 #include <debug.h>
 #include <callback_func.h>
 #include <key_grabber.h>
@@ -60,7 +61,6 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     DEBUG_FUNCTION ("update_tilda");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     gdouble transparency_level = 0;       /* how transparent the window is, percent from 0-100 */
     VteTerminalAntiAlias antialias = VTE_ANTI_ALIAS_USE_DEFAULT;
@@ -157,7 +157,7 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
         vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cursor);
 
     if (use_antialias)
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr (antialias);
+        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr ("font"), antialias);
     else
         vte_terminal_set_font_from_string (VTE_TERMINAL(tt->vte_term), config_getstr ("font"));
 
@@ -225,10 +225,10 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
     }
 
     if (config_getbool ("centered_horizontally"))
-        config_setint (find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
 
     if (config_getbool ("centered_vertically"))
-        config_setint (find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
 
     /* redo animation positions */
     generate_animation_positions (tw);

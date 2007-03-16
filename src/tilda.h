@@ -39,10 +39,6 @@ extern int write_config_file (tilda_window *tw);
 #define HEIGHT 0
 #define WIDTH  1
 
-#define CONFIG1_OLDER -1
-#define CONFIGS_SAME   0
-#define CONFIG1_NEWER  1
-
 extern gint get_display_dimension (const gint dimension);
 extern gint get_physical_height_pixels ();
 extern gint get_physical_width_pixels ();

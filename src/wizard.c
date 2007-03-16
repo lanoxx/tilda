@@ -236,7 +236,6 @@ static GtkWidget* general (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("general");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *frame_wdisplay;
@@ -350,7 +349,6 @@ static GtkWidget* title_command (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("title_command");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *table_title;
@@ -442,7 +440,6 @@ static GtkWidget* appearance (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("appearance");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *vtable;
     GtkWidget *frame_height;
@@ -680,7 +677,6 @@ static GtkWidget* colors (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("colors");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_color;
@@ -741,7 +737,6 @@ static GtkWidget* scrolling (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("scrolling");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_scrollback;
@@ -791,7 +786,6 @@ static void revert_default_compatability (tilda_window *tw)
 {
     DEBUG_FUNCTION ("revert_default_compatability");
     DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     config_setint ("backspace_key", 0);
     config_setint ("delete_key", 1);
@@ -805,7 +799,6 @@ static GtkWidget* compatibility (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("compatibility");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_backspace;
@@ -914,7 +907,6 @@ static GtkWidget* keybindings (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("keybindings");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkWidget *table;
     GtkWidget *label_key;
@@ -952,7 +944,6 @@ static void apply_settings (tilda_window *tw)
 {
     DEBUG_FUNCTION ("apply_settings");
     DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GdkColor gdk_text_color, gdk_back_color;
     tilda_term *tt;
@@ -1030,7 +1021,7 @@ static void apply_settings (tilda_window *tw)
         /* WTF do we do here ??? */
     }
 
-    write_config_file (tw);
+    config_write (tw->config_file);
 
     if (!in_main)
     {

@@ -19,6 +19,7 @@
 #include <debug.h>
 #include <tilda.h>
 #include <callback_func.h>
+#include <configsys.h>
 #include <tilda_window.h>
 #include <key_grabber.h> /* for pull */
 #include <wizard.h>
@@ -331,12 +332,12 @@ static void clean_tmp (tilda_window *tw)
 
 /**
  * Parse all of the Command-Line Options given to tilda.
- * This can modify argv and argc, and will set values in tw->tc.
+ * This can modify argv and argc, and will set values in the config.
  *
  * @param argc argc from main
  * @param argv argv from main
- * @param tw the tilda_window from main. Used for setting values in tw->tc.
- * @param tt the tilda_term, from main. Used for calling the wizard.
+ * @param tw the tilda_window from main.
+ * @param tt the tilda_term, from main.
  */
 static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
 {
@@ -345,7 +346,6 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     DEBUG_ASSERT (argv != NULL);
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     /* Set default values */
     gchar *background_color = config_getstr ("background_color");

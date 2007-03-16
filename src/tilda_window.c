@@ -89,10 +89,9 @@ static gchar* get_config_file_name (tilda_window *tw)
 }
 
 /**
- * Set up tw->tc to hold all of the values in tilda's config.
  * Gets the tw->instance number.
  * Sets tw->config_file.
- * Parses tw->config_file into tw->tc.
+ * Starts up the config system.
  *
  * @param tw the tilda_window in which to store the config
  */
@@ -229,7 +228,6 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
     DEBUG_FUNCTION ("init_tilda_window");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
-    DEBUG_ASSERT (tw->tc != NULL);
 
     GtkAccelGroup *accel_group;
     GClosure *clean, *close, *next, *prev, *add, *copy_closure, *paste_closure;
