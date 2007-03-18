@@ -22,14 +22,14 @@ G_BEGIN_DECLS
 #include <tilda-config.h>
 
 /* Things for translations */
-#if ENABLE_NLS
-	#if HAVE_LIBINTL_H
-		#include <libintl.h>
-	#endif
+#include <gettext.h>
 
+#if ENABLE_NLS
 	#define _(STR) gettext(STR)
+	#define N_(STR) gettext_noop(STR)
 #else
 	#define _(STR) STR
+	#define N_(STR) STR
 #endif
 
 G_END_DECLS
