@@ -172,13 +172,14 @@ gboolean update_tilda (tilda_window *tw, tilda_term *tt, gboolean from_main)
        gtk_notebook_set_show_tabs ((GtkNotebook *) tw->notebook, FALSE);
     }
 
-    gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, config_getint ("scrollbar_pos"));
+    //gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, config_getint ("scrollbar_pos"));
 
     if (!from_main)
     {
         if (scroll)
         {
             gtk_widget_hide (tw->window);
+            gtk_box_reorder_child ((GtkBox *) tt->hbox, tt->scrollbar, config_getint ("scrollbar_pos"));
             gtk_widget_show (tt->scrollbar);
             gtk_widget_show (tw->window);
         }

@@ -454,7 +454,7 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
 
     /* Show the config wizard, if it was requested */
     if (show_config)
-        if ((wizard (*argc, *argv, tw, tt)) == 1) {
+        if (wizard (tw) != 0) {
           clean_up(tw);
         }
 }
@@ -569,9 +569,12 @@ int main (int argc, char **argv)
     if (!g_thread_supported ())
         g_thread_init(NULL);
 
+    /* Initialize GDK / GTK thread support */
     gdk_threads_init();
 
+    /* Initialize GTK and libglade */
     gtk_init (&argc, &argv);
+    glade_init ();
 
     init_tilda_window (tw, tt);
 

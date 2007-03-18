@@ -21,6 +21,8 @@ Applications_DATA = tilda.desktop
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
+data_DATA = tilda.glade
+
 tilda.desktop: tilda.desktop.in
 	sed -e 's|\@BINDIR\@|$(bindir)|' \
 	    -e 's|\@PIXMAPSDIR\@|$(datadir)/applications|' $< > $@

@@ -35,6 +35,9 @@ if test "x$enable_debug_functions" = "xyes"; then
 	AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
 fi
 
+# Needed for libglade signal autoconnect
+# LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O

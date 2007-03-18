@@ -383,7 +383,8 @@ static void config_and_update (gpointer data, guint callback_action, GtkWidget *
     tw = tc->tw;
     tt = tc->tt;
 
-    wizard (-1, NULL, tw, tt);
+    /* Show the config wizard */
+    wizard (tw);
 }
 
 static void menu_quit (gpointer data, guint callback_action, GtkWidget *w)
