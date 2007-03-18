@@ -1,38 +1,40 @@
 email questions/comments to sloutri@iit.edu
 
-1) Here is the software you'll need installed besides tilda:
+1) Here is the software you'll need installed besides Tilda:
 
-ftp://ftp.gnome.org/pub/GNOME/sources/vte/
-http://www.nongnu.org/confuse/
+VTE - ftp://ftp.gnome.org/pub/GNOME/sources/vte/
+libConfuse - http://www.nongnu.org/confuse/
 glib >= 2.8
+glade >= 2.0
 
-2) unzip and untar the source, change directorys to the tilda dir and run:
+2) Unzip and untar the source, change directory to the Tilda dir and run:
 
 ./configure --prefix=/usr
 make
 make install
 
-3) Run tilda -C to bring up the configuration wizard, even if you had tilda
-installed before, ~/.tilda/config changes all the time.
+3) Run "tilda". It will create the default configuration file for you. If you
+would like to see the configuration wizard, right click on the Tilda window
+and choose "Preferences...".
 
-4) The command 'tilda' runs tilda later
+6) Default keybinding is F[$instance+1] so if this is first Tilda process, then
+instance will be 0 (second process, instance will be 1, etc.). For this
+example, you would press F1 to bring Tilda up and down.
 
-5) Default key F[$instance+1] so if this is first tilda you run, instance=0, press
-F1 to bring tilda up and down. Example key bindings:
-
-    None+grave -- ~
-    None+F1 -- can be any key instead of F1 as well
+Some examples of keybinding names:
+    grave -- ~
+    F1 -- can be any key instead of F1 as well
     Control+x -- can be any key instead of x as well
     Alt+x -- can be any key instead of x as well
-    
-Be sure that xbindkeys is not running! If it grabs the same key as you want Tilda to use.
 
-6) tilda -h to see the rest of the command line options. If you want a transparent bg
-and you want a white font do the follow "tilda -t -b black" this will set the
+6) Run "tilda --help" to see the rest of the command line options.
+If you want a transparent background and you want a white font, the following
+will give you what you expect: "tilda -t -b black" this will set the
 forground color to white and the terminal transparent.
 
-7) lock files are stored in ~/.tilda/locks now so keep an eye on that dir if Tilda
-dies in an odd way, seg fault or xkill.
+7) Lock files are stored in ~/.tilda/locks now so keep an eye on that dir if Tilda
+dies in an odd way, seg fault or xkill. This should not be a problem, as we try
+to clean this directory every time Tilda starts.
 
 8) Shortcuts for tabs are: Ctrl-Shift-T (New Tab), Ctrl-Shift-PageUp (Next Tab),
 Ctrl-Shift-PageDown (Prev Tab), Ctrl-Shift-W (Close Tab), Ctrl-Shift-Q (Close Tilda)
