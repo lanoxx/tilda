@@ -9,9 +9,6 @@ irasnyd - make the keyboard shortcuts (accelerators) optional (so you can
 turn them off) as well as making them configurable (so you can choose
 what key to use.
 
-alefteris (irc) - add a .pot (gettext translation template) file to the
-project, so that it will be easier to translate it.
-
 franlever (irc) - I would like to have an option that hides tilda in focus of
 another window, like yakuake has. It is annoying when I click on another window,
 and then I am not seeing tilda appear, so I press the tilda keybinding, but it hides
