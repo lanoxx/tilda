@@ -124,7 +124,7 @@ static gint getnextinstance (tilda_window *tw)
 
             /* Do a sorted insert into the GArray */
             for (i=0; i<count; i++)
-                if (g_array_index (list, gint, i) != i)
+                if (current < g_array_index (list, gint, i))
                     break;
 
             g_array_insert_val (list, i, current);
