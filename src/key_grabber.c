@@ -24,6 +24,7 @@
 #include <tilda.h>
 #include <xerror.h>
 #include <translation.h>
+#include <configsys.h>
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>

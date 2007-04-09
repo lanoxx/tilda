@@ -22,8 +22,10 @@
 #include <tilda_terminal.h>
 #include <callback_func.h>
 #include <load_tilda.h>
+#include <configsys.h>
 
 #include <stdio.h>
+#include <stdlib.h> /* malloc */
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <vte/vte.h>

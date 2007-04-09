@@ -24,6 +24,10 @@ G_BEGIN_DECLS
 /* Things for translations */
 #include <gettext.h>
 
+#if HAVE_LOCALE_H
+	#include <locale.h>
+#endif
+
 #if ENABLE_NLS
 	#define _(STR) gettext(STR)
 	#define N_(STR) gettext_noop(STR)

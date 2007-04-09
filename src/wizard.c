@@ -24,6 +24,7 @@
 #include <key_grabber.h>
 #include <translation.h>
 #include <configsys.h>
+#include <callback_func.h>
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
@@ -119,10 +120,11 @@ static void wizard_closed ()
     const GtkWidget *entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
     const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
 
-    // TODO: Grab the keybinding, grab / set it
-    gchar *key = gtk_entry_get_text (entry_keybinding);
-    gchar *command = gtk_entry_get_text (entry_custom_command);
+    gchar *key = gtk_entry_get_text (GTK_ENTRY(entry_keybinding));
+    gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
 
+    /* TODO: validate this?? */
+    config_setstr ("key", key);
     config_setstr ("command", command);
 
     /* Free the libglade data structure */
@@ -132,7 +134,9 @@ static void wizard_closed ()
     /* Remove the wizard */
     gtk_widget_destroy (wizard_window);
 
-    /* TODO: Write the config? */
+    /* Write the config, because it probably changed. This saves us in case
+     * of an XKill (or crash) later ... */
+    config_write (tw->config_file);
 }
 
 /******************************************************************************/
@@ -187,6 +191,7 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
 
         /* Copy the pressed key to the text entry */
         gtk_entry_set_text (GTK_ENTRY(entry_keybinding), s);
+        config_setstr ("key", s);
     }
 }
 
@@ -305,7 +310,8 @@ static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        gtk_widget_set_double_buffered (VTE_TERMINAL(tt->vte_term), status);
+        //gtk_widget_set_double_buffered (VTE_TERMINAL(tt->vte_term), status);
+        gtk_widget_set_double_buffered (GTK_WIDGET(tt->vte_term), status);
     }
 }
 
@@ -455,7 +461,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
     const gint h_pix = percentage2pixels (h_pct, HEIGHT);
 
     config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (spin_height_pixels, &spin_height_pixels_value_changed_cb, h_pix);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
@@ -471,7 +477,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
     const gint h_pct = pixels2percentage (h_pix, HEIGHT);
 
     config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (spin_height_percentage, &spin_height_percentage_value_changed_cb, h_pct);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
@@ -487,7 +493,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
     const gint w_pix = percentage2pixels (w_pct, WIDTH);
 
     config_setint ("max_width", w_pix);
-    set_spin_value_while_blocking_callback (spin_width_pixels, &spin_width_pixels_value_changed_cb, w_pix);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
@@ -503,7 +509,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
     const gint w_pct = pixels2percentage (w_pix, WIDTH);
 
     config_setint ("max_width", w_pix);
-    set_spin_value_while_blocking_callback (spin_width_percentage, &spin_width_percentage_value_changed_cb, w_pct);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage), &spin_width_percentage_value_changed_cb, w_pct);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
@@ -888,7 +894,7 @@ static void check_scroll_background_toggled_cb (GtkWidget *w)
 
 static void combo_backspace_binding_changed_cb (GtkWidget *w)
 {
-    const gint status = gtk_combo_box_get_active (GTK_TOGGLE_BUTTON(w));
+    const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     const gint keys[] = { VTE_ERASE_ASCII_DELETE,
                           VTE_ERASE_DELETE_SEQUENCE,
                           VTE_ERASE_ASCII_BACKSPACE,
@@ -942,7 +948,7 @@ static void button_grab_keybinding_clicked_cb (GtkWidget *w)
     /* Make the preferences window non-sensitive while we are grabbing keys */
     gtk_widget_set_sensitive (w, FALSE);
     gtk_widget_set_sensitive (wizard_notebook, FALSE);
-    //key_ungrab (tw);
+    key_ungrab (tw);
 
     /* Connect the key grabber to the preferences window */
     g_signal_connect (GTK_OBJECT(wizard_window), "key_press_event", GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
