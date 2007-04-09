@@ -18,9 +18,9 @@ gint config_setstr (const gchar *key, const gchar *val);
 gint config_setbool(const gchar *key, const gboolean val);
 
 /* Get values from the config system */
-const gint     config_getint (const gchar *key);
-const gchar*   config_getstr (const gchar *key);
-const gboolean config_getbool(const gchar *key);
+gint     config_getint (const gchar *key);
+gchar*   config_getstr (const gchar *key);
+gboolean config_getbool(const gchar *key);
 
 #endif /* CONFIGSYS_H */
 

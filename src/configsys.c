@@ -6,6 +6,8 @@
 #include <confuse.h>
 #include <glib.h>
 #include <stdio.h>
+#include <stdlib.h> /* atoi */
+#include <unistd.h> /* fsync */
 
 #include <configsys.h>
 #include <translation.h>
@@ -175,7 +177,7 @@ gint config_setbool(const gchar *key, const gboolean val)
 	return 0;
 }
 
-const gint config_getint (const gchar *key)
+gint config_getint (const gchar *key)
 {
 	gint temp;
 
@@ -186,7 +188,7 @@ const gint config_getint (const gchar *key)
 	return temp;
 }
 
-const gchar* config_getstr (const gchar *key)
+gchar* config_getstr (const gchar *key)
 {
 	gchar *temp;
 
@@ -197,7 +199,7 @@ const gchar* config_getstr (const gchar *key)
 	return temp;
 }
 
-const gboolean config_getbool(const gchar *key)
+gboolean config_getbool(const gchar *key)
 {
 	gboolean temp;
 
