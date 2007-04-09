@@ -21,11 +21,10 @@
 
 G_BEGIN_DECLS
 
-#define PULL_TOGGLE 0
-#define PULL_DOWN 1
-#define PULL_UP 2
+enum pull_state { PULL_UP, PULL_DOWN, PULL_TOGGLE };
+void pull (struct tilda_window_ *tw, enum pull_state state);
 
-extern void pull (tilda_window *tw);
+extern void wait_for_signal_init (tilda_window *tw);
 extern void *wait_for_signal (tilda_window *tw);
 extern void generate_animation_positions (tilda_window *tw);
 

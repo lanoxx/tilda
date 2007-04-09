@@ -30,6 +30,7 @@
 #include <glib/gstdio.h> /* for g_remove */
 #include <gtk/gtk.h>
 #include <vte/vte.h>
+#include <stdlib.h> /* exit */
 
 
 static void copy (gpointer data, guint callback_action, GtkWidget *w);

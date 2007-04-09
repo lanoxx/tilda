@@ -30,3 +30,30 @@ Markus Nagler (irc) - "Leaving modifiers unmodified" is unclear
 Markus Nagler (irc) - "Notebook" should be changed to "Window", probably
 
 Markus Nagler (irc) - "tab_pos" error msg (in a switch stmt) should be changed.
+
+KEY GRABBER
+================================================================================
+
+#if 0
+
+/* It really would be good to automatically initialize, but that may
+ * not really be feasible. */
+init_key_grabber ();
+
+/* This should start / stop the pull() dispatcher loop. */
+start_key_grabber ();
+stop_key_grabber ();
+
+/* Should check that a key is valid: that we can parse it successfully.
+ *
+ * It would be nice if we could determine if the key was taken or not
+ * already, but this may not be possible. */
+validate_key (gchar *key);
+
+/* Should grab the key / release the key given. Maybe in ungrab_key() we
+ * do not need to know the key, since we already have it. */
+grab_key (gchar *key);
+ungrab_key (gchar *key);
+
+#endif
+

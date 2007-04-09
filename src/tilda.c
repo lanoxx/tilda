@@ -569,9 +569,6 @@ int main (int argc, char **argv)
     if (!g_thread_supported ())
         g_thread_init(NULL);
 
-    /* Initialize GDK / GTK thread support */
-    gdk_threads_init();
-
     /* Initialize GTK and libglade */
     gtk_init (&argc, &argv);
     /*
@@ -589,9 +586,7 @@ int main (int argc, char **argv)
     signal (SIGABRT, clean_up_no_args);
     signal (SIGTERM, clean_up_no_args);
 
-    gdk_threads_enter ();
     gtk_main();
-    gdk_threads_leave ();
 
     g_remove (tw->lock_file);
     config_free (tw->config_file);

@@ -363,6 +363,8 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
 
+    wait_for_signal_init (tw);
+
     if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
     {
         TILDA_PERROR ();

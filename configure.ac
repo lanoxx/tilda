@@ -54,7 +54,7 @@ PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
-AC_CHECK_HEADERS([libintl.h])
+AC_CHECK_HEADERS([libintl.h locale.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

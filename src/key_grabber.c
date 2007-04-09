@@ -97,9 +97,9 @@ void generate_animation_positions (struct tilda_window_ *tw)
     }
 }
 
-static void pull_state (struct tilda_window_ *tw, int state)
+void pull (struct tilda_window_ *tw, enum pull_state state)
 {
-    DEBUG_FUNCTION ("pull_state");
+    DEBUG_FUNCTION ("pull");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
@@ -108,8 +108,6 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
     if (pos == 0 && state != PULL_UP)
     {
-        gdk_threads_enter();
-
         pos++;
 
         if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
@@ -125,74 +123,46 @@ static void pull_state (struct tilda_window_ *tw, int state)
 
         if (config_getbool ("animation"))
         {
-            gdk_threads_leave();
-
             for (i=0; i<16; i++)
             {
-                gdk_threads_enter();
                 gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
                 gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
 
                 gdk_flush();
-                gdk_threads_leave();
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
         else
         {
             gdk_flush();
-            gdk_threads_leave();
         }
 
-        gdk_threads_enter();
-
         gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
-
         gdk_flush ();
-        gdk_threads_leave();
     }
     else if (state != PULL_DOWN)
     {
-        gdk_threads_enter();
-
         pos--;
 
         if (config_getbool ("animation"))
         {
-            gdk_threads_leave();
             for (i=15; i>=0; i--)
             {
-                gdk_threads_enter();
                 gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
                 gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
 
                 gdk_flush();
-                gdk_threads_leave();
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
         else
         {
             gdk_flush();
-            gdk_threads_leave();
         }
 
-        gdk_threads_enter();
-
         gtk_widget_hide ((GtkWidget *) tw->window);
-
         gdk_flush ();
-        gdk_threads_leave();
     }
-}
-
-//  Wrapper function so pull() calls without a state toggle like they used to
-void pull (struct tilda_window_ *tw)
-{
-    DEBUG_FUNCTION ("pull");
-    DEBUG_ASSERT (tw != NULL);
-
-    pull_state (tw, PULL_TOGGLE);
 }
 
 static int parse_key (tilda_window *tw, gchar *key_str, KeySym *key_ret)
@@ -411,14 +381,24 @@ gint key_ungrab (tilda_window *tw)
     return 0;
 }
 
-void *wait_for_signal (tilda_window *tw)
+static gboolean wfs_pull_toggle_cb (gpointer data)
 {
-    DEBUG_FUNCTION ("wait_for_signal");
-    DEBUG_ASSERT (tw != NULL);
+    tilda_window *tw = (tilda_window *)data;
 
-    KeySym grabbed_key;
-    XEvent event;
+    /* Toggle the window state */
+    pull (tw, PULL_TOGGLE);
 
+    /* We only want to call this once, so we return false */
+    return FALSE;
+}
+
+
+/**
+ * This needs to be called from the main thread, before the
+ * wait_for_signal() thread is started.
+ */
+void wait_for_signal_init (tilda_window *tw)
+{
     key_grab (tw);
 
     if (config_getbool ("hidden"))
@@ -427,11 +407,32 @@ void *wait_for_signal (tilda_window *tw)
          * Fixes bug that causes Tilda to eat up 100% of CPU
          * if set to stay hidden when started
          */
-        pull_state(tw, PULL_DOWN);
-        pull_state(tw, PULL_UP);
+        pull(tw, PULL_DOWN);
+        pull(tw, PULL_UP);
     }
     else
-        pull_state(tw, PULL_DOWN);
+        pull(tw, PULL_DOWN);
+}
+
+
+/**
+ * IMPORTANT: you are not allowed to call any GTK+ functions, or
+ * any functions which will call GTK+ from this function, since it
+ * will always be running in a seperate thread.
+ *
+ * If you need to call GTK+, create a new static function above,
+ * and "call" it with g_idle_add() to have the Glib mainloop call it
+ * asynchronously, from the main thread. This keeps the GUI processing
+ * in a single thread, removing the need for gdk_threads_enter() and
+ * gdk_threads_leave() to protect all GTK+ function calls.
+ */
+void *wait_for_signal (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("wait_for_signal");
+    DEBUG_ASSERT (tw != NULL);
+
+    KeySym grabbed_key;
+    XEvent event;
 
     for (;;)
     {
@@ -442,11 +443,12 @@ void *wait_for_signal (tilda_window *tw)
             case KeyPress:
                 grabbed_key = XKeycodeToKeysym(dpy, event.xkey.keycode, 0);
 
+                /* If this is the right key, then add the pull-handler to the Glib
+                 * main loop to be called at a later time from the main thread. */
                 if (key == grabbed_key)
-                {
-                    pull (tw);
-                    break;
-                }
+                    g_idle_add (&wfs_pull_toggle_cb, tw);
+
+                break;
             default:
                 break;
         }
