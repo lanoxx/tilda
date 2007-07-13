@@ -1,4 +1,5 @@
 version 0.9.5 (TBA) :
+	* Updated documentation
 	* Use glade to generate the config wizard
 	* Gettextize
 	* Added true transparency
