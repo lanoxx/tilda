@@ -63,13 +63,13 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     switch (config_getint ("scrollbar_pos"))
     {
         case 1: /* scrollbar on left */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
             gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
             break;
 
         default: /* scrollbar on the right */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
             gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
+            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
             break;
     }
 
