@@ -104,22 +104,12 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
-    static gint pos=0;
+    static enum tilda_positions { UP, DOWN } current_state = UP;
 
-    if (pos == 0 && state != PULL_UP)
+    if (current_state == UP && state != PULL_UP)
     {
-        pos++;
-
-        if (gtk_window_is_active ((GtkWindow *) tw->window) == FALSE)
-            gtk_window_present ((GtkWindow *) tw->window);
-        else
-            gtk_widget_show ((GtkWidget *) tw->window);
-
-        if (config_getbool ("pinned"))
-            gtk_window_stick (GTK_WINDOW (tw->window));
-
-        if (config_getbool ("above"))
-            gtk_window_set_keep_above (GTK_WINDOW (tw->window), TRUE);
+        if (!gtk_window_is_active (GTK_WINDOW(tw->window)))
+            gtk_window_present (GTK_WINDOW(tw->window));
 
         if (config_getbool ("animation"))
         {
@@ -134,16 +124,15 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         }
         else
         {
-            gdk_flush();
+            gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         }
 
-        gdk_window_focus (tw->window->window, gtk_get_current_event_time ());
-        gdk_flush ();
+        /* The window is definitely in the pulled down state now */
+        printf ("MOVED DOWN\n");
+        current_state = DOWN;
     }
     else if (state != PULL_DOWN)
     {
-        pos--;
-
         if (config_getbool ("animation"))
         {
             for (i=15; i>=0; i--)
@@ -157,12 +146,17 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         }
         else
         {
-            gdk_flush();
+            gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         }
 
-        gtk_widget_hide ((GtkWidget *) tw->window);
-        gdk_flush ();
+        gtk_widget_hide (GTK_WIDGET(tw->window));
+
+        /* The window is definitely in the UP state now */
+        printf ("MOVED UP\n");
+        current_state = UP;
     }
+
+    gdk_flush ();
 }
 
 void onKeybindingPull (const char *keystring, gpointer user_data)

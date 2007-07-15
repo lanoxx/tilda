@@ -376,6 +376,20 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
         return FALSE;
     }
 
+    /* Set up all window properties */
+    if (config_getbool ("pinned"))
+        gtk_window_stick (GTK_WINDOW(tw->window));
+
+    gtk_window_set_keep_above (GTK_WINDOW(tw->window), config_getbool ("above"));
+
+    /* Position the window, and show it if we're ready */
+    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    gdk_flush ();
+
+    config_getbool ("hidden") ? gtk_widget_hide (GTK_WIDGET(tw->window)) : gtk_widget_show_all (GTK_WIDGET(tw->window));
+
     return TRUE;
 }
 
