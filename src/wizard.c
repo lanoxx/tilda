@@ -608,6 +608,15 @@ static void check_enable_transparency_toggled_cb (GtkWidget *w)
             vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), (1.0 - transparency_level) * 0xffff);
         }
     }
+    else
+    {
+        for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), 0);
+            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), FALSE);
+            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
+        }
+    }
 }
 
 static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
