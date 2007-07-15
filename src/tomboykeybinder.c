@@ -234,7 +234,7 @@ tomboy_keybinder_init (void)
 			  NULL);
 }
 
-void 
+gboolean
 tomboy_keybinder_bind (const char           *keystring,
 		       TomboyBindkeyHandler  handler,
 		       gpointer              user_data)
@@ -256,6 +256,8 @@ tomboy_keybinder_bind (const char           *keystring,
 		g_free (binding->keystring);
 		g_free (binding);
 	}
+
+	return success;
 }
 
 void
