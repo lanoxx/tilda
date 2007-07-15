@@ -173,28 +173,36 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     fprintf (stderr, "KEY GRABBED: %s\n", key);
 #endif
 
-    /* Re-enable widgets */
-    gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
-    gtk_widget_set_sensitive (wizard_notebook, TRUE);
-
-    /* Disconnect the key grabber */
-    g_signal_handlers_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
-
-    /* Copy the pressed key to the text entry */
-    gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
-
-    /* Grab the key */
-    ret = tomboy_keybinder_bind (key, onKeybindingPull, tw);
-
-    if (!ret)
+    /* Ignore modifiers only, we only want things when a real key is pressed.
+     * Note that this will not grab things like <Ctrl><Shift><Alt> unless you have
+     * a typeable key with them. */
+    if ((event->keyval < GDK_Shift_L || event->keyval > GDK_Hyper_R))
     {
-        /* Something really bad happened, what to do now??? */
-        // FIXME
-        DEBUG_ERROR ("Not able to grab key");
+        /* Re-enable widgets */
+        gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
+        gtk_widget_set_sensitive (wizard_notebook, TRUE);
+
+        /* Disconnect the key grabber */
+        g_signal_handlers_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
+
+        /* Copy the pressed key to the text entry */
+        gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
+
+        /* Grab the key */
+        ret = tomboy_keybinder_bind (key, onKeybindingPull, tw);
+
+        if (!ret)
+        {
+            /* Something really bad happened, what to do now??? */
+            // FIXME
+            DEBUG_ERROR ("Not able to grab key");
+        }
+
+        /* Save the value */
+        config_setstr ("key", key);
     }
 
-    /* Save the value */
-    config_setstr ("key", key);
+    /* Free the returned string */
     g_free (key);
 }
 
