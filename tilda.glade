@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.1.5 on Sat Mar 17 20:29:52 2007 by irasnyd@yuki-->
+<!--Generated with glade3 3.2.2 on Sun Jul 15 15:12:45 2007 by irasnyd@kimiko-->
 <glade-interface>
   <widget class="GtkDialog" id="wizard_window">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Tilda Config</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
     <property name="has_separator">False</property>
     <signal name="destroy" handler="button_wizard_close_clicked_cb"/>
     <child internal-child="vbox">
@@ -56,6 +57,7 @@
                                 <child>
                                   <widget class="GtkFontButton" id="button_font">
                                     <property name="visible">True</property>
+                                    <property name="response_id">0</property>
                                   </widget>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -106,6 +108,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_allow_bold_text">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Allow Bold Text</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -120,6 +123,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_enable_antialiasing">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Enable Antialiasing</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -169,6 +173,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_cursor_blinks">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Cursor Blinks</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -183,6 +188,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_terminal_bell">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Audible Terminal Bell</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -232,6 +238,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_enable_double_buffering">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Enable Double Buffering</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -248,6 +255,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_show_notebook_border">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Show Notebook Border</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -262,6 +270,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_start_tilda_hidden">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Start Tilda hidden</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -278,6 +287,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_do_not_show_in_taskbar">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Do not show in taskbar</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -292,6 +302,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_always_on_top">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Always on top</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -306,6 +317,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_display_on_all_workspaces">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Display on all workspaces</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -429,6 +441,7 @@ Exit the terminal</property>
                               <widget class="GtkCheckButton" id="check_run_custom_command">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Run a custom command instead of the shell</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -664,6 +677,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_use_image_for_background">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Use Image for Background</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -678,6 +692,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_animated_pulldown">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Animated Pulldown</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -719,6 +734,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_enable_transparency">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Enable Transparency</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -827,6 +843,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_centered_vertically">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Centered Vertically</property>
+                                <property name="response_id">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
                                 <signal name="toggled" handler="check_centered_vertically_toggled_cb"/>
@@ -843,6 +860,7 @@ Right</property>
                               <widget class="GtkCheckButton" id="check_centered_horizontally">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Centered Horizontally</property>
+                                <property name="response_id">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
                                 <signal name="toggled" handler="check_centered_horizontally_toggled_cb"/>
@@ -1090,6 +1108,7 @@ Right</property>
                             <child>
                               <widget class="GtkColorButton" id="colorbutton_back">
                                 <property name="visible">True</property>
+                                <property name="response_id">0</property>
                                 <property name="color">#000000000000</property>
                               </widget>
                               <packing>
@@ -1104,6 +1123,7 @@ Right</property>
                             <child>
                               <widget class="GtkColorButton" id="colorbutton_text">
                                 <property name="visible">True</property>
+                                <property name="response_id">0</property>
                                 <property name="color">#000000000000</property>
                               </widget>
                               <packing>
@@ -1278,7 +1298,7 @@ Disabled</property>
                                   <widget class="GtkSpinButton" id="spin_scrollback_amount">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="adjustment">0 0 100 1 10 10</property>
+                                    <property name="adjustment">0 0 2147483647 1 10 10</property>
                                   </widget>
                                   <packing>
                                     <property name="padding">4</property>
@@ -1306,6 +1326,7 @@ Disabled</property>
                               <widget class="GtkCheckButton" id="check_scroll_background">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Scroll Background</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -1320,6 +1341,7 @@ Disabled</property>
                               <widget class="GtkCheckButton" id="check_scroll_on_keystroke">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Scroll on Keystroke</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -1334,6 +1356,7 @@ Disabled</property>
                               <widget class="GtkCheckButton" id="check_scroll_on_output">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Scroll on Output</property>
+                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
                               </widget>
                               <packing>
@@ -1511,6 +1534,7 @@ Control-H</property>
                                 <property name="can_focus">True</property>
                                 <property name="label" translatable="yes">_Reset Compatibility Options to Defaults</property>
                                 <property name="use_underline">True</property>
+                                <property name="response_id">0</property>
                               </widget>
                             </child>
                           </widget>
@@ -1570,6 +1594,7 @@ Control-H</property>
                               <widget class="GtkButton" id="button_grab_keybinding">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Grab Keybinding</property>
+                                <property name="response_id">0</property>
                               </widget>
                               <packing>
                                 <property name="right_attach">2</property>
@@ -1660,6 +1685,7 @@ Control-H</property>
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">gtk-close</property>
                 <property name="use_stock">True</property>
+                <property name="response_id">0</property>
                 <signal name="clicked" handler="button_wizard_close_clicked_cb"/>
               </widget>
               <packing>
