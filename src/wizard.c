@@ -698,9 +698,12 @@ static void button_background_image_selection_changed_cb (GtkWidget *w)
 
     config_setstr ("image", image);
 
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), image);
+    if (config_getbool ("use_image"))
+    {
+        for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), image);
+        }
     }
 }
 
