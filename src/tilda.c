@@ -541,9 +541,6 @@ int main (int argc, char **argv)
     textdomain (PACKAGE);
 #endif
 
-    /* Initialize the connection to the X server for the key grabbing code */
-    init_key_grabber ();
-
     /* Get the user's home directory */
     tw->home_dir = g_strdup(g_get_home_dir ());
 
@@ -577,6 +574,9 @@ int main (int argc, char **argv)
      * glade_init ();
      */
 
+    /* Initialize all things needed in the initial tilda_window.
+     * This includes things like keybindings, and the global keybinder, etc.
+     */
     init_tilda_window (tw, tt);
 
     signal (SIGINT, clean_up_no_args);

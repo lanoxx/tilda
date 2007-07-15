@@ -166,33 +166,36 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
     const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
 
-    gchar s[64] = "";
-
-    if ((event->keyval < GDK_Shift_L || event->keyval > GDK_Hyper_R))
-    {
-        if (event->state & GDK_CONTROL_MASK)    { g_strlcat (s, "Control+", sizeof(s)); }
-        //if (event->state & GDK_SHIFT_MASK)      { g_strlcat (s, "Shift+", sizeof(s)); }
-        if (event->state & GDK_MOD1_MASK)       { g_strlcat (s, "Alt+", sizeof(s)); }
-        if (event->state & GDK_MOD4_MASK)       { g_strlcat (s, "Win+", sizeof(s)); }
-
-        g_strlcat (s, gdk_keyval_name (event->keyval), sizeof(s));
+    const gchar *key = egg_virtual_accelerator_name (event->keyval, event->state);
+    gboolean ret = FALSE;
 
 #ifdef DEBUG
-        fprintf (stderr, "KEY GRABBED: %s\n", s);
+    fprintf (stderr, "KEY GRABBED: %s\n", key);
 #endif
 
-        /* Re-enable widgets */
-        gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
-        gtk_widget_set_sensitive (wizard_notebook, TRUE);
-        key_grab (tw);
+    /* Re-enable widgets */
+    gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
+    gtk_widget_set_sensitive (wizard_notebook, TRUE);
 
-        /* Disconnect the key grabber */
-        g_signal_handlers_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
+    /* Disconnect the key grabber */
+    g_signal_handlers_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
 
-        /* Copy the pressed key to the text entry */
-        gtk_entry_set_text (GTK_ENTRY(entry_keybinding), s);
-        config_setstr ("key", s);
+    /* Copy the pressed key to the text entry */
+    gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
+
+    /* Grab the key */
+    ret = tomboy_keybinder_bind (key, onKeybindingPull, tw);
+
+    if (!ret)
+    {
+        /* Something really bad happened, what to do now??? */
+        // FIXME
+        DEBUG_ERROR ("Not able to grab key");
     }
+
+    /* Save the value */
+    config_setstr ("key", key);
+    g_free (key);
 }
 
 static int percentage_dimension (int current_size, int dimension)
@@ -948,7 +951,7 @@ static void button_grab_keybinding_clicked_cb (GtkWidget *w)
     /* Make the preferences window non-sensitive while we are grabbing keys */
     gtk_widget_set_sensitive (w, FALSE);
     gtk_widget_set_sensitive (wizard_notebook, FALSE);
-    key_ungrab (tw);
+    tomboy_keybinder_unbind (config_getstr ("key"), onKeybindingPull);
 
     /* Connect the key grabber to the preferences window */
     g_signal_connect (GTK_OBJECT(wizard_window), "key_press_event", GTK_SIGNAL_FUNC(wizard_key_grab), NULL);

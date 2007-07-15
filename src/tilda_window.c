@@ -239,6 +239,7 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     GdkPixbuf *window_icon;
     const gchar *window_icon_file = g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL);
+    gboolean ret = FALSE;
 
     /* Create a window to hold the scrolling shell, and hook its
      * delete event to the quit function.. */
@@ -363,14 +364,16 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
 
-    wait_for_signal_init (tw);
+    /* Initialize and set up the keybinding to toggle tilda's visibility. */
+    tomboy_keybinder_init ();
+    ret = tomboy_keybinder_bind (config_getstr ("key"), onKeybindingPull, tw);
 
-    if (!g_thread_create ((GThreadFunc) wait_for_signal, tw, FALSE, &error))
+    if (!ret)
     {
-        TILDA_PERROR ();
-        DEBUG_ERROR ("Could not create thread");
-        fprintf (stderr, _("Unable to create window thread\n"));
-        exit (2);
+        /* Something really bad happened, we were unable to bind the key. */
+        // FIXME
+        DEBUG_ERROR ("Unable to bind key");
+        return FALSE;
     }
 
     return TRUE;

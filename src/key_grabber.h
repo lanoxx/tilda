@@ -24,14 +24,10 @@ G_BEGIN_DECLS
 enum pull_state { PULL_UP, PULL_DOWN, PULL_TOGGLE };
 void pull (struct tilda_window_ *tw, enum pull_state state);
 
-extern void wait_for_signal_init (tilda_window *tw);
-extern void *wait_for_signal (tilda_window *tw);
 extern void generate_animation_positions (tilda_window *tw);
 
-/* Functions for grabbing keys */
-extern gint init_key_grabber ();
-extern gint key_grab (tilda_window *tw);
-extern gint key_ungrab (tilda_window *tw);
+/* Key binding callbacks. They get called after you associate them with a key. */
+extern void onKeybindingPull (const char *keystring, gpointer user_data);
 
 G_END_DECLS
 
