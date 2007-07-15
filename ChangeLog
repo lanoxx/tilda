@@ -1,4 +1,5 @@
 version 0.9.5 (TBA) :
+	* Make WWW links Ctrl+Left Click to open in a web browser
 	* Remove old configuration conversion script
 	* Updated documentation
 	* Use glade to generate the config wizard

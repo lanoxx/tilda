@@ -434,37 +434,42 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     VteTerminal *terminal;
     tilda_term *tt;
     tilda_collect *tc;
-    char *match;
-    int tag;
+    gchar *match;
+    gint tag;
     gint xpad, ypad;
+    gchar *cmd;
 
     tc = (tilda_collect *) data;
     tt = tc->tt;
 
     switch (event->button)
     {
-        case 3:
+        case 3: /* Right Click */
             popup_menu (tc);
-
+            break;
+        case 2: /* Middle Click */
+            break;
+        case 1: /* Left Click */
             terminal  = VTE_TERMINAL(tt->vte_term);
             vte_terminal_get_padding (terminal, &xpad, &ypad);
             match = vte_terminal_match_check (terminal,
-                (event->x - ypad) /
-                terminal->char_width,
-                (event->y - ypad) /
-                terminal->char_height,
-                &tag);
-            if (match != NULL)
+                    (event->x - ypad) /
+                    terminal->char_width,
+                    (event->y - ypad) /
+                    terminal->char_height,
+                    &tag);
+
+            /* Check if we can launch a web browser, and do so if possible */
+            if ((event->state & GDK_CONTROL_MASK) && match != NULL)
             {
                 g_print ("Matched `%s' (%d).\n", match, tag);
+                /* TODO: Make the web browser configurable */
+                cmd = g_strdup_printf ("/usr/bin/x-www-browser \"%s\"", match);
+                g_spawn_command_line_async(cmd, NULL);
                 g_free (match);
-
-                if (GPOINTER_TO_INT(data) != 0)
-                    vte_terminal_match_remove (terminal, tag);
+                g_free (cmd);
             }
             break;
-        case 1:
-        case 2:
         default:
             break;
     }

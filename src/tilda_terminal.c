@@ -118,15 +118,13 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
     g_signal_connect (G_OBJECT(tt->vte_term), "decrease-font-size",
                       G_CALLBACK(decrease_font_size), tw->window);
 
-    /* Match "abcdefg". */
-    vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), "abcdefg");
 
     if (dingus)
     {
         i = vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), DINGUS1);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_GUMBY);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND2);
         i = vte_terminal_match_add(VTE_TERMINAL (tt->vte_term), DINGUS2);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND1);
+        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND2);
     }
 
     start_program(t_collect);
@@ -147,7 +145,6 @@ gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main
      * Sending TRUE to let it know we are in main()
      */
     update_tilda (tw, tt, in_main);
-
     gtk_widget_grab_focus (tt->vte_term);
 
     return TRUE;
