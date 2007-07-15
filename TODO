@@ -1,59 +1,20 @@
-[ ] guy in forum - It works fine on a single desktop, but multimonitor
-support would be very much appreciated. In the mean time, perhaps a way
-to specify the location on the desktop?
-
-[ ] guy in forum - Optionally, a dragable bar on the bottom of Tilda to
-change the height?
-
-irasnyd - make the keyboard shortcuts (accelerators) optional (so you can
-turn them off) as well as making them configurable (so you can choose
-what key to use.
-
-franlever (irc) - I would like to have an option that hides tilda in focus of
-another window, like yakuake has. It is annoying when I click on another window,
-and then I am not seeing tilda appear, so I press the tilda keybinding, but it hides
-in the background, so I must press the tilda keybinding again.
-
-WarzoneCommand (irc) - add a "save tilda session" option, so that if tilda is closed
-with two tabs open, it will also be started with two tabs opened.
-
-WarzoneCommand (irc) - add the ability to rename a tab manually.
-
-coNP (irc) - the default key (F1) doesn't work on ubuntu, since it is already bound to help.
-Is it possible to prompt for keybinding on first run of tilda, or perhaps check if the keybinding
-is already in use during the first run, and prompt only if it /is/ in use?
-
-Markus Nagler (irc) - Change "Animation Delay" to "Animation Duration"
-
-Markus Nagler (irc) - "Leaving modifiers unmodified" is unclear
-
-Markus Nagler (irc) - "Notebook" should be changed to "Window", probably
-
-Markus Nagler (irc) - "tab_pos" error msg (in a switch stmt) should be changed.
-
-KEY GRABBER
+Feature Requests / Improvements
 ================================================================================
+* Multimonitor support (Xinerama, etc)
+* Dragable bar at the bottom to change Tilda's height
+* Ability to disable keyboard accelerators (close tab, new tab, etc)
+* Configurable keyboard accelerators (close tab, new tab, etc)
+* Automatically hide tilda when it loses focus (fairly easy)
+* Session support, so tilda will load with the same number of tabs that it had
+  upon closing
+* Ability to rename a tab manually
+* Ability to pop up a dialog when the keybinding process fails (EASY now)
 
-#if 0
 
-/* It really would be good to automatically initialize, but that may
- * not really be feasible. */
-init_key_grabber ();
-
-/* This should start / stop the pull() dispatcher loop. */
-start_key_grabber ();
-stop_key_grabber ();
-
-/* Should check that a key is valid: that we can parse it successfully.
- *
- * It would be nice if we could determine if the key was taken or not
- * already, but this may not be possible. */
-validate_key (gchar *key);
-
-/* Should grab the key / release the key given. Maybe in ungrab_key() we
- * do not need to know the key, since we already have it. */
-grab_key (gchar *key);
-ungrab_key (gchar *key);
-
-#endif
+Possible Translation Problems
+================================================================================
+Change "Animation Delay" to "Animation Duration"
+"Leaving modifiers unmodified" is unclear
+"Notebook" should be changed to "Window", probably
+"tab_pos" error msg (in a switch stmt) should be changed.
 

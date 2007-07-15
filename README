@@ -51,21 +51,18 @@ little trouble as possible. Some example keybindings follow:
 |===================|==========================================================|
 | Keybinding String |                       Notes                              |
 |===================|==========================================================|
-| `                 | This will use the "tilde" key. Many people like this     |
-|                   | setting.                                                 |
+| grave             | This will use the tilde key. Many people want this.
 |===================|==========================================================|
-| grave             | This is an alternate name for the "`" above.             |
-|===================|==========================================================|
-| ~                 | This is the same as Shift-grave                          |
+| ~                 | This is the same as <Shift>grave                         |
 |===================|==========================================================|
 | space             | This will use the spacebar to show / hide Tilda.         |
 |                   | NOT RECOMMENDED!                                         |
 |===================|==========================================================|
-| Shift+Ctrl+A      | Press Shift, Control, and the "a" key at the same time   |
+| <Shift><Ctrl>A    | Press Shift, Control, and the "a" key at the same time   |
 |===================|==========================================================|
-| Shift+space       | Press Shift and the spacebar at the same time            |
+| <Shift>space      | Press Shift and the spacebar at the same time            |
 |===================|==========================================================|
-| Ctrl+z            | Press Control and the "z" key at the same time           |
+| <Ctrl>z           | Press Control and the "z" key at the same time           |
 |===================|==========================================================|
 
 
