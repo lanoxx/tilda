@@ -665,6 +665,25 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (combo_animation_orientation, status);
 
     config_setbool ("animation", status);
+
+    /* If we just disabled animation, we have to reset the window size to the normal
+     * size, since the animations change the size of the window, and pull() does nothing more
+     * than show and place the window. */
+    if (!status)
+    {
+        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    }
+
+    /* Avoids a nasty looking glitch if you switch on animation while the window is
+     * hidden. It will briefly show at full size, then shrink to the first animation
+     * position. From there it works fine. */
+    if (status && tw->current_state == UP)
+    {
+        /* I don't know why, but width=0, height=0 doesn't work. Width=1, height=1 works
+         * exactly as expected, so I'm leaving it that way. */
+        gtk_window_resize (GTK_WINDOW(tw->window), 1, 1);
+    }
 }
 
 static void check_use_image_for_background_toggled_cb (GtkWidget *w)

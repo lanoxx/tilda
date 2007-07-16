@@ -39,6 +39,9 @@ struct tilda_window_
     gboolean config_writing_disabled;
     gint instance;
     gboolean have_argb_visual;
+
+    /* This field MUST be set before calling pull()! */
+    enum tilda_positions { UP, DOWN } current_state;
 };
 
 void add_tab (tilda_window *tw);

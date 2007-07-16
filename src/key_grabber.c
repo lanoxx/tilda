@@ -35,13 +35,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /* Define local variables here */
-static Display *dpy;
-static Window root;
-static int screen;
-static KeySym key;
-
-
 static gint posIV[4][16]; /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
 
 void generate_animation_positions (struct tilda_window_ *tw)
@@ -104,12 +99,12 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
-    static enum tilda_positions { UP, DOWN } current_state = UP;
 
-    if (current_state == UP && state != PULL_UP)
+    if (tw->current_state == UP && state != PULL_UP)
     {
-        if (!gtk_window_is_active (GTK_WINDOW(tw->window)))
-            gtk_window_present (GTK_WINDOW(tw->window));
+        gtk_widget_show_all (GTK_WIDGET(tw->window));
+        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+        gtk_window_present (GTK_WINDOW(tw->window));
 
         if (config_getbool ("animation"))
         {
@@ -127,9 +122,11 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
             gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         }
 
+#if DEBUG
         /* The window is definitely in the pulled down state now */
-        printf ("MOVED DOWN\n");
-        current_state = DOWN;
+        printf ("pull(): MOVED DOWN\n");
+#endif
+        tw->current_state = DOWN;
     }
     else if (state != PULL_DOWN)
     {
@@ -144,16 +141,17 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
-        else
-        {
-            gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-        }
 
+        /* All we have to do at this point is hide the window.
+         * Case 1 - Animation on:  The window has shrunk, just hide it
+         * Case 2 - Animation off: Just hide the window */
         gtk_widget_hide (GTK_WIDGET(tw->window));
 
+#if DEBUG
         /* The window is definitely in the UP state now */
-        printf ("MOVED UP\n");
-        current_state = UP;
+        printf ("pull(): MOVED UP\n");
+#endif
+        tw->current_state = UP;
     }
 
     gdk_flush ();
