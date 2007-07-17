@@ -391,7 +391,10 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     if (config_getbool ("hidden"))
     {
-        gtk_widget_show_all (GTK_WIDGET(tw->notebook));
+        /* It does not cause graphical glitches to make tilda hidden on start this way.
+         * It does make tilda appear much faster on it's first appearance, so I'm leaving
+         * it this way, because it has a good benefit, and no apparent drawbacks. */
+        gtk_widget_show (GTK_WIDGET(tw->window));
         gtk_widget_hide (GTK_WIDGET(tw->window));
     }
     else

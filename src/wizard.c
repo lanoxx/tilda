@@ -626,7 +626,7 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
     gint i;
     tilda_term *tt;
 
-    config_setint ("transparency", transparency_level);
+    config_setint ("transparency", status);
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);

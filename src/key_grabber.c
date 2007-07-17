@@ -102,9 +102,12 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
     if (tw->current_state == UP && state != PULL_UP)
     {
-        gtk_widget_show_all (GTK_WIDGET(tw->window));
+        /* Keep things here just like they are. If you use gtk_window_present() you
+         * will introduce some weird graphical glitches. Also, calling gtk_window_move()
+         * before showing the window avoids yet more glitches. You should probably not use
+         * gtk_window_show_all() here, as it takes a long time to execute. */
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-        gtk_window_present (GTK_WINDOW(tw->window));
+        gtk_widget_show (GTK_WINDOW(tw->window));
 
         if (config_getbool ("animation"))
         {
