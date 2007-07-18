@@ -486,6 +486,10 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
         config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void spin_height_pixels_value_changed_cb (GtkWidget *w)
@@ -502,6 +506,10 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
         config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void spin_width_percentage_value_changed_cb (GtkWidget *w)
@@ -518,6 +526,10 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
         config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void spin_width_pixels_value_changed_cb (GtkWidget *w)
@@ -534,6 +546,10 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
         config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void check_centered_horizontally_toggled_cb (GtkWidget *w)
@@ -553,6 +569,10 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (spin_x_position, !status);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void spin_x_position_value_changed_cb (GtkWidget *w)
@@ -562,6 +582,10 @@ static void spin_x_position_value_changed_cb (GtkWidget *w)
 
     config_setint ("x_pos", x_pos);
     gtk_window_move (GTK_WINDOW(tw->window), x_pos, y_pos);
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void check_centered_vertically_toggled_cb (GtkWidget *w)
@@ -581,6 +605,10 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (spin_y_position, !status);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void spin_y_position_value_changed_cb (GtkWidget *w)
@@ -590,6 +618,10 @@ static void spin_y_position_value_changed_cb (GtkWidget *w)
 
     config_setint ("y_pos", y_pos);
     gtk_window_move (GTK_WINDOW(tw->window), x_pos, y_pos);
+
+    /* Always regenerate animation positions when changing x or y position!
+     * Otherwise you get VERY strange things going on :) */
+    generate_animation_positions (tw);
 }
 
 static void check_enable_transparency_toggled_cb (GtkWidget *w)
