@@ -27,6 +27,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("title", "Tilda", CFGF_NONE),
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
+    CFG_STR("web_browser", "firefox", CFGF_NONE),
 
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),

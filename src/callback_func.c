@@ -32,7 +32,6 @@
 #include <vte/vte.h>
 #include <stdlib.h> /* exit */
 
-
 static void copy (gpointer data, guint callback_action, GtkWidget *w);
 static void paste (gpointer data, guint callback_action, GtkWidget *w);
 static void config_and_update (gpointer data, guint callback_action, GtkWidget *w);
@@ -438,6 +437,8 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
     gint tag;
     gint xpad, ypad;
     gchar *cmd;
+    gchar *web_browser_cmd;
+    gboolean ret = FALSE;
 
     tc = (tilda_collect *) data;
     tt = tc->tt;
@@ -462,13 +463,30 @@ int button_pressed (GtkWidget *widget, GdkEventButton *event, gpointer data)
             /* Check if we can launch a web browser, and do so if possible */
             if ((event->state & GDK_CONTROL_MASK) && match != NULL)
             {
-                g_print ("Matched `%s' (%d).\n", match, tag);
-                /* TODO: Make the web browser configurable */
-                cmd = g_strdup_printf ("/usr/bin/x-www-browser \"%s\"", match);
-                g_spawn_command_line_async(cmd, NULL);
-                g_free (match);
+#if DEBUG
+                printf ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
+#endif
+                web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
+                cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
+#if DEBUG
+                printf ("Launching command: `%s'\n", cmd);
+#endif
+                ret = g_spawn_command_line_async(cmd, NULL);
+
+                /* Check that the command launched */
+                if (!ret)
+                {
+                    printf ("Failed to launch the web browser. The command was `%s'\n", cmd);
+                    TILDA_PERROR ();
+                }
+
                 g_free (cmd);
             }
+
+            /* Always free match if it is non NULL */
+            if (match)
+                g_free (match);
+
             break;
         default:
             break;

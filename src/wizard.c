@@ -454,6 +454,13 @@ static void combo_command_exit_changed_cb (GtkWidget *w)
     config_setint ("command_exit", status);
 }
 
+static void entry_web_browser_changed (GtkWidget *w)
+{
+    const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
+
+    config_setstr ("web_browser", web_browser);
+}
+
 /*
  * Prototypes for the next 4 functions. Since they depend on each other,
  * this is pretty much necessary.
@@ -1047,6 +1054,8 @@ static void set_wizard_state_from_config ()
     SET_SENSITIVE_BY_CONFIG_BOOL ("entry_custom_command","run_command");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_custom_command", "run_command");
 
+    TEXT_ENTRY ("entry_web_browser", "web_browser");
+
     /* Appearance Tab */
     SPIN_BUTTON_SET_RANGE ("spin_height_percentage", 0, 100);
     SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (config_getint ("max_height")));
@@ -1139,6 +1148,8 @@ static void connect_wizard_signals ()
 
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
+
+    CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
 
     /* Appearance Tab */
     CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb);
