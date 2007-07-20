@@ -102,7 +102,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
     if (tw->current_state == UP && state != PULL_UP)
     {
-        /* Keep things here just like they are. If you use gtk_window_present() you
+        /* Keep things here just like they are. If you use gtk_window_present() here, you
          * will introduce some weird graphical glitches. Also, calling gtk_window_move()
          * before showing the window avoids yet more glitches. You should probably not use
          * gtk_window_show_all() here, as it takes a long time to execute. */
@@ -122,8 +122,17 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         }
         else
         {
+            /* I know this seems redundant, but it really is necessary for Tilda to be
+             * pulled down in the correct position. */
             gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         }
+
+        /* Now that we're done with everything, we can call this. It overrides the
+         * focus stealing prevention that is present in openbox and others.
+         *
+         * WARNING: Don't move this up to the top, where the window is shown, or you
+         * will cause some strange glitches. :) */
+        gtk_window_present (GTK_WINDOW(tw->window));
 
 #if DEBUG
         /* The window is definitely in the pulled down state now */
