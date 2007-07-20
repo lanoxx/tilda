@@ -1115,7 +1115,6 @@ static void set_wizard_state_from_config ()
     SPIN_BUTTON ("spin_level_of_transparency", "transparency");
     CHECK_BUTTON ("check_animated_pulldown", "animation");
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
-    SPIN_BUTTON_SET_RANGE ("spin_animation_delay", 1, INT_MAX); // FIXME: doesn't work as 0!?!
     COMBO_BOX ("combo_animation_orientation", "animation_orientation");
     CHECK_BUTTON ("check_use_image_for_background", "use_image");
     FILE_BUTTON ("button_background_image", "image");
