@@ -105,6 +105,7 @@ gint wizard (tilda_window *ltw)
 
     g_snprintf (window_title, sizeof(window_title), "Tilda %d Config", ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
+    gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
 
     return 0;
