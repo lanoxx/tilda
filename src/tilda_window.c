@@ -24,6 +24,7 @@
 #include <tilda_terminal.h>
 #include <key_grabber.h>
 #include <translation.h>
+#include <tomboykeybinder.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -101,6 +102,9 @@ void init_tilda_window_instance (tilda_window *tw)
     DEBUG_FUNCTION ("init_tilda_window_instance");
     DEBUG_ASSERT (tw != NULL);
 
+    gchar *default_key;
+    gboolean writing_default_config = FALSE;
+
     /* Get the instance number for this tilda, and store it in tw->instance.
      * Also create the lock file for this instance. */
     getinstance (tw);
@@ -108,8 +112,23 @@ void init_tilda_window_instance (tilda_window *tw)
     /* Get and store the config file's name */
     tw->config_file = get_config_file_name (tw);
 
+    /* If the file doesn't exist, we need to set up the default key */
+    if (!g_file_test (tw->config_file, G_FILE_TEST_EXISTS))
+    {
+        writing_default_config = TRUE;
+        default_key = g_strdup_printf ("F%d", tw->instance+1);
+    }
+
     /* Start up the configuration system */
     config_init (tw->config_file);
+
+    /* Set the default key like we say we do in the README. If we don't do
+     * this, Tilda will fail to start.
+     *
+     * FIXME: This will still fail with tw->instance > 12. How /should/ we
+     * FIXME: fix the problem??? */
+    if (writing_default_config)
+        config_setstr ("key", default_key);
 }
 
 void add_tab (tilda_window *tw)
