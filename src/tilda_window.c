@@ -34,6 +34,8 @@
 #include <glib-object.h>
 #include <vte/vte.h>
 
+static gboolean first_run = FALSE;
+
 static void
 initialize_alpha_mode (tilda_window *tw)
 {
@@ -103,7 +105,6 @@ void init_tilda_window_instance (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     gchar *default_key;
-    gboolean writing_default_config = FALSE;
 
     /* Get the instance number for this tilda, and store it in tw->instance.
      * Also create the lock file for this instance. */
@@ -115,7 +116,7 @@ void init_tilda_window_instance (tilda_window *tw)
     /* If the file doesn't exist, we need to set up the default key */
     if (!g_file_test (tw->config_file, G_FILE_TEST_EXISTS))
     {
-        writing_default_config = TRUE;
+        first_run = TRUE;
         default_key = g_strdup_printf ("F%d", tw->instance+1);
     }
 
@@ -127,8 +128,13 @@ void init_tilda_window_instance (tilda_window *tw)
      *
      * FIXME: This will still fail with tw->instance > 12. How /should/ we
      * FIXME: fix the problem??? */
-    if (writing_default_config)
+    if (first_run)
+    {
         config_setstr ("key", default_key);
+
+        /* Now show the wizard, so that the user can set up their own key */
+        wizard (tw);
+    }
 }
 
 void add_tab (tilda_window *tw)
@@ -385,14 +391,19 @@ gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
 
     /* Initialize and set up the keybinding to toggle tilda's visibility. */
     tomboy_keybinder_init ();
-    ret = tomboy_keybinder_bind (config_getstr ("key"), onKeybindingPull, tw);
 
-    if (!ret)
+    /* If this is the first time tilda has been run, then don't bother binding the
+     * key, since we've already bound it when we exited the wizard */
+    if (!first_run)
     {
-        /* Something really bad happened, we were unable to bind the key. */
-        // FIXME
-        DEBUG_ERROR ("Unable to bind key");
-        return FALSE;
+        ret = tomboy_keybinder_bind (config_getstr ("key"), onKeybindingPull, tw);
+    }
+
+    if (!ret && !first_run)
+    {
+        /* The key was unbindable, so we need to show the wizard */
+        show_invalid_keybinding_dialog (NULL);
+        wizard (tw);
     }
 
     /* Set up all window properties */

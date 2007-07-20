@@ -128,10 +128,15 @@ gint config_init (const gchar *config_file)
 			return 1;
 		}
 	}
+	/* This is commented out because we don't want to do this. Basically, there
+	 * is no need to write the config until we have shown the wizard, which is
+	 * automatically shown on the first run. */
+#if 0
 	else {
 		/* Write out the defaults */
 		config_write (config_file);
 	}
+#endif
 
 	return 0;
 }

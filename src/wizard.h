@@ -25,6 +25,7 @@
 G_BEGIN_DECLS
 
 gint wizard (tilda_window *tw);
+void show_invalid_keybinding_dialog (GtkWindow *parent_window);
 
 G_END_DECLS
 

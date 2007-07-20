@@ -103,10 +103,18 @@ gint wizard (tilda_window *ltw)
      * the values. */
     connect_wizard_signals ();
 
+    /* Unbind the current keybinding. I'm aware that this opens up an opportunity to
+     * let "someone else" grab the key, but it also saves us some trouble, and makes
+     * validation easier. */
+    tomboy_keybinder_unbind (config_getstr ("key"), onKeybindingPull);
+
     g_snprintf (window_title, sizeof(window_title), "Tilda %d Config", ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
+
+    /* Block here until the wizard is closed successfully */
+    gtk_main ();
 
     return 0;
 }
@@ -123,9 +131,22 @@ static void wizard_closed ()
 
     gchar *key = gtk_entry_get_text (GTK_ENTRY(entry_keybinding));
     gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
+    gboolean key_is_valid = FALSE;
+
+    /* Try to grab the key. This is a good way to validate it :) */
+    key_is_valid = tomboy_keybinder_bind (key, onKeybindingPull, tw);
+
+    if (!key_is_valid)
+    {
+        /* Show the "invalid keybinding" dialog */
+        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window));
+
+        return;
+    }
+
+    config_setstr ("key", key);
 
     /* TODO: validate this?? */
-    config_setstr ("key", key);
     config_setstr ("command", command);
 
     /* Free the libglade data structure */
@@ -138,6 +159,22 @@ static void wizard_closed ()
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
     config_write (tw->config_file);
+
+    /* This exits the wizard */
+    gtk_main_quit ();
+}
+
+void show_invalid_keybinding_dialog (GtkWindow *parent_window)
+{
+    GtkWidget *dialog = gtk_message_dialog_new (parent_window,
+                              GTK_DIALOG_DESTROY_WITH_PARENT,
+                              GTK_MESSAGE_ERROR,
+                              GTK_BUTTONS_CLOSE,
+                              _("The keybinding you chose is invalid. Please choose another."));
+
+    gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
+    gtk_dialog_run (GTK_DIALOG (dialog));
+    gtk_widget_destroy (dialog);
 }
 
 /******************************************************************************/
@@ -168,7 +205,6 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
 
     const gchar *key = egg_virtual_accelerator_name (event->keyval, event->state);
-    gboolean ret = FALSE;
 
 #ifdef DEBUG
     fprintf (stderr, "KEY GRABBED: %s\n", key);
@@ -188,19 +224,6 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
 
         /* Copy the pressed key to the text entry */
         gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
-
-        /* Grab the key */
-        ret = tomboy_keybinder_bind (key, onKeybindingPull, tw);
-
-        if (!ret)
-        {
-            /* Something really bad happened, what to do now??? */
-            // FIXME
-            DEBUG_ERROR ("Not able to grab key");
-        }
-
-        /* Save the value */
-        config_setstr ("key", key);
     }
 
     /* Free the returned string */
@@ -261,8 +284,6 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin, void (*
 static void button_wizard_close_clicked_cb (GtkWidget *w)
 {
     const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
-
-    gtk_widget_hide (wizard_window);
 
     /* Call the clean-up function */
     wizard_closed ();
@@ -1030,7 +1051,6 @@ static void button_grab_keybinding_clicked_cb (GtkWidget *w)
     /* Make the preferences window non-sensitive while we are grabbing keys */
     gtk_widget_set_sensitive (w, FALSE);
     gtk_widget_set_sensitive (wizard_notebook, FALSE);
-    tomboy_keybinder_unbind (config_getstr ("key"), onKeybindingPull);
 
     /* Connect the key grabber to the preferences window */
     g_signal_connect (GTK_OBJECT(wizard_window), "key_press_event", GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
