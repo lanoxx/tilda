@@ -11,6 +11,7 @@
 
 #include <configsys.h>
 #include <translation.h>
+#include <key_converter.h>
 
 
 static cfg_t *tc;
