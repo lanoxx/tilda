@@ -382,6 +382,21 @@ static void try_to_update_config_file (const gchar *config_file)
         changed = TRUE;
     }
 
+    if (compare_config_versions (current_config, "0.9.5") == CONFIG1_OLDER)
+    {
+        char *old_key;
+        char *new_key;
+
+        old_key = config_getstr ("key");
+        new_key = upgrade_key_to_095 (old_key);
+
+        config_setstr ("key", new_key);
+        free (new_key);
+
+        current_config = "0.9.5";
+        changed = TRUE;
+    }
+
     /* We've run through all the updates, so set our config file version to the
      * version we're at now, then write out the config file.
      *

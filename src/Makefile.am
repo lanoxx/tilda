@@ -20,7 +20,8 @@ tilda_SOURCES = tilda_window.c \
 		xerror.c \
 		configsys.c \
 		tomboykeybinder.c \
-		eggaccelerators.c
+		eggaccelerators.c \
+		key_converter.l
 
 tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \
@@ -42,7 +43,8 @@ tilda_LDADD = $(AM_LDADD) \
 		$(LIBGLADE_LIBS) \
 		$(VTE_LIBS) \
 		$(LIBCONFUSE_LIBS) \
-		$(LTLIBINTL)
+		$(LTLIBINTL) \
+		$(LEXLIB)
 
 maintainer-clean-generic:
 	-rm Makefile.in
