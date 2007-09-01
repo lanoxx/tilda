@@ -107,7 +107,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
          * before showing the window avoids yet more glitches. You should probably not use
          * gtk_window_show_all() here, as it takes a long time to execute. */
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-        gtk_widget_show (GTK_WINDOW(tw->window));
+        gtk_widget_show (GTK_WIDGET(tw->window));
 
         if (config_getbool ("animation"))
         {

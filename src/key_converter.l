@@ -48,6 +48,8 @@ SEP		\+
 
 %%
 
+%noyywrap
+
 {CONTROL}{SEP}		append_to_keystring ("<Control>");
 {SHIFT}{SEP}		append_to_keystring ("<Shift>");
 {ALT}{SEP}		append_to_keystring ("<Alt>");
