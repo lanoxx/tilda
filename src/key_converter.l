@@ -9,10 +9,12 @@
 
 %{
 
+/* Storage for the string-reading yyinput function */
 static char *myinput;
 static char *myinputptr;
 static char *myinputeos;
 
+/* My own string-reading yyinput function */
 static int my_yyinput (char *buf, int maxsize);
 
 #undef YY_INPUT
@@ -82,7 +84,7 @@ static int my_yyinput (char *buf, int maxsize)
 	return n;
 }
 
-#ifdef TEST_KEY_CONVERTER
+#ifdef TEST_KEY_CONVERTER_STANDALONE
 int main (int argc, char *argv[])
 {
 	char test_input[] = "Ctrl+Alt+q";
@@ -99,6 +101,11 @@ int main (int argc, char *argv[])
 	return 0;
 }
 #else
+
+/* This takes a char* and upgrades the key to the new format used by
+ * >=tilda-0.9.5. It should handle pretty much every case.
+ *
+ * Don't forget to free() the returned string. */
 char *upgrade_key_to_095 (const char *old_key)
 {
 	myinput = strdup (old_key);
@@ -109,18 +116,5 @@ char *upgrade_key_to_095 (const char *old_key)
 
 	return strdup (new_keystr);
 }
-
-#if 0
-int main (int argc, char *argv[])
-{
-	char *key = upgrade_key_to_095 ("<Control>grave");
-
-	printf ("new key = |%s|\n", key);
-
-	free (key);
-
-	return 0;
-}
-#endif
 #endif
 
