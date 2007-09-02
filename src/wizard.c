@@ -204,6 +204,9 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
     const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
 
+    /* Filter out the numlock (Mod2) key */
+    event->state &= ~ (1<<4);
+
     const gchar *key = egg_virtual_accelerator_name (event->keyval, event->state);
 
 #ifdef DEBUG
