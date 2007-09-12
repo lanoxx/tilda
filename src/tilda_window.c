@@ -383,12 +383,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     generate_animation_positions (tw);
 
-    /* Without the 2 following lines, the animation does not work. Also, for some reason, you must
-     * have shown the window at least once before setting the resize mode. */
-    //gtk_widget_realize (tw->window);
-    //gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
-    gdk_flush ();
-
     return tw;
 }
 

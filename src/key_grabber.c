@@ -25,11 +25,13 @@
 #include <xerror.h>
 #include <translation.h>
 #include <configsys.h>
+#include <tomboykeybinder.h>
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
+#include <gtk/gtkmain.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,6 +94,18 @@ void generate_animation_positions (struct tilda_window_ *tw)
     }
 }
 
+/* Process all pending GTK events, without returning to the GTK mainloop */
+static void process_all_pending_gtk_events ()
+{
+    while (gtk_events_pending ())
+        gtk_main_iteration ();
+
+    /* This is not strictly necessary, but I think it makes the animation
+     * look a little smoother. However, it probably does increase the load
+     * on the X server. */
+    gdk_flush ();
+}
+
 void pull (struct tilda_window_ *tw, enum pull_state state)
 {
     DEBUG_FUNCTION ("pull");
@@ -113,10 +127,10 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         {
             for (i=0; i<16; i++)
             {
-                gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
-                gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
+                gtk_window_move (GTK_WINDOW(tw->window), posIV[2][i], posIV[0][i]);
+                gtk_window_resize (GTK_WINDOW(tw->window), posIV[3][i], posIV[1][i]);
 
-                gdk_flush();
+                process_all_pending_gtk_events ();
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
@@ -146,10 +160,10 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         {
             for (i=15; i>=0; i--)
             {
-                gtk_window_move ((GtkWindow *) tw->window, posIV[2][i], posIV[0][i]);
-                gtk_window_resize ((GtkWindow *) tw->window, posIV[3][i], posIV[1][i]);
+                gtk_window_move (GTK_WINDOW(tw->window), posIV[2][i], posIV[0][i]);
+                gtk_window_resize (GTK_WINDOW(tw->window), posIV[3][i], posIV[1][i]);
 
-                gdk_flush();
+                process_all_pending_gtk_events ();
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
@@ -165,8 +179,6 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 #endif
         tw->current_state = UP;
     }
-
-    gdk_flush ();
 }
 
 static void onKeybindingPull (const char *keystring, gpointer user_data)
