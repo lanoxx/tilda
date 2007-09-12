@@ -340,8 +340,6 @@ static void try_to_update_config_file (const gchar *config_file)
     DEBUG_ASSERT (config_file != NULL);
 
     gboolean changed = FALSE;
-    //FIXME: if we use this version, we must free() the string at every return statement
-    //gchar *current_config = strdup (config_getstr ("tilda_config_version"));
     gchar *current_config = config_getstr ("tilda_config_version");
 
     if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)

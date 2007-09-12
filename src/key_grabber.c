@@ -169,11 +169,27 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
     gdk_flush ();
 }
 
-void onKeybindingPull (const char *keystring, gpointer user_data)
+static void onKeybindingPull (const char *keystring, gpointer user_data)
 {
-	tilda_window *tw = (tilda_window*)user_data;
+	tilda_window *tw = TILDA_WINDOW(user_data);
 	pull (tw, PULL_TOGGLE);
 }
+
+gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)
+{
+    /* Empty strings are no good */
+    if (strcmp ("", keystr) == 0)
+        return FALSE;
+
+    return tomboy_keybinder_bind (keystr, onKeybindingPull, tw);
+}
+
+void tilda_keygrabber_unbind (const gchar *keystr)
+{
+    tomboy_keybinder_unbind (keystr, onKeybindingPull);
+}
+
+
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
 

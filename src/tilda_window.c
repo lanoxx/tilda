@@ -24,7 +24,6 @@
 #include <tilda_terminal.h>
 #include <key_grabber.h>
 #include <translation.h>
-#include <tomboykeybinder.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,10 +33,8 @@
 #include <glib-object.h>
 #include <vte/vte.h>
 
-static gboolean first_run = FALSE;
-
 static void
-initialize_alpha_mode (tilda_window *tw)
+tilda_window_setup_alpha_mode (tilda_window *tw)
 {
     GdkScreen *screen;
     GdkColormap *colormap;
@@ -45,124 +42,19 @@ initialize_alpha_mode (tilda_window *tw)
     screen = gtk_widget_get_screen (GTK_WIDGET (tw->window));
     colormap = gdk_screen_get_rgba_colormap (screen);
     if (colormap != NULL && gdk_screen_is_composited (screen))
-	{
-		/* Set RGBA colormap if possible so VTE can use real alpha
-		 * channels for transparency. */
-
-		gtk_widget_set_colormap(GTK_WIDGET (tw->window), colormap);
-		tw->have_argb_visual = TRUE;
-	}
-	else
-	{
-		tw->have_argb_visual = FALSE;
-	}
-}
-
-/**
- * Get a pointer to the config file name for this instance.
- *
- * NOTE: you MUST call free() on the returned value!!!
- *
- * @param tw the tilda_window structure corresponding to this instance
- * @return a pointer to a string representation of the config file's name
- */
-static gchar* get_config_file_name (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("get_config_file_name");
-    DEBUG_ASSERT (tw != NULL);
-
-    gchar *config_file;
-    gchar instance_str[6];
-    const gchar config_prefix[] = "/.tilda/config_";
-    gint config_file_size = 0;
-
-    /* Get a string form of the instance */
-    g_snprintf (instance_str, sizeof(instance_str), "%d", tw->instance);
-
-    /* Calculate the config_file variable's size */
-    config_file_size = strlen (tw->home_dir) + strlen (config_prefix) + strlen (instance_str) + 1;
-
-    /* Allocate the config_file variable */
-    if ((config_file = (gchar*) malloc (config_file_size * sizeof(gchar))) == NULL)
-        print_and_exit (_("Out of memory, exiting ..."), EXIT_FAILURE);
-
-    /* Store the config file name in the allocated space */
-    g_snprintf (config_file, config_file_size, "%s%s%s", tw->home_dir, config_prefix, instance_str);
-
-    return config_file;
-}
-
-/**
- * Gets the tw->instance number.
- * Sets tw->config_file.
- * Starts up the config system.
- *
- * @param tw the tilda_window in which to store the config
- */
-void init_tilda_window_instance (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("init_tilda_window_instance");
-    DEBUG_ASSERT (tw != NULL);
-
-    gchar *default_key;
-
-    /* Get the instance number for this tilda, and store it in tw->instance.
-     * Also create the lock file for this instance. */
-    getinstance (tw);
-
-    /* Get and store the config file's name */
-    tw->config_file = get_config_file_name (tw);
-
-    /* If the file doesn't exist, we need to set up the default key */
-    if (!g_file_test (tw->config_file, G_FILE_TEST_EXISTS))
     {
-        first_run = TRUE;
-        default_key = g_strdup_printf ("F%d", tw->instance+1);
+        /* Set RGBA colormap if possible so VTE can use real alpha
+         * channels for transparency. */
+
+        gtk_widget_set_colormap(GTK_WIDGET (tw->window), colormap);
+        tw->have_argb_visual = TRUE;
     }
-
-    /* Start up the configuration system */
-    config_init (tw->config_file);
-
-    /* Set the default key like we say we do in the README. If we don't do
-     * this, Tilda will fail to start.
-     *
-     * FIXME: This will still fail with tw->instance > 12. How /should/ we
-     * FIXME: fix the problem??? */
-    if (first_run)
+    else
     {
-        config_setstr ("key", default_key);
-
-        /* Now show the wizard, so that the user can set up their own key */
-        wizard (tw);
+        tw->have_argb_visual = FALSE;
     }
 }
 
-void add_tab (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("add_tab");
-    DEBUG_ASSERT (tw != NULL);
-
-    tilda_term *tt;
-
-    tt = (tilda_term *) malloc (sizeof (tilda_term));
-
-    if (tt == NULL)
-    {
-        TILDA_PERROR ();
-        fprintf (stderr, _("Out of memory, cannot create tab\n"));
-        return;
-    }
-
-    init_tilda_terminal (tw, tt, FALSE);
-}
-
-void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w)
-{
-    DEBUG_FUNCTION ("add_tab_menu_call");
-    DEBUG_ASSERT (data != NULL);
-
-    add_tab (((tilda_collect *) data)->tw);
-}
 
 static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 {
@@ -178,7 +70,7 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
 
     do
     {
-        page = ((tilda_term *) terms->data)->hbox;
+        page = TILDA_TERM(terms->data)->hbox;
         if (page == current_page)
         {
             result = terms->data;
@@ -189,249 +81,429 @@ static tilda_term* find_tt_in_g_list (tilda_window *tw, gint pos)
     return result;
 }
 
-void close_current_tab (tilda_window *tw)
+void tilda_window_close_current_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("close_current_tab");
     DEBUG_ASSERT (tw != NULL);
 
-    gint pos;
-    tilda_term *tt;
-
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
-    {
-        clean_up (tw);
-    }
-    else
-    {
-        pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-        if ((tt = find_tt_in_g_list (tw, pos)) != NULL)
-        {
-            gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-
-            if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
-                gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-
-            tw->terms = g_list_remove (tw->terms, tt);
-            free (tt);
-        }
-    }
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    tilda_window_close_tab (tw, pos);
 }
 
-void close_tab (gpointer data, guint callback_action, GtkWidget *w)
+
+gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
-    DEBUG_FUNCTION ("close_tab");
-    DEBUG_ASSERT (data != NULL);
-
-    gint pos;
-    tilda_term *tt;
-    tilda_window *tw;
-    tilda_collect *tc = (tilda_collect *) data;
-
-    tw = tc->tw;
-    tt = tc->tt;
-
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 2)
+    switch (pos)
     {
-        clean_up (tw);
-    }
-    else
-    {
-        pos = gtk_notebook_page_num (GTK_NOTEBOOK (tw->notebook), tt->hbox);
-        gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), pos);
-
-        if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
-            gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
-
-        tw->terms = g_list_remove (tw->terms, tt);
-        free (tt);
-    }
-
-    free (tc);
-}
-
-gboolean init_tilda_window (tilda_window *tw, tilda_term *tt)
-{
-    DEBUG_FUNCTION ("init_tilda_window");
-    DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tt != NULL);
-
-    GtkAccelGroup *accel_group;
-    GClosure *clean, *close, *next, *prev, *add, *copy_closure, *paste_closure;
-    GClosure *goto_tab_closure_1, *goto_tab_closure_2, *goto_tab_closure_3, *goto_tab_closure_4;
-    GClosure *goto_tab_closure_5, *goto_tab_closure_6, *goto_tab_closure_7, *goto_tab_closure_8;
-    GClosure *goto_tab_closure_9, *goto_tab_closure_10;
-    GError *error;
-
-    GdkPixbuf *window_icon;
-    const gchar *window_icon_file = g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL);
-    gboolean ret = FALSE;
-
-    /* Create a window to hold the scrolling shell, and hook its
-     * delete event to the quit function.. */
-    tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    initialize_alpha_mode (tw);
-    gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
-    g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(deleted_and_quit), tw->window);
-
-    /* Create notebook to hold all terminal widgets */
-    tw->notebook = gtk_notebook_new ();
-    gtk_notebook_set_homogeneous_tabs (GTK_NOTEBOOK(tw->notebook), TRUE);
-    g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
-
-    /* Init GList of all tilda_term structures */
-    tw->terms = NULL;
-
-    switch (config_getint ("tab_pos"))
-    {
-        case 0:
+        default: /* default is top */
+            fprintf (stderr, _("You have a bad tab_pos in your configuration file\n"));
+        case NB_TOP:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
             break;
-        case 1:
+        case NB_BOTTOM:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
             break;
-        case 2:
+        case NB_LEFT:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
             break;
-        case 3:
+        case NB_RIGHT:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
-            break;
-        default:
-            DEBUG_ERROR ("Tab position");
-            fprintf (stderr, _("Bad tab_pos, not changing anything...\n"));
             break;
     }
 
-    gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
-    gtk_widget_show (tw->notebook);
+    return 0;
+}
 
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
+static void next_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("next_tab");
+    DEBUG_ASSERT (tw != NULL);
 
-    init_tilda_terminal (tw, tt, TRUE);
+    gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
+}
+
+static void prev_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("prev_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);
+}
+
+static void focus_term (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("focus_term");
+    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (widget != NULL);
+
+    GList *list;
+    GtkWidget *box;
+    GtkWidget *n = GTK_WIDGET (data);
+
+    box = gtk_notebook_get_nth_page (GTK_NOTEBOOK(n), gtk_notebook_get_current_page(GTK_NOTEBOOK(n)));
+    list = gtk_container_children (GTK_CONTAINER(box));
+    gtk_widget_grab_focus (list->data);
+}
+
+static void goto_tab (tilda_window *tw, guint i)
+{
+    DEBUG_FUNCTION ("goto_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
+}
+
+static gboolean goto_tab_generic (tilda_window *tw, gint tab_number)
+{
+    DEBUG_FUNCTION ("goto_tab_generic");
+    DEBUG_ASSERT (tw != NULL);
+
+    if (g_list_length (tw->terms) > (tab_number-1))
+    {
+        goto_tab (tw, g_list_length (tw->terms) - tab_number);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+/* These all just call the generic function since they're all basically the same
+ * anyway. Unfortunately, they can't just be macros, since we need to be able to
+ * create a pointer to them for callbacks. */
+static gboolean goto_tab_1  (tilda_window *tw) { return goto_tab_generic (tw, 1);  }
+static gboolean goto_tab_2  (tilda_window *tw) { return goto_tab_generic (tw, 2);  }
+static gboolean goto_tab_3  (tilda_window *tw) { return goto_tab_generic (tw, 3);  }
+static gboolean goto_tab_4  (tilda_window *tw) { return goto_tab_generic (tw, 4);  }
+static gboolean goto_tab_5  (tilda_window *tw) { return goto_tab_generic (tw, 5);  }
+static gboolean goto_tab_6  (tilda_window *tw) { return goto_tab_generic (tw, 6);  }
+static gboolean goto_tab_7  (tilda_window *tw) { return goto_tab_generic (tw, 7);  }
+static gboolean goto_tab_8  (tilda_window *tw) { return goto_tab_generic (tw, 8);  }
+static gboolean goto_tab_9  (tilda_window *tw) { return goto_tab_generic (tw, 9);  }
+static gboolean goto_tab_10 (tilda_window *tw) { return goto_tab_generic (tw, 10); }
+
+static void ccopy (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("ccopy");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->notebook != NULL);
+
+    GtkWidget *current_page;
+    GList *list;
+
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
+    list = gtk_container_get_children (GTK_CONTAINER(current_page));
+    vte_terminal_copy_clipboard (VTE_TERMINAL(list->data));
+}
+
+static void cpaste (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("cpaste");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tw->notebook != NULL);
+
+    GtkWidget *current_page;
+    GList *list;
+
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
+    list = gtk_container_get_children (GTK_CONTAINER (current_page));
+    vte_terminal_paste_clipboard (VTE_TERMINAL(list->data));
+}
+
+static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
+{
+    GtkAccelGroup *accel_group;
+    GClosure *temp;
 
     /* Create Accel Group to add key codes for quit, next, prev and new tabs */
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
 
     /* Exit on Ctrl-Q */
-    clean = g_cclosure_new_swap ((GCallback) clean_up, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, clean);
+    temp = g_cclosure_new_swap (G_CALLBACK(gtk_main_quit), tw, NULL);
+    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
     /* Go to Next Tab */
-    next = g_cclosure_new_swap ((GCallback) next_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, next);
+    temp = g_cclosure_new_swap (G_CALLBACK(next_tab), tw, NULL);
+    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
     /* Go to Prev Tab */
-    prev = g_cclosure_new_swap ((GCallback) prev_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, prev);
+    temp = g_cclosure_new_swap (G_CALLBACK(prev_tab), tw, NULL);
+    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
     /* Go to New Tab */
-    add = g_cclosure_new_swap ((GCallback) add_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, add);
+    temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_add_tab), tw, NULL);
+    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
     /* Delete Current Tab */
-    close = g_cclosure_new_swap ((GCallback) close_current_tab, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, close);
+    temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_close_current_tab), tw, NULL);
+    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
     /* Goto Tab # */
     /* Know a better way? Then you do. */
-    goto_tab_closure_1 = g_cclosure_new_swap ((GCallback) goto_tab_1, tw, NULL);
-    gtk_accel_group_connect (accel_group, '1', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_1);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_1), tw, NULL);
+    gtk_accel_group_connect (accel_group, '1', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_2 = g_cclosure_new_swap ((GCallback) goto_tab_2, tw, NULL);
-    gtk_accel_group_connect (accel_group, '2', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_2);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_2), tw, NULL);
+    gtk_accel_group_connect (accel_group, '2', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_3 = g_cclosure_new_swap ((GCallback) goto_tab_3, tw, NULL);
-    gtk_accel_group_connect (accel_group, '3', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_3);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_3), tw, NULL);
+    gtk_accel_group_connect (accel_group, '3', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_4 = g_cclosure_new_swap ((GCallback) goto_tab_4, tw, NULL);
-    gtk_accel_group_connect (accel_group, '4', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_4);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_4), tw, NULL);
+    gtk_accel_group_connect (accel_group, '4', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_5 = g_cclosure_new_swap ((GCallback) goto_tab_5, tw, NULL);
-    gtk_accel_group_connect (accel_group, '5', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_5);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_5), tw, NULL);
+    gtk_accel_group_connect (accel_group, '5', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_6 = g_cclosure_new_swap ((GCallback) goto_tab_6, tw, NULL);
-    gtk_accel_group_connect (accel_group, '6', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_6);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_6), tw, NULL);
+    gtk_accel_group_connect (accel_group, '6', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_7 = g_cclosure_new_swap ((GCallback) goto_tab_7, tw, NULL);
-    gtk_accel_group_connect (accel_group, '7', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_7);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_7), tw, NULL);
+    gtk_accel_group_connect (accel_group, '7', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_8 = g_cclosure_new_swap ((GCallback) goto_tab_8, tw, NULL);
-    gtk_accel_group_connect (accel_group, '8', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_8);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_8), tw, NULL);
+    gtk_accel_group_connect (accel_group, '8', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_9 = g_cclosure_new_swap ((GCallback) goto_tab_9, tw, NULL);
-    gtk_accel_group_connect (accel_group, '9', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_9);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_9), tw, NULL);
+    gtk_accel_group_connect (accel_group, '9', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    goto_tab_closure_10 = g_cclosure_new_swap ((GCallback) goto_tab_10, tw, NULL);
-    gtk_accel_group_connect (accel_group, '0', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, goto_tab_closure_10);
+    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_10), tw, NULL);
+    gtk_accel_group_connect (accel_group, '0', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    copy_closure = g_cclosure_new_swap ((GCallback) ccopy, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, copy_closure);
+    temp = g_cclosure_new_swap (G_CALLBACK(ccopy), tw, NULL);
+    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    paste_closure = g_cclosure_new_swap ((GCallback) cpaste, tw, NULL);
-    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, paste_closure);
+    temp = g_cclosure_new_swap (G_CALLBACK(cpaste), tw, NULL);
+    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
+    return 0;
+}
 
-    /*  Set a window icon! */
-    window_icon = gdk_pixbuf_new_from_file (window_icon_file, NULL);
+static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
+{
+    GdkPixbuf *window_icon = gdk_pixbuf_new_from_file (filename, NULL);
 
     if (window_icon == NULL)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Cannot open window icon");
-        fprintf (stderr, _("Unable to set tilda's icon: %s\n"), window_icon_file);
-    }
-    else
-    {
-        gtk_window_set_icon (GTK_WINDOW(tw->window), window_icon);
-        g_object_unref (window_icon);
+        fprintf (stderr, _("Unable to set tilda's icon: %s\n"), filename);
+        return 1;
     }
 
-    gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
+    gtk_window_set_icon (GTK_WINDOW(tw->window), window_icon);
+    g_object_unref (window_icon);
 
-    /* Initialize and set up the keybinding to toggle tilda's visibility. */
-    tomboy_keybinder_init ();
+    return 0;
+}
 
-    /* If this is the first time tilda has been run, then don't bother binding the
-     * key, since we've already bound it when we exited the wizard */
-    if (!first_run)
-    {
-        ret = tomboy_keybinder_bind (config_getstr ("key"), onKeybindingPull, tw);
-    }
+/**
+ * tilda_window_init ()
+ *
+ * Create a new tilda_window * and return it. It will also initialize and set up
+ * as much of the window as possible using the values in the configuation system.
+ *
+ * @param instance the instance number of this tilda_window
+ *
+ * Success: return a non-NULL tilda_window *
+ * Failure: return NULL
+ *
+ * Notes: The configuration system must be up and running before calling this function.
+ */
+tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
+{
+    DEBUG_FUNCTION ("tilda_window_init");
+    DEBUG_ASSERT (instance >= 0);
 
-    if (!ret && !first_run)
-    {
-        /* The key was unbindable, so we need to show the wizard */
-        show_invalid_keybinding_dialog (NULL);
-        wizard (tw);
-    }
+    tilda_window *tw;
+
+    tw = malloc (sizeof(tilda_window));
+
+    if (tw == NULL)
+        return NULL;
+
+    /* Set the instance number */
+    tw->instance = instance;
+
+    /* Get the user's home directory */
+    tw->home_dir = g_strdup (g_get_home_dir ());
+
+    /* Set the config file */
+    tw->config_file = g_strdup (config_file);
+
+    /* Create the main window */
+    tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
     /* Set up all window properties */
     if (config_getbool ("pinned"))
         gtk_window_stick (GTK_WINDOW(tw->window));
 
+    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), config_getbool ("notaskbar"));
     gtk_window_set_keep_above (GTK_WINDOW(tw->window), config_getbool ("above"));
+    gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
+    gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
+    tilda_window_set_icon (tw, g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL));
+    tilda_window_setup_alpha_mode (tw);
 
-    /* Position the window, and show it if we're ready */
+    /* Add keyboard accelerators */
+    tilda_window_setup_keyboard_accelerators (tw);
+
+    /* Create the notebook */
+    tw->notebook = gtk_notebook_new ();
+
+    /* Set up all notebook properties */
+    gtk_notebook_set_homogeneous_tabs (GTK_NOTEBOOK(tw->notebook), TRUE);
+    gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
+    tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
+
+    /* Create the linked list of terminals */
+    tw->terms = NULL;
+
+    /* Add the initial terminal */
+    tilda_window_add_tab (tw);
+
+    /* Connect signal handlers */
+    g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw->window);
+    g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
+
+    /* Add the notebook to the window */
+    gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
+
+    /* Show the widgets */
+    gtk_widget_show (tw->notebook);
+    /* the tw->window widget will be shown later, by pull() */
+
+    /* Position the window */
     tw->current_state = UP;
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    generate_animation_positions (tw);
+
+    /* Without the 2 following lines, the animation does not work. Also, for some reason, you must
+     * have shown the window at least once before setting the resize mode. */
+    //gtk_widget_realize (tw->window);
+    //gtk_container_set_resize_mode (GTK_CONTAINER(tw->window), GTK_RESIZE_IMMEDIATE);
     gdk_flush ();
 
-    if (config_getbool ("hidden"))
+    return tw;
+}
+
+gint tilda_window_free (tilda_window *tw)
+{
+    gint num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
+
+    /* Close each tab which still exists.
+     * This will free their data structures automatically. */
+    while (num_pages > 0)
     {
-        /* It does not cause graphical glitches to make tilda hidden on start this way.
-         * It does make tilda appear much faster on it's first appearance, so I'm leaving
-         * it this way, because it has a good benefit, and no apparent drawbacks. */
-        gtk_widget_show (GTK_WIDGET(tw->window));
-        gtk_widget_hide (GTK_WIDGET(tw->window));
-    }
-    else
-    {
-        pull (tw, PULL_DOWN);
+        /* Close the 0th tab, which should always exist while we have
+         * some pages left in the notebook. */
+        tilda_window_close_tab (tw, 0);
+
+        num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
     }
 
-    return TRUE;
+    g_free (tw->config_file);
+    g_free (tw->home_dir);
+
+    g_free (tw);
+
+    return 0;
+}
+
+/**
+ * tilda_window_add_tab ()
+ *
+ * Create and add a new tab at the end of the notebook
+ *
+ * Success: the new tab's index (>=0)
+ * Failure: -1
+ */
+gint tilda_window_add_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_window_add_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    tilda_term *tt;
+    GtkWidget *label;
+    gint index;
+
+    tt = tilda_term_init (tw);
+
+    if (tt == NULL)
+    {
+        TILDA_PERROR ();
+        fprintf (stderr, _("Out of memory, cannot create tab\n"));
+        return -1;
+    }
+
+    /* Create page and append to notebook */
+    label = gtk_label_new ("Tilda");
+    /* Strangely enough, prepend puts pages on the end */
+    index = gtk_notebook_prepend_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
+    gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE, TRUE, GTK_PACK_END);
+    gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
+
+    /* We should show the tabs if there are more than one tab in the notebook */
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
+
+    /* Add to GList list of tilda_term structures in tilda_window structure */
+    tw->terms = g_list_append (tw->terms, tt);
+
+    /* The new terminal should grab the focus automatically */
+    gtk_widget_grab_focus (tt->vte_term);
+
+    return index;
+}
+
+/**
+ * tilda_window_close_tab ()
+ *
+ * Closes the tab at the given tab index (starting from 0)
+ *
+ * Success: return 0
+ * Failure: return non-zero
+ */
+gint tilda_window_close_tab (tilda_window *tw, gint tab_index)
+{
+    DEBUG_FUNCTION ("tilda_window_close_tab");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tab_index >= 0);
+
+    tilda_term *tt;
+    GtkWidget *child;
+
+    child = gtk_notebook_get_nth_page (GTK_NOTEBOOK(tw->notebook), tab_index);
+
+    if (child == NULL)
+    {
+        g_printerr ("Bad tab_index specified");
+        return -1;
+    }
+
+    tt = find_tt_in_g_list (tw, tab_index);
+
+    gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), tab_index);
+
+    /* We should hide the tabs if there is only one tab left */
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
+
+    /* With no pages left, it's time to leave the program */
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 1)
+        gtk_main_quit ();
+
+    /* Remove the tilda_term from the list of terminals */
+    tw->terms = g_list_remove (tw->terms, tt);
+
+    /* Free the terminal, we are done with it */
+    tilda_term_free (tt);
+
+    return 0;
 }
 

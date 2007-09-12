@@ -26,8 +26,8 @@ void pull (struct tilda_window_ *tw, enum pull_state state);
 
 extern void generate_animation_positions (tilda_window *tw);
 
-/* Key binding callbacks. They get called after you associate them with a key. */
-extern void onKeybindingPull (const char *keystring, gpointer user_data);
+gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw);
+void tilda_keygrabber_unbind (const gchar *keystr);
 
 G_END_DECLS
 

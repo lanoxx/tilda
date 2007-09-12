@@ -28,20 +28,21 @@ G_BEGIN_DECLS
     (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
     strcmp ((a), (b)))
 
-void clean_up (tilda_window *tw);
-void clean_up_no_args ();
-
 extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
-extern void print_and_exit (const gchar *message, gint exitval);
-extern void getinstance (tilda_window *tw);
-extern int write_config_file (tilda_window *tw);
 
-#define HEIGHT 0
-#define WIDTH  1
+enum dimensions { HEIGHT, WIDTH };
 
-extern gint get_display_dimension (const gint dimension);
+/* FIXME: some of this can go elsewhere */
+extern gint get_display_dimension (enum dimensions dimension);
 extern gint get_physical_height_pixels ();
 extern gint get_physical_width_pixels ();
+
+struct lock_info
+{
+    gint pid;
+    gint instance;
+};
+
 
 G_END_DECLS
 

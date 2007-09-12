@@ -44,12 +44,17 @@ struct tilda_window_
     enum tilda_positions { UP, DOWN } current_state;
 };
 
-void add_tab (tilda_window *tw);
-void add_tab_menu_call (gpointer data, guint callback_action, GtkWidget *w);
-void close_tab (gpointer data, guint callback_action, GtkWidget *w);
-gboolean init_tilda_window (tilda_window *tw, tilda_term *tt);
-void init_tilda_window_instance (tilda_window *tw);
-void close_current_tab (tilda_window *tw);
+enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT };
+
+gint tilda_window_add_tab (tilda_window *tw);
+gint tilda_window_close_tab (tilda_window *tw, gint tab_position);
+tilda_window *tilda_window_init (const gchar *config_file, const gint instance);
+gint tilda_window_free (tilda_window *tw);
+
+gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos);
+void tilda_window_close_current_tab (tilda_window *tw);
+
+#define TILDA_WINDOW(data) ((tilda_window *)(data))
 
 G_END_DECLS
 

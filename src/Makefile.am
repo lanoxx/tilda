@@ -15,7 +15,6 @@ tilda_SOURCES = tilda_window.c \
 		wizard.c \
 		callback_func.c \
 		key_grabber.c \
-		load_tilda.c  \
 		tilda.c \
 		xerror.c \
 		configsys.c \

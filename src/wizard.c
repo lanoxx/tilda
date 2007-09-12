@@ -20,7 +20,6 @@
 #include <debug.h>
 #include <tilda.h>
 #include <wizard.h>
-#include <load_tilda.h>
 #include <key_grabber.h>
 #include <translation.h>
 #include <configsys.h>
@@ -64,7 +63,7 @@ gint wizard (tilda_window *ltw)
     DEBUG_FUNCTION ("wizard");
     DEBUG_ASSERT (ltw != NULL);
 
-    gchar window_title[64];
+    gchar *window_title;
     const gchar *glade_file = g_build_filename (DATADIR, "tilda.glade", NULL);
     GtkWidget *wizard_window;
 
@@ -106,12 +105,13 @@ gint wizard (tilda_window *ltw)
     /* Unbind the current keybinding. I'm aware that this opens up an opportunity to
      * let "someone else" grab the key, but it also saves us some trouble, and makes
      * validation easier. */
-    tomboy_keybinder_unbind (config_getstr ("key"), onKeybindingPull);
+    tilda_keygrabber_unbind (config_getstr ("key"));
 
-    g_snprintf (window_title, sizeof(window_title), "Tilda %d Config", ltw->instance);
+    window_title = g_strdup_printf ("Tilda %d Config", ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
+    g_free (window_title);
 
     /* Block here until the wizard is closed successfully */
     gtk_main ();
@@ -125,6 +125,8 @@ gint wizard (tilda_window *ltw)
  * wizard's lifetime. */
 static void wizard_closed ()
 {
+    DEBUG_FUNCTION ("wizard_closed");
+
     const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
     const GtkWidget *entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
     const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
@@ -134,7 +136,7 @@ static void wizard_closed ()
     gboolean key_is_valid = FALSE;
 
     /* Try to grab the key. This is a good way to validate it :) */
-    key_is_valid = tomboy_keybinder_bind (key, onKeybindingPull, tw);
+    key_is_valid = tilda_keygrabber_bind (key, tw);
 
     if (!key_is_valid)
     {
@@ -166,6 +168,8 @@ static void wizard_closed ()
 
 void show_invalid_keybinding_dialog (GtkWindow *parent_window)
 {
+    DEBUG_FUNCTION ("show_invalid_keybinding_dialog");
+
     GtkWidget *dialog = gtk_message_dialog_new (parent_window,
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_ERROR,
@@ -233,7 +237,7 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     g_free (key);
 }
 
-static int percentage_dimension (int current_size, int dimension)
+static int percentage_dimension (int current_size, enum dimensions dimension)
 {
     DEBUG_FUNCTION ("percentage_dimension");
     DEBUG_ASSERT (dimension == WIDTH || dimension == HEIGHT);
@@ -266,10 +270,11 @@ static void window_title_change_all ()
     for (i=0;i<size;i++,list_count--)
     {
         tt = g_list_nth (tw->terms, list_count)->data;
-        title = get_window_title (tt->vte_term, tw);
+        title = get_window_title (tt->vte_term);
         page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), i);
         label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
         gtk_label_set_label (GTK_LABEL(label), title);
+        g_free (title);
     }
 }
 
@@ -925,7 +930,12 @@ static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 
         for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
-            gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, status);
+
+            if (status == 1)
+                gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 0);
+            else /* status == 0 */
+                gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 1);
+
             gtk_widget_show (tt->scrollbar);
         }
 

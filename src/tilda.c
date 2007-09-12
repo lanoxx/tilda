@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <glib-object.h>
+#include <glib.h>
 #include <stdio.h>
 #include <signal.h>
 #include <pwd.h>
@@ -48,147 +49,47 @@
 #include <vte/vte.h>
 #include <glib/gstdio.h>
 
-/**
- * Print a message to stderr, then exit.
- *
- * @param message the message to print
- * @param exitval the value to call exit with
- */
-void print_and_exit (const gchar *message, gint exitval)
+
+static gchar *create_lock_file (gchar *home_directory, struct lock_info lock)
 {
-    DEBUG_FUNCTION ("print_and_exit");
-    DEBUG_ASSERT (message != NULL);
+    DEBUG_FUNCTION ("create_lock_file");
+    DEBUG_ASSERT (home_directory != NULL);
+    DEBUG_ASSERT (lock.instance >= 0);
+    DEBUG_ASSERT (lock.pid >= 1);
 
-    fprintf (stderr, "%s\n", message);
-    exit (exitval);
-}
-
-/**
- * Exit on OOM condition.
- *
- * Always terminates with EXIT_FAILURE.
- */
-void oom_exit ()
-{
-	DEBUG_FUNCTION ("oom_exit");
-
-	print_and_exit (_("Out of memory, exiting ..."), EXIT_FAILURE);
-}
-
-/**
- * Get the next instance number to use
- *
- * @param tw the tilda_window structure for this instance
- */
-static gint getnextinstance (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("getnextinstance");
-    DEBUG_ASSERT (tw != NULL);
-
-    GArray *list = NULL;
-
-    gchar *lock_dir;
-    gchar *name;
-    gchar **tokens;
-    const gchar lock_subdir[] = "/.tilda/locks";
-    gint lock_dir_size = 0;
-    gint count = 0;
-    gint current = 0;
-    gint i;
-    GDir *dir;
-
-    /* We create a new array to store gint values.
-     * We don't want it zero-terminated or cleared to 0's. */
-    list = g_array_new (FALSE, FALSE, sizeof(gint));
-
-    /* Figure out the size of the lock_dir variable. Make sure to
-     * account for the null-terminator at the end of the string. */
-    lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
-
-    /* Make sure our allocation did not fail */
-    if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        oom_exit ();
-
-    /* Get the lock directory for this user, and open the directory */
-    g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
-    dir = g_dir_open (lock_dir, 0, NULL);
-
-    while (dir != NULL && (name = (gchar*)g_dir_read_name (dir)))
-    {
-        tokens = g_strsplit (name, "_", 3);
-
-        if (tokens != NULL)
-        {
-            current = atoi (tokens[2]);
-            g_strfreev (tokens);
-
-            /* Do a sorted insert into the GArray */
-            for (i=0; i<count; i++)
-                if (current < g_array_index (list, gint, i))
-                    break;
-
-            g_array_insert_val (list, i, current);
-            count++;
-        }
-    }
-
-    /* Find the lowest non-consecutive available place in the array. This
-     * will be this tilda's number. */
-    for (i=0; i<count; i++)
-        if (g_array_index (list, gint, i) != i)
-            break;
-
-    /* Free memory that we allocated */
-    if (dir != NULL)
-        g_dir_close (dir);
-
-    g_array_free (list, TRUE);
-    free (lock_dir);
-
-    return i;
-}
-
-/**
- * Set the instance number for tw, and create the lock file
- *
- * @param tw the tilda_window to manipulate
- */
-void getinstance (tilda_window *tw)
-{
-    DEBUG_FUNCTION ("getinstance");
-    DEBUG_ASSERT (tw != NULL);
-
-    gchar pid[6];
-    gchar instance[6];
-    const gchar lock_subdir[] = "/.tilda/locks";
-    gint lock_file_size = 0;
-
-    /* Get the number of existing locks */
-    tw->instance = getnextinstance (tw);
-
-    /* Set up the temporary variables used for calculating the
-     * size of the tw->lock_file string. */
-    g_snprintf (pid, sizeof(pid), "%d", getpid());
-    g_snprintf (instance, sizeof(instance), "%d", tw->instance);
-
-    /* Calculate tw->lock_file's size, and allocate it */
-    lock_file_size = strlen (tw->home_dir) + strlen (lock_subdir)
-                   + strlen ("/lock_") + strlen (pid) + strlen ("_")
-                   + strlen (instance) + 1;
-
-    if ((tw->lock_file = (gchar*) malloc (lock_file_size * sizeof(gchar))) == NULL)
-        oom_exit ();
+    gint ret;
+    gchar *lock_file_full;
+    gchar *lock_directory = g_build_filename (home_directory, ".tilda", "locks", NULL);
+    gchar *lock_file = g_strdup_printf ("lock_%d_%d", lock.pid, lock.instance);
 
     /* Make the ~/.tilda/locks directory */
-    g_snprintf (tw->lock_file, lock_file_size, "%s%s", tw->home_dir, lock_subdir);
-    g_mkdir_with_parents (tw->lock_file,  S_IRUSR | S_IWUSR | S_IXUSR);
+    ret = g_mkdir_with_parents (lock_directory,  S_IRUSR | S_IWUSR | S_IXUSR);
 
-    /* Set tw->lock_file to the lock name for this instance */
-    g_snprintf (tw->lock_file, lock_file_size, "%s%s/lock_%s_%s",
-            tw->home_dir, lock_subdir, pid, instance);
+    if (ret == -1)
+        goto mkdir_fail;
+
+    /* Create the full path to the lock file */
+    lock_file_full = g_build_filename (lock_directory, lock_file, NULL);
 
     /* Create the lock file */
-    g_creat (tw->lock_file, S_IRUSR | S_IWUSR | S_IXUSR);
+    ret = g_creat (lock_file_full, S_IRUSR | S_IWUSR | S_IXUSR);
+
+    if (ret == -1)
+        goto creat_fail;
+
+    g_free (lock_file);
+    g_free (lock_directory);
+
+    return lock_file_full;
+
+    /* Free memory and return NULL */
+creat_fail:
+    g_free (lock_file_full);
+mkdir_fail:
+    g_free (lock_file);
+    g_free (lock_directory);
+
+    return NULL;
 }
 
 /**
@@ -197,137 +98,169 @@ void getinstance (tilda_window *tw)
  * will return the lock file's corresponding pid, if it is a valid lock.
  *
  * @param filename the filename to check
- * @param lock_pid the pid of the lock file (if it was valid)
- * @return TRUE if this is a lockfile, FALSE otherwise
+ * @return a new struct lock_info
+ *
+ * Success: struct lock_info will be filled in and non-NULL
+ * Failure: return NULL
  */
-static gboolean islockfile (const gchar *filename, gint *lock_pid)
+static struct lock_info *islockfile (const gchar *filename)
 {
     DEBUG_FUNCTION ("islockfile");
     DEBUG_ASSERT (filename != NULL);
-    DEBUG_ASSERT (lock_pid != NULL);
+
+    struct lock_info *lock;
+
+    lock = malloc (sizeof (struct lock_info));
+
+    if (lock == NULL)
+        return NULL;
+
+#ifdef USE_GLIB_2_14
+    GRegex *regex;
+    GMatchInfo *match_info;
+    gboolean matched;
+    gchar *temp;
+
+    regex = g_regex_new ("^lock_(\d+)_(\d+)$", 0, 0, NULL);
+    matched = g_regex_match (regex, filename, 0, &match_info);
+
+    if (!matched)
+    {
+        g_free (lock);
+        lock = NULL;
+        goto nomatch;
+    }
+
+    /* Get the lock pid */
+    temp = g_match_info_fetch (match_info, 0);
+    lock->pid = atoi (temp);
+    g_free (temp);
+
+    /* Get the configuration number */
+    temp = g_match_info_fetch (match_info, 1);
+    lock->instance = atoi (temp);
+    g_free (temp);
+
+nomatch:
+    if (match_info)
+        g_match_info_free (match_info);
+
+    g_regex_unref (regex);
+
+    return matched;
+
+#else /* Glib version is <2.14 */
 
     gboolean matches = g_str_has_prefix (filename, "lock_");
     gboolean islock = FALSE;
-    gchar *pid, *conf_num;
-    gint int_pid, int_cnum;
+    gchar *pid_s, *instance_s;
 
     if (matches) /* we are prefixed with "lock_" and are probably a lock */
     {
-        pid = strstr (filename, "_");
+        pid_s = strstr (filename, "_");
 
-        if (pid) /* we have a valid pid */
+        if (pid_s) /* we have a valid pid */
         {
-            int_pid = atoi (pid+1);
-            conf_num = strstr (pid+1, "_");
+            /* Advance the pointer past the underscore */
+            pid_s++;
 
-            if (int_pid > 0 && conf_num)
+            lock->pid = atoi (pid_s);
+            instance_s = strstr (pid_s, "_");
+
+            if (lock->pid > 0 && instance_s)
             {
-                int_cnum = atoi (conf_num+1);
-                *lock_pid = int_pid;
-                islock = TRUE; /* we parsed everything, so yes, we were a lock */
+                /* Advance the pointer past the underscore */
+                instance_s++;
+
+                /* Extract the instance number and store it */
+                lock->instance = atoi (instance_s);
+
+                /* we parsed everything, so yes, we were a lock */
+                islock = TRUE;
             }
         }
     }
 
-    return islock;
+    if (!islock)
+    {
+        g_free (lock);
+        lock = NULL;
+    }
+
+    return lock;
+#endif
 }
 
 /**
- * Remove stale locks in the ~/.tilda/locks/ directory.
+ * Remove stale lock files from the ~/.tilda/locks/ directory.
  *
- * @param tw the tilda_window structure for this instance
+ * @param home_directory the user's home directory
+ *
+ * Success: returns 0
+ * Failure: returns non-zero
  */
-static void clean_tmp (tilda_window *tw)
+static gint remove_stale_lock_files (gchar *home_directory)
 {
-    DEBUG_FUNCTION ("clean_tmp");
-    DEBUG_ASSERT (tw != NULL);
+    DEBUG_FUNCTION ("remove_stale_lock_files");
+    DEBUG_ASSERT (home_directory != NULL);
 
-    FILE *ptr;
-    const gchar cmd[] = "ps -C tilda -o pid=";
+    GSList *pids = NULL;
+    FILE *ps_output;
+    const gchar ps_command[] = "ps -C tilda -o pid=";
     gchar buf[16]; /* Really shouldn't need more than 6 */
-    gint i;
 
-    gint num_pids = 0;
-    gint *running_pids;
-
-    /* Allocate just one pid, for now */
-    if ((running_pids = (gint*) malloc (1 * sizeof(gint))) == NULL)
-        oom_exit ();
-
-    /* Get all running tilda pids, and store them in an array */
-    if ((ptr = popen (cmd, "r")) != NULL)
+    if ((ps_output = popen (ps_command, "r")) == NULL)
     {
-        while (fgets (buf, sizeof(buf), ptr) != NULL)
-        {
-            i = atoi(buf); /* get the pid */
-
-            if (i > 0 && i < 32768)
-            {
-                running_pids[num_pids] = i;
-                num_pids++;
-
-                /* Allocate space for the next pid */
-                if ((running_pids = (gint*) realloc (running_pids, (num_pids+1) * sizeof(gint))) == NULL)
-                    oom_exit ();
-            }
-        }
-
-        pclose (ptr);
+        g_printerr ("Unable to run: `%s'\n", ps_command);
+        return -1;
     }
 
-    gchar *lock_dir;
-    const gchar lock_subdir[] = "/.tilda/locks";
+    /* The popen() succeeded, get all of the pids */
+    while (fgets (buf, sizeof(buf), ps_output) != NULL)
+        pids = g_slist_append (pids, GINT_TO_POINTER (atoi (buf)));
+
+    /* We've read all of the pids, exit */
+    pclose (ps_output);
+
+    struct lock_info *lock;
+    gchar *lock_dir = g_build_filename (home_directory, ".tilda", "locks", NULL);
     gchar *remove_file;
     gchar *filename;
     GDir *dir;
     gint pid;
-    gint lock_dir_size = 0;
-    gint remove_file_size = 0;
-    gboolean stale;
 
-    lock_dir_size = strlen (tw->home_dir) + strlen (lock_subdir) + 1;
-
-    if ((lock_dir = (gchar*) malloc (lock_dir_size * sizeof(gchar))) == NULL)
-        oom_exit ();
-
-    g_snprintf (lock_dir, lock_dir_size, "%s%s", tw->home_dir, lock_subdir);
+    /* Open the lock directory for reading */
     dir = g_dir_open (lock_dir, 0, NULL);
+
+    if (dir == NULL)
+    {
+        g_printerr ("Unable to open lock directory: %s\n", lock_dir);
+        g_free (lock_dir);
+        return -2;
+    }
 
     /* For each possible lock file, check if it is a lock, and see if
      * it matches one of the running tildas */
-    while (dir != NULL && (filename = (gchar*)g_dir_read_name (dir)))
+    while (filename = (gchar*) g_dir_read_name (dir))
     {
-        if (islockfile (filename, &pid))
+        lock = islockfile (filename);
+
+        if (lock && (g_slist_find (pids, GINT_TO_POINTER (lock->pid)) == NULL))
         {
-            stale = TRUE;
-
-            for (i=0; i<num_pids; i++)
-                if (running_pids[i] == pid)
-                    stale = FALSE;
-
-            if (stale)
-            {
-                /* Calculate the size of remove_file, but make sure to allocate space
-                 * for the null-terminator and the "/" in the g_snprintf() below. */
-                remove_file_size = strlen (lock_dir) + strlen (filename) + 2;
-
-                if ((remove_file = (gchar*) malloc (remove_file_size * sizeof(gchar))) == NULL)
-                    oom_exit ();
-
-                g_snprintf (remove_file, remove_file_size, "%s/%s", lock_dir, filename);
-                g_remove (remove_file);
-
-                /* Free the memory we just allocated, since we don't need it anymore */
-                free (remove_file);
-            }
+            /* We have found a stale element */
+            remove_file = g_build_filename (lock_dir, filename, NULL);
+            g_remove (remove_file);
+            g_free (remove_file);
         }
+
+        if (lock)
+            g_free (lock);
     }
 
-    if (dir != NULL)
-        g_dir_close (dir);
+    g_dir_close (dir);
+    g_free (lock_dir);
 
-    free (running_pids);
-    free (lock_dir);
+    return 0;
 }
 
 /**
@@ -336,16 +269,13 @@ static void clean_tmp (tilda_window *tw)
  *
  * @param argc argc from main
  * @param argv argv from main
- * @param tw the tilda_window from main.
- * @param tt the tilda_term, from main.
+ * @return TRUE if we should show the configuration wizard, FALSE otherwise
  */
-static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt)
+static gboolean parse_cli (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("parse_cli");
     DEBUG_ASSERT (argc != NULL);
     DEBUG_ASSERT (argv != NULL);
-    DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tt != NULL);
 
     /* Set default values */
     gchar *background_color = config_getstr ("background_color");
@@ -385,16 +315,12 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     };
 
 
-    /* If the config file doesn't exist open up the wizard */
-    if (access (tw->config_file, R_OK) == -1)
-        show_config = TRUE;
-
     /* Set up the command-line parser */
     GError *error = NULL;
     GOptionContext *context = g_option_context_new (NULL);
     g_option_context_add_main_entries (context, cl_opts, NULL);
     g_option_context_add_group (context, gtk_get_option_group (TRUE));
-    g_option_context_parse (context, argc, argv, &error);
+    g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free (context);
 
     /* Check for unknown options, and give a nice message if there are some */
@@ -412,7 +338,7 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
         printf ("%s\n\n", TILDA_VERSION);
 
         printf ("Copyright (c) 2005,2006 Tristan Sloughter (sloutri@iit.edu)\n");
-        printf ("Copyright (c) 2005,2006 Ira W. Snyder (tilda@irasnyder.com)\n\n");
+        printf ("Copyright (c) 2005-2007 Ira W. Snyder (tilda@irasnyder.com)\n\n");
 
         printf ("This program comes with ABSOLUTELY NO WARRANTY.\n");
         printf ("This is free software, and you are welcome to redistribute it\n");
@@ -452,11 +378,8 @@ static void parse_cli (int *argc, char ***argv, tilda_window *tw, tilda_term *tt
     if (scrollbar != config_getbool ("scrollbar"))
         config_setbool ("scrollbar", scrollbar);
 
-    /* Show the config wizard, if it was requested */
-    if (show_config)
-        if (wizard (tw) != 0) {
-          clean_up(tw);
-        }
+    /* TRUE if we should show the config wizard, FALSE otherwize */
+    return show_config;
 }
 
 gint get_physical_height_pixels ()
@@ -477,7 +400,7 @@ gint get_physical_width_pixels ()
     return gdk_screen_get_width (screen);
 }
 
-gint get_display_dimension (const gint dimension)
+gint get_display_dimension (const enum dimensions dimension)
 {
     DEBUG_FUNCTION ("get_display_dimension");
     DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
@@ -512,27 +435,118 @@ int find_centering_coordinate (const int screen_dimension, const int tilda_dimen
     return screen_center - tilda_center;
 }
 
-int main (int argc, char **argv)
+/**
+ * Get a pointer to the config file name for this instance.
+ *
+ * NOTE: you MUST call free() on the returned value!!!
+ *
+ * @param tw the tilda_window structure corresponding to this instance
+ * @return a pointer to a string representation of the config file's name
+ */
+static gchar *get_config_file_name (gchar *home_directory, gint instance)
+{
+    DEBUG_FUNCTION ("get_config_file_name");
+    DEBUG_ASSERT (home_directory != NULL);
+    DEBUG_ASSERT (instance >= 0);
+
+    gchar *config_file_prefix = g_build_filename (home_directory, ".tilda", "config_", NULL);
+    gchar *config_file;
+
+    config_file = g_strdup_printf ("%s%d", config_file_prefix, instance);
+    g_free (config_file_prefix);
+
+    return config_file;
+}
+
+/**
+ * get_instance_number ()
+ *
+ * Gets the next available tilda instance number. This will always pick the
+ * lowest non-running tilda available.
+ *
+ * Success: return next available instance number (>=0)
+ * Failure: return -1
+ */
+static gint get_instance_number (gchar *home_directory)
+{
+    DEBUG_FUNCTION ("get_instance_number");
+    DEBUG_ASSERT (home_directory != NULL);
+
+    gint i;
+    gchar *name;
+
+    GDir *dir;
+    GSList *list = NULL;
+    struct lock_info *lock;
+    gchar *lock_dir = g_build_filename (home_directory, ".tilda", "locks", NULL);
+
+    /* Open the lock directory */
+    dir = g_dir_open (lock_dir, 0, NULL);
+
+    /* Check for failure to open */
+    if (dir == NULL)
+    {
+        g_printerr ("Unable to open lock directory: %s\n", lock_dir);
+        g_free (lock_dir);
+        return -1;
+    }
+
+    /* Look through every file in the lock directory, and see if it is a lock file.
+     * If it is a lock file, store it's instance number in the list. */
+    while (name = (gchar*)g_dir_read_name (dir))
+    {
+        lock = islockfile (name);
+
+        if (lock != NULL)
+        {
+            list = g_slist_append (list, GINT_TO_POINTER (lock->instance));
+            g_free (lock);
+        }
+    }
+
+    g_dir_close (dir);
+
+    /* Find the lowest available instance.
+     *
+     * This is not the most efficient algorithm ever, but the
+     * list should not be too big, so it's ok for now. */
+    for (i=0; i<INT_MAX; i++)
+        if (!g_slist_find (list, GINT_TO_POINTER (i)))
+            break;
+
+    g_free (lock_dir);
+    g_slist_free (list);
+
+    return i;
+}
+
+static void termination_handler (gint signum)
+{
+    DEBUG_FUNCTION ("termination_handler");
+
+    gtk_main_quit ();
+}
+
+int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("main");
 
-    tilda_window *tw;
-    tilda_term *tt;
+    tilda_window *tw = NULL;
 
-    /* create new tilda window and terminal */
-    tw = (tilda_window *) malloc (sizeof (tilda_window));
-    tt = (tilda_term *) malloc (sizeof (tilda_term));
+    struct sigaction sa;
+    struct lock_info lock;
+    gboolean need_wizard = FALSE;
+    gchar *home_dir, *config_file, *lock_file;
 
-    /* Check the allocations above, since they are extremely critical,
-     * and segfaults suck */
-    if (tw == NULL || tt == NULL)
-    {
-        DEBUG_ERROR ("Out of memory");
-        DEBUG_ASSERT (tw != NULL);
-        DEBUG_ASSERT (tt != NULL);
+    home_dir = g_strdup (g_get_home_dir ());
 
-        oom_exit ();
-    }
+    /* Remove stale lock files */
+    remove_stale_lock_files (home_dir);
+
+    lock.pid = getpid ();
+    lock.instance = get_instance_number (home_dir);
+    config_file = get_config_file_name (home_dir, lock.instance);
+    lock_file = create_lock_file (home_dir, lock);
 
 #if ENABLE_NLS
     /* Gettext Initialization */
@@ -541,14 +555,6 @@ int main (int argc, char **argv)
     textdomain (PACKAGE);
 #endif
 
-    /* Get the user's home directory */
-    tw->home_dir = g_strdup(g_get_home_dir ());
-
-    /* Gotta do this first to make sure no lock files are left over */
-    clean_tmp (tw);
-
-    /* Set: tw->instance, tw->config_file, and parse the config file */
-    init_tilda_window_instance (tw);
 
 #ifdef DEBUG
     /* Have to do this early. */
@@ -556,9 +562,11 @@ int main (int argc, char **argv)
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
+    /* Start up the configuration system */
+    config_init (config_file);
 
-    /* Parse all of the command-line options */
-    parse_cli (&argc, &argv, tw, tt);
+    /* Parse the command line */
+    need_wizard = parse_cli (argc, argv);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
@@ -568,32 +576,87 @@ int main (int argc, char **argv)
 
     /* Initialize GTK and libglade */
     gtk_init (&argc, &argv);
+
     /*
      * Not needed with the new glade:
      * ====================================
      * glade_init ();
      */
 
-    /* Initialize all things needed in the initial tilda_window.
-     * This includes things like keybindings, and the global keybinder, etc.
-     */
-    init_tilda_window (tw, tt);
+    /* create new tilda_window */
+    tw = tilda_window_init (config_file, lock.instance);
 
-    signal (SIGINT, clean_up_no_args);
-    signal (SIGQUIT, clean_up_no_args);
-    signal (SIGABRT, clean_up_no_args);
-    signal (SIGKILL, clean_up_no_args);
-    signal (SIGABRT, clean_up_no_args);
-    signal (SIGTERM, clean_up_no_args);
+    /* Check the allocations above */
+    if (tw == NULL)
+        goto tw_alloc_failed;
 
+    /* Initialize and set up the keybinding to toggle tilda's visibility. */
+    tomboy_keybinder_init ();
+
+    /* Hook up signal handlers */
+    sa.sa_handler = termination_handler;
+    sigemptyset (&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    sigaction (SIGINT,  &sa, NULL);
+    sigaction (SIGQUIT, &sa, NULL);
+    sigaction (SIGABRT, &sa, NULL);
+    sigaction (SIGTERM, &sa, NULL);
+    sigaction (SIGKILL, &sa, NULL);
+
+    /* If the config file doesn't exist open up the wizard */
+    if (access (tw->config_file, R_OK) == -1)
+    {
+        /* We probably need a default key, too ... */
+        gchar *default_key = g_strdup_printf ("F%d", tw->instance+1);
+        config_setstr ("key", default_key);
+        g_free (default_key);
+
+        need_wizard = TRUE;
+    }
+
+    /* Show the wizard if we need to.
+     *
+     * Note that the key will be bound upon exiting the wizard */
+    if (need_wizard)
+        wizard (tw);
+    else
+    {
+        gint ret = tilda_keygrabber_bind (config_getstr ("key"), tw);
+
+        if (!ret)
+        {
+            /* The key was unbindable, so we need to show the wizard */
+            show_invalid_keybinding_dialog (NULL);
+            wizard (tw);
+        }
+    }
+
+    if (config_getbool ("hidden"))
+    {
+        /* It does not cause graphical glitches to make tilda hidden on start this way.
+         * It does make tilda appear much faster on it's first appearance, so I'm leaving
+         * it this way, because it has a good benefit, and no apparent drawbacks. */
+        gtk_widget_show (GTK_WIDGET(tw->window));
+        gtk_widget_hide (GTK_WIDGET(tw->window));
+    }
+    else
+    {
+        pull (tw, PULL_DOWN);
+    }
+
+    /* Whew! We're finally all set up and ready to run GTK ... */
     gtk_main();
 
-    g_remove (tw->lock_file);
-    config_free (tw->config_file);
-    free (tw->home_dir);
-    free (tw->lock_file);
-    free (tw->config_file);
-    free (tw);
+    /* Ok, we're at the end of our run. Time to clean up ... */
+    tilda_window_free (tw);
+
+tw_alloc_failed:
+    config_free (config_file);
+    g_remove (lock_file);
+    g_free (lock_file);
+    g_free (config_file);
+    g_free (home_dir);
 
     return 0;
 }

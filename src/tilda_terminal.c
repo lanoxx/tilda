@@ -21,8 +21,8 @@
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <callback_func.h>
-#include <load_tilda.h>
 #include <configsys.h>
+#include <translation.h>
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
@@ -35,118 +35,696 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
-gboolean init_tilda_terminal (tilda_window *tw, tilda_term *tt, gboolean in_main)
+
+
+static gint start_shell (struct tilda_term_ *tt);
+static gint tilda_term_config_defaults (tilda_term *tt);
+static void child_exited_cb (GtkWidget *widget, gpointer data);
+static void window_title_changed_cb (GtkWidget *widget, gpointer data);
+static void status_line_changed_cb (GtkWidget *widget, gpointer data);
+static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
+static void status_line_changed_cb (GtkWidget *widget, gpointer data);
+static void iconify_window_cb (GtkWidget *widget, gpointer data);
+static void deiconify_window_cb (GtkWidget *widget, gpointer data);
+static void raise_window_cb (GtkWidget *widget, gpointer data);
+static void lower_window_cb (GtkWidget *widget, gpointer data);
+static void maximize_window_cb (GtkWidget *widget, gpointer data);
+static void restore_window_cb (GtkWidget *widget, gpointer data);
+static void refresh_window_cb (GtkWidget *widget, gpointer data);
+static void resize_window_cb (GtkWidget *widget, guint width, guint height, gpointer data);
+static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
+static void increase_font_size_cb (GtkWidget *widget, gpointer data);
+static void decrease_font_size_cb (GtkWidget *widget, gpointer data);
+
+
+gint tilda_term_free (struct tilda_term_ *term)
 {
-    DEBUG_FUNCTION ("init_tilda_terminal");
+    DEBUG_FUNCTION ("tilda_term_free");
+    DEBUG_ASSERT (term != NULL);
+
+    g_free (term);
+
+    return 0;
+}
+
+
+
+struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
+{
+    DEBUG_FUNCTION ("tilda_term_init");
+    DEBUG_ASSERT (tw != NULL);
+
+    int ret;
+    struct tilda_term_ *term;
+
+    term = malloc (sizeof (struct tilda_term_));
+
+    /* Check for a failed allocation */
+    if (!term)
+        return NULL;
+
+    /* Add the parent window reference */
+    term->tw = tw;
+
+    /* Create a non-homogenous hbox, with 0px spacing between members */
+    term->hbox = gtk_hbox_new (FALSE, 0);
+
+    /* Create the terminal */
+    term->vte_term = vte_terminal_new ();
+
+    /* Create the scrollbar for the terminal */
+    term->scrollbar = gtk_vscrollbar_new (VTE_TERMINAL(term->vte_term)->adjustment);
+
+    /* Set properties of the terminal */
+    tilda_term_config_defaults (term);
+
+    /* Pack everything into the hbox */
+    switch (config_getint ("scrollbar_pos"))
+    {
+        case LEFT:
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
+            gtk_widget_show (term->scrollbar);
+            break;
+
+        case RIGHT:
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
+            gtk_widget_show (term->scrollbar);
+            break;
+
+        default:
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
+            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
+            // do NOT show the scrollbar
+            break;
+    }
+
+
+    /** Signal Connection **/
+    g_signal_connect (G_OBJECT(term->vte_term), "child-exited",
+                      G_CALLBACK(child_exited_cb), term);
+    g_signal_connect (G_OBJECT(term->vte_term), "window-title-changed",
+                      G_CALLBACK(window_title_changed_cb), term);
+    g_signal_connect (G_OBJECT(term->vte_term), "eof",
+                      G_CALLBACK(child_exited_cb), term);
+    g_signal_connect (G_OBJECT(term->vte_term), "status-line-changed",
+                      G_CALLBACK(status_line_changed_cb), term);
+    g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
+                      G_CALLBACK(button_press_cb), term);
+
+    /* Connect to application request signals. */
+    g_signal_connect (G_OBJECT(term->vte_term), "iconify-window",
+                      G_CALLBACK(iconify_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "deiconify-window",
+                      G_CALLBACK(deiconify_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "raise-window",
+                      G_CALLBACK(raise_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "lower-window",
+                      G_CALLBACK(lower_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "maximize-window",
+                      G_CALLBACK(maximize_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "restore-window",
+                      G_CALLBACK(restore_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "refresh-window",
+                      G_CALLBACK(refresh_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "resize-window",
+                      G_CALLBACK(resize_window_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "move-window",
+                      G_CALLBACK(move_window_cb), tw->window);
+
+    /* Connect to font tweakage. */
+    g_signal_connect (G_OBJECT(term->vte_term), "increase-font-size",
+                      G_CALLBACK(increase_font_size_cb), tw->window);
+    g_signal_connect (G_OBJECT(term->vte_term), "decrease-font-size",
+                      G_CALLBACK(decrease_font_size_cb), tw->window);
+
+    /* Match URL's, etc */
+    ret = vte_terminal_match_add (VTE_TERMINAL(term->vte_term), DINGUS1);
+    vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
+    ret = vte_terminal_match_add(VTE_TERMINAL (term->vte_term), DINGUS2);
+    vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
+
+    /* Show the child widgets */
+    gtk_widget_show (term->vte_term);
+    gtk_widget_show (term->hbox);
+
+    /* Fork the appropriate command into the terminal */
+    ret = start_shell (term);
+
+    if (ret)
+        goto err_fork;
+
+    return term;
+
+err_fork:
+    g_free (term);
+    return NULL;
+}
+
+static void window_title_changed_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("window_title_changed_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_term *tt = TILDA_TERM(data);
+    gchar *title = get_window_title (widget);
+    GtkWidget *label;
+
+    label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
+    gtk_label_set_text (GTK_LABEL(label), title);
+
+    g_free (title);
+}
+
+static void status_line_changed_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("status_line_changed_cb");
+    DEBUG_ASSERT (widget != NULL);
+
+    g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
+}
+
+static void iconify_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("iconify_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_iconify ((GTK_WIDGET(data))->window);
+}
+
+static void deiconify_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("deiconify_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_deiconify ((GTK_WIDGET(data))->window);
+}
+
+static void raise_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("raise_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_raise ((GTK_WIDGET(data))->window);
+}
+
+static void lower_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("lower_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_lower ((GTK_WIDGET(data))->window);
+}
+
+static void maximize_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("maximize_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_maximize ((GTK_WIDGET(data))->window);
+}
+
+static void restore_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("restore_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_unmaximize ((GTK_WIDGET(data))->window);
+}
+
+static void refresh_window_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("refresh_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    GdkRectangle rect;
+    if (GTK_IS_WIDGET(data))
+    {
+        if ((GTK_WIDGET(data))->window)
+        {
+            rect.x = rect.y = 0;
+            rect.width = (GTK_WIDGET(data))->allocation.width;
+            rect.height = (GTK_WIDGET(data))->allocation.height;
+            gdk_window_invalidate_rect ((GTK_WIDGET(data))->window, &rect, TRUE);
+        }
+    }
+}
+
+static void resize_window_cb (GtkWidget *widget, guint width, guint height, gpointer data)
+{
+    DEBUG_FUNCTION ("resize_window_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (width >= 0);
+    DEBUG_ASSERT (height >= 0);
+    DEBUG_ASSERT (data != NULL);
+
+    VteTerminal *terminal;
+    gint owidth, oheight, xpad, ypad;
+
+    if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2))
+    {
+        terminal = VTE_TERMINAL(widget);
+
+        /* Take into account border overhead. */
+        gtk_window_get_size (GTK_WINDOW(data), &owidth, &oheight);
+        owidth -= terminal->char_width * terminal->column_count;
+        oheight -= terminal->char_height * terminal->row_count;
+
+        /* Take into account padding, which needn't be re-added. */
+        vte_terminal_get_padding (VTE_TERMINAL(widget), &xpad, &ypad);
+        owidth -= xpad;
+        oheight -= ypad;
+        gtk_window_resize (GTK_WINDOW(data), width + owidth, height + oheight);
+    }
+}
+
+static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data)
+{
+    DEBUG_FUNCTION ("move_window_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    if (GTK_IS_WIDGET(data))
+        if ((GTK_WIDGET(data))->window)
+            gdk_window_move ((GTK_WIDGET(data))->window, x, y);
+}
+
+static void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
+{
+    DEBUG_FUNCTION ("adjust_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    VteTerminal *terminal;
+    PangoFontDescription *desired;
+    gint newsize;
+    gint columns, rows, owidth, oheight;
+
+    /* Read the screen dimensions in cells. */
+    terminal = VTE_TERMINAL(widget);
+    columns = terminal->column_count;
+    rows = terminal->row_count;
+
+    /* Take into account padding and border overhead. */
+    gtk_window_get_size(GTK_WINDOW(data), &owidth, &oheight);
+    owidth -= terminal->char_width * terminal->column_count;
+    oheight -= terminal->char_height * terminal->row_count;
+
+    /* Calculate the new font size. */
+    desired = pango_font_description_copy (vte_terminal_get_font(terminal));
+    newsize = pango_font_description_get_size (desired) / PANGO_SCALE;
+    newsize += howmuch;
+    pango_font_description_set_size (desired, CLAMP(newsize, 4, 144) * PANGO_SCALE);
+
+    /* Change the font, then resize the window so that we have the same
+     * number of rows and columns. */
+    vte_terminal_set_font (terminal, desired);
+    /*gtk_window_resize (GTK_WINDOW(data),
+              columns * terminal->char_width + owidth,
+              rows * terminal->char_height + oheight);*/
+
+    pango_font_description_free (desired);
+}
+
+static void increase_font_size_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("increase_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    adjust_font_size (widget, data, 1);
+}
+
+static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("decrease_font_size");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    adjust_font_size (widget, data, -1);
+}
+
+static gint start_shell (struct tilda_term_ *tt)
+{
+    DEBUG_FUNCTION ("start_shell");
+    DEBUG_ASSERT (tt != NULL);
+
+    gint ret;
+    gint argc;
+    gchar **argv;
+
+    if (!config_getbool ("run_command"))
+    {
+        /* Do nothing here, we'll get taken care of later */
+    }
+    else if (g_shell_parse_argv (config_getstr ("command"), &argc, &argv, NULL))
+    {
+        ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
+                    argv[0], argv, NULL,
+                    config_getstr ("working_dir"),
+                    TRUE, TRUE, TRUE);
+
+        /* Check to see that we actually launched something */
+        if (ret == -1)
+            g_printerr ("Unable to launch custom command: %s\n", config_getstr ("command"));
+
+        g_strfreev (argv);
+        return ret; // the early way out
+    }
+    else /* An error in g_shell_parse_argv ??? */
+    {
+        TILDA_PERROR ();
+        DEBUG_ERROR ("argv parse");
+        exit (1);
+    }
+
+    gchar *command = (gchar *) g_getenv ("SHELL");
+
+    if (command == NULL)
+        command = "/bin/sh";
+
+    ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
+                command, NULL, NULL,
+                config_getstr ("working_dir"),
+                TRUE, TRUE, TRUE);
+
+    if (ret == -1)
+    {
+        g_printerr ("Unable to launch shell: %s\n", command);
+        return 1;
+    }
+
+    return 0;
+}
+
+
+static void child_exited_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("child_exited_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_term *tt = TILDA_TERM(data);
+    gint index = gtk_notebook_page_num (GTK_NOTEBOOK(tt->tw->notebook), tt->hbox);
+
+    /* Make sure we got a valid index */
+    if (index == -1)
+    {
+        g_printerr ("Bad notebook tab\n");
+        return;
+    }
+
+    /* FIXME: this should go in a header */
+    enum command_exit { HOLD_TERMINAL_OPEN, RESTART_COMMAND, EXIT_TERMINAL };
+
+    /* Check the user's preference for what to do when the child terminal
+     * is closed. Take the appropriate action */
+    switch (config_getint ("command_exit"))
+    {
+        case EXIT_TERMINAL:
+            tilda_window_close_tab (tt->tw, index);
+            break;
+        case RESTART_COMMAND:
+            vte_terminal_feed (VTE_TERMINAL(tt->vte_term), "\r\n\r\n", 4);
+            start_shell (tt);
+            break;
+        case HOLD_TERMINAL_OPEN:
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * tilda_term_config_defaults ()
+ *
+ * Read and set all of the defaults for this terminal from the current configuration.
+ *
+ * Success: return 0
+ * Failure: return non-zero
+ */
+static gint tilda_term_config_defaults (tilda_term *tt)
+{
+    DEBUG_FUNCTION ("tilda_term_config_defaults");
+    DEBUG_ASSERT (tt != NULL);
+
+    gdouble transparency_level = 0.0;
+    GdkColor fg, bg /*, tint, highlight, cursor, black */;
+
+
+    /** Colors **/
+    bg.red   =    config_getint ("back_red");
+    bg.green =    config_getint ("back_green");
+    bg.blue  =    config_getint ("back_blue");
+
+    fg.red   =    config_getint ("text_red");
+    fg.green =    config_getint ("text_green");
+    fg.blue  =    config_getint ("text_blue");
+
+    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, NULL, 0);
+
+    /** Bells **/
+    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !config_getbool ("bell"));
+
+    /** Cursor **/
+    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), config_getbool ("blinks"));
+
+    /** Scrolling **/
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_output"));
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_key"));
+
+    /** Mouse **/
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE); /* TODO: make this configurable */
+
+    /** Text Properties **/
+    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
+    gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
+    vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr ("font"), config_getbool ("antialias"));
+
+    /** Keys **/
+    switch (config_getint ("backspace_key"))
+    {
+        case ASCII_DELETE:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
+            break;
+        case DELETE_SEQUENCE:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_DELETE_SEQUENCE);
+            break;
+        case ASCII_BACKSPACE:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_BACKSPACE);
+            break;
+        case AUTO:
+        default:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
+            break;
+    }
+
+    switch (config_getint ("delete_key"))
+    {
+        case ASCII_DELETE:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
+            break;
+        case DELETE_SEQUENCE:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_DELETE_SEQUENCE);
+            break;
+        case ASCII_BACKSPACE:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_BACKSPACE);
+            break;
+        case AUTO:
+        default:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
+            break;
+    }
+
+    /** Background **/
+    if (config_getbool ("use_image"))
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), config_getstr ("image"));
+    else
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
+
+    transparency_level = ((gdouble) config_getint ("transparency"))/100;
+
+    if (config_getbool ("enable_transparency") && transparency_level > 0)
+    {
+        vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
+        vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
+        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), !tt->tw->have_argb_visual);
+    }
+
+    return 0;
+}
+
+static void menu_copy_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_copy_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_term *tt = TILDA_TERM(data);
+
+    vte_terminal_copy_clipboard (VTE_TERMINAL (tt->vte_term));
+}
+
+static void menu_paste_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_paste_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_term *tt = TILDA_TERM(data);
+
+    vte_terminal_paste_clipboard (VTE_TERMINAL (tt->vte_term));
+}
+
+
+static void menu_config_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_config_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_term *tt = TILDA_TERM (data);
+
+    /* Show the config wizard */
+    wizard (tt->tw);
+}
+
+static void menu_quit_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_quit_cb");
+
+    gtk_main_quit ();
+}
+
+static void menu_add_tab_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_add_tab_cb");
+    DEBUG_ASSERT (w != NULL);
+
+    tilda_term *tt = TILDA_TERM (data);
+
+    tilda_window_add_tab (tt->tw);
+}
+
+static void menu_close_tab_cb (gpointer data, guint callback_action, GtkWidget *w)
+{
+    DEBUG_FUNCTION ("menu_close_tab_cb");
+    DEBUG_ASSERT (w != NULL);
+
+    tilda_term *tt = TILDA_TERM(data);
+    tilda_window_close_current_tab (tt->tw);
+}
+
+static void popup_menu (tilda_window *tw, tilda_term *tt)
+{
+    DEBUG_FUNCTION ("popup_menu");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
-    gboolean dingus = TRUE;
-    gint i;
-    tilda_collect *t_collect;
-    GtkWidget *label = NULL;
+    GtkItemFactory *item_factory;
+    GtkWidget *menu;
 
-    t_collect = (tilda_collect *) malloc (sizeof (tilda_collect));
-    t_collect->tw = tw;
-    t_collect->tt = tt;
+    GtkItemFactoryEntry menu_items[] = {
+        { _("/_New Tab"),		"<Ctrl><Shift>T",	menu_add_tab_cb,	0, "<StockItem>",	GTK_STOCK_ADD			},
+        { _("/_Close Tab"),		NULL,				menu_close_tab_cb,	0, "<StockItem>",	GTK_STOCK_CLOSE			},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Copy"),			"<Ctrl><Shift>C",	menu_copy_cb,		0, "<StockItem>",	GTK_STOCK_COPY			},
+        { _("/_Paste"),			"<Ctrl><Shift>V",	menu_paste_cb,		0, "<StockItem>",	GTK_STOCK_PASTE			},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Preferences..."),NULL,				menu_config_cb,		0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
+        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
+        { _("/_Quit"),			"<Ctrl>Q",			menu_quit_cb,		0, "<StockItem>",	GTK_STOCK_QUIT			}
+    };
 
-    /* Create a box to hold everything. */
-    tt->hbox = gtk_hbox_new (0, FALSE);
+    gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
-    /* Create the terminal widget and add it to the scrolling shell. */
-    tt->vte_term = vte_terminal_new ();
-    tt->scrollbar = gtk_vscrollbar_new ((VTE_TERMINAL(tt->vte_term))->adjustment);
+    item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", NULL);
+    gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, tt);
+    menu = gtk_item_factory_get_widget (item_factory, "<main>");
+    gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
+                   NULL, NULL, 3, gtk_get_current_event_time());
 
-    /* Causes terminal to blink if TRUE */
-    gtk_widget_set_double_buffered (tt->vte_term, config_getbool ("double_buffer"));
-
-    switch (config_getint ("scrollbar_pos"))
-    {
-        case 1: /* scrollbar on left */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
-            break;
-
-        default: /* scrollbar on the right */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->scrollbar, FALSE, FALSE, 0); /* add scrollbar */
-            gtk_box_pack_start (GTK_BOX(tt->hbox), tt->vte_term, TRUE, TRUE, 0); /* add term */
-            break;
-    }
-
-    /* Connect to the "window_title_changed" signal to set the main
-     * window's title. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "window-title-changed",
-                      G_CALLBACK(window_title_changed), t_collect);
-
-    /* Connect to the "eof" signal to quit when the session ends. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "eof",
-                      G_CALLBACK(destroy_and_quit_eof), t_collect);
-    g_signal_connect (G_OBJECT(tt->vte_term), "child-exited",
-                      G_CALLBACK(close_tab_on_exit), t_collect);
-
-    /* Connect to the "status-line-changed" signal. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "status-line-changed",
-                      G_CALLBACK(status_line_changed), tt->vte_term);
-
-    /* Connect to the "button-press" event. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "button-press-event",
-                      G_CALLBACK(button_pressed), t_collect);
-
-    /* Connect to application request signals. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "iconify-window",
-                      G_CALLBACK(iconify_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "deiconify-window",
-                      G_CALLBACK(deiconify_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "raise-window",
-                      G_CALLBACK(raise_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "lower-window",
-                      G_CALLBACK(lower_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "maximize-window",
-                      G_CALLBACK(maximize_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "restore-window",
-                      G_CALLBACK(restore_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "refresh-window",
-                      G_CALLBACK(refresh_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "resize-window",
-                      G_CALLBACK(resize_window), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "move-window",
-                      G_CALLBACK(move_window), tw->window);
-
-    /* Connect to font tweakage. */
-    g_signal_connect (G_OBJECT(tt->vte_term), "increase-font-size",
-                      G_CALLBACK(increase_font_size), tw->window);
-    g_signal_connect (G_OBJECT(tt->vte_term), "decrease-font-size",
-                      G_CALLBACK(decrease_font_size), tw->window);
-
-
-    if (dingus)
-    {
-        i = vte_terminal_match_add (VTE_TERMINAL(tt->vte_term), DINGUS1);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND2);
-        i = vte_terminal_match_add(VTE_TERMINAL (tt->vte_term), DINGUS2);
-        vte_terminal_match_set_cursor_type (VTE_TERMINAL(tt->vte_term), i, GDK_HAND2);
-    }
-
-    start_program(t_collect);
-
-    gtk_widget_show (tt->vte_term);
-    gtk_widget_show (tt->hbox);
-
-    /* Create page to append to notebook */
-    label = gtk_label_new ("Tilda");
-    gtk_notebook_prepend_page ((GtkNotebook *) tw->notebook, tt->hbox, label);
-    gtk_notebook_set_tab_label_packing ((GtkNotebook *) tw->notebook, tt->hbox, TRUE, TRUE, GTK_PACK_END);
-    gtk_notebook_set_current_page ((GtkNotebook *) tw->notebook, 0);
-
-    /* Add to GList list of tilda_term structures in tilda_window structure */
-    tw->terms = g_list_append (tw->terms, tt);
-
-    /* Set everything up and display the widgets.
-     * Sending TRUE to let it know we are in main()
-     */
-    update_tilda (tw, tt, in_main);
-    gtk_widget_grab_focus (tt->vte_term);
-
-    return TRUE;
+    gtk_widget_show_all(menu);
 }
 
+static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+    DEBUG_FUNCTION ("button_press_cb");
+    DEBUG_ASSERT (data != NULL);
+
+    VteTerminal *terminal;
+    tilda_term *tt;
+    gchar *match;
+    gint tag;
+    gint xpad, ypad;
+    gchar *cmd;
+    gchar *web_browser_cmd;
+    gboolean ret = FALSE;
+
+    tt = TILDA_TERM(data);
+
+    switch (event->button)
+    {
+        case 3: /* Right Click */
+            popup_menu (tt->tw, tt);
+            break;
+        case 2: /* Middle Click */
+            break;
+        case 1: /* Left Click */
+            terminal  = VTE_TERMINAL(tt->vte_term);
+            vte_terminal_get_padding (terminal, &xpad, &ypad);
+            match = vte_terminal_match_check (terminal,
+                    (event->x - ypad) /
+                    terminal->char_width,
+                    (event->y - ypad) /
+                    terminal->char_height,
+                    &tag);
+
+            /* Check if we can launch a web browser, and do so if possible */
+            if ((event->state & GDK_CONTROL_MASK) && match != NULL)
+            {
+#if DEBUG
+                printf ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
+#endif
+                web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
+                cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
+#if DEBUG
+                printf ("Launching command: `%s'\n", cmd);
+#endif
+                ret = g_spawn_command_line_async(cmd, NULL);
+
+                /* Check that the command launched */
+                if (!ret)
+                {
+                    printf ("Failed to launch the web browser. The command was `%s'\n", cmd);
+                    TILDA_PERROR ();
+                }
+
+                g_free (cmd);
+            }
+
+            /* Always free match if it is non NULL */
+            if (match)
+                g_free (match);
+
+            break;
+        default:
+            break;
+    }
+
+    return FALSE;
+}
+
+/* vim: set ts=4 sts=4 sw=4 expandtab: */

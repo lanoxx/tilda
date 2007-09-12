@@ -14,8 +14,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef TILDA_TERMINAL_H
-#define TILDA_TERMINAL_H
+#ifndef TILDA_TERMINALN_H
+#define TILDA_TERMINALN_H
 
 #include <tilda_window.h>
 
@@ -24,25 +24,52 @@
 G_BEGIN_DECLS
 
 typedef struct tilda_term_ tilda_term;
-typedef struct tilda_collect_ tilda_collect;
 
 struct tilda_term_
 {
     GtkWidget *vte_term;
     GtkWidget *hbox;
     GtkWidget *scrollbar;
-};
 
-
-struct tilda_collect_
-{
     struct tilda_window_ *tw;
-    struct tilda_term_ *tt;
 };
 
-gboolean init_tilda_terminal (struct tilda_window_ *tw, struct tilda_term_ *tt, gboolean in_main);
+enum tilda_term_scrollbar_positions { DISABLED, LEFT, RIGHT };
+enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
+
+/**
+ * tilda_term_init ()
+ *
+ * Initialize and return a new struct tilda_term_.
+ *
+ * @param tw The main tilda window, which must be initialized.
+ *
+ * Success: return a non-NULL struct tilda_term_ *.
+ * Failure: return NULL.
+ *
+ * Notes: you must call tilda_term_free() on the returned struct tilda_term_
+ *        when you are finished using it, and it has been removed from all GTK
+ *        structures, such as the notebook.
+ */
+struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw);
+
+/**
+ * tilda_term_free ()
+ *
+ * Free a struct tilda_term_* created with tilda_term_init (). This will
+ * clean up any memory allocations that were made to create the object. It
+ * should only be called when there is no more need to access the object.
+ *
+ * Success: return 0
+ * Failure: return non-zero
+ */
+gint tilda_term_free (struct tilda_term_ *term);
+
+#define TILDA_TERM(tt) ((tilda_term *)(tt))
 
 G_END_DECLS
 
-#endif
+/* vim: set ts=4 sts=4 sw=4 expandtab: */
+
+#endif /* TILDA_TERMINALN_H */
 
