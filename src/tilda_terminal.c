@@ -99,27 +99,12 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     tilda_term_config_defaults (term);
 
     /* Pack everything into the hbox */
-    switch (config_getint ("scrollbar_pos"))
-    {
-        case LEFT:
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
-            gtk_widget_show (term->scrollbar);
-            break;
+    gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
+    gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
+    gtk_widget_show (term->scrollbar);
 
-        case RIGHT:
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
-            gtk_widget_show (term->scrollbar);
-            break;
-
-        default:
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
-            gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
-            // do NOT show the scrollbar
-            break;
-    }
-
+    /* Set the scrollbar position */
+    tilda_term_set_scrollbar_position (term, config_getint ("scrollbar_pos"));
 
     /** Signal Connection **/
     g_signal_connect (G_OBJECT(term->vte_term), "child-exited",
@@ -180,6 +165,31 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 err_fork:
     g_free (term);
     return NULL;
+}
+
+void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos)
+{
+    DEBUG_FUNCTION ("tilda_term_set_scrollbar_position");
+    DEBUG_ASSERT (tt != NULL);
+    DEBUG_ASSERT (pos == LEFT || pos == RIGHT || pos == DISABLED);
+
+    switch (pos)
+    {
+        case LEFT:
+            gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 0);
+            gtk_widget_show (tt->scrollbar);
+            break;
+
+        case RIGHT:
+            gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 1);
+            gtk_widget_show (tt->scrollbar);
+            break;
+
+        case DISABLED:
+        default:
+            gtk_widget_hide (tt->scrollbar);
+            break;
+    }
 }
 
 static void window_title_changed_cb (GtkWidget *widget, gpointer data)

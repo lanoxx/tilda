@@ -894,20 +894,6 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
     }
 }
 
-/* FIXME: there is a bug below, but I'm not sure what it is, only the effect:
- *
- * 1) Move the combo to Disabled
- * 2) Move to non disabled
- * 3) Move to other non disabled
- *
- * Observe that the scrollbar didn't come back between 1 & 2,
- * but did between 2 & 3. Strange ...
- *
- * FIXME: Another bug ...
- *
- * On load, the scrollbar's state is backwards from what it should be,
- * but after you switch it in the wizard, it is ok again until restart-time
- */
 static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -916,39 +902,10 @@ static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 
     config_setint ("scrollbar_pos", status);
 
-    if (status != 2) // Left or Right, not Disabled
+    for (i=0; i<g_list_length (tw->terms); i++)
     {
-        config_setbool ("scrollbar", TRUE);
-
-        /* These 2 commented-out statements fix the bug where the scrollbar
-         * does not always update immediately on the screen when changing
-         * properties. The problem is that we should only do it when the
-         * window is in the "down" state. I'm not sure how to detect this, yet.
-         *
-         * Uncomment when you fix the bug :) */
-        //gtk_widget_hide (tw->window);
-
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-
-            if (status == 1)
-                gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 0);
-            else /* status == 0 */
-                gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 1);
-
-            gtk_widget_show (tt->scrollbar);
-        }
-
-        //gtk_widget_show (tw->window);
-    }
-    else // Disabled
-    {
-        config_setbool ("scrollbar", FALSE);
-
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            gtk_widget_hide (tt->scrollbar);
-        }
+        tt = g_list_nth_data (tw->terms, i);
+        tilda_term_set_scrollbar_position (tt, status);
     }
 }
 

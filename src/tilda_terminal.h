@@ -34,7 +34,7 @@ struct tilda_term_
     struct tilda_window_ *tw;
 };
 
-enum tilda_term_scrollbar_positions { DISABLED, LEFT, RIGHT };
+enum tilda_term_scrollbar_positions { RIGHT, LEFT, DISABLED };
 enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
 
 /**
@@ -64,6 +64,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw);
  * Failure: return non-zero
  */
 gint tilda_term_free (struct tilda_term_ *term);
+
+
+void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos);
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 
