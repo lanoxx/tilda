@@ -211,7 +211,7 @@ static gint remove_stale_lock_files (gchar *home_directory)
 
     if ((ps_output = popen (ps_command, "r")) == NULL)
     {
-        g_printerr ("Unable to run: `%s'\n", ps_command);
+        g_printerr ("Unable to run command: `%s'\n", ps_command);
         return -1;
     }
 
@@ -351,7 +351,10 @@ static gboolean parse_cli (int argc, char *argv[])
     if (background_color != config_getstr ("background_color"))
         config_setstr ("background_color", background_color);
     if (command != config_getstr ("command"))
+    {
+        config_setbool ("run_command", TRUE);
         config_setstr ("command", command);
+    }
     if (font != config_getstr ("font"))
         config_setstr ("font", font);
     if (image != config_getstr ("image"))

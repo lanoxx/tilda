@@ -387,6 +387,13 @@ static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
     adjust_font_size (widget, data, -1);
 }
 
+/* Fork a shell into the VTE Terminal
+ *
+ * @param tt the tilda_term to fork into
+ *
+ * SUCCESS: return 0
+ * FAILURE: return non-zero
+ */
 static gint start_shell (struct tilda_term_ *tt)
 {
     DEBUG_FUNCTION ("start_shell");
@@ -395,46 +402,61 @@ static gint start_shell (struct tilda_term_ *tt)
     gint ret;
     gint argc;
     gchar **argv;
+    GError *error = NULL;
 
-    if (!config_getbool ("run_command"))
+    gchar *default_command;
+
+    if (config_getbool ("run_command"))
     {
-        /* Do nothing here, we'll get taken care of later */
-    }
-    else if (g_shell_parse_argv (config_getstr ("command"), &argc, &argv, NULL))
-    {
+        ret = g_shell_parse_argv (config_getstr ("command"), &argc, &argv, &error);
+
+        /* Check for error */
+        if (ret == FALSE)
+        {
+            g_printerr ("Problem parsing custom command: %s\n", error->message);
+            g_printerr ("Launching default shell\n");
+
+            g_error_free (error);
+            goto launch_default_shell;
+        }
+
         ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
                     argv[0], argv, NULL,
                     config_getstr ("working_dir"),
                     TRUE, TRUE, TRUE);
 
-        /* Check to see that we actually launched something */
-        if (ret == -1)
-            g_printerr ("Unable to launch custom command: %s\n", config_getstr ("command"));
-
         g_strfreev (argv);
-        return ret; // the early way out
-    }
-    else /* An error in g_shell_parse_argv ??? */
-    {
-        TILDA_PERROR ();
-        DEBUG_ERROR ("argv parse");
-        exit (1);
+
+        /* Check for error */
+        if (ret == -1)
+        {
+            g_printerr ("Unable to launch custom command: %s\n", config_getstr ("command"));
+            g_printerr ("Launching default shell\n");
+
+            goto launch_default_shell;
+        }
+
+        return 0; /* SUCCESS: the early way out */
     }
 
-    gchar *command = (gchar *) g_getenv ("SHELL");
+launch_default_shell:
 
-    if (command == NULL)
-        command = "/bin/sh";
+    /* No custom command, get it from the environment */
+    default_command = (gchar *) g_getenv ("SHELL");
+
+    /* Check for error */
+    if (default_command == NULL)
+        default_command = "/bin/sh";
 
     ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-                command, NULL, NULL,
+                default_command, NULL, NULL,
                 config_getstr ("working_dir"),
                 TRUE, TRUE, TRUE);
 
     if (ret == -1)
     {
-        g_printerr ("Unable to launch shell: %s\n", command);
-        return 1;
+        g_printerr ("Unable to launch default shell: %s\n", default_command);
+        return ret;
     }
 
     return 0;

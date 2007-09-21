@@ -317,6 +317,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     DEBUG_FUNCTION ("tilda_window_init");
     DEBUG_ASSERT (instance >= 0);
 
+    gint ret;
     tilda_window *tw;
 
     tw = malloc (sizeof(tilda_window));
@@ -363,7 +364,13 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tw->terms = NULL;
 
     /* Add the initial terminal */
-    tilda_window_add_tab (tw);
+    ret = tilda_window_add_tab (tw);
+
+    if (ret < 0)
+    {
+        free (tw);
+        return NULL;
+    }
 
     /* Connect signal handlers */
     g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw->window);
