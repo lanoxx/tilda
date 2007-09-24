@@ -1,4 +1,4 @@
-// vim: set ts=8 sts=8 sw=8 noexpandtab textwidth=112:
+/* vim: set ts=8 sts=8 sw=8 noexpandtab textwidth=112: */
 
 #ifndef CONFIGSYS_H
 #define CONFIGSYS_H

@@ -23,6 +23,7 @@
 #include <callback_func.h>
 #include <configsys.h>
 #include <translation.h>
+#include <wizard.h> /* wizard */
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
@@ -77,7 +78,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     int ret;
     struct tilda_term_ *term;
 
-    term = malloc (sizeof (struct tilda_term_));
+    term = g_malloc (sizeof (struct tilda_term_));
 
     /* Check for a failed allocation */
     if (!term)
@@ -479,7 +480,8 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
         return;
     }
 
-    /* FIXME: this should go in a header */
+    /* These can stay here. They don't need to go into a header because
+     * they are only used at this point in the code. */
     enum command_exit { HOLD_TERMINAL_OPEN, RESTART_COMMAND, EXIT_TERMINAL };
 
     /* Check the user's preference for what to do when the child terminal

@@ -320,7 +320,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gint ret;
     tilda_window *tw;
 
-    tw = malloc (sizeof(tilda_window));
+    tw = g_malloc (sizeof(tilda_window));
 
     if (tw == NULL)
         return NULL;
