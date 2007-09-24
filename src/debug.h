@@ -20,6 +20,7 @@
 
 #include <tilda-config.h>
 
+#include <glib.h>
 #include <stdio.h>
 
 /* Debug Macros
@@ -38,7 +39,7 @@
 
     #define DEBUG_ASSERT assert
 
-    #define DEBUG_ERROR(ERRMSG) fprintf (stderr, "*** DEVELOPER ERROR *** at %s:%d" \
+    #define DEBUG_ERROR(ERRMSG) g_printerr("*** DEVELOPER ERROR *** at %s:%d" \
                                          " -> %s\n", __FILE__, __LINE__, (ERRMSG))
 
 #else
@@ -63,7 +64,7 @@
 
 #if DEBUG_FUNCTIONS
 
-    #define DEBUG_FUNCTION(NAME) fprintf (stderr, "FUNCTION ENTERED: %s\n", (NAME))
+    #define DEBUG_FUNCTION(NAME) g_printerr("FUNCTION ENTERED: %s\n", (NAME))
 
 #else
 

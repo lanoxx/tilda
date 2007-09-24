@@ -150,7 +150,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
 #if DEBUG
         /* The window is definitely in the pulled down state now */
-        printf ("pull(): MOVED DOWN\n");
+        g_print ("pull(): MOVED DOWN\n");
 #endif
         tw->current_state = DOWN;
     }
@@ -175,7 +175,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
 #if DEBUG
         /* The window is definitely in the UP state now */
-        printf ("pull(): MOVED UP\n");
+        g_print ("pull(): MOVED UP\n");
 #endif
         tw->current_state = UP;
     }

@@ -211,7 +211,7 @@ static gint remove_stale_lock_files (gchar *home_directory)
 
     if ((ps_output = popen (ps_command, "r")) == NULL)
     {
-        g_printerr ("Unable to run command: `%s'\n", ps_command);
+        g_printerr (_("Unable to run command: `%s'\n"), ps_command);
         return -1;
     }
 
@@ -234,7 +234,7 @@ static gint remove_stale_lock_files (gchar *home_directory)
 
     if (dir == NULL)
     {
-        g_printerr ("Unable to open lock directory: %s\n", lock_dir);
+        g_printerr (_("Unable to open lock directory: %s\n"), lock_dir);
         g_free (lock_dir);
         return -2;
     }
@@ -327,7 +327,7 @@ static gboolean parse_cli (int argc, char *argv[])
     if (error)
     {
         const char *msg = _("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n");
-        fprintf (stderr, msg, error->message);
+        g_printerr (msg, error->message);
 
         exit (EXIT_FAILURE);
     }
@@ -335,14 +335,14 @@ static gboolean parse_cli (int argc, char *argv[])
     /* If we need to show the version, show it then exit normally */
     if (version)
     {
-        printf ("%s\n\n", TILDA_VERSION);
+        g_print ("%s\n\n", TILDA_VERSION);
 
-        printf ("Copyright (c) 2005,2006 Tristan Sloughter (sloutri@iit.edu)\n");
-        printf ("Copyright (c) 2005-2007 Ira W. Snyder (tilda@irasnyder.com)\n\n");
+        g_print ("Copyright (c) 2005,2006 Tristan Sloughter (sloutri@iit.edu)\n");
+        g_print ("Copyright (c) 2005-2007 Ira W. Snyder (tilda@irasnyder.com)\n\n");
 
-        printf ("This program comes with ABSOLUTELY NO WARRANTY.\n");
-        printf ("This is free software, and you are welcome to redistribute it\n");
-        printf ("under certain conditions. See the file COPYING for details.\n");
+        g_print ("This program comes with ABSOLUTELY NO WARRANTY.\n");
+        g_print ("This is free software, and you are welcome to redistribute it\n");
+        g_print ("under certain conditions. See the file COPYING for details.\n");
 
         exit (EXIT_SUCCESS);
     }
@@ -489,7 +489,7 @@ static gint get_instance_number (gchar *home_directory)
     /* Check for failure to open */
     if (dir == NULL)
     {
-        g_printerr ("Unable to open lock directory: %s\n", lock_dir);
+        g_printerr (_("Unable to open lock directory: %s\n"), lock_dir);
         g_free (lock_dir);
         return -1;
     }

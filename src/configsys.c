@@ -125,7 +125,7 @@ gint config_init (const gchar *config_file)
 			try_to_update_config_file (config_file);
 		else {
 			DEBUG_ERROR ("Problem parsing config");
-			fprintf (stderr, _("Problem parsing config file\n"));
+			g_printerr (_("Problem parsing config file\n"));
 			return 1;
 		}
 	}
@@ -246,7 +246,7 @@ gint config_write (const gchar *config_file)
             TILDA_PERROR ();
             DEBUG_ERROR ("Unable to sync file");
 
-            fprintf (stderr, _("Unable to sync the config file to disk\n"));
+            g_printerr (_("Unable to sync the config file to disk\n"));
             ret = 2;
         }
 
@@ -256,7 +256,7 @@ gint config_write (const gchar *config_file)
             TILDA_PERROR ();
             DEBUG_ERROR ("Unable to close config file");
 
-            fprintf (stderr, _("Unable to close the config file\n"));
+            g_printerr (_("Unable to close the config file\n"));
             ret = 3;
         }
     }
@@ -265,7 +265,7 @@ gint config_write (const gchar *config_file)
         TILDA_PERROR ();
         DEBUG_ERROR ("Unable to write config file");
 
-        fprintf (stderr, _("Unable to write the config file to %s\n"), config_file);
+        g_printerr (_("Unable to write the config file to %s\n"), config_file);
         ret = 4;
     }
 

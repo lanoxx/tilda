@@ -214,7 +214,7 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     const gchar *key = egg_virtual_accelerator_name (event->keyval, event->state);
 
 #ifdef DEBUG
-    fprintf (stderr, "KEY GRABBED: %s\n", key);
+    g_printerr ("KEY GRABBED: %s\n", key);
 #endif
 
     /* Ignore modifiers only, we only want things when a real key is pressed.
@@ -423,7 +423,7 @@ static void combo_tab_pos_changed_cb (GtkWidget *w)
 
     if (status < 0 || status > 4) {
         DEBUG_ERROR ("Notebook tab position invalid");
-        fprintf (stderr, _("Invalid tab position setting, ignoring\n"));
+        g_printerr (_("Invalid tab position setting, ignoring\n"));
         return;
     }
 

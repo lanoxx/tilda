@@ -43,36 +43,34 @@ gchar *get_window_title (GtkWidget *widget)
     window_title = g_strdup (vte_title);
     initial = g_strdup (config_getstr ("title"));
 
+    /* These are not needed anywhere else. If they ever are, move them to a header file */
+    enum d_set_title { NOT_DISPLAYED, AFTER_INITIAL, BEFORE_INITIAL, REPLACE_INITIAL };
+
     switch (config_getint ("d_set_title"))
     {
-        case 3:
-            if (window_title != NULL)
-                title = g_strdup (window_title);
-            else
-                title = g_strdup ("Untitled");
+        case REPLACE_INITIAL:
+            title = (window_title != NULL) ? g_strdup (window_title)
+                                           : g_strdup (_("Untitled"));
             break;
 
-        case 2:
-            if (window_title != NULL)
-                title = g_strconcat (window_title, " - ", initial, NULL);
-            else
-                title = g_strdup (initial);
+        case BEFORE_INITIAL:
+            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", window_title, initial)
+                                           : g_strdup (initial);
             break;
 
-        case 1:
-            if (window_title != NULL)
-                title = g_strconcat (initial, " - ", window_title, NULL);
-            else
-                title = g_strdup (initial);
-        break;
+        case AFTER_INITIAL:
+            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", initial, window_title)
+                                           : g_strdup (initial);
+            break;
 
-        case 0:
+        case NOT_DISPLAYED:
             title = g_strdup (initial);
             break;
 
         default:
-            g_assert_not_reached ();
-            title = NULL;
+            g_printerr (_("Bad value for \"d_set_title\" in config file\n"));
+            title = g_strdup ("");
+            break;
     }
 
     g_free (window_title);

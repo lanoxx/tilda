@@ -414,8 +414,8 @@ static gint start_shell (struct tilda_term_ *tt)
         /* Check for error */
         if (ret == FALSE)
         {
-            g_printerr ("Problem parsing custom command: %s\n", error->message);
-            g_printerr ("Launching default shell\n");
+            g_printerr (_("Problem parsing custom command: %s\n"), error->message);
+            g_printerr (_("Launching default shell instead\n"));
 
             g_error_free (error);
             goto launch_default_shell;
@@ -431,8 +431,8 @@ static gint start_shell (struct tilda_term_ *tt)
         /* Check for error */
         if (ret == -1)
         {
-            g_printerr ("Unable to launch custom command: %s\n", config_getstr ("command"));
-            g_printerr ("Launching default shell\n");
+            g_printerr (_("Unable to launch custom command: %s\n"), config_getstr ("command"));
+            g_printerr (_("Launching default shell instead\n"));
 
             goto launch_default_shell;
         }
@@ -456,7 +456,7 @@ launch_default_shell:
 
     if (ret == -1)
     {
-        g_printerr ("Unable to launch default shell: %s\n", default_command);
+        g_printerr (_("Unable to launch default shell: %s\n"), default_command);
         return ret;
     }
 
@@ -476,7 +476,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
     /* Make sure we got a valid index */
     if (index == -1)
     {
-        g_printerr ("Bad notebook tab\n");
+        DEBUG_ERROR ("Bad notebook tab\n");
         return;
     }
 
@@ -730,19 +730,19 @@ static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer d
             if ((event->state & GDK_CONTROL_MASK) && match != NULL)
             {
 #if DEBUG
-                printf ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
+                g_print ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
 #endif
                 web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
                 cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
 #if DEBUG
-                printf ("Launching command: `%s'\n", cmd);
+                g_print ("Launching command: `%s'\n", cmd);
 #endif
                 ret = g_spawn_command_line_async(cmd, NULL);
 
                 /* Check that the command launched */
                 if (!ret)
                 {
-                    printf ("Failed to launch the web browser. The command was `%s'\n", cmd);
+                    g_printerr (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
                     TILDA_PERROR ();
                 }
 

@@ -96,7 +96,7 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
     switch (pos)
     {
         default: /* default is top */
-            fprintf (stderr, _("You have a bad tab_pos in your configuration file\n"));
+            g_printerr (_("You have a bad tab_pos in your configuration file\n"));
         case NB_TOP:
             gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
             break;
@@ -289,7 +289,7 @@ static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
     {
         TILDA_PERROR ();
         DEBUG_ERROR ("Cannot open window icon");
-        fprintf (stderr, _("Unable to set tilda's icon: %s\n"), filename);
+        g_printerr (_("Unable to set tilda's icon: %s\n"), filename);
         return 1;
     }
 
@@ -438,7 +438,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     if (tt == NULL)
     {
         TILDA_PERROR ();
-        fprintf (stderr, _("Out of memory, cannot create tab\n"));
+        g_printerr (_("Out of memory, cannot create tab\n"));
         return -1;
     }
 
@@ -483,7 +483,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index)
 
     if (child == NULL)
     {
-        g_printerr ("Bad tab_index specified");
+        DEBUG_ERROR ("Bad tab_index specified");
         return -1;
     }
 
