@@ -30,13 +30,6 @@ G_BEGIN_DECLS
 
 extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
 
-enum dimensions { HEIGHT, WIDTH };
-
-/* FIXME: some of this can go elsewhere */
-extern gint get_display_dimension (enum dimensions dimension);
-extern gint get_physical_height_pixels ();
-extern gint get_physical_width_pixels ();
-
 struct lock_info
 {
     gint pid;

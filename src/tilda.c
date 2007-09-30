@@ -385,38 +385,6 @@ static gboolean parse_cli (int argc, char *argv[])
     return show_config;
 }
 
-gint get_physical_height_pixels ()
-{
-    DEBUG_FUNCTION ("get_physical_height_pixels");
-
-    const GdkScreen *screen = gdk_screen_get_default ();
-
-    return gdk_screen_get_height (screen);
-}
-
-gint get_physical_width_pixels ()
-{
-    DEBUG_FUNCTION ("get_physical_width_pixels");
-
-    const GdkScreen *screen = gdk_screen_get_default ();
-
-    return gdk_screen_get_width (screen);
-}
-
-gint get_display_dimension (const enum dimensions dimension)
-{
-    DEBUG_FUNCTION ("get_display_dimension");
-    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
-
-    if (dimension == HEIGHT)
-        return get_physical_height_pixels ();
-
-    if (dimension == WIDTH)
-        return get_physical_width_pixels ();
-
-    return -1;
-}
-
 /*
  * Finds the coordinate that will center the tilda window in the screen.
  *

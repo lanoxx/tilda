@@ -37,6 +37,9 @@
 /* INT_MAX */
 #include <limits.h>
 
+/* For use in get_display_dimension() */
+static enum dimensions { HEIGHT, WIDTH };
+
 /* This will hold the libglade representation of the .glade file.
  * We keep this global so that we can look up any element from any routine.
  *
@@ -243,9 +246,9 @@ static int percentage_dimension (int current_size, enum dimensions dimension)
     DEBUG_ASSERT (dimension == WIDTH || dimension == HEIGHT);
 
     if (dimension == HEIGHT)
-        return (int) (((float) current_size) / ((float) get_physical_height_pixels ()) * 100.0);
+        return (int) (((float) current_size) / ((float) gdk_screen_height ()) * 100.0);
 
-    return (int) (((float) current_size) / ((float) get_physical_width_pixels ()) * 100.0);
+    return (int) (((float) current_size) / ((float) gdk_screen_width ()) * 100.0);
 }
 
 #define percentage_height(current_height) percentage_dimension(current_height, HEIGHT)
@@ -253,6 +256,20 @@ static int percentage_dimension (int current_size, enum dimensions dimension)
 
 #define pixels2percentage(PIXELS,DIMENSION) percentage_dimension ((PIXELS),(DIMENSION))
 #define percentage2pixels(PERCENTAGE,DIMENSION) (((PERCENTAGE) / 100.0) * get_display_dimension ((DIMENSION)))
+
+static gint get_display_dimension (const enum dimensions dimension)
+{
+    DEBUG_FUNCTION ("get_display_dimension");
+    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
+
+    if (dimension == HEIGHT)
+        return gdk_screen_height ();
+
+    if (dimension == WIDTH)
+        return gdk_screen_width ();
+
+    return -1;
+}
 
 static void window_title_change_all ()
 {
@@ -513,7 +530,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -533,7 +550,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -553,7 +570,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -573,7 +590,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -591,7 +608,7 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     config_setbool ("centered_horizontally", status);
 
     if (status)
-        config_setint ("x_pos", find_centering_coordinate (get_physical_width_pixels(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
     else
         config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_x_position)));
 
@@ -627,7 +644,7 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     config_setbool ("centered_vertically", status);
 
     if (status)
-        config_setint ("y_pos", find_centering_coordinate (get_physical_height_pixels(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
     else
         config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_y_position)));
 
@@ -1082,18 +1099,18 @@ static void set_wizard_state_from_config ()
     /* Appearance Tab */
     SPIN_BUTTON_SET_RANGE ("spin_height_percentage", 0, 100);
     SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (config_getint ("max_height")));
-    SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, get_physical_height_pixels());
+    SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, gdk_screen_height());
     SPIN_BUTTON ("spin_height_pixels", "max_height");
 
     SPIN_BUTTON_SET_RANGE ("spin_width_percentage", 0, 100);
     SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (config_getint ("max_width")));
-    SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, get_physical_width_pixels());
+    SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, gdk_screen_width());
     SPIN_BUTTON ("spin_width_pixels", "max_width");
 
     CHECK_BUTTON ("check_centered_horizontally", "centered_horizontally");
     CHECK_BUTTON ("check_centered_vertically", "centered_vertically");
-    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, get_physical_width_pixels());
-    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, get_physical_height_pixels());
+    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
+    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
     SPIN_BUTTON ("spin_x_position", "x_pos");
     SPIN_BUTTON ("spin_y_position", "y_pos");
     SET_SENSITIVE_BY_CONFIG_NBOOL ("spin_x_position","centered_horizontally");
