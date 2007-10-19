@@ -31,11 +31,6 @@ fi
 
 AC_ARG_ENABLE([debug-functions], [AC_HELP_STRING([--enable-debug-functions], [enable function call tracing])])
 
-# Notice if a version of lex is not installed and error out
-case $LEX in
-:) AC_MSG_ERROR([No lex program found]);;
-esac
-
 if test "x$enable_debug_functions" = "xyes"; then
 	AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
 fi
@@ -47,6 +42,14 @@ fi
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_LEX
+
+# Notice if there are no versions of lex installed
+# and error out of the configure.
+case $LEX in
+	:)
+		AC_MSG_ERROR([No lex program found])
+		;;
+esac
 
 # Checks for libraries.
 PKG_PROG_PKG_CONFIG
