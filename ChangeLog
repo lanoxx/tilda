@@ -1,4 +1,5 @@
 version 0.9.5 (TBA) :
+	* Tabs now loop to beginning/end for next/prev
 	* Better animation support
 	* Major code reorganization
 	* Make WWW links Ctrl+Left Click to open in a web browser

@@ -119,15 +119,33 @@ static void next_tab (tilda_window *tw)
     DEBUG_FUNCTION ("next_tab");
     DEBUG_ASSERT (tw != NULL);
 
-    gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
+    int num_pages;
+    int current_page;
+
+    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+
+    if (num_pages != (current_page + num_pages))
+      gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
+    else
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), num_pages-1);
 }
 
 static void prev_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("prev_tab");
     DEBUG_ASSERT (tw != NULL);
+  
+    int num_pages;
+    int current_page;
 
-    gtk_notebook_prev_page ((GtkNotebook *) tw->notebook);
+    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+
+    if ((num_pages-1) != current_page)
+      gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
+    else
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0); 
 }
 
 static void focus_term (GtkWidget *widget, gpointer data)
@@ -143,6 +161,17 @@ static void focus_term (GtkWidget *widget, gpointer data)
     box = gtk_notebook_get_nth_page (GTK_NOTEBOOK(n), gtk_notebook_get_current_page(GTK_NOTEBOOK(n)));
     list = gtk_container_children (GTK_CONTAINER(box));
     gtk_widget_grab_focus (list->data);
+}
+
+static void focus_out_event_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("focus_out_event_cb");
+    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (widget != NULL);
+
+    //GList* tl = gtk_window_list_toplevels();
+
+    //printf ("hide() %i\n", g_list_length(tl));
 }
 
 static void goto_tab (tilda_window *tw, guint i)
@@ -375,6 +404,8 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     /* Connect signal handlers */
     g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw->window);
     g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
+
+    g_signal_connect (G_OBJECT(tw->window), "focus-out-event", GTK_SIGNAL_FUNC(focus_out_event_cb), tw->window);
 
     /* Add the notebook to the window */
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
