@@ -550,6 +550,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
     vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr ("font"), config_getbool ("antialias"));
 
+    /** Scrollback **/
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getint ("lines"));
+
     /** Keys **/
     switch (config_getint ("backspace_key"))
     {
