@@ -50,7 +50,7 @@ void generate_animation_positions (struct tilda_window_ *tw)
      * The slide positions are derived from FVWM sources, file fvwm/move_resize.c,
      * to there added by Greg J. Badros, gjb@cs.washington.edu
      */
-    const float posCFV[] = {.005,.01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
+    const float posCFV[] = {.01, .01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
 
     gint i;
     gint last_pos_x = config_getint ("x_pos");
