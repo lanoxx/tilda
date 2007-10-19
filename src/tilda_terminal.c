@@ -52,7 +52,6 @@ static void lower_window_cb (GtkWidget *widget, gpointer data);
 static void maximize_window_cb (GtkWidget *widget, gpointer data);
 static void restore_window_cb (GtkWidget *widget, gpointer data);
 static void refresh_window_cb (GtkWidget *widget, gpointer data);
-static void resize_window_cb (GtkWidget *widget, guint width, guint height, gpointer data);
 static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
 static void increase_font_size_cb (GtkWidget *widget, gpointer data);
 static void decrease_font_size_cb (GtkWidget *widget, gpointer data);
@@ -134,8 +133,6 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(restore_window_cb), tw->window);
     g_signal_connect (G_OBJECT(term->vte_term), "refresh-window",
                       G_CALLBACK(refresh_window_cb), tw->window);
-    g_signal_connect (G_OBJECT(term->vte_term), "resize-window",
-                      G_CALLBACK(resize_window_cb), tw->window);
     g_signal_connect (G_OBJECT(term->vte_term), "move-window",
                       G_CALLBACK(move_window_cb), tw->window);
 
@@ -292,34 +289,6 @@ static void refresh_window_cb (GtkWidget *widget, gpointer data)
             rect.height = (GTK_WIDGET(data))->allocation.height;
             gdk_window_invalidate_rect ((GTK_WIDGET(data))->window, &rect, TRUE);
         }
-    }
-}
-
-static void resize_window_cb (GtkWidget *widget, guint width, guint height, gpointer data)
-{
-    DEBUG_FUNCTION ("resize_window_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (width >= 0);
-    DEBUG_ASSERT (height >= 0);
-    DEBUG_ASSERT (data != NULL);
-
-    VteTerminal *terminal;
-    gint owidth, oheight, xpad, ypad;
-
-    if ((GTK_IS_WINDOW(data)) && (width >= 2) && (height >= 2))
-    {
-        terminal = VTE_TERMINAL(widget);
-
-        /* Take into account border overhead. */
-        gtk_window_get_size (GTK_WINDOW(data), &owidth, &oheight);
-        owidth -= terminal->char_width * terminal->column_count;
-        oheight -= terminal->char_height * terminal->row_count;
-
-        /* Take into account padding, which needn't be re-added. */
-        vte_terminal_get_padding (VTE_TERMINAL(widget), &xpad, &ypad);
-        owidth -= xpad;
-        oheight -= ypad;
-        gtk_window_resize (GTK_WINDOW(data), width + owidth, height + oheight);
     }
 }
 
