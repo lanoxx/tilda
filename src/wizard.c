@@ -1231,5 +1231,6 @@ static void connect_wizard_signals ()
 
     /* Close Button */
     CONNECT_SIGNAL ("button_wizard_close","clicked",button_wizard_close_clicked_cb);
+    CONNECT_SIGNAL ("wizard_window","delete_event",button_wizard_close_clicked_cb);
 }
 
