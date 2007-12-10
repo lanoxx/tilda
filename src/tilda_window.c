@@ -169,9 +169,7 @@ static void focus_out_event_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
 
-    //GList* tl = gtk_window_list_toplevels();
-
-    //printf ("hide() %i\n", g_list_length(tl));
+    //printf ("hide()\n");
 }
 
 static void goto_tab (tilda_window *tw, guint i)
@@ -346,7 +344,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     DEBUG_FUNCTION ("tilda_window_init");
     DEBUG_ASSERT (instance >= 0);
 
-    gint ret;
     tilda_window *tw;
 
     tw = g_malloc (sizeof(tilda_window));
@@ -393,9 +390,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tw->terms = NULL;
 
     /* Add the initial terminal */
-    ret = tilda_window_add_tab (tw);
-
-    if (ret < 0)
+    if (!tilda_window_add_tab (tw))
     {
         free (tw);
         return NULL;
@@ -470,7 +465,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     {
         TILDA_PERROR ();
         g_printerr (_("Out of memory, cannot create tab\n"));
-        return -1;
+        return FALSE;
     }
 
     /* Create page and append to notebook */
@@ -490,7 +485,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     /* The new terminal should grab the focus automatically */
     gtk_widget_grab_focus (tt->vte_term);
 
-    return index;
+    return TRUE; //index;
 }
 
 /**
