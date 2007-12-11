@@ -114,7 +114,7 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
     return 0;
 }
 
-static void next_tab (tilda_window *tw)
+static gint next_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("next_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -129,13 +129,17 @@ static void next_tab (tilda_window *tw)
       gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
     else
       gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), num_pages-1);
+
+    // It worked. Having this return true makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return TRUE;
 }
 
-static void prev_tab (tilda_window *tw)
+static gint prev_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("prev_tab");
     DEBUG_ASSERT (tw != NULL);
-  
+
     int num_pages;
     int current_page;
 
@@ -145,7 +149,11 @@ static void prev_tab (tilda_window *tw)
     if ((num_pages-1) != current_page)
       gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
     else
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0); 
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0);
+
+    // It worked. Having this return true makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return TRUE;
 }
 
 static void focus_term (GtkWidget *widget, gpointer data)
