@@ -643,15 +643,15 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     GtkWidget *menu;
 
     GtkItemFactoryEntry menu_items[] = {
-        { _("/_New Tab"),		"<Ctrl><Shift>T",	menu_add_tab_cb,	0, "<StockItem>",	GTK_STOCK_ADD			},
-        { _("/_Close Tab"),		NULL,				menu_close_tab_cb,	0, "<StockItem>",	GTK_STOCK_CLOSE			},
+        { _("/_New Tab"),		"<Ctrl><Shift>t",	menu_add_tab_cb,	0, "<StockItem>",	GTK_STOCK_ADD			},
+        { _("/_Close Tab"),		"<Ctrl><Shift>w",	menu_close_tab_cb,	0, "<StockItem>",	GTK_STOCK_CLOSE			},
         { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-        { _("/_Copy"),			"<Ctrl><Shift>C",	menu_copy_cb,		0, "<StockItem>",	GTK_STOCK_COPY			},
-        { _("/_Paste"),			"<Ctrl><Shift>V",	menu_paste_cb,		0, "<StockItem>",	GTK_STOCK_PASTE			},
+        { _("/_Copy"),			"<Ctrl><Shift>c",	menu_copy_cb,		0, "<StockItem>",	GTK_STOCK_COPY			},
+        { _("/_Paste"),			"<Ctrl><Shift>v",	menu_paste_cb,		0, "<StockItem>",	GTK_STOCK_PASTE			},
         { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
         { _("/_Preferences..."),NULL,				menu_config_cb,		0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
         { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-        { _("/_Quit"),			"<Ctrl>Q",			menu_quit_cb,		0, "<StockItem>",	GTK_STOCK_QUIT			}
+        { _("/_Quit"),			"<Ctrl><Shift>q",	menu_quit_cb,		0, "<StockItem>",	GTK_STOCK_QUIT			}
     };
 
     gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
