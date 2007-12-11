@@ -49,7 +49,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("animation_orientation", 0, CFGF_NONE),
 
     /* guint16 */
-    CFG_INT("scrollbar_pos", 1, CFGF_NONE),
+    CFG_INT("scrollbar_pos", 2, CFGF_NONE),
     CFG_INT("back_red", 0x0000, CFGF_NONE),
     CFG_INT("back_green", 0x0000, CFGF_NONE),
     CFG_INT("back_blue", 0x0000, CFGF_NONE),
