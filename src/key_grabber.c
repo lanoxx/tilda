@@ -123,6 +123,15 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         gtk_widget_show (GTK_WIDGET(tw->window));
 
+        /* The window should maintain its properties when it is merely hidden, but it does
+         * not. If you delete the following call, the window will not remain visible
+         * on all workspaces after pull()ing it up and down a number of times.
+         *
+         * Note that the "Always on top" property doesn't seem to go away, only this
+         * property (Show on all desktops) does... */
+        if (config_getbool ("pinned"))
+            gtk_window_stick (GTK_WINDOW (tw->window));
+
         if (config_getbool ("animation"))
         {
             for (i=0; i<16; i++)
