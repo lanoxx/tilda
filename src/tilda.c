@@ -459,7 +459,7 @@ static gint get_instance_number (gchar *home_directory)
     {
         g_printerr (_("Unable to open lock directory: %s\n"), lock_dir);
         g_free (lock_dir);
-        return -1;
+        return 0;
     }
 
     /* Look through every file in the lock directory, and see if it is a lock file.
