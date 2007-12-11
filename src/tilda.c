@@ -436,7 +436,7 @@ static gchar *get_config_file_name (gchar *home_directory, gint instance)
  * lowest non-running tilda available.
  *
  * Success: return next available instance number (>=0)
- * Failure: return -1
+ * Failure: return 0
  */
 static gint get_instance_number (gchar *home_directory)
 {
