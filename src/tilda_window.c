@@ -255,23 +255,23 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
 
-    /* Exit on Ctrl-Q */
+    /* Exit on <Ctrl><Shift>q */
     temp = g_cclosure_new_swap (G_CALLBACK(gtk_main_quit), tw, NULL);
     gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    /* Go to Next Tab */
+    /* Go to Next Tab on <Ctrl>Page_Down */
     temp = g_cclosure_new_swap (G_CALLBACK(next_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
+    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    /* Go to Prev Tab */
+    /* Go to Prev Tab on <Ctrl>Page_Up */
     temp = g_cclosure_new_swap (G_CALLBACK(prev_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
+    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    /* Go to New Tab */
+    /* Add New Tab on <Ctrl><Shift>t */
     temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_add_tab), tw, NULL);
     gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
-    /* Delete Current Tab */
+    /* Close Current Tab on <Ctrl><Shift>w */
     temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_close_current_tab), tw, NULL);
     gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
 
