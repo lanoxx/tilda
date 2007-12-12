@@ -8,10 +8,14 @@ version 0.9.5 (TBA) :
 	* Use glade to generate the config wizard
 	* Gettextize
 	* Added true transparency
+	* Made scrollbar off by default	 
 	* Fixed another bug in getting the new lock file (Thanks Wilberding)
 	* Removed resize/move from hide when animation is turned off.
 	  This will fix the closing of certain program (i.e. nano) when
 	  Tilda is hidden
+	* To keep Tilda open on 'exit' set 
+	  Preferences->Title and Command->When 
+          Command Exits to "Hold the Terminal Open"
 
 version 0.9.4 (11-28-06):
 	* Double Buffering is now in the Preferences. Enable or disable to fix
