@@ -1,4 +1,7 @@
 version 0.9.5 (12-12-07) :
+	* Fixed clear/reset issue
+	* Switched to Gnome shortcut keys
+	* Fixed background scrolling bug	
 	* Tabs now loop to beginning/end for next/prev
 	* Better animation support
 	* Major code reorganization
@@ -6,7 +9,7 @@ version 0.9.5 (12-12-07) :
 	* Remove old configuration conversion script
 	* Updated documentation
 	* Use glade to generate the config wizard
-	* Gettextize
+	* Gettextize for translations
 	* Added true transparency
 	* Made scrollbar off by default	 
 	* Fixed another bug in getting the new lock file (Thanks Wilberding)
