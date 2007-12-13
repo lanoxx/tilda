@@ -1,4 +1,4 @@
-version 0.9.5 (TBA) :
+version 0.9.5 (12-12-07) :
 	* Tabs now loop to beginning/end for next/prev
 	* Better animation support
 	* Major code reorganization
