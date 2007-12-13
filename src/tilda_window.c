@@ -216,7 +216,7 @@ static gboolean goto_tab_8  (tilda_window *tw) { return goto_tab_generic (tw, 8)
 static gboolean goto_tab_9  (tilda_window *tw) { return goto_tab_generic (tw, 9);  }
 static gboolean goto_tab_10 (tilda_window *tw) { return goto_tab_generic (tw, 10); }
 
-static void ccopy (tilda_window *tw)
+static gint ccopy (tilda_window *tw)
 {
     DEBUG_FUNCTION ("ccopy");
     DEBUG_ASSERT (tw != NULL);
@@ -229,9 +229,12 @@ static void ccopy (tilda_window *tw)
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
     list = gtk_container_get_children (GTK_CONTAINER(current_page));
     vte_terminal_copy_clipboard (VTE_TERMINAL(list->data));
+
+    /* Stop the event's propagation */
+    return TRUE;
 }
 
-static void cpaste (tilda_window *tw)
+static gint cpaste (tilda_window *tw)
 {
     DEBUG_FUNCTION ("cpaste");
     DEBUG_ASSERT (tw != NULL);
@@ -244,6 +247,9 @@ static void cpaste (tilda_window *tw)
     current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
     list = gtk_container_get_children (GTK_CONTAINER (current_page));
     vte_terminal_paste_clipboard (VTE_TERMINAL(list->data));
+
+    /* Stop the event's propagation */
+    return TRUE;
 }
 
 static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
