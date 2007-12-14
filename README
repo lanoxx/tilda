@@ -22,7 +22,7 @@ Running Tilda
 ================================================================================
 Once you have installed tilda, you can run it using the tilda.desktop file which
 should have been installed into your system. Alternatively, you can run `tilda'
-from your command line, or any other convienient way.
+from your command line, or any other convenient way.
 
 The first time you run Tilda, it will create the default configuration file for
 you, and show the configuration wizard. If you do not want to change any
@@ -36,8 +36,8 @@ F3 - the third instance
 
 Other default keybindings are:
 Shift-Ctrl-T - Open new tab
-Shift-Ctrl-PageUp - Next tab
-Shift-Ctrl-PageDown - Previos tab
+Ctrl-PageUp - Next tab
+Ctrl-PageDown - Previous tab
 Shift-Ctrl-W - Close current tab
 Shift-Ctrl-Q - Exit Tilda
 

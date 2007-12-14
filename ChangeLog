@@ -1,7 +1,12 @@
-version 0.9.5 (12-12-07) :
+version 0.9.6 (TBA):
+	* Add future plans to the TODO list
+	* Update documentation to reflect the current keybindings
+	* Fix Ubuntu's bugs about copy and paste
+
+version 0.9.5 (12-12-07):
 	* Fixed clear/reset issue
 	* Switched to Gnome shortcut keys
-	* Fixed background scrolling bug	
+	* Fixed background scrolling bug
 	* Tabs now loop to beginning/end for next/prev
 	* Better animation support
 	* Major code reorganization
@@ -11,14 +16,14 @@ version 0.9.5 (12-12-07) :
 	* Use glade to generate the config wizard
 	* Gettextize for translations
 	* Added true transparency
-	* Made scrollbar off by default	 
+	* Made scrollbar off by default
 	* Fixed another bug in getting the new lock file (Thanks Wilberding)
 	* Removed resize/move from hide when animation is turned off.
 	  This will fix the closing of certain program (i.e. nano) when
 	  Tilda is hidden
-	* To keep Tilda open on 'exit' set 
-	  Preferences->Title and Command->When 
-          Command Exits to "Hold the Terminal Open"
+	* To keep Tilda open on 'exit' set
+	  Preferences->Title and Command->When Command Exits to
+	  "Hold the Terminal Open"
 
 version 0.9.4 (11-28-06):
 	* Double Buffering is now in the Preferences. Enable or disable to fix
