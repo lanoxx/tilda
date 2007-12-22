@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2007-12-11 18:11-0800\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2007-12-22 09:07-0600\n"
 "PO-Revision-Date: 2007-10-23 07:52+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -298,8 +298,8 @@ msgstr ""
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
-"applications and operating systems that expect different terminal "
-"behavior.</i></small>"
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
 msgstr ""
 
 #: tilda.glade:1531
@@ -422,12 +422,12 @@ msgstr ""
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
 
-#: src/tilda_window.c:327
+#: src/tilda_window.c:333
 #, fuzzy, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Nie można ustawić ikony tildy: %s\n"
 
-#: src/tilda_window.c:475
+#: src/tilda_window.c:481
 msgid "Out of memory, cannot create tab\n"
 msgstr "Zbyt mało pamięci do utworzenia nowej zakładki\n"
 

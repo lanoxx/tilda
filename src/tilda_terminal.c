@@ -512,7 +512,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_key"));
 
     /** Mouse **/
-    vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), TRUE); /* TODO: make this configurable */
+    vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), FALSE); /* TODO: make this configurable */
 
     /** Text Properties **/
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));

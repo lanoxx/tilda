@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-11 18:11-0800\n"
+"POT-Creation-Date: 2007-12-22 09:07-0600\n"
 "PO-Revision-Date: 2007-05-14 18:18+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -295,8 +295,8 @@ msgstr ""
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
-"applications and operating systems that expect different terminal "
-"behavior.</i></small>"
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
 msgstr ""
 
 #: tilda.glade:1531
@@ -421,12 +421,12 @@ msgstr ""
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
 
-#: src/tilda_window.c:327
+#: src/tilda_window.c:333
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Kunde inte ställa in ikon för tilda: %s\n"
 
-#: src/tilda_window.c:475
+#: src/tilda_window.c:481
 msgid "Out of memory, cannot create tab\n"
 msgstr "Slut på minne, kan inte skapa flik\n"
 
