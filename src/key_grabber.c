@@ -154,8 +154,11 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
          * focus stealing prevention that is present in openbox and others.
          *
          * WARNING: Don't move this up to the top, where the window is shown, or you
-         * will cause some strange glitches. :) */
-        gtk_window_present (GTK_WINDOW(tw->window));
+         * will cause some strange glitches. :)
+         *
+         * NOTE: Using gtk_window_present_with_time() keeps away the nasty focus-stealing-prevention
+         * in metacity and others. DO NOT make this gtk_window_present()! */
+        gtk_window_present_with_time (GTK_WINDOW(tw->window), tomboy_keybinder_get_current_event_time());
 
 #if DEBUG
         /* The window is definitely in the pulled down state now */
