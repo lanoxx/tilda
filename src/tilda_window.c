@@ -167,7 +167,7 @@ static void focus_term (GtkWidget *widget, gpointer data)
     GtkWidget *n = GTK_WIDGET (data);
 
     box = gtk_notebook_get_nth_page (GTK_NOTEBOOK(n), gtk_notebook_get_current_page(GTK_NOTEBOOK(n)));
-    list = gtk_container_children (GTK_CONTAINER(box));
+    list = gtk_container_get_children (GTK_CONTAINER(box));
     gtk_widget_grab_focus (list->data);
 }
 
@@ -395,7 +395,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tw->notebook = gtk_notebook_new ();
 
     /* Set up all notebook properties */
-    gtk_notebook_set_homogeneous_tabs (GTK_NOTEBOOK(tw->notebook), TRUE);
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
     tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
