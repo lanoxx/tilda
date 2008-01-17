@@ -575,9 +575,11 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     return 0;
 }
 
-static void menu_copy_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_copy_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_copy_cb");
+    DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
@@ -585,9 +587,11 @@ static void menu_copy_cb (gpointer data, guint callback_action, GtkWidget *w)
     vte_terminal_copy_clipboard (VTE_TERMINAL (tt->vte_term));
 }
 
-static void menu_paste_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_paste_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_paste_cb");
+    DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
@@ -596,41 +600,43 @@ static void menu_paste_cb (gpointer data, guint callback_action, GtkWidget *w)
 }
 
 
-static void menu_config_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_preferences_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_config_cb");
+    DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (data != NULL);
 
-    tilda_term *tt = TILDA_TERM (data);
-
     /* Show the config wizard */
-    wizard (tt->tw);
+    wizard (TILDA_WINDOW(data));
 }
 
-static void menu_quit_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_quit_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_quit_cb");
 
     gtk_main_quit ();
 }
 
-static void menu_add_tab_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_add_tab_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_add_tab_cb");
-    DEBUG_ASSERT (w != NULL);
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
-    tilda_term *tt = TILDA_TERM (data);
-
-    tilda_window_add_tab (tt->tw);
+    tilda_window_add_tab (TILDA_WINDOW(data));
 }
 
-static void menu_close_tab_cb (gpointer data, guint callback_action, GtkWidget *w)
+static void
+menu_close_tab_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_close_tab_cb");
-    DEBUG_ASSERT (w != NULL);
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
-    tilda_term *tt = TILDA_TERM(data);
-    tilda_window_close_current_tab (tt->tw);
+    tilda_window_close_current_tab (TILDA_WINDOW(data));
 }
 
 static void popup_menu (tilda_window *tw, tilda_term *tt)
@@ -639,29 +645,75 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
-    GtkItemFactory *item_factory;
+    GtkAction *action;
+    GtkActionGroup *action_group;
+    GtkUIManager *ui_manager;
+    GError *error = NULL;
     GtkWidget *menu;
 
-    GtkItemFactoryEntry menu_items[] = {
-        { _("/_New Tab"),		"<Ctrl><Shift>t",	menu_add_tab_cb,	0, "<StockItem>",	GTK_STOCK_ADD			},
-        { _("/_Close Tab"),		"<Ctrl><Shift>w",	menu_close_tab_cb,	0, "<StockItem>",	GTK_STOCK_CLOSE			},
-        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-        { _("/_Copy"),			"<Ctrl><Shift>c",	menu_copy_cb,		0, "<StockItem>",	GTK_STOCK_COPY			},
-        { _("/_Paste"),			"<Ctrl><Shift>v",	menu_paste_cb,		0, "<StockItem>",	GTK_STOCK_PASTE			},
-        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-        { _("/_Preferences..."),NULL,				menu_config_cb,		0, "<StockItem>",	GTK_STOCK_PREFERENCES	},
-        { "/sep1",				NULL,				NULL,				0, "<Separator>",	NULL					},
-        { _("/_Quit"),			"<Ctrl><Shift>q",	menu_quit_cb,		0, "<StockItem>",	GTK_STOCK_QUIT			}
-    };
+    /* Just use a static string here to initialize the GtkUIManager,
+     * rather than installing and reading from a file all the time. */
+    static const gchar menu_str[] =
+        "<ui>"
+            "<popup name=\"popup-menu\">"
+                "<menuitem action=\"new-tab\" />"
+                "<menuitem action=\"close-tab\" />"
+                "<separator />"
+                "<menuitem action=\"copy\" />"
+                "<menuitem action=\"paste\" />"
+                "<separator />"
+                "<menuitem action=\"preferences\" />"
+                "<separator />"
+                "<menuitem action=\"quit\" />"
+            "</popup>"
+        "</ui>";
 
-    gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
+    /* Create the action group */
+    action_group = gtk_action_group_new ("popup-menu-action-group");
 
-    item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", NULL);
-    gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, tt);
-    menu = gtk_item_factory_get_widget (item_factory, "<main>");
-    gtk_menu_popup (GTK_MENU(menu), NULL, NULL,
-                   NULL, NULL, 3, gtk_get_current_event_time());
+    /* Add Actions and connect callbacks */
+    action = gtk_action_new ("new-tab", _("_New Tab"), NULL, GTK_STOCK_ADD);
+    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>t");
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_add_tab_cb), tw);
 
+    action = gtk_action_new ("close-tab", _("_Close Tab"), NULL, GTK_STOCK_CLOSE);
+    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>w");
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
+
+    action = gtk_action_new ("copy", NULL, NULL, GTK_STOCK_COPY);
+    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>c");
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_copy_cb), tt);
+
+    action = gtk_action_new ("paste", NULL, NULL, GTK_STOCK_PASTE);
+    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>v");
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_paste_cb), tt);
+
+    action = gtk_action_new ("preferences", NULL, NULL, GTK_STOCK_PREFERENCES);
+    gtk_action_group_add_action (action_group, action);
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_preferences_cb), tw);
+
+    action = gtk_action_new ("quit", NULL, NULL, GTK_STOCK_QUIT);
+    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>q");
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_quit_cb), tw);
+
+    /* Create and add actions to the GtkUIManager */
+    ui_manager = gtk_ui_manager_new ();
+    gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
+    gtk_ui_manager_add_ui_from_string (ui_manager, menu_str, -1, &error);
+
+    /* Check for an error (REALLY REALLY unlikely, unless the developers screwed up */
+    if (error)
+    {
+        DEBUG_ERROR ("GtkUIManager problem\n");
+        g_printerr ("Error message: %s\n", error->message);
+        g_error_free (error);
+    }
+
+    /* Get the popup menu out of the GtkUIManager */
+    menu = gtk_ui_manager_get_widget (ui_manager, "/ui/popup-menu");
+
+    /* Display the menu */
+    gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
     gtk_widget_show_all(menu);
 }
 
