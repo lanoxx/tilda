@@ -210,21 +210,23 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
     const GtkWidget *button_grab_keybinding = glade_xml_get_widget (xml, "button_grab_keybinding");
     const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
     const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
+    gchar *key;
 
-    /* Filter out the numlock (Mod2) key */
-    event->state &= ~ (1<<4);
+    if (gtk_accelerator_valid (event->keyval, event->state))
+    {
+        /* This lets us ignore all ignorable modifier keys, including
+         * NumLock and many others. :)
+         *
+         * The logic is: keep only the important modifiers that were pressed
+         * for this event. */
+        event->state &= gtk_accelerator_get_default_mod_mask();
 
-    const gchar *key = egg_virtual_accelerator_name (event->keyval, event->state);
+        /* Generate the correct name for this key */
+        key = gtk_accelerator_name (event->keyval, event->state);
 
 #ifdef DEBUG
     g_printerr ("KEY GRABBED: %s\n", key);
 #endif
-
-    /* Ignore modifiers only, we only want things when a real key is pressed.
-     * Note that this will not grab things like <Ctrl><Shift><Alt> unless you have
-     * a typeable key with them. */
-    if ((event->keyval < GDK_Shift_L || event->keyval > GDK_Hyper_R))
-    {
         /* Re-enable widgets */
         gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
         gtk_widget_set_sensitive (wizard_notebook, TRUE);
@@ -234,10 +236,10 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
 
         /* Copy the pressed key to the text entry */
         gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
-    }
 
-    /* Free the returned string */
-    g_free (key);
+        /* Free the string */
+        g_free (key);
+    }
 }
 
 static int percentage_dimension (int current_size, enum dimensions dimension)
