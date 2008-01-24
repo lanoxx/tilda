@@ -37,6 +37,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if DEBUG
+#define debug_printf(args...) do { g_print ("debug: " args); } while (0)
+#else
+#define debug_printf(args...) do { /* nothing */ } while (0)
+#endif
+
 
 /* Define local variables here */
 static gint posIV[4][16]; /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
@@ -119,7 +125,13 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
         /* Keep things here just like they are. If you use gtk_window_present() here, you
          * will introduce some weird graphical glitches. Also, calling gtk_window_move()
          * before showing the window avoids yet more glitches. You should probably not use
-         * gtk_window_show_all() here, as it takes a long time to execute. */
+         * gtk_window_show_all() here, as it takes a long time to execute.
+         *
+         * Overriding the user time here seems to work a lot better than calling
+         * gtk_window_present_with_time() here, or at the end of the function. I have
+         * no idea why, they should do the same thing. */
+        gdk_x11_window_set_user_time (GTK_WIDGET(tw->window)->window,
+                                      tomboy_keybinder_get_current_event_time());
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         gtk_widget_show (GTK_WIDGET(tw->window));
 
@@ -143,27 +155,8 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
                 g_usleep (config_getint ("slide_sleep_usec"));
             }
         }
-        else
-        {
-            /* I know this seems redundant, but it really is necessary for Tilda to be
-             * pulled down in the correct position. */
-            gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-        }
 
-        /* Now that we're done with everything, we can call this. It overrides the
-         * focus stealing prevention that is present in openbox and others.
-         *
-         * WARNING: Don't move this up to the top, where the window is shown, or you
-         * will cause some strange glitches. :)
-         *
-         * NOTE: Using gtk_window_present_with_time() keeps away the nasty focus-stealing-prevention
-         * in metacity and others. DO NOT make this gtk_window_present()! */
-        gtk_window_present_with_time (GTK_WINDOW(tw->window), tomboy_keybinder_get_current_event_time());
-
-#if DEBUG
-        /* The window is definitely in the pulled down state now */
-        g_print ("pull(): MOVED DOWN\n");
-#endif
+        debug_printf ("pull(): MOVED DOWN\n");
         tw->current_state = DOWN;
     }
     else if (state != PULL_DOWN)
@@ -185,10 +178,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
          * Case 2 - Animation off: Just hide the window */
         gtk_widget_hide (GTK_WIDGET(tw->window));
 
-#if DEBUG
-        /* The window is definitely in the UP state now */
-        g_print ("pull(): MOVED UP\n");
-#endif
+        debug_printf ("pull(): MOVED UP\n");
         tw->current_state = UP;
     }
 }
