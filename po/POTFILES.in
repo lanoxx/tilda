@@ -2,9 +2,8 @@
 
 tilda.glade
 src/callback_func.c
-src/key_grabber.c
+src/configsys.c
 src/tilda.c
+src/tilda_terminal.c
 src/tilda_window.c
 src/wizard.c
-src/xerror.c
-
