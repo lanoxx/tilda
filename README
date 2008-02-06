@@ -2,7 +2,8 @@ Contacting the Developers / Questions and Comments
 ================================================================================
 Please email questions and comments to anyone listed in the AUTHORS file, or
 drop by on our IRC channel: #tilda on irc.oftc.net. One or more of the
-developers is almost always present in the IRC channel.
+developers is almost always present in the IRC channel. Please see the section
+titled "Reporting Bugs" below for how to submit a bug report.
 
 
 Dependencies
@@ -96,8 +97,9 @@ Reporting Bugs
 We have done our best to make sure that Tilda is free from bugs, but it is
 inevitable that we have missed some.
 
-Please email any bug reports to the developers directly. If you post them to
-SourceForge.net's bug tracker, you are likely to get a very delayed response.
+You may open bugs at http://bugs.launchpad.net/tilda or email them to the
+developers directly. If you post them to SourceForge.net's bug tracker, they
+will most likely be forgotten.
 
 
 Contributing to Tilda
