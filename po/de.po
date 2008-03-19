@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-22 09:07-0600\n"
-"PO-Revision-Date: 2007-04-06 16:12+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-03-18 23:09-0700\n"
+"PO-Revision-Date: 2008-02-29 08:38+0000\n"
+"Last-Translator: Matthias Gutjahr <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-12-12 20:08+0000\n"
+"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
 msgid "Tilda Config"
-msgstr ""
+msgstr "Tilda Konfiguration"
 
 #: tilda.glade:42
 msgid "Display on all workspaces"
@@ -47,31 +47,31 @@ msgstr "Double Buffering aktivieren"
 
 #: tilda.glade:138
 msgid "<b>Window Display</b>"
-msgstr ""
+msgstr "<b>Fenster-Anzeige</b>"
 
 #: tilda.glade:169
 msgid "Audible Terminal Bell"
-msgstr ""
+msgstr "Akkustische Terminalglocke"
 
 #: tilda.glade:182
 msgid "Cursor Blinks"
-msgstr ""
+msgstr "Cursor blinkt"
 
 #: tilda.glade:201
 msgid "<b>Terminal Display</b>"
-msgstr ""
+msgstr "<b>Terminal-Anzeige</b>"
 
 #: tilda.glade:234
 msgid "Enable Antialiasing"
-msgstr ""
+msgstr "Aktiviere Antialising"
 
 #: tilda.glade:247
 msgid "Allow Bold Text"
-msgstr ""
+msgstr "Erlaube fetten Text"
 
 #: tilda.glade:262
 msgid "Position of Tabs:"
-msgstr ""
+msgstr "Position der Registerkarten:"
 
 #: tilda.glade:275 tilda.glade:1084
 msgid ""
@@ -80,10 +80,14 @@ msgid ""
 "Left\n"
 "Right"
 msgstr ""
+"Oben\n"
+"Unten\n"
+"Links\n"
+"Rechts"
 
 #: tilda.glade:315
 msgid "Font:"
-msgstr ""
+msgstr "Schriftart:"
 
 #: tilda.glade:334
 msgid "<b>Font</b>"
@@ -95,11 +99,11 @@ msgstr "Allgemein"
 
 #: tilda.glade:404
 msgid "Web Browser"
-msgstr ""
+msgstr "Webbrowser"
 
 #: tilda.glade:419
 msgid "<b>URL Handling</b>"
-msgstr ""
+msgstr "<b>URL-Handhabung</b>"
 
 #: tilda.glade:451
 msgid "Initial Title:"
@@ -110,12 +114,17 @@ msgid "Dynamically-set Title:"
 msgstr "Dynamisch gesetze Überschrift"
 
 #: tilda.glade:484
+#, fuzzy
 msgid ""
 "Isn't displayed\n"
 "Goes after initial title\n"
 "Goes before initial title\n"
 "Replace initial title"
 msgstr ""
+"Nicht angezeigt\n"
+"Kommt nach Anfangstitel\n"
+"Kommt vor Anfangstitel\n"
+"Ersetze Anfangstitel"
 
 #: tilda.glade:505
 msgid "<b>Title</b>"
@@ -123,15 +132,15 @@ msgstr "<b>Titel</b>"
 
 #: tilda.glade:538
 msgid "Run a custom command instead of the shell"
-msgstr ""
+msgstr "Führe benutzerdefinierten Befehl anstelle der Shell aus"
 
 #: tilda.glade:550
 msgid "Custom Command:"
-msgstr ""
+msgstr "Benutzerdefinierter Befehl:"
 
 #: tilda.glade:562
 msgid "When Command Exits:"
-msgstr ""
+msgstr "Wenn Befehl endet:"
 
 #: tilda.glade:574
 msgid ""
@@ -139,6 +148,9 @@ msgid ""
 "Restart the command\n"
 "Exit the terminal"
 msgstr ""
+"Halte den Terminal offen\n"
+"Starte den Befehl erneut\n"
+"Beende den Terminal"
 
 #: tilda.glade:607
 msgid "<b>Command</b>"
@@ -218,7 +230,7 @@ msgstr "Darstellung"
 
 #: tilda.glade:1187
 msgid "Built-in Schemes"
-msgstr ""
+msgstr "Eingebaute Schemata"
 
 #: tilda.glade:1197
 msgid ""
@@ -227,18 +239,22 @@ msgid ""
 "Black on White\n"
 "White on Black"
 msgstr ""
+"Benutzerdefiniert\n"
+"Grün auf Schwarz\n"
+"Schwarz auf Weiss\n"
+"Weiss auf Schwarz"
 
 #: tilda.glade:1212
 msgid "Text Color"
-msgstr ""
+msgstr "Textfarbe"
 
 #: tilda.glade:1224
 msgid "Background Color"
-msgstr ""
+msgstr "Hintergrundfarbe"
 
 #: tilda.glade:1270
 msgid "<b>Foreground and Background Colors</b>"
-msgstr ""
+msgstr "<b>Vordergrund- und Hintergrundfarbe</b>"
 
 #: tilda.glade:1293
 msgid "Colors"
@@ -250,7 +266,7 @@ msgstr "Bei Ausgabe scrollen"
 
 #: tilda.glade:1338
 msgid "Scroll on Keystroke"
-msgstr ""
+msgstr "Bei Tastendruck scrollen"
 
 #: tilda.glade:1353
 msgid "Scroll Background"
@@ -258,7 +274,7 @@ msgstr "Hintergrund scrollen"
 
 #: tilda.glade:1381
 msgid "lines"
-msgstr ""
+msgstr "Zeilen"
 
 #: tilda.glade:1399
 msgid ""
@@ -266,6 +282,9 @@ msgid ""
 "On the Right\n"
 "Disabled"
 msgstr ""
+"Links\n"
+"Rechts\n"
+"Deaktiviert"
 
 #: tilda.glade:1413
 msgid "Scrollback:"
@@ -277,7 +296,7 @@ msgstr "Scrollbalken ist:"
 
 #: tilda.glade:1441
 msgid "<b>Scrolling</b>"
-msgstr ""
+msgstr "<b>Scrollen</b>"
 
 #: tilda.glade:1464
 msgid "Scrolling"
@@ -285,11 +304,11 @@ msgstr "Scrollen"
 
 #: tilda.glade:1482
 msgid "<b>Compatibility</b>"
-msgstr ""
+msgstr "<b>Kompatibilität</b>"
 
 #: tilda.glade:1496
 msgid "    "
-msgstr ""
+msgstr "    "
 
 #: tilda.glade:1512
 msgid ""
@@ -298,14 +317,18 @@ msgid ""
 "applications and operating systems that expect different terminal behavior.</"
 "i></small>"
 msgstr ""
+"<small><i><b>Hinweis:</b> Diese Einstellungen können dazu führen, dass sich "
+"einige Anwendungen nicht korrekt verhalten. Sie sind lediglich hier, damit "
+"problematische Anwendungen oder Betriebssysteme, die ein anderes Terminal-"
+"Verhalten erwarten, reibungslos funktionieren.</i></small>"
 
 #: tilda.glade:1531
 msgid "_Delete key generates:"
-msgstr ""
+msgstr "_Entfernen-Taste erzeugt:"
 
 #: tilda.glade:1546
 msgid "_Backspace key generates:"
-msgstr ""
+msgstr "_Rücktaste erzeugt:"
 
 #: tilda.glade:1558 tilda.glade:1571
 msgid ""
@@ -313,10 +336,13 @@ msgid ""
 "Escape sequence\n"
 "Control-H"
 msgstr ""
+"ASCII DEL\n"
+"Escape-Sequenz\n"
+"Steuerung-H"
 
 #: tilda.glade:1599
 msgid "_Reset Compatibility Options to Defaults"
-msgstr ""
+msgstr "Kompatibilitätseinstellungen auf Vorgabewerte _zurücksetzen"
 
 #: tilda.glade:1630
 msgid "Compatibility"
@@ -324,41 +350,62 @@ msgstr "Kompatibilität"
 
 #: tilda.glade:1660
 msgid "Key Binding"
-msgstr ""
+msgstr "Tastaturkürzel"
 
 #: tilda.glade:1683
 msgid "Grab Keybinding"
 msgstr "Tastenbelegung greifen"
 
 #: tilda.glade:1702
+#, fuzzy
 msgid "<b>Pulldown Key</b>"
-msgstr ""
+msgstr "<b>Pulldown-Taste</b>"
 
 #: tilda.glade:1725
 msgid "Keybindings"
 msgstr "Tastenbelegungen"
 
 #: tilda.glade:1750
+#, fuzzy
 msgid "gtk-close"
-msgstr ""
+msgstr "gtk-schließen"
 
 #: src/callback_func.c:53
 msgid "Untitled"
-msgstr ""
+msgstr "Unbenannt"
 
 #: src/callback_func.c:71
 msgid "Bad value for \"d_set_title\" in config file\n"
-msgstr ""
+msgstr "Ungültiger Wert für \"d_set_title\" in der Konfigurationsdatei\n"
+
+#: src/configsys.c:128
+#, fuzzy
+msgid "Problem parsing config file\n"
+msgstr "Problem beim Lesen der Konfigurationsdatei\n"
+
+#: src/configsys.c:249
+#, fuzzy
+msgid "Unable to sync the config file to disk\n"
+msgstr "Konnte die Konfigurationsdatei nicht speichern\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "Kann die Konfigurationsdatei nicht schließen\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Kann die Konfigurationsdatei nicht nach %s schreiben\n"
 
 #: src/tilda.c:214
 #, c-format
 msgid "Unable to run command: `%s'\n"
-msgstr ""
+msgstr "Kann Befehl nicht ausführen: `%s'\n"
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, c-format
 msgid "Unable to open lock directory: %s\n"
-msgstr ""
+msgstr "Kann gesperrtes Verzeichnis nicht öffnen: %s\n"
 
 #: src/tilda.c:300
 msgid "Use Antialiased Fonts"
@@ -374,11 +421,12 @@ msgstr "Kommando beim Starten ausführen"
 
 #: src/tilda.c:304
 msgid "Set the font to the following string"
-msgstr ""
+msgstr "Setze die Schriftart auf folgenden String"
 
 #: src/tilda.c:305
+#, fuzzy
 msgid "Scrollback Lines"
-msgstr ""
+msgstr "Zurück zu scrollende Zeilen"
 
 #: src/tilda.c:306
 msgid "Use Scrollbar"
@@ -393,8 +441,9 @@ msgid "Print the version, then exit"
 msgstr "Version ausgeben, danach beenden"
 
 #: src/tilda.c:309
+#, fuzzy
 msgid "Set Initial Working Directory"
-msgstr ""
+msgstr "Anfangs-Arbeitsverzeichnis setzen"
 
 #: src/tilda.c:312
 msgid "Set Background Image"
@@ -412,29 +461,64 @@ msgid ""
 "\n"
 "Error message: %s\n"
 msgstr ""
+"Fehler bei der Analyse der Kommandozeilen-Optionen. Versuche \"tilda --help"
+"\"\n"
+"um alle möglichen Optionen zu sehen.\n"
+"\n"
+"Fehlermeldung: %s\n"
+
+#: src/tilda_terminal.c:386
+#, fuzzy, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Problem beim Lesen eines benutzerdefinierten Befehls: %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+#, fuzzy
+msgid "Launching default shell instead\n"
+msgstr "Öffne stattdessen die Standard-Shell\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Konnte benutzerdefinierten Befehl nicht ausführen: %s\n"
+
+#: src/tilda_terminal.c:428
+#, fuzzy, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Konnte die Standard-Shell nicht öffnen: %s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Neuer Reiter"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "Reiter s_chließen"
+
+#: src/tilda_terminal.c:769
+#, fuzzy, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Konnte Webbrowser nicht starten. Der Befehl lautete `%s'\n"
 
 #: src/tilda_window.c:99
 msgid "You have a bad tab_pos in your configuration file\n"
-msgstr ""
+msgstr "Sie haben eine falsche tab_pos in Ihrer Konfigurationsdatei\n"
 
 #: src/tilda_window.c:333
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
-msgstr ""
+msgstr "Kann tildas Symbol nicht festlegen: %s\n"
 
-#: src/tilda_window.c:481
+#: src/tilda_window.c:480
 msgid "Out of memory, cannot create tab\n"
 msgstr "Kein Speicher vorhanden, Tab kann nicht erstellt werden\n"
 
 #: src/wizard.c:180
 msgid "The keybinding you chose is invalid. Please choose another."
 msgstr ""
+"Das von Ihnen gewählte Tastenkürzel ist ungültig. Bitte wählen Sie ein "
+"Anderes."
 
-#: src/wizard.c:443
+#: src/wizard.c:445
 msgid "Invalid tab position setting, ignoring\n"
-msgstr ""
-
-#: src/xerror.c:48
-#, c-format
-msgid "X Error: %s"
-msgstr "X Fehler: %s"
+msgstr "Ungültige Einstellung der Registerkarten-Position. Ignoriere.\n"

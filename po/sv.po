@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-22 09:07-0600\n"
+"POT-Creation-Date: 2008-03-18 23:09-0700\n"
 "PO-Revision-Date: 2007-05-14 18:18+0000\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Last-Translator: Umut <Unknown>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-12-12 20:08+0000\n"
+"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
@@ -350,12 +350,29 @@ msgstr ""
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr ""
 
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "Kunde inte synkronisera konfigurationsfilen till disk\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "Kunde inte stänga konfigurationsfilen\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Kunde inte skriva konfigurationsfilen till %s\n"
+
 #: src/tilda.c:214
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr ""
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
@@ -417,6 +434,38 @@ msgstr ""
 "\n"
 "Felmeddelande: %s\n"
 
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr ""
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
 #: src/tilda_window.c:99
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
@@ -426,7 +475,7 @@ msgstr ""
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Kunde inte ställa in ikon för tilda: %s\n"
 
-#: src/tilda_window.c:481
+#: src/tilda_window.c:480
 msgid "Out of memory, cannot create tab\n"
 msgstr "Slut på minne, kan inte skapa flik\n"
 
@@ -434,11 +483,6 @@ msgstr "Slut på minne, kan inte skapa flik\n"
 msgid "The keybinding you chose is invalid. Please choose another."
 msgstr ""
 
-#: src/wizard.c:443
+#: src/wizard.c:445
 msgid "Invalid tab position setting, ignoring\n"
 msgstr ""
-
-#: src/xerror.c:48
-#, c-format
-msgid "X Error: %s"
-msgstr "X-fel: %s"

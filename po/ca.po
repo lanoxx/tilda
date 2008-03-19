@@ -7,35 +7,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-22 09:07-0600\n"
-"PO-Revision-Date: 2007-05-10 06:44+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-03-18 23:09-0700\n"
+"PO-Revision-Date: 2008-01-22 10:08+0000\n"
+"Last-Translator: animarval <animarval@gmail.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-12-12 20:08+0000\n"
+"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
 msgid "Tilda Config"
-msgstr ""
+msgstr "Configuració de Tilda"
 
 #: tilda.glade:42
 msgid "Display on all workspaces"
-msgstr ""
+msgstr "Mostra en tots els espais de treball"
 
 #: tilda.glade:55
 msgid "Always on top"
-msgstr ""
+msgstr "Sempre en primer pla"
 
 #: tilda.glade:70
 msgid "Do not show in taskbar"
-msgstr ""
+msgstr "No mostrar a la barra de tasques"
 
 #: tilda.glade:85 src/tilda.c:303
 msgid "Start Tilda hidden"
-msgstr ""
+msgstr "Inicia Tilda ocultament"
 
 #: tilda.glade:102
 msgid "Show Notebook Border"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: tilda.glade:117
 msgid "Enable Double Buffering"
-msgstr ""
+msgstr "Permet Double Buffering"
 
 #: tilda.glade:138
 msgid "<b>Window Display</b>"
@@ -67,11 +67,11 @@ msgstr ""
 
 #: tilda.glade:247
 msgid "Allow Bold Text"
-msgstr ""
+msgstr "Permet text en negreta"
 
 #: tilda.glade:262
 msgid "Position of Tabs:"
-msgstr ""
+msgstr "Posició de les Pestanyes:"
 
 #: tilda.glade:275 tilda.glade:1084
 msgid ""
@@ -80,6 +80,10 @@ msgid ""
 "Left\n"
 "Right"
 msgstr ""
+"Dalt\n"
+"Baix\n"
+"Esquerra\n"
+"Dreta"
 
 #: tilda.glade:315
 msgid "Font:"
@@ -103,11 +107,11 @@ msgstr ""
 
 #: tilda.glade:451
 msgid "Initial Title:"
-msgstr ""
+msgstr "Títol Inicial:"
 
 #: tilda.glade:461
 msgid "Dynamically-set Title:"
-msgstr ""
+msgstr "Posar un Títol Dinàmic:"
 
 #: tilda.glade:484
 msgid ""
@@ -116,10 +120,14 @@ msgid ""
 "Goes before initial title\n"
 "Replace initial title"
 msgstr ""
+"No serà mostrat\n"
+"Anirà després del títol inicial\n"
+"Anirà abans del títol inicial\n"
+"Substituirà el títol inicial"
 
 #: tilda.glade:505
 msgid "<b>Title</b>"
-msgstr ""
+msgstr "<b>Títol</b>"
 
 #: tilda.glade:538
 msgid "Run a custom command instead of the shell"
@@ -127,7 +135,7 @@ msgstr ""
 
 #: tilda.glade:550
 msgid "Custom Command:"
-msgstr ""
+msgstr "Ordre personalitzada:"
 
 #: tilda.glade:562
 msgid "When Command Exits:"
@@ -142,7 +150,7 @@ msgstr ""
 
 #: tilda.glade:607
 msgid "<b>Command</b>"
-msgstr ""
+msgstr "<b>Ordre</b>"
 
 #: tilda.glade:632
 msgid "Title and Command"
@@ -170,43 +178,43 @@ msgstr ""
 
 #: tilda.glade:852
 msgid "Centered Vertically"
-msgstr ""
+msgstr "Centrat Verticalment"
 
 #: tilda.glade:869 src/tilda.c:310
 msgid "X Position"
-msgstr ""
+msgstr "Posició X"
 
 #: tilda.glade:882 src/tilda.c:311
 msgid "Y Position"
-msgstr ""
+msgstr "Posició Y"
 
 #: tilda.glade:933
 msgid "<b>Position</b>"
-msgstr ""
+msgstr "<b>Posició</b>"
 
 #: tilda.glade:968
 msgid "Enable Transparency"
-msgstr ""
+msgstr "Habilita la transparència"
 
 #: tilda.glade:981
 msgid "Level of Transparency"
-msgstr ""
+msgstr "Nivell de Transparència"
 
 #: tilda.glade:1008
 msgid "Animated Pulldown"
-msgstr ""
+msgstr "Animació del menú desplegable"
 
 #: tilda.glade:1023
 msgid "Use Image for Background"
-msgstr ""
+msgstr "Usar Imatge per al Fons"
 
 #: tilda.glade:1038
 msgid "Animation Delay (usec)"
-msgstr ""
+msgstr "Retard de l'Animació (usec)"
 
 #: tilda.glade:1053
 msgid "Animation Orientation"
-msgstr ""
+msgstr "Orientació de l'Animació"
 
 #: tilda.glade:1120
 msgid "<b>Extras</b>"
@@ -258,7 +266,7 @@ msgstr ""
 
 #: tilda.glade:1381
 msgid "lines"
-msgstr ""
+msgstr "línies"
 
 #: tilda.glade:1399
 msgid ""
@@ -266,6 +274,9 @@ msgid ""
 "On the Right\n"
 "Disabled"
 msgstr ""
+"A l'Esquerra\n"
+"A la Dreta\n"
+"Desactivat"
 
 #: tilda.glade:1413
 msgid "Scrollback:"
@@ -277,19 +288,19 @@ msgstr ""
 
 #: tilda.glade:1441
 msgid "<b>Scrolling</b>"
-msgstr ""
+msgstr "<b>Desplaçament</b>"
 
 #: tilda.glade:1464
 msgid "Scrolling"
-msgstr ""
+msgstr "Desplaçament"
 
 #: tilda.glade:1482
 msgid "<b>Compatibility</b>"
-msgstr ""
+msgstr "<b>Compatibilitat</b>"
 
 #: tilda.glade:1496
 msgid "    "
-msgstr ""
+msgstr "    "
 
 #: tilda.glade:1512
 msgid ""
@@ -298,6 +309,10 @@ msgid ""
 "applications and operating systems that expect different terminal behavior.</"
 "i></small>"
 msgstr ""
+"<small><i><b>Nota:</b> aquestes opcions poden fer que algunes aplicacions no "
+"funcionin correctament. Només hi són per permetre-us solucionar aspectes de "
+"certes aplicacions i sistemes operatius que esperen un comportament diferent "
+"del terminal.</i></small>"
 
 #: tilda.glade:1531
 msgid "_Delete key generates:"
@@ -340,25 +355,42 @@ msgstr ""
 
 #: tilda.glade:1750
 msgid "gtk-close"
-msgstr ""
+msgstr "gtk-close"
 
 #: src/callback_func.c:53
 msgid "Untitled"
-msgstr ""
+msgstr "Sense títol"
 
 #: src/callback_func.c:71
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr ""
 
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr ""
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr ""
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr ""
+
 #: src/tilda.c:214
 #, c-format
 msgid "Unable to run command: `%s'\n"
-msgstr ""
+msgstr "Incapaç d'executar l'ordre: '%s'\n"
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, c-format
 msgid "Unable to open lock directory: %s\n"
-msgstr ""
+msgstr "Incapaç d'obrir el directori bloquejat: %s\n"
 
 #: src/tilda.c:300
 msgid "Use Antialiased Fonts"
@@ -366,11 +398,11 @@ msgstr ""
 
 #: src/tilda.c:301
 msgid "Set the background color"
-msgstr ""
+msgstr "Indicar color del fons"
 
 #: src/tilda.c:302
 msgid "Run a command at startup"
-msgstr ""
+msgstr "Executar ordre a l'iniciar"
 
 #: src/tilda.c:304
 msgid "Set the font to the following string"
@@ -413,6 +445,38 @@ msgid ""
 "Error message: %s\n"
 msgstr ""
 
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr ""
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
 #: src/tilda_window.c:99
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
@@ -422,7 +486,7 @@ msgstr ""
 msgid "Unable to set tilda's icon: %s\n"
 msgstr ""
 
-#: src/tilda_window.c:481
+#: src/tilda_window.c:480
 msgid "Out of memory, cannot create tab\n"
 msgstr ""
 
@@ -430,11 +494,6 @@ msgstr ""
 msgid "The keybinding you chose is invalid. Please choose another."
 msgstr ""
 
-#: src/wizard.c:443
+#: src/wizard.c:445
 msgid "Invalid tab position setting, ignoring\n"
-msgstr ""
-
-#: src/xerror.c:48
-#, c-format
-msgid "X Error: %s"
 msgstr ""

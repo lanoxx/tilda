@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-22 09:07-0600\n"
-"PO-Revision-Date: 2007-06-06 16:13+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-03-18 23:09-0700\n"
+"PO-Revision-Date: 2008-02-23 19:20+0000\n"
+"Last-Translator: Julián Alarcón <alarconj@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2007-12-12 20:08+0000\n"
+"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
 msgid "Tilda Config"
-msgstr ""
+msgstr "Configuración de Tilda"
 
 #: tilda.glade:42
 msgid "Display on all workspaces"
@@ -40,11 +40,11 @@ msgstr "Iniciar Tilda escondido"
 
 #: tilda.glade:102
 msgid "Show Notebook Border"
-msgstr ""
+msgstr "Mostrar borde de cuaderno"
 
 #: tilda.glade:117
 msgid "Enable Double Buffering"
-msgstr ""
+msgstr "Habilitar doble memoria temporal"
 
 #: tilda.glade:138
 msgid "<b>Window Display</b>"
@@ -56,7 +56,7 @@ msgstr ""
 
 #: tilda.glade:182
 msgid "Cursor Blinks"
-msgstr ""
+msgstr "Intermitencia del cursor"
 
 #: tilda.glade:201
 msgid "<b>Terminal Display</b>"
@@ -68,11 +68,11 @@ msgstr ""
 
 #: tilda.glade:247
 msgid "Allow Bold Text"
-msgstr ""
+msgstr "Permitir texto en negrita"
 
 #: tilda.glade:262
 msgid "Position of Tabs:"
-msgstr ""
+msgstr "Posición de pestañas:"
 
 #: tilda.glade:275 tilda.glade:1084
 msgid ""
@@ -81,10 +81,14 @@ msgid ""
 "Left\n"
 "Right"
 msgstr ""
+"Superior\n"
+"Inferior\n"
+"Izquierda\n"
+"Derecha"
 
 #: tilda.glade:315
 msgid "Font:"
-msgstr ""
+msgstr "Tipo de letra:"
 
 #: tilda.glade:334
 msgid "<b>Font</b>"
@@ -96,11 +100,11 @@ msgstr "General"
 
 #: tilda.glade:404
 msgid "Web Browser"
-msgstr ""
+msgstr "Navegador web"
 
 #: tilda.glade:419
 msgid "<b>URL Handling</b>"
-msgstr ""
+msgstr "<b>Manejo de vínculos</b>"
 
 #: tilda.glade:451
 msgid "Initial Title:"
@@ -128,7 +132,7 @@ msgstr ""
 
 #: tilda.glade:550
 msgid "Custom Command:"
-msgstr ""
+msgstr "Comando personalizado:"
 
 #: tilda.glade:562
 msgid "When Command Exits:"
@@ -229,14 +233,18 @@ msgid ""
 "Black on White\n"
 "White on Black"
 msgstr ""
+"Personalizado\n"
+"Verde sobre Negro\n"
+"Negro sobre Blanco\n"
+"Blanco sobre Negro"
 
 #: tilda.glade:1212
 msgid "Text Color"
-msgstr ""
+msgstr "Color del texto"
 
 #: tilda.glade:1224
 msgid "Background Color"
-msgstr ""
+msgstr "Color de fondo"
 
 #: tilda.glade:1270
 msgid "<b>Foreground and Background Colors</b>"
@@ -260,7 +268,7 @@ msgstr ""
 
 #: tilda.glade:1381
 msgid "lines"
-msgstr ""
+msgstr "líneas"
 
 #: tilda.glade:1399
 msgid ""
@@ -268,6 +276,9 @@ msgid ""
 "On the Right\n"
 "Disabled"
 msgstr ""
+"A la izquierda\n"
+"A la derecha\n"
+"Deshabilitado"
 
 #: tilda.glade:1413
 msgid "Scrollback:"
@@ -279,7 +290,7 @@ msgstr ""
 
 #: tilda.glade:1441
 msgid "<b>Scrolling</b>"
-msgstr ""
+msgstr "<b>Desplazamiento</b>"
 
 #: tilda.glade:1464
 msgid "Scrolling"
@@ -287,11 +298,11 @@ msgstr "Desplazamiento"
 
 #: tilda.glade:1482
 msgid "<b>Compatibility</b>"
-msgstr ""
+msgstr "<b>Compatibilidad</b>"
 
 #: tilda.glade:1496
 msgid "    "
-msgstr ""
+msgstr "    "
 
 #: tilda.glade:1512
 msgid ""
@@ -326,7 +337,7 @@ msgstr "Compatibilidad"
 
 #: tilda.glade:1660
 msgid "Key Binding"
-msgstr ""
+msgstr "Atajo de teclado"
 
 #: tilda.glade:1683
 msgid "Grab Keybinding"
@@ -346,18 +357,35 @@ msgstr ""
 
 #: src/callback_func.c:53
 msgid "Untitled"
-msgstr ""
+msgstr "Sin título"
 
 #: src/callback_func.c:71
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr ""
 
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "No se pudo sincronizar el archivo de configuración a disco\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "No se pudo cerrar el archivo de configuración\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr ""
+
 #: src/tilda.c:214
 #, c-format
 msgid "Unable to run command: `%s'\n"
-msgstr ""
+msgstr "Incapaz de ejecutar el comando: `%s'\n"
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
@@ -420,6 +448,38 @@ msgstr ""
 "\n"
 "Mensaje de error: %s\n"
 
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr ""
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Nueva pestaña"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "_Cerrar pestaña"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
 #: src/tilda_window.c:99
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
@@ -427,21 +487,16 @@ msgstr ""
 #: src/tilda_window.c:333
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
-msgstr ""
+msgstr "Incapaz de establecer el ícono de Tilda: %s\n"
 
-#: src/tilda_window.c:481
+#: src/tilda_window.c:480
 msgid "Out of memory, cannot create tab\n"
 msgstr "No hay memoria disponible, no se puede crear pestaña\n"
 
 #: src/wizard.c:180
 msgid "The keybinding you chose is invalid. Please choose another."
-msgstr ""
+msgstr "El atajo de teclado que definió es inválido. Seleccione otro."
 
-#: src/wizard.c:443
+#: src/wizard.c:445
 msgid "Invalid tab position setting, ignoring\n"
 msgstr ""
-
-#: src/xerror.c:48
-#, c-format
-msgid "X Error: %s"
-msgstr "Error X: %s"

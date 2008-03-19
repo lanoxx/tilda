@@ -1,13 +1,13 @@
 # translation of Tilda.
 # Copyright (C) 2007 Truffa Davide
 # This file is distributed under the same license as the Tilda package.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Tilda 9.5\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2007-12-22 09:07-0600\n"
+"POT-Creation-Date: 2008-03-18 23:09-0700\n"
 "PO-Revision-Date: 2007-07-15 15:58+0200\n"
 "Last-Translator: Davide Truffa <davide@catoblepa.org>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -374,12 +374,30 @@ msgstr ""
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr ""
 
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr ""
+
+#: src/configsys.c:259
+#, fuzzy
+msgid "Unable to close the config file\n"
+msgstr "Impossibile impostare l'icona di Tilda: %s\n"
+
+#: src/configsys.c:268
+#, fuzzy, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Impossibile impostare l'icona di Tilda: %s\n"
+
 #: src/tilda.c:214
 #, fuzzy, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "Impossibile impostare l'icona di Tilda: %s\n"
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, fuzzy, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Impossibile impostare l'icona di Tilda: %s\n"
@@ -441,6 +459,40 @@ msgstr ""
 "\n"
 "Messaggio di errore: %s\n"
 
+#: src/tilda_terminal.c:386
+#, fuzzy, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Impossibile impostare l'icona di Tilda: %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr ""
+
+#: src/tilda_terminal.c:403
+#, fuzzy, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Impossibile impostare l'icona di Tilda: %s\n"
+
+#: src/tilda_terminal.c:428
+#, fuzzy, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Impossibile impostare l'icona di Tilda: %s\n"
+
+#: src/tilda_terminal.c:675
+#, fuzzy
+msgid "_New Tab"
+msgstr "/_Nuova scheda"
+
+#: src/tilda_terminal.c:679
+#, fuzzy
+msgid "_Close Tab"
+msgstr "/_Chiudi scheda"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
 #: src/tilda_window.c:99
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
@@ -450,7 +502,7 @@ msgstr ""
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Impossibile impostare l'icona di Tilda: %s\n"
 
-#: src/tilda_window.c:481
+#: src/tilda_window.c:480
 msgid "Out of memory, cannot create tab\n"
 msgstr "Memoria esaurita, non posso creare la scheda\n"
 
@@ -458,23 +510,15 @@ msgstr "Memoria esaurita, non posso creare la scheda\n"
 msgid "The keybinding you chose is invalid. Please choose another."
 msgstr ""
 
-#: src/wizard.c:443
+#: src/wizard.c:445
 msgid "Invalid tab position setting, ignoring\n"
 msgstr "Posizionamento delle schede non valido, verrà ignorato\n"
 
-#: src/xerror.c:48
-#, c-format
-msgid "X Error: %s"
-msgstr "Errore di X: %s"
+#~ msgid "X Error: %s"
+#~ msgstr "Errore di X: %s"
 
 #~ msgid "Error removing lock file: %s\n"
 #~ msgstr "Errore durante la rimozione del file di lock: %s\n"
-
-#~ msgid "/_New Tab"
-#~ msgstr "/_Nuova scheda"
-
-#~ msgid "/_Close Tab"
-#~ msgstr "/_Chiudi scheda"
 
 #~ msgid "/_Copy"
 #~ msgstr "/_Copia"
