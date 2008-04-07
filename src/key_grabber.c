@@ -37,6 +37,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <gdk/gdkx.h>
+
 #if DEBUG
 #define debug_printf(args...) do { g_print ("debug: " args); } while (0)
 #else
@@ -100,6 +102,64 @@ void generate_animation_positions (struct tilda_window_ *tw)
     }
 }
 
+/* Shamelessly adapted (read: ripped off) from gdk_window_focus() and
+ * http://code.google.com/p/ttm/ trunk/src/window.c set_active()
+ *
+ * Also, more thanks to halfline and marnanel from irc.gnome.org #gnome
+ * for their help in figuring this out.
+ *
+ * Thank you. And fuck metacity, who we hate, because they keep breaking us.
+ */
+
+/* This function will make sure that tilda window becomes active (gains
+ * the focus) when it is called.
+ *
+ * This has to be the worst possible way of making this work, but it was the
+ * only way to get metacity to play nicely. All the other WM's are so nice,
+ * why oh why does metacity hate us so?
+ */
+void tilda_window_set_active (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_window_set_active");
+    DEBUG_ASSERT (tw != NULL);
+
+    Display *x11_display = gdk_x11_get_default_xdisplay ();
+    Window *x11_window = GDK_WINDOW_XWINDOW( GTK_WIDGET(tw->window)->window );
+    Window *x11_root_window = gdk_x11_get_default_root_xwindow ();
+    GdkScreen *screen = gdk_screen_get_default ();
+
+    XEvent event;
+    long mask = SubstructureRedirectMask | SubstructureNotifyMask;
+
+    if (gdk_x11_screen_supports_net_wm_hint (screen,
+                                             gdk_atom_intern_static_string ("_NET_ACTIVE_WINDOW")))
+    {
+        event.xclient.type = ClientMessage;
+        event.xclient.serial = 0;
+        event.xclient.send_event = True;
+        event.xclient.display = x11_display;
+        event.xclient.window = x11_window;
+        event.xclient.message_type = gdk_x11_get_xatom_by_name ("_NET_ACTIVE_WINDOW");
+
+        event.xclient.format = 32;
+        event.xclient.data.l[0] = 2; /* pager */
+        event.xclient.data.l[1] = 0;
+        event.xclient.data.l[2] = 0;
+        event.xclient.data.l[3] = 0;
+        event.xclient.data.l[4] = 0;
+
+        XSendEvent (x11_display, x11_root_window, False, mask, &event);
+    }
+    else
+    {
+        /* The WM doesn't support the EWMH standards. We'll print a warning and
+         * try this, though it probably won't work... */
+        g_printerr ("WARNING: Window manager (%s) does not support EWMH hints\n",
+                    gdk_x11_screen_get_window_manager_name (screen));
+        XRaiseWindow (x11_display, x11_window);
+    }
+}
+
 /* Process all pending GTK events, without returning to the GTK mainloop */
 static void process_all_pending_gtk_events ()
 {
@@ -134,6 +194,11 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
                                       tomboy_keybinder_get_current_event_time());
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         gtk_widget_show (GTK_WIDGET(tw->window));
+
+        /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
+         * focus stealing prevention to make the old _NET_WM_USER_TIME hack
+         * not work anymore. This is working for now... */
+        tilda_window_set_active (tw);
 
         /* The window should maintain its properties when it is merely hidden, but it does
          * not. If you delete the following call, the window will not remain visible
