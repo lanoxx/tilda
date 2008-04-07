@@ -108,7 +108,7 @@ void generate_animation_positions (struct tilda_window_ *tw)
  * Also, more thanks to halfline and marnanel from irc.gnome.org #gnome
  * for their help in figuring this out.
  *
- * Thank you. And fuck metacity, who we hate, because they keep breaking us.
+ * Thank you. And boo to metacity, because they keep breaking us.
  */
 
 /* This function will make sure that tilda window becomes active (gains
@@ -123,10 +123,10 @@ void tilda_window_set_active (tilda_window *tw)
     DEBUG_FUNCTION ("tilda_window_set_active");
     DEBUG_ASSERT (tw != NULL);
 
-    Display *x11_display = gdk_x11_get_default_xdisplay ();
-    Window *x11_window = GDK_WINDOW_XWINDOW( GTK_WIDGET(tw->window)->window );
-    Window *x11_root_window = gdk_x11_get_default_root_xwindow ();
-    GdkScreen *screen = gdk_screen_get_default ();
+    Display *x11_display = GDK_WINDOW_XDISPLAY( tw->window->window );
+    Window *x11_window = GDK_WINDOW_XWINDOW( tw->window->window );
+    Window *x11_root_window = GDK_WINDOW_XWINDOW ( gtk_widget_get_root_window (tw->window) );
+    GdkScreen *screen = gtk_widget_get_screen (tw->window);
 
     XEvent event;
     long mask = SubstructureRedirectMask | SubstructureNotifyMask;
