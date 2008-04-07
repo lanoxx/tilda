@@ -1,11 +1,12 @@
 version 0.9.6 (TBA):
 	* Move bugtracker to http://bugs.launchpad.net/tilda
-	* Fix metacity focus problems (hopefully)
+	* Fix metacity-2.20 focus problems
 	* Add future plans to the TODO list
 	* Update documentation to reflect the current keybindings
 	* Fix Ubuntu's bugs about copy and paste
+	* Fix metacity-2.22 focus problems
 
-version 0.9.5 (12-12-07):
+version 0.9.5 (2007-12-12):
 	* Fixed clear/reset issue
 	* Switched to Gnome shortcut keys
 	* Fixed background scrolling bug
@@ -27,7 +28,7 @@ version 0.9.5 (12-12-07):
 	  Preferences->Title and Command->When Command Exits to
 	  "Hold the Terminal Open"
 
-version 0.9.4 (11-28-06):
+version 0.9.4 (2006-11-28):
 	* Double Buffering is now in the Preferences. Enable or disable to fix
 	  problems with blinking on your system
 	* Add support for a window icon.
@@ -44,7 +45,7 @@ version 0.9.4 (11-28-06):
 	* Changed getinstance back to its old way of working,
 	  so it doesn't just count locks but checks the numbers (thanks wilber)
 
-version 0.09.3 (2006-6-28):
+version 0.09.3 (2006-06-28):
 	* ctrl-# changes tab, sorry not alt-# (bash uses that)
 	* ctrl-shift-w fix
 	* Added ability to set height/width by percentage of screen resolution
@@ -62,7 +63,7 @@ version 0.09.3 (2006-6-28):
 	* fixed a strlen warning in tilda_window.c
 	* removed the apply button since it was confusing
 
-version 0.09.2 (2006-1-21):
+version 0.09.2 (2006-01-21):
 	* Added libConfuse to configure.in.
 	* Better command-line option help generation.
 	* Switch to libConfuse for config-file parsing.
@@ -73,11 +74,11 @@ version 0.09.2 (2006-1-21):
 	* Added shortcuts for adding tabs and going to the next or prev tab
 	* Various bug fixes
 
-version 0.09.1 (2005-10-4):
+version 0.09.1 (2005-10-04):
 	* Fixed problem of tab taking other tabs title
 	* Fixed 100% CPU problem when Tilda is started hidden
 
-version 0.09 (2005-10-3):
+version 0.09 (2005-10-03):
 	* Added Dynamic tab titles
 	* Added lots of added preferences to Tilda Wizard (too many to name here)
 	* Window Maker bug fix
