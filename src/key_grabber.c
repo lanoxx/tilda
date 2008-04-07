@@ -143,7 +143,7 @@ void tilda_window_set_active (tilda_window *tw)
 
         event.xclient.format = 32;
         event.xclient.data.l[0] = 2; /* pager */
-        event.xclient.data.l[1] = 0;
+        event.xclient.data.l[1] = tomboy_keybinder_get_current_event_time(); /* timestamp */
         event.xclient.data.l[2] = 0;
         event.xclient.data.l[3] = 0;
         event.xclient.data.l[4] = 0;
