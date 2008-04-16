@@ -10,17 +10,21 @@ DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(datadir)\" @DEFS@
 
 bin_PROGRAMS = tilda
 
-tilda_SOURCES = tilda_window.c \
-		tilda_terminal.c \
-		wizard.c \
-		callback_func.c \
-		key_grabber.c \
-		tilda.c \
-		xerror.c \
-		configsys.c \
-		tomboykeybinder.c \
-		eggaccelerators.c \
-		key_converter.l
+# Keep the headers here so that make dist-bzip2 works
+tilda_SOURCES = callback_func.h callback_func.c \
+		configsys.h configsys.c \
+		debug.h \
+		eggaccelerators.h eggaccelerators.c \
+		gettext.h \
+		key_converter.h key_converter.l \
+		key_grabber.h key_grabber.c \
+		tilda.h tilda.c \
+		tilda_terminal.h tilda_terminal.c \
+		tilda_window.h tilda_window.c \
+		tomboykeybinder.h tomboykeybinder.c \
+		translation.h \
+		wizard.h wizard.c \
+		xerror.h xerror.c
 
 tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \

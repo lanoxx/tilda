@@ -5,6 +5,7 @@ version 0.9.6 (TBA):
 	* Update documentation to reflect the current keybindings
 	* Fix Ubuntu's bugs about copy and paste
 	* Fix metacity-2.22 focus problems
+	* Fix autotools so that it can generate release tarballs
 
 version 0.9.5 (2007-12-12):
 	* Fixed clear/reset issue
