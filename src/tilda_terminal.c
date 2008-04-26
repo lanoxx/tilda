@@ -501,7 +501,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     /** Bells **/
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !config_getbool ("bell"));
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
 
     /** Cursor **/
     vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), config_getbool ("blinks"));
