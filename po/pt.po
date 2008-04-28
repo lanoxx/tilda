@@ -6,15 +6,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
-"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2008-03-18 23:09-0700\n"
-"PO-Revision-Date: 2008-03-12 19:18+0000\n"
-"Last-Translator: Luiz Marcelo Serique <marcelo.serique@gmail.com>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-01-30 19:35-0800\n"
+"PO-Revision-Date: 2008-04-19 11:22+0000\n"
+"Last-Translator: João Santos <twocool.pt@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
@@ -34,7 +34,6 @@ msgid "Do not show in taskbar"
 msgstr "Não mostrar na barra de tarefas"
 
 #: tilda.glade:85 src/tilda.c:303
-#, fuzzy
 msgid "Start Tilda hidden"
 msgstr "Iniciar o Tilda escondido"
 
@@ -43,7 +42,6 @@ msgid "Show Notebook Border"
 msgstr "Mostrar Borda do Bloco de Notas"
 
 #: tilda.glade:117
-#, fuzzy
 msgid "Enable Double Buffering"
 msgstr "Habilitar Buffering Duplo"
 
@@ -68,25 +66,22 @@ msgid "Enable Antialiasing"
 msgstr "Habilitar Antiserrilhado"
 
 #: tilda.glade:247
-#, fuzzy
 msgid "Allow Bold Text"
 msgstr "Permitir Texto em Negrito"
 
 #: tilda.glade:262
-#, fuzzy
 msgid "Position of Tabs:"
 msgstr "Posição das Abas"
 
 #: tilda.glade:275 tilda.glade:1084
-#, fuzzy
 msgid ""
 "Top\n"
 "Bottom\n"
 "Left\n"
 "Right"
 msgstr ""
-"Acima\n"
-"Abaixo\n"
+"Cimo\n"
+"Fundo\n"
 "Esquerda\n"
 "Direita"
 
@@ -107,7 +102,6 @@ msgid "Web Browser"
 msgstr "Navegador Web"
 
 #: tilda.glade:419
-#, fuzzy
 msgid "<b>URL Handling</b>"
 msgstr "<b>Tratamento de URL</b>"
 
@@ -319,8 +313,8 @@ msgstr "    "
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
-"applications and operating systems that expect different terminal behavior.</"
-"i></small>"
+"applications and operating systems that expect different terminal "
+"behavior.</i></small>"
 msgstr ""
 "<small><i><b>Nota:</b> Estas opções podem levar a que algumas aplicações se "
 "comportem incorrectamente.  Estão aqui apenas para lhe permitir contornar "
@@ -383,7 +377,6 @@ msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Valor inválido para \"d_set_title\" no ficheiro de configuração\n"
 
 #: src/configsys.c:128
-#, fuzzy
 msgid "Problem parsing config file\n"
 msgstr "Problema ao analisar o arquivo de configuração\n"
 
@@ -407,7 +400,7 @@ msgstr "Não foi possível escrever o ficheiro de configuração para %s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "Não foi possível correr o comando: '%s'\n"
 
-#: src/tilda.c:237 src/tilda.c:463
+#: src/tilda.c:237 src/tilda.c:460
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Não foi possível abrir directório de bloqueio: %s\n"
@@ -475,12 +468,11 @@ msgid "Problem parsing custom command: %s\n"
 msgstr "Problema ao analisar o comando personalizado: %s\n"
 
 #: src/tilda_terminal.c:387 src/tilda_terminal.c:404
-#, fuzzy
 msgid "Launching default shell instead\n"
-msgstr "Carregando o shell padrão\n"
+msgstr "Carregando antes a shell padrão\n"
 
 #: src/tilda_terminal.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Incapaz de carregar o comando personalizado: %s\n"
 
@@ -490,17 +482,15 @@ msgid "Unable to launch default shell: %s\n"
 msgstr "Incapaz de carregar o shell padrão: %s\n"
 
 #: src/tilda_terminal.c:675
-#, fuzzy
 msgid "_New Tab"
 msgstr "_Nova Aba"
 
 #: src/tilda_terminal.c:679
-#, fuzzy
 msgid "_Close Tab"
 msgstr "_Fechar Aba"
 
 #: src/tilda_terminal.c:769
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Falha ao carregar o navegador web. O comando foi `%s'\n"
 

@@ -6,15 +6,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
-"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2008-03-18 23:09-0700\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-01-30 19:35-0800\n"
 "PO-Revision-Date: 2008-03-17 23:34+0000\n"
 "Last-Translator: luojie-dune <Unknown>\n"
 "Language-Team: Chinese (China) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-03-19 05:36+0000\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:7
@@ -313,11 +313,11 @@ msgstr "    "
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
-"applications and operating systems that expect different terminal behavior.</"
-"i></small>"
+"applications and operating systems that expect different terminal "
+"behavior.</i></small>"
 msgstr ""
-"<small><i><b>注意：</b>这些选项可能造成一些应用程序产生不正确的行为。仅用于允"
-"许您在一些应用程序和操作系统中作调整以获得不同的终端行为。</i></small>"
+"<small><i><b>注意：</b>这些选项可能造成一些应用程序产生不正确的行为。仅用于允许您在一些应用程序和操作系统中作调整以获得不同的终端行为。<"
+"/i></small>"
 
 #: tilda.glade:1531
 msgid "_Delete key generates:"
@@ -395,7 +395,7 @@ msgstr "无法将配置文件写入%s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "无法执行命令：`%s'\n"
 
-#: src/tilda.c:237 src/tilda.c:463
+#: src/tilda.c:237 src/tilda.c:460
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "无法打开锁定的目录：%s\n"
