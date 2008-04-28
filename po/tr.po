@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-01-30 19:35-0800\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
 "PO-Revision-Date: 2007-05-22 18:11+0000\n"
 "Last-Translator: Alperen Yusuf Aybar <alperen@aybar.biz>\n"
 "Language-Team: Turkish <tr@li.org>\n"
@@ -295,8 +295,8 @@ msgstr ""
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
-"applications and operating systems that expect different terminal "
-"behavior.</i></small>"
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
 msgstr ""
 
 #: tilda.glade:1531
@@ -372,7 +372,7 @@ msgstr ""
 msgid "Unable to run command: `%s'\n"
 msgstr ""
 
-#: src/tilda.c:237 src/tilda.c:460
+#: src/tilda.c:237 src/tilda.c:463
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""

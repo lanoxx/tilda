@@ -1,4 +1,4 @@
-version 0.9.6 (TBA):
+version 0.9.6 (2008-4-28):
 	* Move bugtracker to http://bugs.launchpad.net/tilda
 	* Fix metacity-2.20 focus problems
 	* Add future plans to the TODO list

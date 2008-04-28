@@ -3,7 +3,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([Tilda], [0.9.6pre], [http://bugs.launchpad.net/tilda])
+AC_INIT([Tilda], [0.9.6], [http://bugs.launchpad.net/tilda])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/tilda.c])
 AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
