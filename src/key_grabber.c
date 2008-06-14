@@ -257,7 +257,7 @@ static void onKeybindingPull (const char *keystring, gpointer user_data)
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)
 {
     /* Empty strings are no good */
-    if (strcmp ("", keystr) == 0)
+    if (keystr == NULL || strcmp ("", keystr) == 0)
         return FALSE;
 
     return tomboy_keybinder_bind (keystr, onKeybindingPull, tw);

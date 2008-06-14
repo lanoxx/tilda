@@ -1,3 +1,5 @@
+
+
 /*
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by
@@ -177,7 +179,27 @@ static void focus_out_event_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
 
-    //printf ("hide()\n");
+    printf ("hide()\n");
+
+    GList *list = gtk_container_get_children ((GtkContainer *) widget);
+    gboolean has_focus = FALSE;
+
+    if (GTK_WIDGET_HAS_FOCUS(list->data))
+      {
+        has_focus = TRUE;
+      }
+
+    while ((list = g_list_next(list)) != NULL) 
+    {
+      if (GTK_WIDGET_HAS_FOCUS(list->data))
+      {
+	has_focus = TRUE;
+	break;
+      }
+    }  
+
+    if (!has_focus)
+      printf ("really HIDE\n");
 }
 
 static void goto_tab (tilda_window *tw, guint i)
