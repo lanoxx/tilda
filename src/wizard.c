@@ -37,6 +37,107 @@
 /* INT_MAX */
 #include <limits.h>
 
+const GdkColor
+terminal_palette_tango[TERMINAL_PALETTE_SIZE] =
+{
+  { 0, 0x2e2e, 0x3434, 0x3636 },
+  { 0, 0xcccc, 0x0000, 0x0000 },
+  { 0, 0x4e4e, 0x9a9a, 0x0606 },
+  { 0, 0xc4c4, 0xa0a0, 0x0000 },
+  { 0, 0x3434, 0x6565, 0xa4a4 },
+  { 0, 0x7575, 0x5050, 0x7b7b },
+  { 0, 0x0606, 0x9820, 0x9a9a },
+  { 0, 0xd3d3, 0xd7d7, 0xcfcf },
+  { 0, 0x5555, 0x5757, 0x5353 },
+  { 0, 0xefef, 0x2929, 0x2929 },
+  { 0, 0x8a8a, 0xe2e2, 0x3434 },
+  { 0, 0xfcfc, 0xe9e9, 0x4f4f },
+  { 0, 0x7272, 0x9f9f, 0xcfcf },
+  { 0, 0xadad, 0x7f7f, 0xa8a8 },
+  { 0, 0x3434, 0xe2e2, 0xe2e2 },
+  { 0, 0xeeee, 0xeeee, 0xecec }
+};
+
+const GdkColor
+terminal_palette_linux[TERMINAL_PALETTE_SIZE] =
+{
+  { 0, 0x0000, 0x0000, 0x0000 },
+  { 0, 0xaaaa, 0x0000, 0x0000 },
+  { 0, 0x0000, 0xaaaa, 0x0000 },
+  { 0, 0xaaaa, 0x5555, 0x0000 },
+  { 0, 0x0000, 0x0000, 0xaaaa },
+  { 0, 0xaaaa, 0x0000, 0xaaaa },
+  { 0, 0x0000, 0xaaaa, 0xaaaa },
+  { 0, 0xaaaa, 0xaaaa, 0xaaaa },
+  { 0, 0x5555, 0x5555, 0x5555 },
+  { 0, 0xffff, 0x5555, 0x5555 },
+  { 0, 0x5555, 0xffff, 0x5555 },
+  { 0, 0xffff, 0xffff, 0x5555 },
+  { 0, 0x5555, 0x5555, 0xffff },
+  { 0, 0xffff, 0x5555, 0xffff },
+  { 0, 0x5555, 0xffff, 0xffff },
+  { 0, 0xffff, 0xffff, 0xffff }
+};
+
+const GdkColor
+terminal_palette_xterm[TERMINAL_PALETTE_SIZE] =
+{
+    {0, 0x0000, 0x0000, 0x0000 },
+    {0, 0xcdcb, 0x0000, 0x0000 },
+    {0, 0x0000, 0xcdcb, 0x0000 },
+    {0, 0xcdcb, 0xcdcb, 0x0000 },
+    {0, 0x1e1a, 0x908f, 0xffff },
+    {0, 0xcdcb, 0x0000, 0xcdcb },
+    {0, 0x0000, 0xcdcb, 0xcdcb },
+    {0, 0xe5e2, 0xe5e2, 0xe5e2 },
+    {0, 0x4ccc, 0x4ccc, 0x4ccc },
+    {0, 0xffff, 0x0000, 0x0000 },
+    {0, 0x0000, 0xffff, 0x0000 },
+    {0, 0xffff, 0xffff, 0x0000 },
+    {0, 0x4645, 0x8281, 0xb4ae },
+    {0, 0xffff, 0x0000, 0xffff },
+    {0, 0x0000, 0xffff, 0xffff },
+    {0, 0xffff, 0xffff, 0xffff }
+};
+
+const GdkColor
+terminal_palette_rxvt[TERMINAL_PALETTE_SIZE] =
+{
+  { 0, 0x0000, 0x0000, 0x0000 },
+  { 0, 0xcdcd, 0x0000, 0x0000 },
+  { 0, 0x0000, 0xcdcd, 0x0000 },
+  { 0, 0xcdcd, 0xcdcd, 0x0000 },
+  { 0, 0x0000, 0x0000, 0xcdcd },
+  { 0, 0xcdcd, 0x0000, 0xcdcd },
+  { 0, 0x0000, 0xcdcd, 0xcdcd },
+  { 0, 0xfafa, 0xebeb, 0xd7d7 },
+  { 0, 0x4040, 0x4040, 0x4040 },
+  { 0, 0xffff, 0x0000, 0x0000 },
+  { 0, 0x0000, 0xffff, 0x0000 },
+  { 0, 0xffff, 0xffff, 0x0000 },
+  { 0, 0x0000, 0x0000, 0xffff },
+  { 0, 0xffff, 0x0000, 0xffff },
+  { 0, 0x0000, 0xffff, 0xffff },
+  { 0, 0xffff, 0xffff, 0xffff }
+};
+
+typedef struct _TerminalPaletteScheme
+{
+  const char *name;
+  const GdkColor *palette;
+}TerminalPaletteScheme;
+
+static TerminalPaletteScheme palette_schemes[] = {
+  { N_("Tango"), terminal_palette_tango },
+  { N_("Linux console"), terminal_palette_linux },
+  { N_("XTerm"), terminal_palette_xterm },
+  { N_("Rxvt"), terminal_palette_rxvt }
+};
+
+static void init_palette_scheme_menu (void);
+static void update_palette_color_button(gint idx);
+
+
 /* For use in get_display_dimension() */
 static enum dimensions { HEIGHT, WIDTH };
 
@@ -97,6 +198,8 @@ gint wizard (tilda_window *ltw)
      * I know how ugly this is ... */
     tw = ltw;
 
+    init_palette_scheme_menu ();
+
     /* Copy the current program state into the wizard */
     set_wizard_state_from_config ();
 
@@ -115,6 +218,9 @@ gint wizard (tilda_window *ltw)
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
     g_free (window_title);
+    
+    /* Disable auto hide */
+    tw->disable_auto_hide = TRUE;
 
     /* Block here until the wizard is closed successfully */
     gtk_main ();
@@ -122,6 +228,38 @@ gint wizard (tilda_window *ltw)
     return 0;
 }
 
+gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+{
+    /* Try to grab the key. This is a good way to validate it :) */
+    gboolean key_is_valid = tilda_keygrabber_bind (accel, tw);
+
+    if (key_is_valid)
+        return TRUE;
+    else
+    {
+        /* Show the "invalid keybinding" dialog */
+        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window), message);
+        return FALSE;
+    }
+}
+
+gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+{
+    guint accel_key;
+    GdkModifierType accel_mods;
+   
+    /* Parse the accelerator string. If it parses improperly, both values will be 0.*/ 
+    gtk_accelerator_parse (accel, &accel_key, &accel_mods);
+    if (! ((accel_key == 0) && (accel_mods == 0)) )
+        return TRUE;
+    else
+    {
+        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window), message);
+        return FALSE;
+    }
+}
+
+# define GET_BUTTON_LABEL(BUTTON) ( gtk_button_get_label( GTK_BUTTON(glade_xml_get_widget(xml, BUTTON))))
 
 /* Gets called just after the wizard is closed. This should clean up after
  * the wizard, and do anything that couldn't be done immediately during the
@@ -130,26 +268,94 @@ static void wizard_closed ()
 {
     DEBUG_FUNCTION ("wizard_closed");
 
-    const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
+    const gchar *key = GET_BUTTON_LABEL("button_keybinding_pulldown");
+    const gchar *addtab_key = GET_BUTTON_LABEL("button_keybinding_addtab");
+    const gchar *closetab_key = GET_BUTTON_LABEL("button_keybinding_closetab");
+    const gchar *nexttab_key = GET_BUTTON_LABEL("button_keybinding_nexttab");
+    const gchar *prevtab_key = GET_BUTTON_LABEL("button_keybinding_prevtab");
+    const gchar *copy_key = GET_BUTTON_LABEL("button_keybinding_copy");
+    const gchar *paste_key = GET_BUTTON_LABEL("button_keybinding_paste");
+    const gchar *quit_key = GET_BUTTON_LABEL("button_keybinding_quit");
+    const gchar *gototab_1_key = GET_BUTTON_LABEL("button_keybinding_gototab1");
+    const gchar *gototab_2_key = GET_BUTTON_LABEL("button_keybinding_gototab2");
+    const gchar *gototab_3_key = GET_BUTTON_LABEL("button_keybinding_gototab3");
+    const gchar *gototab_4_key = GET_BUTTON_LABEL("button_keybinding_gototab4");
+    const gchar *gototab_5_key = GET_BUTTON_LABEL("button_keybinding_gototab5");
+    const gchar *gototab_6_key = GET_BUTTON_LABEL("button_keybinding_gototab6");
+    const gchar *gototab_7_key = GET_BUTTON_LABEL("button_keybinding_gototab7");
+    const gchar *gototab_8_key = GET_BUTTON_LABEL("button_keybinding_gototab8");
+    const gchar *gototab_9_key = GET_BUTTON_LABEL("button_keybinding_gototab9");
+    const gchar *gototab_10_key = GET_BUTTON_LABEL("button_keybinding_gototab10");
+
     const GtkWidget *entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
     const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
 
-    gchar *key = gtk_entry_get_text (GTK_ENTRY(entry_keybinding));
-    gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
-    gboolean key_is_valid = FALSE;
+    const gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
 
-    /* Try to grab the key. This is a good way to validate it :) */
-    key_is_valid = tilda_keygrabber_bind (key, tw);
+    /* Validate our new shortcuts */
 
-    if (!key_is_valid)
-    {
-        /* Show the "invalid keybinding" dialog */
-        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window));
-
+     /* The pulldown key is validated differently (should it be?), so it gets its own function. */
+    if (!validate_pulldown_keybinding(key, wizard_window, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
         return;
-    }
-
+ 
+     /* Check the rest of them */
+    if (!validate_keybinding(addtab_key, wizard_window, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(closetab_key, wizard_window, _("The keybinding you chose for \"Close Tab\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(nexttab_key, wizard_window, _("The keybinding you chose for \"Next Tab\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(prevtab_key, wizard_window, _("The keybinding you chose for \"Previous Tab\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(copy_key, wizard_window, _("The keybinding you chose for \"Copy\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(paste_key, wizard_window, _("The keybinding you chose for \"Paste\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(quit_key, wizard_window, _("The keybinding you chose for \"Quit\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_1_key, wizard_window, _("The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_2_key, wizard_window, _("The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_3_key, wizard_window, _("The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_4_key, wizard_window, _("The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_5_key, wizard_window, _("The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_6_key, wizard_window, _("The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_7_key, wizard_window, _("The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_8_key, wizard_window, _("The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_9_key, wizard_window, _("The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(gototab_10_key, wizard_window, _("The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose another.")))
+        return;
+ 
+    /* Now that our shortcuts are validated, store them back into the config. */
     config_setstr ("key", key);
+    config_setstr ("addtab_key", addtab_key);
+    config_setstr ("closetab_key", closetab_key);
+    config_setstr ("nexttab_key", nexttab_key);
+    config_setstr ("prevtab_key", prevtab_key);
+    config_setstr ("copy_key", copy_key);
+    config_setstr ("paste_key", paste_key);
+    config_setstr ("quit_key", quit_key);
+    config_setstr ("gototab_1_key",  gototab_1_key);
+    config_setstr ("gototab_2_key",  gototab_2_key);
+    config_setstr ("gototab_3_key",  gototab_3_key);
+    config_setstr ("gototab_4_key",  gototab_4_key);
+    config_setstr ("gototab_5_key",  gototab_5_key);
+    config_setstr ("gototab_6_key",  gototab_6_key);
+    config_setstr ("gototab_7_key",  gototab_7_key);
+    config_setstr ("gototab_8_key",  gototab_8_key);
+    config_setstr ("gototab_9_key",  gototab_9_key);
+    config_setstr ("gototab_10_key", gototab_10_key);
+
+    /* Now that they're in the config, reset the keybindings right now. */
+    tilda_window_setup_keyboard_accelerators(tw);
 
     /* TODO: validate this?? */
     config_setstr ("command", command);
@@ -159,7 +365,7 @@ static void wizard_closed ()
     xml = NULL;
 
     /* Remove the wizard */
-    gtk_widget_destroy (wizard_window);
+    gtk_widget_destroy (GTK_WIDGET(wizard_window));
 
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
@@ -167,9 +373,12 @@ static void wizard_closed ()
 
     /* This exits the wizard */
     gtk_main_quit ();
+    
+    /* Enables auto hide */
+    tw->disable_auto_hide = FALSE;
 }
 
-void show_invalid_keybinding_dialog (GtkWindow *parent_window)
+void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* message)
 {
     DEBUG_FUNCTION ("show_invalid_keybinding_dialog");
 
@@ -177,7 +386,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window)
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_ERROR,
                               GTK_BUTTONS_CLOSE,
-                              _("The keybinding you chose is invalid. Please choose another."));
+                              message);
 
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gtk_dialog_run (GTK_DIALOG (dialog));
@@ -189,7 +398,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window)
 /******************************************************************************/
 
 /*
- * The functions wizard_key_grab() and setup_key_grab() are totally inspired by
+ * The functions wizard_dlg_key_grab() and setup_key_grab() are totally inspired by
  * the custom keybindings dialog in denemo. See http://denemo.sourceforge.net/
  *
  * Thanks for the help! :)
@@ -200,16 +409,16 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window)
  * manually ignore all modifier keys, and only register "real" keys.
  *
  * We return when the first "real" key is pressed.
+ *
+ * Note that this is called for the key_press_event for the key-grab dialog, not for the wizard.
  */
-static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
+
+static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w)
 {
-    DEBUG_FUNCTION ("wizard_key_grab");
+    DEBUG_FUNCTION ("wizard_dlg_key_grab");
     DEBUG_ASSERT (wizard_window != NULL);
     DEBUG_ASSERT (event != NULL);
 
-    const GtkWidget *button_grab_keybinding = glade_xml_get_widget (xml, "button_grab_keybinding");
-    const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
-    const GtkWidget *entry_keybinding = glade_xml_get_widget (xml, "entry_keybinding");
     gchar *key;
 
     if (gtk_accelerator_valid (event->keyval, event->state))
@@ -227,15 +436,15 @@ static void wizard_key_grab (GtkWidget *wizard_window, GdkEventKey *event)
 #ifdef DEBUG
     g_printerr ("KEY GRABBED: %s\n", key);
 #endif
-        /* Re-enable widgets */
-        gtk_widget_set_sensitive (button_grab_keybinding, TRUE);
-        gtk_widget_set_sensitive (wizard_notebook, TRUE);
 
         /* Disconnect the key grabber */
-        g_signal_handlers_disconnect_by_func (GTK_OBJECT(wizard_window), GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
+        g_signal_handlers_disconnect_by_func (GTK_OBJECT(dialog), GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
 
+	/* Destroy the dialog */
+        gtk_widget_destroy (dialog);
+ 
         /* Copy the pressed key to the text entry */
-        gtk_entry_set_text (GTK_ENTRY(entry_keybinding), key);
+        gtk_button_set_label (GTK_BUTTON(w), key);
 
         /* Free the string */
         g_free (key);
@@ -418,6 +627,29 @@ static void check_enable_antialiasing_toggled_cb (GtkWidget *w)
     }
 }
 
+static void spin_auto_hide_time_value_changed_cb (GtkWidget *w)
+{
+    const gint auto_hide_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
+    config_setint ("auto_hide_time", auto_hide_time);
+    tw->auto_hide_max_time = auto_hide_time;
+}
+
+static void check_auto_hide_on_focus_lost_toggled_cb (GtkWidget *w)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("auto_hide_on_focus_lost", status);
+    tw->auto_hide_on_focus_lost = status;
+}
+
+static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("auto_hide_on_mouse_leave", status);
+    tw->auto_hide_on_mouse_leave = status;
+}
+
 static void check_allow_bold_text_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -492,8 +724,8 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
     label_custom_command = glade_xml_get_widget (xml, "label_custom_command");
     entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
 
-    gtk_widget_set_sensitive (label_custom_command, status);
-    gtk_widget_set_sensitive (entry_custom_command, status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_custom_command), status);
+    gtk_widget_set_sensitive (GTK_WIDGET(entry_custom_command), status);
 }
 
 static void combo_command_exit_changed_cb (GtkWidget *w)
@@ -614,8 +846,8 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     else
         config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_x_position)));
 
-    gtk_widget_set_sensitive (label_x_position, !status);
-    gtk_widget_set_sensitive (spin_x_position, !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_x_position), !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_x_position), !status);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
 
@@ -650,8 +882,8 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     else
         config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_y_position)));
 
-    gtk_widget_set_sensitive (label_y_position, !status);
-    gtk_widget_set_sensitive (spin_y_position, !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_y_position), !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_y_position), !status);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
 
@@ -684,8 +916,8 @@ static void check_enable_transparency_toggled_cb (GtkWidget *w)
 
     config_setbool ("enable_transparency", status);
 
-    gtk_widget_set_sensitive (label_level_of_transparency, status);
-    gtk_widget_set_sensitive (spin_level_of_transparency, status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_level_of_transparency), status);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_level_of_transparency), status);
 
     if (status)
     {
@@ -747,10 +979,10 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
     const GtkWidget *label_animation_orientation = glade_xml_get_widget (xml, "label_animation_orientation");
     const GtkWidget *combo_animation_orientation = glade_xml_get_widget (xml, "combo_animation_orientation");
 
-    gtk_widget_set_sensitive (label_animation_delay, status);
-    gtk_widget_set_sensitive (spin_animation_delay, status);
-    gtk_widget_set_sensitive (label_animation_orientation, status);
-    gtk_widget_set_sensitive (combo_animation_orientation, status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_animation_delay), status);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_animation_delay), status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_animation_orientation), status);
+    gtk_widget_set_sensitive (GTK_WIDGET(combo_animation_orientation), status);
 
     config_setbool ("animation", status);
 
@@ -785,7 +1017,7 @@ static void check_use_image_for_background_toggled_cb (GtkWidget *w)
 
     config_setbool ("use_image", status);
 
-    gtk_widget_set_sensitive (button_background_image, status);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_background_image), status);
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
@@ -913,6 +1145,98 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
     }
 }
 
+
+
+static void combo_palette_scheme_changed_cb (GtkWidget *w)
+{
+    gint i, j;
+    tilda_term *tt;
+    GdkColor fg, bg;
+    GtkWidget *color_button;
+
+    i = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+    if (i < G_N_ELEMENTS (palette_schemes))
+    {
+        color_button = glade_xml_get_widget (xml, "colorbutton_text");
+        gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
+        color_button = glade_xml_get_widget (xml, "colorbutton_back");
+        gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
+
+        memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
+
+        /* Set terminal palette. */
+        for (j=0; j<g_list_length (tw->terms); j++) 
+        {
+            tt = g_list_nth_data (tw->terms, j);
+            vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE); 
+        }
+
+        for (j=0; j<TERMINAL_PALETTE_SIZE; j++)
+        {
+            update_palette_color_button(j);
+
+            /* Set palette in the config. */
+            config_setnint ("palette", current_palette[j].red,   j*3);
+            config_setnint ("palette", current_palette[j].green, j*3+1);
+            config_setnint ("palette", current_palette[j].blue,  j*3+2);
+        }
+    }
+    else
+    {
+        /* "Custom" selected, do nothing. */
+    }
+
+    /* Set palette scheme in the config*/
+    config_setint ("palette_scheme", i);
+}
+
+static void colorbutton_palette_n_set_cb (GtkWidget *w)
+{
+    const GtkWidget *combo_palette_scheme = glade_xml_get_widget (xml, "combo_palette_scheme");
+    const gchar* name = gtk_widget_get_name(w);
+    gint i;
+    tilda_term *tt;
+    GtkWidget *color_button;
+    GdkColor fg, bg;
+
+    /* The user just changed palette manually, so set the palette scheme to "Custom" */
+    i = G_N_ELEMENTS (palette_schemes);
+    gtk_combo_box_set_active (GTK_COMBO_BOX(combo_palette_scheme), i);
+    config_setint ("palette_scheme", i);
+
+    /* Get the index number of color button which was set */
+    i = atoi(&name[sizeof("colorbutton_palette_")-1]);
+
+    /* Now get the color that was set, save it. */
+    gtk_color_button_get_color (GTK_COLOR_BUTTON(w), &current_palette[i]);
+
+    /* Why saving the whole palette, not the single color that was set,
+     * is if the config file doesn't exist, and we save the single color,
+     * then exit, the color always becomes the first color in the config file,
+     * no matter which one it actually is, and leaves other colors unset.
+     * Obviously this is not what we want.
+     * However, maybe there is a better solution for this issue.
+     */
+    for (i=0; i<TERMINAL_PALETTE_SIZE; i++)
+    {
+        config_setnint ("palette", current_palette[i].red,   i*3);
+        config_setnint ("palette", current_palette[i].green, i*3+1);
+        config_setnint ("palette", current_palette[i].blue,  i*3+2);
+    }
+
+    /* Set terminal palette. */
+    color_button = glade_xml_get_widget (xml, "colorbutton_text");
+    gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
+    color_button = glade_xml_get_widget (xml, "colorbutton_back");
+    gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
+
+    for (i=0; i<g_list_length (tw->terms); i++) 
+    {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE); 
+    }
+}
+
 static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -1032,17 +1356,99 @@ static void button_reset_compatibility_options_clicked_cb (GtkWidget *w)
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_delete_binding), 1);
 }
 
-static void button_grab_keybinding_clicked_cb (GtkWidget *w)
+static void button_keybinding_clicked_cb (GtkWidget *w)
 {
     const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
     const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
 
-    /* Make the preferences window non-sensitive while we are grabbing keys */
-    gtk_widget_set_sensitive (w, FALSE);
-    gtk_widget_set_sensitive (wizard_notebook, FALSE);
+    /* Get all my keybinding buttons. */
+    const GtkWidget *button_keybinding_pulldown =  glade_xml_get_widget (xml, "button_keybinding_pulldown");
+    const GtkWidget *button_keybinding_addtab =    glade_xml_get_widget (xml, "button_keybinding_addtab");
+    const GtkWidget *button_keybinding_closetab =  glade_xml_get_widget (xml, "button_keybinding_closetab"); 
+    const GtkWidget *button_keybinding_nexttab =   glade_xml_get_widget (xml, "button_keybinding_nexttab");
+    const GtkWidget *button_keybinding_prevtab =   glade_xml_get_widget (xml, "button_keybinding_prevtab");
+    const GtkWidget *button_keybinding_copy =      glade_xml_get_widget (xml, "button_keybinding_copy");
+    const GtkWidget *button_keybinding_paste =     glade_xml_get_widget (xml, "button_keybinding_paste");
+    const GtkWidget *button_keybinding_quit =      glade_xml_get_widget (xml, "button_keybinding_quit");
+    const GtkWidget *button_keybinding_gototab1 =  glade_xml_get_widget (xml, "button_keybinding_gototab1");
+    const GtkWidget *button_keybinding_gototab2 =  glade_xml_get_widget (xml, "button_keybinding_gototab2");
+    const GtkWidget *button_keybinding_gototab3 =  glade_xml_get_widget (xml, "button_keybinding_gototab3");
+    const GtkWidget *button_keybinding_gototab4 =  glade_xml_get_widget (xml, "button_keybinding_gototab4");
+    const GtkWidget *button_keybinding_gototab5 =  glade_xml_get_widget (xml, "button_keybinding_gototab5");
+    const GtkWidget *button_keybinding_gototab6 =  glade_xml_get_widget (xml, "button_keybinding_gototab6");
+    const GtkWidget *button_keybinding_gototab7 =  glade_xml_get_widget (xml, "button_keybinding_gototab7");
+    const GtkWidget *button_keybinding_gototab8 =  glade_xml_get_widget (xml, "button_keybinding_gototab8");
+    const GtkWidget *button_keybinding_gototab9 =  glade_xml_get_widget (xml, "button_keybinding_gototab9");
+    const GtkWidget *button_keybinding_gototab10 = glade_xml_get_widget (xml, "button_keybinding_gototab10");
 
-    /* Connect the key grabber to the preferences window */
-    g_signal_connect (GTK_OBJECT(wizard_window), "key_press_event", GTK_SIGNAL_FUNC(wizard_key_grab), NULL);
+    /* Make the preferences window and buttons non-sensitive while we are grabbing keys. */
+    gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), FALSE);
+
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_copy), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_paste), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_quit), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab1), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab2), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab3), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab4), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab5), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab6), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab7), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab8), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), FALSE);
+
+    /* Bring up the dialog that will accept the new keybinding */
+    GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
+                              GTK_DIALOG_DESTROY_WITH_PARENT,
+                              GTK_MESSAGE_QUESTION,
+                              GTK_BUTTONS_CANCEL,
+                              "Enter keyboard shortcut");
+
+    /* Connect the key grabber to the dialog */
+    g_signal_connect (GTK_OBJECT(dialog), "key_press_event", GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
+ 
+    gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
+    gint response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+
+    /* Re-enable widgets. Doing it here instead of wizard_dlg_key_grab because it is possible to close
+       the dialog without grabbing a key, by clicking. */
+    gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), TRUE);
+
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_copy), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_paste), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_quit), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab1), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab2), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab3), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab4), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab5), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab6), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab7), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab8), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), TRUE);
+
+    /* If the dialog was "programmatically destroyed" (we got a key), we don't want to destroy it again.
+       Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
+    if (response != -1)
+    {
+        g_signal_handlers_disconnect_by_func (GTK_OBJECT(dialog), GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
+        gtk_widget_destroy (dialog);
+    }
+
 }
 
 /******************************************************************************/
@@ -1056,6 +1462,7 @@ static void button_grab_keybinding_clicked_cb (GtkWidget *w)
 #define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX(glade_xml_get_widget (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
 #define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
 #define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define BUTTON_LABEL_FROM_CFG(GLADE_NAME,CFG_STR) gtk_button_set_label (GTK_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
 #define SPIN_BUTTON(GLADE_NAME,CFG_INT) gtk_spin_button_set_value (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
 #define SPIN_BUTTON_SET_RANGE(GLADE_NAME,LOWER,UPPER) gtk_spin_button_set_range (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), (LOWER), (UPPER))
 #define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), (VALUE))
@@ -1069,6 +1476,7 @@ static void button_grab_keybinding_clicked_cb (GtkWidget *w)
 static void set_wizard_state_from_config ()
 {
     GdkColor text_color, back_color;
+    gint i;
 
     /* General Tab */
     CHECK_BUTTON ("check_display_on_all_workspaces", "pinned");
@@ -1085,6 +1493,11 @@ static void set_wizard_state_from_config ()
     CHECK_BUTTON ("check_allow_bold_text", "bold");
     COMBO_BOX ("combo_tab_pos", "tab_pos");
     FONT_BUTTON ("button_font", "font");
+
+    SPIN_BUTTON_SET_RANGE ("spin_auto_hide_time", 0, 99999);
+    SPIN_BUTTON_SET_VALUE ("spin_auto_hide_time", config_getint ("auto_hide_time"));
+    CHECK_BUTTON ("check_auto_hide_on_focus_lost", "auto_hide_on_focus_lost");
+    CHECK_BUTTON ("check_auto_hide_on_mouse_leave", "auto_hide_on_mouse_leave");
 
     /* Title and Command Tab */
     TEXT_ENTRY ("entry_title", "title");
@@ -1146,6 +1559,18 @@ static void set_wizard_state_from_config ()
     back_color.blue = config_getint ("back_blue");
     COLOR_BUTTON ("colorbutton_back", &back_color);
 
+    COMBO_BOX ("combo_palette_scheme", "palette_scheme");
+
+    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++)
+    {
+        current_palette[i].pixel = 0;
+        current_palette[i].red   = config_getnint ("palette", i*3);
+        current_palette[i].green = config_getnint ("palette", i*3+1);
+        current_palette[i].blue  = config_getnint ("palette", i*3+2);
+ 
+        update_palette_color_button(i);
+    }
+
     /* Scrolling Tab */
     COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
     SPIN_BUTTON ("spin_scrollback_amount", "lines");
@@ -1158,7 +1583,24 @@ static void set_wizard_state_from_config ()
     COMBO_BOX ("combo_delete_binding", "delete_key");
 
     /* Keybinding Tab */
-    TEXT_ENTRY ("entry_keybinding", "key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_pulldown", "key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_addtab", "addtab_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_closetab", "closetab_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_nexttab", "nexttab_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_prevtab", "prevtab_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_copy", "copy_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_paste", "paste_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_quit", "quit_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab1", "gototab_1_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab2", "gototab_2_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab3", "gototab_3_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab4", "gototab_4_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab5", "gototab_5_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab6", "gototab_6_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab7", "gototab_7_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab8", "gototab_8_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab9", "gototab_9_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab10", "gototab_10_key");
 }
 
 #define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect (glade_xml_get_widget (xml, (GLADE_WIDGET)), (SIGNAL_NAME), GTK_SIGNAL_FUNC((SIGNAL_HANDLER)), NULL)
@@ -1167,6 +1609,8 @@ static void set_wizard_state_from_config ()
  * values, that way all of the signal handlers don't get called */
 static void connect_wizard_signals ()
 {
+    gint i;
+
     /* General Tab */
     CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb);
     CONNECT_SIGNAL ("check_do_not_show_in_taskbar","toggled",check_do_not_show_in_taskbar_toggled_cb);
@@ -1182,6 +1626,10 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb);
     CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb);
     CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb);
+
+    CONNECT_SIGNAL ("spin_auto_hide_time","value-changed",spin_auto_hide_time_value_changed_cb);
+    CONNECT_SIGNAL ("check_auto_hide_on_focus_lost","toggled",check_auto_hide_on_focus_lost_toggled_cb);
+    CONNECT_SIGNAL ("check_auto_hide_on_mouse_leave","toggled",check_auto_hide_on_mouse_leave_toggled_cb);
 
     /* Title and Command Tab */
     CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb);
@@ -1215,6 +1663,13 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("combo_colorschemes","changed",combo_colorschemes_changed_cb);
     CONNECT_SIGNAL ("colorbutton_text","color-set",colorbutton_text_color_set_cb);
     CONNECT_SIGNAL ("colorbutton_back","color-set",colorbutton_back_color_set_cb);
+    CONNECT_SIGNAL ("combo_palette_scheme","changed",combo_palette_scheme_changed_cb);
+    for(i = 0; i < TERMINAL_PALETTE_SIZE; i++)
+    {
+        char *s = g_strdup_printf ("colorbutton_palette_%d", i);
+        CONNECT_SIGNAL (s,"color-set",colorbutton_palette_n_set_cb);
+        g_free (s);
+    }
 
     /* Scrolling Tab */
     CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb);
@@ -1229,10 +1684,50 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_reset_compatibility_options","clicked",button_reset_compatibility_options_clicked_cb);
 
     /* Keybinding Tab */
-    CONNECT_SIGNAL ("button_grab_keybinding","clicked",button_grab_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_pulldown","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_quit","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_addtab","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_closetab","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_nexttab","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_prevtab","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_copy","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_paste","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab1","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab2","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab3","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab4","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab5","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab6","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab7","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab8","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab9","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_gototab10","clicked",button_keybinding_clicked_cb);
 
     /* Close Button */
     CONNECT_SIGNAL ("button_wizard_close","clicked",button_wizard_close_clicked_cb);
     CONNECT_SIGNAL ("wizard_window","delete_event",button_wizard_close_clicked_cb);
+}
+
+/* Initialize the palette scheme menu.
+ * Add the predefined schemes to the combo box.*/
+static void init_palette_scheme_menu (void)
+{
+    gint i;
+    GtkWidget *combo_palette = glade_xml_get_widget (xml, "combo_palette_scheme");
+
+    i = G_N_ELEMENTS (palette_schemes);
+    while (i > 0)
+    {
+        gtk_combo_box_prepend_text (GTK_COMBO_BOX (combo_palette), _(palette_schemes[--i].name));
+    }
+}
+
+static void update_palette_color_button(gint idx)
+{
+    char *s = g_strdup_printf ("colorbutton_palette_%d", idx);
+    GtkWidget *color_button = glade_xml_get_widget (xml, s);
+    g_free (s);
+
+    gtk_color_button_set_color (GTK_COLOR_BUTTON (color_button), &current_palette[idx]);
 }
 

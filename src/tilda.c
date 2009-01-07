@@ -274,7 +274,7 @@ static gint remove_stale_lock_files (gchar *home_directory)
 static gboolean parse_cli (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("parse_cli");
-    DEBUG_ASSERT (argc != NULL);
+    DEBUG_ASSERT (argc != 0);
     DEBUG_ASSERT (argv != NULL);
 
     /* Set default values */
@@ -601,7 +601,7 @@ int main (int argc, char *argv[])
         if (!ret)
         {
             /* The key was unbindable, so we need to show the wizard */
-            show_invalid_keybinding_dialog (NULL);
+            show_invalid_keybinding_dialog (NULL, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another."));
             wizard (tw);
         }
     }

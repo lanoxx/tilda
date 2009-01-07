@@ -36,7 +36,7 @@
 #define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
 #define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
 
-
+GdkColor current_palette[TERMINAL_PALETTE_SIZE];
 
 static gint start_shell (struct tilda_term_ *tt);
 static gint tilda_term_config_defaults (tilda_term *tt);
@@ -486,9 +486,10 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     gdouble transparency_level = 0.0;
     GdkColor fg, bg /*, tint, highlight, cursor, black */;
+    gint i;
 
 
-    /** Colors **/
+    /** Colors & Palette **/
     bg.red   =    config_getint ("back_red");
     bg.green =    config_getint ("back_green");
     bg.blue  =    config_getint ("back_blue");
@@ -497,7 +498,15 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     fg.green =    config_getint ("text_green");
     fg.blue  =    config_getint ("text_blue");
 
-    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, NULL, 0);
+    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++)
+    {
+        current_palette[i].pixel = 0;
+        current_palette[i].red   = config_getnint ("palette", i*3);
+        current_palette[i].green = config_getnint ("palette", i*3+1);
+        current_palette[i].blue  = config_getnint ("palette", i*3+2);
+    }
+ 
+    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
 
     /** Bells **/
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
@@ -639,6 +648,16 @@ menu_close_tab_cb (GtkWidget *widget, gpointer data)
     tilda_window_close_current_tab (TILDA_WINDOW(data));
 }
 
+static void on_popup_hide (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION("on_popup_hide");
+    DEBUG_ASSERT(widget != NULL);
+    DEBUG_ASSERT(data != NULL);
+    
+    tilda_window *tw = TILDA_WINDOW(data);
+    tw->disable_auto_hide = FALSE;
+}
+
 static void popup_menu (tilda_window *tw, tilda_term *tt)
 {
     DEBUG_FUNCTION ("popup_menu");
@@ -673,19 +692,19 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     /* Add Actions and connect callbacks */
     action = gtk_action_new ("new-tab", _("_New Tab"), NULL, GTK_STOCK_ADD);
-    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>t");
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("addtab_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_add_tab_cb), tw);
 
     action = gtk_action_new ("close-tab", _("_Close Tab"), NULL, GTK_STOCK_CLOSE);
-    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>w");
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("closetab_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
 
     action = gtk_action_new ("copy", NULL, NULL, GTK_STOCK_COPY);
-    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>c");
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("copy_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_copy_cb), tt);
 
     action = gtk_action_new ("paste", NULL, NULL, GTK_STOCK_PASTE);
-    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>v");
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("paste_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_paste_cb), tt);
 
     action = gtk_action_new ("preferences", NULL, NULL, GTK_STOCK_PREFERENCES);
@@ -693,7 +712,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_preferences_cb), tw);
 
     action = gtk_action_new ("quit", NULL, NULL, GTK_STOCK_QUIT);
-    gtk_action_group_add_action_with_accel (action_group, action, "<Ctrl><Shift>q");
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("quit_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_quit_cb), tw);
 
     /* Create and add actions to the GtkUIManager */
@@ -711,6 +730,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     /* Get the popup menu out of the GtkUIManager */
     menu = gtk_ui_manager_get_widget (ui_manager, "/ui/popup-menu");
+
+    /* Disable auto hide */
+    tw->disable_auto_hide = TRUE;
+    g_signal_connect (G_OBJECT(menu), "unmap", GTK_SIGNAL_FUNC(on_popup_hide), tw);
 
     /* Display the menu */
     gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());

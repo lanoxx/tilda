@@ -32,6 +32,7 @@ struct tilda_window_
     GtkWidget *window;
     GtkWidget *notebook;
     GList *terms;
+    GtkAccelGroup * accel_group;
 
     gchar *home_dir;
     gchar *lock_file;
@@ -39,6 +40,21 @@ struct tilda_window_
     gboolean config_writing_disabled;
     gint instance;
     gboolean have_argb_visual;
+    
+    /* Temporarily disable auto hiding */
+    gboolean disable_auto_hide;
+    /* Auto hide tick-function handler */
+    gint auto_hide_tick_handler;
+    /* Auto hide current time */
+    guint32 auto_hide_current_time;
+    /* Auto hide max time */
+    guint32 auto_hide_max_time;
+    /* Generic timer resolution */
+    guint32 timer_resolution;
+    /* Should Tilda hide itself on focus lost event? */
+    gboolean auto_hide_on_focus_lost;
+    /* Should Tilda hide itself when mouse leaves it? */
+    gboolean auto_hide_on_mouse_leave;
 
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
@@ -53,6 +69,8 @@ gint tilda_window_free (tilda_window *tw);
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos);
 void tilda_window_close_current_tab (tilda_window *tw);
+
+gint tilda_window_setup_keyboard_accelerators (tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 

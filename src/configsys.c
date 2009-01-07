@@ -25,6 +25,23 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 13", CFGF_NONE),
     CFG_STR("key", NULL, CFGF_NONE),
+    CFG_STR("addtab_key", "<Shift><Control>t", CFGF_NONE),
+    CFG_STR("closetab_key", "<Shift><Control>w", CFGF_NONE),
+    CFG_STR("nexttab_key", "<Control>Page_Down", CFGF_NONE),
+    CFG_STR("prevtab_key", "<Control>Page_Up", CFGF_NONE),
+    CFG_STR("gototab_1_key", "<Alt>1", CFGF_NONE),
+    CFG_STR("gototab_2_key", "<Alt>2", CFGF_NONE),
+    CFG_STR("gototab_3_key", "<Alt>3", CFGF_NONE),
+    CFG_STR("gototab_4_key", "<Alt>4", CFGF_NONE),
+    CFG_STR("gototab_5_key", "<Alt>5", CFGF_NONE),
+    CFG_STR("gototab_6_key", "<Alt>6", CFGF_NONE),
+    CFG_STR("gototab_7_key", "<Alt>7", CFGF_NONE),
+    CFG_STR("gototab_8_key", "<Alt>8", CFGF_NONE),
+    CFG_STR("gototab_9_key", "<Alt>9", CFGF_NONE),
+    CFG_STR("gototab_10_key", "<Alt>0", CFGF_NONE),
+    CFG_STR("copy_key", "<Shift><Control>c", CFGF_NONE),
+    CFG_STR("paste_key", "<Shift><Control>v", CFGF_NONE),
+    CFG_STR("quit_key", "<Shift><Control>q", CFGF_NONE),
     CFG_STR("title", "Tilda", CFGF_NONE),
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
@@ -47,6 +64,29 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("scheme", 3, CFGF_NONE),
     CFG_INT("slide_sleep_usec", 15000, CFGF_NONE),
     CFG_INT("animation_orientation", 0, CFGF_NONE),
+    CFG_INT("timer_resolution", 1000, CFGF_NONE),
+    CFG_INT("auto_hide_time", 2000, CFGF_NONE),
+    CFG_INT("palette_scheme", 0, CFGF_NONE),
+ 
+/* int list */
+    CFG_INT_LIST("palette", "{\
+        0x2e2e, 0x3434, 0x3636,\
+        0xcccc, 0x0000, 0x0000,\
+        0x4e4e, 0x9a9a, 0x0606,\
+        0xc4c4, 0xa0a0, 0x0000,\
+        0x3434, 0x6565, 0xa4a4,\
+        0x7575, 0x5050, 0x7b7b,\
+        0x0606, 0x9820, 0x9a9a,\
+        0xd3d3, 0xd7d7, 0xcfcf,\
+        0x5555, 0x5757, 0x5353,\
+        0xefef, 0x2929, 0x2929,\
+        0x8a8a, 0xe2e2, 0x3434,\
+        0xfcfc, 0xe9e9, 0x4f4f,\
+        0x7272, 0x9f9f, 0xcfcf,\
+        0xadad, 0x7f7f, 0xa8a8,\
+        0x3434, 0xe2e2, 0xe2e2,\
+        0xeeee, 0xeeee, 0xecec}",
+        CFGF_NONE),
 
     /* guint16 */
     CFG_INT("scrollbar_pos", 2, CFGF_NONE),
@@ -79,6 +119,8 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
     CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),
     CFG_BOOL("double_buffer", FALSE, CFGF_NONE),
+    CFG_BOOL("auto_hide_on_focus_lost", FALSE, CFGF_NONE),
+    CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
     CFG_END()
 };
 
@@ -166,6 +208,15 @@ gint config_setint (const gchar *key, const gint val)
 	return 0;
 }
 
+gint config_setnint(const gchar *key, const gint val, const guint idx)
+{
+	config_mutex_lock ();
+	cfg_setnint (tc, key, val, idx);
+	config_mutex_unlock ();
+
+	return 0;
+}
+
 gint config_setstr (const gchar *key, const gchar *val)
 {
 	config_mutex_lock ();
@@ -190,6 +241,17 @@ gint config_getint (const gchar *key)
 
 	config_mutex_lock ();
 	temp = cfg_getint (tc, key);
+	config_mutex_unlock ();
+
+	return temp;
+}
+
+glong config_getnint(const gchar *key, const guint idx)
+{
+	glong temp;
+
+	config_mutex_lock ();
+	temp = cfg_getnint (tc, key, idx);
 	config_mutex_unlock ();
 
 	return temp;

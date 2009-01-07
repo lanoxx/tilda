@@ -70,6 +70,10 @@ void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollba
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 
+#define TERMINAL_PALETTE_SIZE 16
+
+extern GdkColor current_palette[TERMINAL_PALETTE_SIZE];
+
 G_END_DECLS
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */

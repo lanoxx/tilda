@@ -166,40 +166,89 @@ static void focus_term (GtkWidget *widget, gpointer data)
 
     GList *list;
     GtkWidget *box;
-    GtkWidget *n = GTK_WIDGET (data);
+    tilda_window *tw = TILDA_WINDOW(data);
+    GtkWidget *n = GTK_WIDGET (tw->notebook);
 
     box = gtk_notebook_get_nth_page (GTK_NOTEBOOK(n), gtk_notebook_get_current_page(GTK_NOTEBOOK(n)));
     list = gtk_container_get_children (GTK_CONTAINER(box));
     gtk_widget_grab_focus (list->data);
 }
 
-static void focus_out_event_cb (GtkWidget *widget, gpointer data)
+static gboolean auto_hide_tick(gpointer data)
+{
+    DEBUG_FUNCTION ("auto_hide_tick");
+    DEBUG_ASSERT (data != NULL);
+    
+    tilda_window *tw = TILDA_WINDOW(data);
+    tw->auto_hide_current_time += tw->timer_resolution;
+    if ((tw->auto_hide_current_time >= tw->auto_hide_max_time) || tw->current_state == UP)
+    {
+        pull(tw, PULL_UP);
+        tw->auto_hide_tick_handler = 0;
+        return FALSE;
+    }
+    return TRUE;
+}
+
+/* Start auto hide tick */
+static void start_auto_hide_tick(tilda_window *tw)
+{
+    if ((tw->auto_hide_tick_handler == 0) && (tw->disable_auto_hide == FALSE))
+    {
+        tw->auto_hide_current_time = 0;
+        tw->auto_hide_tick_handler = g_timeout_add(tw->timer_resolution, auto_hide_tick, tw);
+    }
+}
+
+/* Stop auto hide tick */
+static void stop_auto_hide_tick(tilda_window *tw)
+{
+    if (tw->auto_hide_tick_handler != 0)
+    {
+        g_source_remove(tw->auto_hide_tick_handler);
+        tw->auto_hide_tick_handler = 0;
+    }
+}
+
+static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+    DEBUG_FUNCTION ("mouse_enter");
+    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (widget != NULL);
+    
+    tilda_window *tw = TILDA_WINDOW(data);
+    stop_auto_hide_tick(tw);
+    if (tw->disable_auto_hide == FALSE)
+        tilda_window_set_active(tw);
+}
+ 
+static void mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+    DEBUG_FUNCTION ("mouse_leave");
+    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (widget != NULL);
+    
+    GdkEventCrossing *ev = (GdkEventCrossing*)event;
+    tilda_window *tw = TILDA_WINDOW(data);
+    
+    if ((ev->mode != GDK_CROSSING_NORMAL) || (tw->auto_hide_on_mouse_leave == FALSE))
+        return;
+    
+    start_auto_hide_tick(tw);
+}
+
+static void focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("focus_out_event_cb");
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
-
-    printf ("hide()\n");
-
-    GList *list = gtk_container_get_children ((GtkContainer *) widget);
-    gboolean has_focus = FALSE;
-
-    if (GTK_WIDGET_HAS_FOCUS(list->data))
-      {
-        has_focus = TRUE;
-      }
-
-    while ((list = g_list_next(list)) != NULL) 
-    {
-      if (GTK_WIDGET_HAS_FOCUS(list->data))
-      {
-	has_focus = TRUE;
-	break;
-      }
-    }  
-
-    if (!has_focus)
-      printf ("really HIDE\n");
+    
+    tilda_window *tw = TILDA_WINDOW(data);
+    
+    if (tw->auto_hide_on_focus_lost == FALSE)
+        return;
+    
+    start_auto_hide_tick(tw);
 }
 
 static void goto_tab (tilda_window *tw, guint i)
@@ -274,73 +323,58 @@ static gint cpaste (tilda_window *tw)
     return TRUE;
 }
 
-static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
+/* Tie a single keyboard shortcut to a callback function */
+gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw)
 {
-    GtkAccelGroup *accel_group;
+    guint accel_key;
+    GdkModifierType accel_mods;
     GClosure *temp;
-
+ 
+    gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
+    if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
+    {
+        temp = g_cclosure_new_swap (callback_func, tw, NULL);
+        gtk_accel_group_connect (tw->accel_group, accel_key, accel_mods , GTK_ACCEL_VISIBLE, temp);
+    }
+ 
+    return 0;
+}
+ 
+gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
+{
+ 
+    /* If we already have an tw->accel_group (which would happen if we're redefining accelerators in the config window)
+       we want to remove it before creating a new one. */
+    if (tw->accel_group != NULL)
+        gtk_window_remove_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
+ 
     /* Create Accel Group to add key codes for quit, next, prev and new tabs */
-    accel_group = gtk_accel_group_new ();
-    gtk_window_add_accel_group (GTK_WINDOW (tw->window), accel_group);
-
-    /* Exit on <Ctrl><Shift>q */
-    temp = g_cclosure_new_swap (G_CALLBACK(gtk_main_quit), tw, NULL);
-    gtk_accel_group_connect (accel_group, 'q', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    /* Go to Next Tab on <Ctrl>Page_Down */
-    temp = g_cclosure_new_swap (G_CALLBACK(next_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Down, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    /* Go to Prev Tab on <Ctrl>Page_Up */
-    temp = g_cclosure_new_swap (G_CALLBACK(prev_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, GDK_Page_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    /* Add New Tab on <Ctrl><Shift>t */
-    temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_add_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, 't', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    /* Close Current Tab on <Ctrl><Shift>w */
-    temp = g_cclosure_new_swap (G_CALLBACK(tilda_window_close_current_tab), tw, NULL);
-    gtk_accel_group_connect (accel_group, 'w', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    /* Goto Tab # */
+    tw->accel_group = gtk_accel_group_new ();
+    gtk_window_add_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
+ 
+    /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab, Add Tab,
+       Close Tab, Copy, and Paste using key combinations defined in the config. */
+    tilda_add_config_accelerator("quit_key",     G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator("nexttab_key",  G_CALLBACK(next_tab),                       tw);
+    tilda_add_config_accelerator("prevtab_key",  G_CALLBACK(prev_tab),                       tw);
+    tilda_add_config_accelerator("addtab_key",   G_CALLBACK(tilda_window_add_tab),           tw);
+    tilda_add_config_accelerator("closetab_key", G_CALLBACK(tilda_window_close_current_tab), tw);
+    tilda_add_config_accelerator("copy_key",     G_CALLBACK(ccopy),                          tw);
+    tilda_add_config_accelerator("paste_key",    G_CALLBACK(cpaste),                         tw);
+ 
+    /* Set up keyboard shortcuts for Goto Tab # using key combinations defined in the config*/
     /* Know a better way? Then you do. */
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_1), tw, NULL);
-    gtk_accel_group_connect (accel_group, '1', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_2), tw, NULL);
-    gtk_accel_group_connect (accel_group, '2', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_3), tw, NULL);
-    gtk_accel_group_connect (accel_group, '3', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_4), tw, NULL);
-    gtk_accel_group_connect (accel_group, '4', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_5), tw, NULL);
-    gtk_accel_group_connect (accel_group, '5', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_6), tw, NULL);
-    gtk_accel_group_connect (accel_group, '6', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_7), tw, NULL);
-    gtk_accel_group_connect (accel_group, '7', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_8), tw, NULL);
-    gtk_accel_group_connect (accel_group, '8', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_9), tw, NULL);
-    gtk_accel_group_connect (accel_group, '9', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(goto_tab_10), tw, NULL);
-    gtk_accel_group_connect (accel_group, '0', GDK_MOD1_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(ccopy), tw, NULL);
-    gtk_accel_group_connect (accel_group, 'c', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
-
-    temp = g_cclosure_new_swap (G_CALLBACK(cpaste), tw, NULL);
-    gtk_accel_group_connect (accel_group, 'v', GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE, temp);
-
+    tilda_add_config_accelerator("gototab_1_key",  G_CALLBACK(goto_tab_1),  tw);
+    tilda_add_config_accelerator("gototab_2_key",  G_CALLBACK(goto_tab_2),  tw);
+    tilda_add_config_accelerator("gototab_3_key",  G_CALLBACK(goto_tab_3),  tw);
+    tilda_add_config_accelerator("gototab_4_key",  G_CALLBACK(goto_tab_4),  tw);
+    tilda_add_config_accelerator("gototab_5_key",  G_CALLBACK(goto_tab_5),  tw);
+    tilda_add_config_accelerator("gototab_6_key",  G_CALLBACK(goto_tab_6),  tw);
+    tilda_add_config_accelerator("gototab_7_key",  G_CALLBACK(goto_tab_7),  tw);
+    tilda_add_config_accelerator("gototab_8_key",  G_CALLBACK(goto_tab_8),  tw);
+    tilda_add_config_accelerator("gototab_9_key",  G_CALLBACK(goto_tab_9),  tw);
+    tilda_add_config_accelerator("gototab_10_key", G_CALLBACK(goto_tab_10), tw);
+    
     return 0;
 }
 
@@ -398,6 +432,16 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
 
     /* Create the main window */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    
+    /* Generic timer resolution */
+    tw->timer_resolution = config_getint("timer_resolution");
+    
+    /* Auto hide support */
+    tw->auto_hide_tick_handler = 0;
+    tw->auto_hide_max_time = config_getint("auto_hide_time");
+    tw->auto_hide_on_mouse_leave = config_getbool("auto_hide_on_mouse_leave");
+    tw->auto_hide_on_focus_lost = config_getbool("auto_hide_on_focus_lost");
+    tw->disable_auto_hide = FALSE;
 
     /* Set up all window properties */
     if (config_getbool ("pinned"))
@@ -411,6 +455,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tilda_window_setup_alpha_mode (tw);
 
     /* Add keyboard accelerators */
+    tw->accel_group = NULL; /* We can redefine the accelerator group from the wizard; this shows that it's our first time defining it. */
     tilda_window_setup_keyboard_accelerators (tw);
 
     /* Create the notebook */
@@ -432,10 +477,11 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     }
 
     /* Connect signal handlers */
-    g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw->window);
-    g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw->notebook);
-
-    g_signal_connect (G_OBJECT(tw->window), "focus-out-event", GTK_SIGNAL_FUNC(focus_out_event_cb), tw->window);
+    g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw);
+    g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw);
+    g_signal_connect (G_OBJECT(tw->window), "focus-out-event", GTK_SIGNAL_FUNC(focus_out_event_cb), tw);
+    g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", GTK_SIGNAL_FUNC(mouse_enter), tw);
+    g_signal_connect (G_OBJECT(tw->window), "leave-notify-event", GTK_SIGNAL_FUNC(mouse_leave), tw);
 
     /* Add the notebook to the window */
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);

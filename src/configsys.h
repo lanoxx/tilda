@@ -16,11 +16,13 @@ gint config_write (const gchar *config_file);
 gint config_setint (const gchar *key, const gint val);
 gint config_setstr (const gchar *key, const gchar *val);
 gint config_setbool(const gchar *key, const gboolean val);
+gint config_setnint(const gchar *key, const gint val, const guint idx);
 
 /* Get values from the config system */
 gint     config_getint (const gchar *key);
 gchar*   config_getstr (const gchar *key);
 gboolean config_getbool(const gchar *key);
+glong    config_getnint(const gchar *key, const guint idx);
 
 #endif /* CONFIGSYS_H */
 
