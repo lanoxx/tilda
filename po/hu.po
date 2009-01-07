@@ -1,0 +1,513 @@
+# Hungarian translation for tilda
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2008-03-05 00:28+0000\n"
+"Last-Translator: Pittmann Tamás <zaivaldi@gmail.com>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Tilda Beállítás"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Minden munkaterületen megjelenjen"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Mindig felül"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "Ne jelenjen meg a feladatlistában"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Tilda indítása rejtve"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "Keret megjelenítése"
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "Dupla gyorstár engedélyezése"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>Ablak beállítások</b>"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr "Hangos terminál csengő"
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr "Villogó kurzor"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Terminál beállítások</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "Élsimítás bekapcsolása"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "Félkövér szöveg engedélyezése"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "Fülek helye"
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"Fent\n"
+"Lent\n"
+"Balra\n"
+"Jobbra"
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "Betűkészlet:"
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Betűkészlet</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "Általános"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "Webböngésző"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "<b>URL kezelés</b>"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Ablakcím induláskor:"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr "Dinamikus ablakcím:"
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+"Nincs\n"
+"Az indulási cím után\n"
+"Az indulási cím előtt\n"
+"Az indulási cím cseréje"
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Cím</b>"
+
+#: tilda.glade:538
+msgid "Run a custom command instead of the shell"
+msgstr "Héj helyett saját parancs futtatása"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "Saját parancs:"
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr "Parancs befejeződésekor:"
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+"A terminál maradjon megnyitva\n"
+"Induljon újra a parancs\n"
+"Kilépés a terminálból"
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Parancs</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Cím és parancs"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "Százalék"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "Képpont"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Magasság</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Szélesség</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "Vizszintesen középre"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "Függőlegesen középre"
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "X pozíció"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Y pozíció"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>Elhelyezés</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Átlátszóság engedélyezése"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "Átlátszóság szintje:"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr "Animált lenyitás"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Kép használata háttérként"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Animáció késleltetése (usec)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "Animáció iránya"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Extrák</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Megjelenés"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr "Beépített színsémák"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+"Saját beállítás\n"
+"Zöld a feketén\n"
+"Fekete a fehéren\n"
+"Fehér a Feketén"
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "Szövegszín"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "Háttérszín"
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Előtér és háttérszínek</b>"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Színek"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr "Görgetés kiíráskor"
+
+#: tilda.glade:1338
+msgid "Scroll on Keystroke"
+msgstr "Görgetés billentyű leütésre"
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr "Háttér görgetése"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "sor"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"Balra\n"
+"Jobbra\n"
+"Letiltva"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr "Visszagörgethető sorok száma"
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr "Görgetősáv helye:"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>Görgetés</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Görgetés"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>Kompatibilitás</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>Megjegyzés:</b> Ezek az opciók néhány program helytelen "
+"működését eredményezhetik. Csak azért vannak itt, hogy biztosítsák a "
+"terminál bizonyos programokkal és operációs rendszerekkel való "
+"együttműködését, amelyek más igényeket támasztanak a terminállal szemben.</"
+"i></small>"
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr "A _Delete billentyű által küldött kód:"
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr "A _Backspace billentyű által küldött kód:"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+"ASCII DEL\n"
+"Escape sorozat\n"
+"Control-H"
+
+#: tilda.glade:1599
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Kompatibilitási beállítások alapértelmezettre állítása"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Kompatibilitás"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "Gyorsbillentyű"
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr "Gyorsbillentyű megadása"
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr "<b>Terminálnyitó gyorsbillentyű</b>"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "Gyorsbillentyű"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "gtk-close"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "Névtelen"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Hibás érték a konfigfájlban itt: \"d_set_title\"\n"
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr "Hiba a konfigfájlban.\n"
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "Nem tudom elvégezni a konfigfájl szinkronizálását.\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "Nem tudom bezárni a konfigfájlt.\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Nem tudom írni a konfigfájlt: %s\n"
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "A '%s' parancs futtatása nem sikerült\n"
+
+#: src/tilda.c:237 src/tilda.c:463
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Nem tudom megnyitni a zárolási könyvtárat :%s\n"
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr "Élsimított betűkészletek használata"
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Háttérszín beállítása"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Parancs futtatása induláskor"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "Betűkészlet beállítása erre a karakterláncra"
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr "Visszagördíthető sorok száma"
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "Görgetősáv használata"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "Átlátszóság: 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "Verzió kiírása és kilépés"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "Kezdő munkakönyvtár beállítása"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Háttérkép beállítása"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Indítás konfigurációs ablakkal"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Hiba a megadott opciókban. Próbáld a \"tilda --help\"-et.\n"
+"\n"
+"Hiba: %s\n"
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Parancs értelmezési hiba: %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr "Helyette indítom az alapértelmezett héjat.\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Nem tudom elindítani a megadott felhasználói parancsot: %s\n"
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Nem tudom elindítani az alapértelmezett héjat: %s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "Új _fül"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "Fül _bezárása"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Nem tudtam elindítani a böngészőt, parancs: %s\n"
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "A konfigfájlban hibás a fülek pozíciója\n"
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Nem tudom a tilda ikonját beállítani: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr "Elfogyott a memória. a fül nem hozható létre\n"
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr "A választott gyorsbillentyű érvénytelen. Válasszon másikat."
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Érvénytelen fülpozíció, figyelmen kívül lesz hagyva\n"

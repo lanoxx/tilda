@@ -1,0 +1,511 @@
+# Chinese (China) translation for tilda
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2008-03-17 23:34+0000\n"
+"Last-Translator: luojie-dune <Unknown>\n"
+"Language-Team: Chinese (China) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Tilda设置"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "在所有工作空间上显示"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "置顶"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "不在任务栏显示"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Tilda 启动后隐藏"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "显示窗口边框"
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "启用双重缓存"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>窗口显示</b>"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr "可闻的终端响铃"
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr "光标闪烁"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>终端显示</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "启用字体抗锯齿"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "允许粗体"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "标签位置："
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"顶部\n"
+"底部\n"
+"左边\n"
+"右边"
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "字体："
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>字体</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "常规"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "网页浏览器"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "<b>URL处理</b>"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "原始标题 :"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr "动态设置标题:"
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+"未显示\n"
+"在原始标题之后\n"
+"在原始标题之前\n"
+"替换原始标题"
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>标题</b>"
+
+#: tilda.glade:538
+msgid "Run a custom command instead of the shell"
+msgstr "运行一个自定义命令而非shell指令"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "自定义命令："
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr "当命令存在："
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+"保持终端打开\n"
+"重启命令\n"
+"退出终端"
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>命令</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "标题和命令"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "百分比"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "按像素计"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>高度</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>宽度</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "水平居中"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "垂直居中"
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "X轴位置"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Y轴位置"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>位置</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "启用透明"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "透明度"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr "下拉动画"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "使用图片作为背景"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "动画延迟（微秒）"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "动画方向"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>额外</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "外观"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr "内置方案"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+"自定义\n"
+"黑底绿字\n"
+"白底黑字\n"
+"黑底白字"
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "文字颜色"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "背景颜色"
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>前景和背景颜色</b>"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "颜色"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr "输出时滚动"
+
+#: tilda.glade:1338
+msgid "Scroll on Keystroke"
+msgstr "击键时滚动"
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr "滚动背景"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "行"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"左侧\n"
+"右侧\n"
+"禁用"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr "回滚:"
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr "滚动条位于:"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>滚动</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "滚动"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>兼容性</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>注意：</b>这些选项可能造成一些应用程序产生不正确的行为。仅用于允"
+"许您在一些应用程序和操作系统中作调整以获得不同的终端行为。</i></small>"
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr "按Detelet键产生(_D):"
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr "按Backspace键产生(_B)"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+"ASCII DEL\n"
+"转码序列\n"
+"Ctrl+H"
+
+#: tilda.glade:1599
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "重置兼容性选项为默认值(_R)"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "兼容性"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "键绑定"
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr "捕捉键绑定"
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr "<b>下拉快捷键</b>"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "键绑定"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "关闭"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "未命名"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "配置文件中\"d_set_title\"的值有误\n"
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr "解析配置文件错误\n"
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "无法同步磁盘上的配置文件\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "无法关闭配置文件\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "无法将配置文件写入%s\n"
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "无法执行命令：`%s'\n"
+
+#: src/tilda.c:237 src/tilda.c:463
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "无法打开锁定的目录：%s\n"
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr "使用平滑字体"
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "设置背景颜色"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "启动时运行命令"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "使用如下字符串的字体"
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr "回滚行"
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "使用滚动条"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "不透明: 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "显示版本号后退出"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "设定初始工作目录"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "设置背景图片"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "显示配置向导"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"解析命令行参数时出错。请尝试\"tilda --help\"\n"
+"来获得所有可用选项。\n"
+"\n"
+"错误信息：%s\n"
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "解析自定义命令错误：%s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr "运行默认shell作为替代\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "无法执行自定义命令：%s\n"
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "无法运行默认shell：%s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "新建标签(_N)"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "关闭标签(_C)"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "无法运行web浏览器。该命令是'%s'\n"
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "在你的配置文件中有一个错误的标签位置\n"
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "无法设置tilda的图标: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr "内存不够，无法创建标签页\n"
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr "键绑定无效。请重新选择。"
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "无效标签位置，忽略\n"

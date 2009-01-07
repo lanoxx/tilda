@@ -1,0 +1,513 @@
+# Russian translation for tilda
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the tilda package.
+# Anton Shestakov <engored@ya.ru>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2008-02-09 09:14+0000\n"
+"Last-Translator: Anton Shestakov <Unknown>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Настройка Tilda"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Отображать на всех рабочих столах"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Поверх всех окон"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "Не показывать в панели задач"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Скрыть Tilda при запуске"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "Рамка вокруг окна"
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "Двойная буферизация"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>Настройки отображения</b>"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr "Звуковой терминальный сигнал"
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr "Мерцающий курсор"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Внешний вид терминала</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "Включить сглаживание"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "Разрешить полужирный текст"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "Расположение закладок:"
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"Сверху\n"
+"Снизу\n"
+"Слева\n"
+"Справа"
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "Шрифт:"
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Шрифт</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "Основные"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "Веб-браузер"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "<b>Обработка URL</b>"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Исходный заголовок:"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr "Автоматически установленный заголовок"
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+"Не показывать\n"
+"После начального заголовка\n"
+"Перед начальным заголовком\n"
+"Вместо начального заголовка"
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Заголовок</b>"
+
+#: tilda.glade:538
+msgid "Run a custom command instead of the shell"
+msgstr "Запускать пользовательскую команду вместо shell"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "Пользовательская команда:"
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr "Когда команда завершается:"
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+"Держать терминал открытым\n"
+"Перезапустить команду\n"
+"Выйти из терминала"
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Команда</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Заголовок и команда"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "В процентах:"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "В пикселах:"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Высота</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Ширина</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "Центрировать по горизонтали"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "Центрировать по вертикали"
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "Позиция по горизонтали"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Позиция по вертикали"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>Расположение</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Включить прозрачность"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "Уровень прозрачности"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr "Анимировать появление/скрытие"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Использовать изображение в качестве фона"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Продолжительность анимации (мкс)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "Направление анимации"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Дополнительно</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Внешний вид"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr "Встроенные схемы"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+"Пользовательская\n"
+"Зеленый на черном\n"
+"Черный на белом\n"
+"Белый на черном"
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "Цвет текста"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "Цвет фона"
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Цвет текста и фона</b>"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Цвета"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr "Прокручивать по мере появления текста"
+
+#: tilda.glade:1338
+msgid "Scroll on Keystroke"
+msgstr "Прокручивать клавишами"
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr "Прокручивать фоновое изображение"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "cтрок(и)"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"Слева\n"
+"Справа\n"
+"Выключен"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr "Буфер прокрутки:"
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr "Полоса прокрутки:"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>Прокрутка</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Прокрутка"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>Совместимость</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>Замечание:</b> Эти параметры могут вызвать некорректную работу "
+"некоторых приложений. Они представлены только для того, чтобы позволить "
+"работать с некоторыми приложениями и операционными ситемами, ожидающими "
+"другого поведения терминала.</i></small>"
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr "Клавиша _Delete вызывает:"
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr "Клавиша _Backspace вызывает:"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+"ASCII DEL\n"
+"Управляющую последовательность\n"
+"Control-H"
+
+#: tilda.glade:1599
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Восстановить параметры совместимости по умолчанию"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Совместимость"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "Привязка к клавише"
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr "Установить комбинацию клавиш"
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr "<b>Горячая клавиша</b>"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "Сочетание клавиш"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "gtk-close"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "Безымянный"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Неправильное значение параметра \"d_set_title\" в файле конфигурации\n"
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr "Возникла проблема при обработке файла конфигурации\n"
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "Не удалось записать конфигурационный файл на диск\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "Не удалось закрыть конфигурационный файл\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Возникла ошибка при записи конфигурационного файла в %s\n"
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "Не удалось выполнить команду: «%s»\n"
+
+#: src/tilda.c:237 src/tilda.c:463
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Невозможно открыть директорию lock: %s\n"
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr "Использовать сглаживание шрифтов"
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Установить цвет фона"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Запустить команду при запуске"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "Использовать указанный шрифт"
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr "Размер буфера прокрутки, строк"
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "Использовать полосу прокрутки"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "Непрозрачность: 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "Вывести версию и выйти"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "Установить рабочую директорию"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Установить фоновое изображение"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Запустить мастер конфигурации"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Ошибка обработки опций командной строки. Получить список доступных\n"
+"опций можно, запустив «tilda --help»\n"
+"\n"
+"Сообщение об ошибке: %s\n"
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Возникла проблема при обработке пользовательской команды: %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr "Запуск оболочки по умолчанию вместо\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Не удалось запустить пользовательскую команду: %s\n"
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Не удалось запустить оболочку по умолчанию: %s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Новая вкладка"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "_Закрыть вкладку"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Ошибка при запуске веб-браузера командой «%s»\n"
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "Неправильный параметр tab_pos в файле конфигурации\n"
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Не удалось установить иконку tilda: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr "Не удалось создать вкладку: память исчерпана\n"
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr "Комбинация клавиш, которую вы выбрали, неверная. Выберите другую."
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Неправильный вариант положения вкладки, пропущен\n"

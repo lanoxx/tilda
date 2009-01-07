@@ -1,0 +1,534 @@
+# Spanish translation for tilda
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2008-03-27 19:11+0000\n"
+"Last-Translator: Jorge Rodríguez <yitano@gmail.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Configuración de Tilda"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Mostrar en todos los espacios de trabajo"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Siempre visible"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "No mostrar en la barra de tareas"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Iniciar Tilda oculto"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "Mostrar borde de cuaderno"
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "Habilitar doble memoria temporal"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>Visualización de la Ventana</b>"
+
+#: tilda.glade:169
+#, fuzzy
+msgid "Audible Terminal Bell"
+msgstr "Campana del terminal activada"
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr "Intermitencia del cursor"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Visualización del Terminal</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "Activar Antialiasing"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "Permitir texto en negrita"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "Posición de pestañas:"
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"Superior\n"
+"Inferior\n"
+"Izquierda\n"
+"Derecha"
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "Tipo de letra:"
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Fuente</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "General"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "Navegador web"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "<b>Manejo de vínculos</b>"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Título Inicial:"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr "Título establecido Dinámicamente:"
+
+#: tilda.glade:484
+#, fuzzy
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+"No mostrar\n"
+"Colocar tras el título inicial\n"
+"Colocar antes del título inicial\n"
+"Reemplazar por el título inicial"
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Título</b>"
+
+#: tilda.glade:538
+#, fuzzy
+msgid "Run a custom command instead of the shell"
+msgstr "Ejecutar un comando personalizado en lugar del terminal"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "Comando personalizado:"
+
+#: tilda.glade:562
+#, fuzzy
+msgid "When Command Exits:"
+msgstr "Cuando el comando termine:"
+
+#: tilda.glade:574
+#, fuzzy
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+"Mantener el terminal abierto\n"
+"Reejecutar el comando\n"
+"Salir del terminal"
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Comando</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Título y comando"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "En Pixeles"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Alto</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Ancho</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "Centrado Horizontalmente"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "Centrado Verticalmente"
+
+#: tilda.glade:869 src/tilda.c:310
+#, fuzzy
+msgid "X Position"
+msgstr "Posición X"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Posición Y"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>Posición</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Activar Transparencia"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "Nivel de Transparencia"
+
+#: tilda.glade:1008
+#, fuzzy
+msgid "Animated Pulldown"
+msgstr "Desplazamiento vertical animado"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Usar imagen como fondo"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Retardo de Animacion (useg)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "Orientaci'on de la Animación"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Extras</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: tilda.glade:1187
+#, fuzzy
+msgid "Built-in Schemes"
+msgstr "Esquemas de color internos"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+"Personalizado\n"
+"Verde sobre Negro\n"
+"Negro sobre Blanco\n"
+"Blanco sobre Negro"
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "Color del texto"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "Color de fondo"
+
+#: tilda.glade:1270
+#, fuzzy
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Colores de la ventana y del fondo</b>"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Colores"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr "Desplazar tras salida"
+
+#: tilda.glade:1338
+#, fuzzy
+msgid "Scroll on Keystroke"
+msgstr "Desplazar al teclear"
+
+#: tilda.glade:1353
+#, fuzzy
+msgid "Scroll Background"
+msgstr "Desplazar el fondo"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "líneas"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"A la izquierda\n"
+"A la derecha\n"
+"Deshabilitado"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr "Desplazamiento hacia atrás"
+
+#: tilda.glade:1426
+#, fuzzy
+msgid "Scrollbar is:"
+msgstr "Barra de desplazamiento a la:"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>Desplazamiento</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Desplazamiento"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>Compatibilidad</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>Nota:</b> Estas opciones pueden causar que algunas aplicaciones "
+"se comporten incorrectamente. Sólo están aquí para permitirle trabajar con "
+"ciertas aplicaciones y sistemas operativos que esperan un comportamiento "
+"diferente del terminal.</i></small>"
+
+#: tilda.glade:1531
+#, fuzzy
+msgid "_Delete key generates:"
+msgstr "La tecla «_Suprimir» produce:"
+
+#: tilda.glade:1546
+#, fuzzy
+msgid "_Backspace key generates:"
+msgstr "La tecla <<_Retroceso>> produce:"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+"ASCII DEL\n"
+"Secuencia de escape\n"
+"Control-H"
+
+#: tilda.glade:1599
+#, fuzzy
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Reiniciar las Opciones de Compatibilidad a las predeterminadas"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Compatibilidad"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "Atajo de teclado"
+
+#: tilda.glade:1683
+#, fuzzy
+msgid "Grab Keybinding"
+msgstr "Guardar atajos de teclado"
+
+#: tilda.glade:1702
+#, fuzzy
+msgid "<b>Pulldown Key</b>"
+msgstr "<b>Tecla de desplazamiento hacia abajo</b>"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "Atajos de teclado"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "Cerrar gtk"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "Sin título"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Valor erróneo para \"d_set_title\" en el fichero de configuración\n"
+
+#: src/configsys.c:128
+#, fuzzy
+msgid "Problem parsing config file\n"
+msgstr "Problema analizando el fichero de configuración\n"
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "No se pudo sincronizar el archivo de configuración a disco\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "No se pudo cerrar el archivo de configuración\n"
+
+#: src/configsys.c:268
+#, fuzzy, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Incapaz de escribir el fichero de configuración en %s\n"
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "Incapaz de ejecutar el comando: `%s'\n"
+
+#: src/tilda.c:237 src/tilda.c:463
+#, fuzzy, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Incapaz de abrir el fichero protegido %s\n"
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr "Usar fuentes suavizadas"
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Elegir el color de fondo"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Ejecutar un comando al inicio"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "Establecer la fuente para la siguiente cadena"
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr "Líneas de desplazamiento hacia atras"
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "Usar Barra de desplazamiento"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "Opacidad: 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "Imprimir la version y luego salir"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "Elegir el Directorio de Trabajo Inicial"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Elegir la Imagen de Fondo"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Mostrar Asistente de Configuración"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Error interpretando las opciones de línea de comando. Pruebe con \"tilda --"
+"help\"\n"
+"para ver todas las opciones posibles.\n"
+"\n"
+"Mensaje de error: %s\n"
+
+#: src/tilda_terminal.c:386
+#, fuzzy, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Problema analizando comando personalizado: %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+#, fuzzy
+msgid "Launching default shell instead\n"
+msgstr "En su lugar, ejecutando terminal predeterminado\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Incapaz de ejecutar el comando personalizado %s\n"
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Incapaz de ejecutar el terminal predeterminado: %s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Nueva pestaña"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "_Cerrar pestaña"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Fallo al ejecutar el navegador web. El comando fue '%s'\n"
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "Tiene un tab_pos erróneo en su archivo de configuración\n"
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Incapaz de establecer el ícono de Tilda: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr "No hay memoria disponible, no se puede crear pestaña\n"
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr "El atajo de teclado que definió es inválido. Seleccione otro."
+
+#: src/wizard.c:445
+#, fuzzy
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Configuración del tab position errónea, ignorando.\n"

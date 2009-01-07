@@ -1,0 +1,114 @@
+Contacting the Developers / Questions and Comments
+================================================================================
+Please email questions and comments to anyone listed in the AUTHORS file, or
+drop by on our IRC channel: #tilda on irc.oftc.net. One or more of the
+developers is almost always present in the IRC channel. Please see the section
+titled "Reporting Bugs" below for how to submit a bug report.
+
+
+Dependencies
+================================================================================
+GLib >= 2.8 - http://developer.gnome.org/arch/gtk/glib.html
+Glade >= 2.0 - http://glade.gnome.org/
+VTE - http://developer.gnome.org/doc/API/2.0/vte/
+libConfuse - http://www.nongnu.org/confuse/
+
+
+Installing from source
+================================================================================
+See the INSTALL file for details.
+
+
+Running Tilda
+================================================================================
+Once you have installed tilda, you can run it using the tilda.desktop file which
+should have been installed into your system. Alternatively, you can run `tilda'
+from your command line, or any other convenient way.
+
+The first time you run Tilda, it will create the default configuration file for
+you, and show the configuration wizard. If you do not want to change any
+settings, just press the "OK" button to accept the defaults.
+
+The default keybindings to show and hide Tilda are as follows:
+F1 - the first instance
+F2 - the second instance
+F3 - the third instance
+...
+
+Other default keybindings are:
+Shift-Ctrl-T - Open new tab
+Ctrl-PageUp - Next tab
+Ctrl-PageDown - Previous tab
+Shift-Ctrl-W - Close current tab
+Shift-Ctrl-Q - Exit Tilda
+
+
+Specifying your own keybinding to hide / show Tilda
+================================================================================
+We, the developers, have attempted to make the keybinding setting work with as
+little trouble as possible. Some example keybindings follow:
+
+
+|===================|==========================================================|
+| Keybinding String |                       Notes                              |
+|===================|==========================================================|
+| grave             | This will use the tilde key. Many people want this.
+|===================|==========================================================|
+| ~                 | This is the same as <Shift>grave                         |
+|===================|==========================================================|
+| space             | This will use the spacebar to show / hide Tilda.         |
+|                   | NOT RECOMMENDED!                                         |
+|===================|==========================================================|
+| <Shift><Ctrl>A    | Press Shift, Control, and the "a" key at the same time   |
+|===================|==========================================================|
+| <Shift>space      | Press Shift and the spacebar at the same time            |
+|===================|==========================================================|
+| <Ctrl>z           | Press Control and the "z" key at the same time           |
+|===================|==========================================================|
+
+
+That should cover most of the cases. If you want to use something else, it
+probably follows the pattern, so give it a try. Alternatively, you can use the
+configuration wizard, and press the "Grab Keybinding" button on the
+"Keybindings" tab, then type the combination you want to use. Hopefully, Tilda
+will be able to grab it for you.
+
+
+Files that Tilda creates
+================================================================================
+On its first run, Tilda will attempt to create the directory ~/.tilda. Inside of
+this directory, it will create another directory ~/.tilda/locks. Inside the
+~/.tilda/locks directory, Tilda will create a file each time it starts, in order
+to keep track of how many instances are running. The naming of lock files follow
+the format "lock_$PID_$INSTANCE". Configuration files are stored inside
+~/.tilda, and have the format "config_$INSTANCE".
+
+
+Getting more help
+================================================================================
+To get more help, you should first open a command prompt, and run "tilda
+--help". If that does not help you satisfactorily, please see the section titled
+"Contacting the Developers / Questions and Comments" at the beginning of this
+document.
+
+
+Reporting Bugs
+================================================================================
+We have done our best to make sure that Tilda is free from bugs, but it is
+inevitable that we have missed some.
+
+You may open bugs at http://bugs.launchpad.net/tilda or email them to the
+developers directly. If you post them to SourceForge.net's bug tracker, they
+will most likely be forgotten.
+
+
+Contributing to Tilda
+================================================================================
+If you would like to help us develop Tilda, please send an email to one (or all)
+of the developers, or just come into our IRC channel and say hello! We're very
+open to anyone who wants to help out, and we are willing to answer any questions
+you may have.
+
+You can also look into the TODO file and see if there is something there that
+you would like to do.
+

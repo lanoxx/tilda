@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Tilda
+Exec=@BINDIR@/tilda
+Icon=@PIXMAPSDIR@/tilda.png
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Application;Utility;TerminalEmulator;

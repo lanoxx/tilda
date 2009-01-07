@@ -1,0 +1,485 @@
+# Slovenian translation for tilda
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2007-07-11 00:16+0000\n"
+"Last-Translator: Nejc Lotrič <Unknown>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr ""
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Prikaži na vseh delovnih površinah"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Vedno na vrhu"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "Ne prikaži v opravilni vrstici"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr ""
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr ""
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "Omogoči Dvojno Medpomnenje"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>Okenski prikaz</b>"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr ""
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr ""
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Prikaz v Terminalu</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr ""
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr ""
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr ""
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr ""
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Pisava</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "Splošno"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr ""
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr ""
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Prvotni Naslov:"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr ""
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Naslov</b>"
+
+#: tilda.glade:538
+msgid "Run a custom command instead of the shell"
+msgstr ""
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr ""
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr ""
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Ukaz</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Naslov in Ukaz"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "Odstotek"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "V Pikslih"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Višina</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Širina</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr ""
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr ""
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "Pozicija X"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Pozicija Y"
+
+#: tilda.glade:933
+#, fuzzy
+msgid "<b>Position</b>"
+msgstr "<b>Pozicija</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Vključi Prosojnost"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "Nivo Prozornosti"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr ""
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Uporabi Sliko za Ozadje"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Zakasnitev Animacij (usec)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr ""
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Dodatki</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Videz"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr ""
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr ""
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr ""
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr ""
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Barve"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr ""
+
+#: tilda.glade:1338
+msgid "Scroll on Keystroke"
+msgstr ""
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr ""
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr ""
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr ""
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr ""
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr ""
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Premikanje zaslona"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr ""
+
+#: tilda.glade:1496
+msgid "    "
+msgstr ""
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr ""
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr ""
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+
+#: tilda.glade:1599
+msgid "_Reset Compatibility Options to Defaults"
+msgstr ""
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Združljivost"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr ""
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr ""
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr ""
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr ""
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr ""
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr ""
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr ""
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr ""
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr ""
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr ""
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr ""
+
+#: src/tilda.c:237 src/tilda.c:463
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr ""
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr ""
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Nastavi barvo ozadja"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Poženi ukaz ob zagonu"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr ""
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr ""
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr ""
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr ""
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr ""
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr ""
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Nastavi Sliko Ozadja"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Prikaži Čarovnika Nastavitev"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr ""
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr ""
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr ""
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Ni moč nastaviti ikone tilde: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr ""
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr ""
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr ""

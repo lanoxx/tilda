@@ -1,0 +1,156 @@
+version 0.9.6 (2008-4-28):
+	* Move bugtracker to http://bugs.launchpad.net/tilda
+	* Fix metacity-2.20 focus problems
+	* Add future plans to the TODO list
+	* Update documentation to reflect the current keybindings
+	* Fix Ubuntu's bugs about copy and paste
+	* Fix metacity-2.22 focus problems
+	* Fix autotools so that it can generate release tarballs
+	* No more visual bell
+
+version 0.9.5 (2007-12-12):
+	* Fixed clear/reset issue
+	* Switched to Gnome shortcut keys
+	* Fixed background scrolling bug
+	* Tabs now loop to beginning/end for next/prev
+	* Better animation support
+	* Major code reorganization
+	* Make WWW links Ctrl+Left Click to open in a web browser
+	* Remove old configuration conversion script
+	* Updated documentation
+	* Use glade to generate the config wizard
+	* Gettextize for translations
+	* Added true transparency
+	* Made scrollbar off by default
+	* Fixed another bug in getting the new lock file (Thanks Wilberding)
+	* Removed resize/move from hide when animation is turned off.
+	  This will fix the closing of certain program (i.e. nano) when
+	  Tilda is hidden
+	* To keep Tilda open on 'exit' set
+	  Preferences->Title and Command->When Command Exits to
+	  "Hold the Terminal Open"
+
+version 0.9.4 (2006-11-28):
+	* Double Buffering is now in the Preferences. Enable or disable to fix
+	  problems with blinking on your system
+	* Add support for a window icon.
+	* Add a --hidden command line option.
+	* Change "Display pulled down on start" to "Start Tilda hidden".
+	* Updated the Preferences window.
+	* Add "centered horizontally" and "centered vertically" options.
+	* Enable double buffering by default.
+	* Fix getnextinstance() function.
+	* Changed default slide delay to 15000
+	* Now installs .desktop file and icon
+	* Set copy/paste to ctrl-shift-c/ctrl-shift-v
+	* Alt-# for switching tabs now :), sorry for all the changes
+	* Changed getinstance back to its old way of working,
+	  so it doesn't just count locks but checks the numbers (thanks wilber)
+
+version 0.09.3 (2006-06-28):
+	* ctrl-# changes tab, sorry not alt-# (bash uses that)
+	* ctrl-shift-w fix
+	* Added ability to set height/width by percentage of screen resolution
+	* All Tabs are now the same size
+	* Remove stale code (apply() function).
+	* Patch from Danny Milosavljevic (thanks!) which fixes:
+	* "tilda -C", then Cancel quits app now
+	* wizard is a gtk dialog now (modal, not sure if it's used in other
+	  places than the -C command line arg)
+	* wizard uses stock buttons now
+	* fixed the command line in the wizard to take command line arguments
+	  as well
+	* fixed the restart handling in close_tab_on_exit (combo entry order
+	  changed, but the switch statement contained the old order - it seems)
+	* fixed a strlen warning in tilda_window.c
+	* removed the apply button since it was confusing
+
+version 0.09.2 (2006-01-21):
+	* Added libConfuse to configure.in.
+	* Better command-line option help generation.
+	* Switch to libConfuse for config-file parsing.
+	* Internal cleanups / documentation.
+	* Increase use of GLib.
+	* Sliding action added
+	* No more blinking terminal
+	* Added shortcuts for adding tabs and going to the next or prev tab
+	* Various bug fixes
+
+version 0.09.1 (2005-10-04):
+	* Fixed problem of tab taking other tabs title
+	* Fixed 100% CPU problem when Tilda is started hidden
+
+version 0.09 (2005-10-03):
+	* Added Dynamic tab titles
+	* Added lots of added preferences to Tilda Wizard (too many to name here)
+	* Window Maker bug fix
+	* Possible fix to Tilda not grabbing focus on pull down
+	* Cleaned up the autotools build stuff. There were some directories that
+	  should have never gotten into CVS. Run autogen.sh to set up the build now.
+
+version 0.08.1 (2005-08-18):
+	* Fixed a bug where the scrollbar would not show up on new tabs.
+	* Fixed a bug where all new tabs in the same instance did not take on the
+	  same properties as their parent.
+	* Fixed some GCC4 compile warnings. Thanks to Daniel Holbach for pointing
+	  them out!
+	* Minor code cleanups.
+	* Misc bugfixes.
+
+version 0.08 (2005-07-31):
+	* Tabs have been added -- right cick on the tilda window to add or remove
+	  a tab.
+	* May have fixed some focus issues.
+	* Fixed problem with GNU Screen.
+	* Fixed gthread crash problem.
+	* Misc bugfixes.
+
+version 0.07 (2005-06-15):
+	* New right-click menu -- you can configure tilda while it is running.
+	  This works for everything but changing the key binding.
+	* Removed the dependency on XBindKeys. Tilda now listens for key-presses
+	  on it's own. See the README for details.
+	* Removed support for commands of the form 'tilda -T $NUM'
+	* Each instance of tilda now has it's own config file.
+	* Misc bugfixes.
+
+version 0.06 (2005-05-24):
+	* New configuration wizard. Still ugly, and it still does not auto-update
+	  yet, but I'm saving that for when you can have each tilda instance
+	  configured seperately.
+	* Fixed LOTS of possible (and real) buffer overflows. This fixes some GTK
+	  crashes that we were having due to overwriting memory.
+	* Changed the config file code around, it's much less hackish now.
+	* Changed the way tilda is built.
+	* Misc bugfixes.
+
+version 0.05.1 (2005-03-25):
+	* Fixed a defunct process that was running loose.
+
+version 0.05 (2005-03-15):
+	* Added the environmental variable TILDA_NUM which is set to the current
+	  tilda's number to move it up and down.
+	* Fixed a bug where tilda would not clean up after itself 100%. Now each
+	  time tilda is run it will check the tmp directory and clean it up if it
+	  is not completely clean.
+
+version 0.04 (2005-02-09):
+	* Added support for running multiple instances of tilda at the same time.
+	* Fixed a bug where tilda would close X when closing tilda.
+
+version 0.03 (2005-01-12):
+	* Fixed bugs of not completely leaving the screen on some window managers.
+	* Added many command-line options. Run 'tilda -h' to see them.
+	* Removed the dependency on devilspie.
+	* Changed the configuration wizard and the ~/.tilda/config file syntax. Be
+	  sure to run tilda -C if you are migrating from version 0.02 or earlier to
+	  version 0.03.
+	* Added fake transparency, option of black or white background color,
+	  option of a scrollbar, and many more.
+
+version 0.02 (2005-01-05):
+	* Fixed bugs, hopefully, in writing to configuration files.
+	* Added options in configuration wizard for devilspie and xbindkeys.
+	* Tilda can start devilspie and xbindkeys on start of tilda.
+	* Our first release!
+

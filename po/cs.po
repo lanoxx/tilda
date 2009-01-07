@@ -1,0 +1,513 @@
+# Czech translation for tilda
+# Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2008-04-28 05:41-0500\n"
+"PO-Revision-Date: 2008-02-14 07:57+0000\n"
+"Last-Translator: Vojtěch Trefný <vojtech.trefny@gmail.com>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Konfigurace"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Zobrazovat na všech plochách"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Vždy navrchu"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "Nezobrazovat na panelu úloh"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Spustit Tildu skrytou"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "Zobrazovat rámeček"
+
+#: tilda.glade:117
+msgid "Enable Double Buffering"
+msgstr "Povolit Double Buffering"
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "Zobrazení okna"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr "Terminálové pípání"
+
+#: tilda.glade:182
+msgid "Cursor Blinks"
+msgstr "Kurzor bliká"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Zobrazení Terminálu</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "Povolit vyhlazování"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "Povolit tučný text"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "Pozice panelů"
+
+#: tilda.glade:275 tilda.glade:1084
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"Nahoře\n"
+"Dole\n"
+"Vlevo\n"
+"Vpravo"
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "Písmo:"
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Písmo</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "Obecné"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "Webový prohlížeč"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "URL"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Výchozí titulek"
+
+#: tilda.glade:461
+msgid "Dynamically-set Title:"
+msgstr "Dynamický titulek"
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+"Není zobrazeno\n"
+"Následuje za výchozím titulkem.\n"
+"Předchází výchozí titulek\n"
+"Nahrazuje výchozí titulek"
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Titulek</b>"
+
+#: tilda.glade:538
+msgid "Run a custom command instead of the shell"
+msgstr "Místo shellu spustit vlastní příkaz"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "Vlastní příkaz"
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr "Když příkaz skončí"
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+"Nechat terminál otevřený\n"
+"Zopakovat příkaz\n"
+"Opustit terminál"
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Příkaz</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Titulek a příkaz"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "Procenta"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "V pixelech"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Výška</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Šířka</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "Vycentrováno vodorovně"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "Vycentrováno svisle"
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "Pozice X"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Pozice Y"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>Umístění</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Povolit průhlednost"
+
+#: tilda.glade:981
+msgid "Level of Transparency"
+msgstr "Úroveň průhlednosti"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr "Animované vysouvání"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Obrázek na pozadí"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Délka animace (mikrosekundy)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "Směr animace"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Doplňky</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Vzhled"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr "Vestavěná témata"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+"Vlastní\n"
+"Zelené na černém\n"
+"Černé na bílém\n"
+"Bílé na černém"
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "Barva textu"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "Barva pozadí"
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "Barva pozadí a popředí"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Barvy"
+
+#: tilda.glade:1323
+msgid "Scroll on Output"
+msgstr "Posouvat při výstupu"
+
+#: tilda.glade:1338
+msgid "Scroll on Keystroke"
+msgstr "Posouvat stiskem klávesy"
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr "Posouvat pozadí"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "řádky"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"Nalevo\n"
+"Napravo\n"
+"Zakázaný"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr "Odskrolováno:"
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr "Posuvník je:"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>Posun</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Posouvání"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>Kompatibilita</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>Poznámka:</b> Tyto volby mohou způsobit, že některé aplikace "
+"nebudou fungovat správně. Jsou tu pouze proto, abyste mohli obejít to, že "
+"některé aplikace a operační systémy očekávají jiné chování terminálu.</i></"
+"small>"
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr "Klávesa _Delete generuje:"
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr "Klávesa _Backspace generuje:"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+"ASCII DEL\n"
+"Escape sekvenci\n"
+"Control-H"
+
+#: tilda.glade:1599
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "Obnovit standardní nastavení pro _kompatibilitu"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Kompatibilita"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "Klávesová zkratka"
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr "Zabrat klávesové zkratky"
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr "Rolovací klávesa"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "Klávesové zkratky"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "gtk-close"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "Bez názvu"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Špatná hodnota \"d_set_title\" v konfiguračním souboru.\n"
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr ""
+
+#: src/configsys.c:249
+msgid "Unable to sync the config file to disk\n"
+msgstr "Nemohu synchronizovat konfigurační soubor na disk\n"
+
+#: src/configsys.c:259
+msgid "Unable to close the config file\n"
+msgstr "Nemohu zavřít konfigurační soubor\n"
+
+#: src/configsys.c:268
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Nemohu zapsat konfigurační soubor do %s\n"
+
+#: src/tilda.c:214
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "Nemohu spustit příkaz: `%s'\n"
+
+#: src/tilda.c:237 src/tilda.c:463
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Nemohu otevřít adresář: %s\n"
+
+#: src/tilda.c:300
+msgid "Use Antialiased Fonts"
+msgstr "Použít vyhlazování písma"
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Nastavit barvu pozadí"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Spouštět příkaz při spuštění"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "Nastavit písmo na následující řetězec"
+
+#: src/tilda.c:305
+msgid "Scrollback Lines"
+msgstr "Odskrolovaných řádků"
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "Použít posuvník"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "Průhlednost: 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "Vypsat verzi, poté ukončit"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "Nastavit počáteční pracovní adresář"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Nastavit obrázek pozadí"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Zobrazit konfiguračního průvodce"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Chyba při zpracování volby příkazového řádku. Zkuste \"tilda --help\"\n"
+"pro zobrazení všech možností.\n"
+"\n"
+"Chybová zpráva: %s\n"
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+msgid "Launching default shell instead\n"
+msgstr "Spouštím výchozí shell.\n"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Nemohu spustit příkaz: %s\n"
+
+#: src/tilda_terminal.c:428
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Nemohu spustit výchozí shell: %s\n"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Nová karta"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "_Zavřít kartu"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Selhalo spuštění internetového prohlížeče. Příkaz byl `%s'\n"
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "Špatná hodnota tab_pos v konfiguračním souboru.\n"
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Nemohu nastavit ikonu tildy: %s\n"
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr "Nedostatek paměti, nemohu vytvořit panel\n"
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr "Vámi zvolená klávesová zkratka je neplatná. Prosím zvolte jinou."
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Neplatné nastavení pozice panelu. Ignoruji.\n"
