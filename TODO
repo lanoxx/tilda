@@ -1,15 +1,16 @@
 Feature Requests / Improvements
 ================================================================================
 * Multimonitor support (Xinerama, etc)
+  -Tilda has  been tested and works with Xinerama (Jordan Wilberding)
 * Dragable bar at the bottom to change Tilda's height
 * Ability to disable keyboard accelerators (close tab, new tab, etc)
 * Configurable keyboard accelerators (close tab, new tab, etc)
-* Automatically hide tilda when it loses focus (fairly easy)
-* Session support, so tilda will load with the same number of tabs that it had
+* Automatically hide Tilda when it loses focus (fairly easy)
+* Session support, so Tilda will load with the same number of tabs that it had
   upon closing
 * Ability to rename a tab manually
 * Ability to pop up a dialog when the keybinding process fails (EASY now)
-
+* Add -c option to specify specific configuration file for Tilda instance
 
 Future Plans
 ================================================================================
