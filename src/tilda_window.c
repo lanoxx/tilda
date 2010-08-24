@@ -117,9 +117,12 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
 }
 
 
-static gint toggle_fullscreen_cb (tilda_window *tw)
+gint toggle_fullscreen_cb (tilda_window *tw)
 {
-    if (tw->fullscreen != TRUE) {
+    DEBUG_FUNCTION ("toggle_fullscreen_cb");
+    DEBUG_ASSERT (tw != NULL);
+    
+	if (tw->fullscreen != TRUE) {
 		tw->fullscreen = TRUE;
 		gtk_window_fullscreen (GTK_WINDOW (tw->window));
 	}

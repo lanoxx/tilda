@@ -644,6 +644,16 @@ menu_add_tab_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
+menu_fullscreen_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("menu_fullscreen_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    toggle_fullscreen_cb (TILDA_WINDOW(data));
+}
+
+static void
 menu_close_tab_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_close_tab_cb");
@@ -686,6 +696,8 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
                 "<menuitem action=\"copy\" />"
                 "<menuitem action=\"paste\" />"
                 "<separator />"
+                "<menuitem action=\"fullscreen\" />"
+                "<separator />"
                 "<menuitem action=\"preferences\" />"
                 "<separator />"
                 "<menuitem action=\"quit\" />"
@@ -711,6 +723,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     action = gtk_action_new ("paste", NULL, NULL, GTK_STOCK_PASTE);
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("paste_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_paste_cb), tt);
+
+    action = gtk_action_new ("fullscreen", _("Toggle fullscreen"), NULL, NULL);
+    gtk_action_group_add_action (action_group, action);
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_fullscreen_cb), tw);
 
     action = gtk_action_new ("preferences", NULL, NULL, GTK_STOCK_PREFERENCES);
     gtk_action_group_add_action (action_group, action);
