@@ -485,8 +485,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     gdouble transparency_level = 0.0;
     GdkColor fg, bg /*, tint, highlight, cursor, black */;
+    gchar* word_chars;
     gint i;
-
 
     /** Colors & Palette **/
     bg.red   =    config_getint ("back_red");
@@ -564,6 +564,12 @@ static gint tilda_term_config_defaults (tilda_term *tt)
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
             break;
     }
+
+    /** Word chars **/
+    word_chars =  config_getstr ("word_chars");
+    if (NULL == word_chars || '\0' == word_chars)
+        word_chars = DEFAULT_WORD_CHARS;
+    vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
 
     /** Background **/
     if (config_getbool ("use_image"))

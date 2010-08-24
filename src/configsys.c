@@ -47,6 +47,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
     CFG_STR("web_browser", "x-www-browser", CFGF_NONE),
+    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
 
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),

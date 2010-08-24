@@ -5,6 +5,8 @@
 
 #include <glib.h>
 
+#define DEFAULT_WORD_CHARS  "-A-Za-z0-9,./?%&#:_"
+
 /* Initialize and free the config system's private variables */
 gint config_init (const gchar *config_file);
 gint config_free (const gchar *config_file);
