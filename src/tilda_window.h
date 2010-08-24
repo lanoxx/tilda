@@ -68,6 +68,7 @@ gint tilda_window_add_tab (tilda_window *tw);
 gint tilda_window_close_tab (tilda_window *tw, gint tab_position);
 tilda_window *tilda_window_init (const gchar *config_file, const gint instance);
 gint tilda_window_free (tilda_window *tw);
+gint toggle_fullscreen_cb (tilda_window *tw);
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos);
 void tilda_window_close_current_tab (tilda_window *tw);
