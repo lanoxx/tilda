@@ -1062,7 +1062,6 @@ static void button_background_image_selection_changed_cb (GtkWidget *w)
             vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), image);
         }
     }
-    g_free (image);
 }
 
 static void combo_colorschemes_changed_cb (GtkWidget *w)
