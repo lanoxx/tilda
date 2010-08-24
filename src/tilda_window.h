@@ -56,6 +56,8 @@ struct tilda_window_
     /* Should Tilda hide itself when mouse leaves it? */
     gboolean auto_hide_on_mouse_leave;
 
+	gboolean fullscreen;
+
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
 };
