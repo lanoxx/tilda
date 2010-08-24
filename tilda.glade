@@ -45,7 +45,7 @@
                               <widget class="GtkSpinButton" id="spin_auto_hide_time">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -740,7 +740,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_height_percentage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -767,7 +767,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_height_pixels">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">3</property>
@@ -838,7 +838,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_width_percentage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -852,7 +852,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_width_pixels">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">3</property>
@@ -963,7 +963,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_x_position">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -979,7 +979,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_y_position">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">3</property>
@@ -1060,7 +1060,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_level_of_transparency">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">0 0 100 1 10 10</property>
+                                <property name="adjustment">0 0 100 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">2</property>
@@ -1134,7 +1134,7 @@ Exit the terminal</property>
                               <widget class="GtkSpinButton" id="spin_animation_delay">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">1 1 2147483647 1 10 10</property>
+                                <property name="adjustment">1 1 2147483647 1 10 0</property>
                               </widget>
                               <packing>
                                 <property name="left_attach">2</property>
@@ -1799,7 +1799,7 @@ White on Black</property>
                                   <widget class="GtkSpinButton" id="spin_scrollback_amount">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="adjustment">0 0 2147483647 1 10 10</property>
+                                    <property name="adjustment">0 0 2147483647 1 10 0</property>
                                   </widget>
                                   <packing>
                                     <property name="padding">4</property>
