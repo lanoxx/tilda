@@ -124,8 +124,8 @@ void tilda_window_set_active (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     Display *x11_display = GDK_WINDOW_XDISPLAY( tw->window->window );
-    Window *x11_window = GDK_WINDOW_XWINDOW( tw->window->window );
-    Window *x11_root_window = GDK_WINDOW_XWINDOW ( gtk_widget_get_root_window (tw->window) );
+    Window x11_window = GDK_WINDOW_XWINDOW( tw->window->window );
+    Window x11_root_window = GDK_WINDOW_XWINDOW ( gtk_widget_get_root_window (tw->window) );
     GdkScreen *screen = gtk_widget_get_screen (tw->window);
 
     XEvent event;
@@ -260,12 +260,12 @@ gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)
     if (keystr == NULL || strcmp ("", keystr) == 0)
         return FALSE;
 
-    return tomboy_keybinder_bind (keystr, onKeybindingPull, tw);
+    return tomboy_keybinder_bind (keystr, (TomboyBindkeyHandler)onKeybindingPull, tw);
 }
 
 void tilda_keygrabber_unbind (const gchar *keystr)
 {
-    tomboy_keybinder_unbind (keystr, onKeybindingPull);
+    tomboy_keybinder_unbind (keystr, (TomboyBindkeyHandler)onKeybindingPull);
 }
 
 
