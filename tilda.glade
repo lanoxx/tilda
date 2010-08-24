@@ -2762,7 +2762,7 @@ Control-H</property>
             <child>
               <widget class="GtkButton" id="button_wizard_close">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label" translatable="no">gtk-close</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="button_wizard_close_clicked_cb"/>
