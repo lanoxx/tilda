@@ -32,9 +32,7 @@
 #include <vte/vte.h>
 #include <string.h>
 
-
-#define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
-#define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
+#define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
 GdkColor current_palette[TERMINAL_PALETTE_SIZE];
 
@@ -76,6 +74,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 
     int ret;
     struct tilda_term_ *term;
+    GError *error = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
 
@@ -143,9 +142,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(decrease_font_size_cb), tw->window);
 
     /* Match URL's, etc */
-    ret = vte_terminal_match_add (VTE_TERMINAL(term->vte_term), DINGUS1);
-    vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
-    ret = vte_terminal_match_add(VTE_TERMINAL (term->vte_term), DINGUS2);
+
+    term->http_regexp=g_regex_new(HTTP_REGEXP, G_REGEX_CASELESS, G_REGEX_MATCH_NOTEMPTY, &error);
+    ret = vte_terminal_match_add_gregex(VTE_TERMINAL(term->vte_term), term->http_regexp,0);
     vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
 
     /* Show the child widgets */

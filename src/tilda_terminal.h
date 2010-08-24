@@ -30,6 +30,7 @@ struct tilda_term_
     GtkWidget *vte_term;
     GtkWidget *hbox;
     GtkWidget *scrollbar;
+    GRegex *http_regexp;
 
     struct tilda_window_ *tw;
 };
