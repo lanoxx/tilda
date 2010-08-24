@@ -23,7 +23,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("tilda_config_version", PACKAGE_VERSION, CFGF_NONE),
     CFG_STR("image", NULL, CFGF_NONE),
     CFG_STR("command", "", CFGF_NONE),
-    CFG_STR("font", "Monospace 13", CFGF_NONE),
+    CFG_STR("font", "Monospace 11", CFGF_NONE),
     CFG_STR("key", NULL, CFGF_NONE),
     CFG_STR("addtab_key", "<Shift><Control>t", CFGF_NONE),
     CFG_STR("closetab_key", "<Shift><Control>w", CFGF_NONE),
@@ -45,7 +45,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("title", "Tilda", CFGF_NONE),
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
-    CFG_STR("web_browser", "firefox", CFGF_NONE),
+    CFG_STR("web_browser", "x-www-browser", CFGF_NONE),
 
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),
