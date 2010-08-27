@@ -213,7 +213,7 @@ gint wizard (tilda_window *ltw)
      * validation easier. */
     tilda_keygrabber_unbind (config_getstr ("key"));
 
-    window_title = g_strdup_printf ("Tilda %d Config", ltw->instance);
+    window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
