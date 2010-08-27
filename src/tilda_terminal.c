@@ -512,7 +512,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
 
     /** Cursor **/
-    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), config_getbool ("blinks"));
+    vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
+            (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
 
     /** Scrolling **/
     vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
