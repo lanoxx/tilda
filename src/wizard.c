@@ -386,6 +386,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_ERROR,
                               GTK_BUTTONS_CLOSE,
+                              NULL,
                               message);
 
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
@@ -413,7 +414,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
  * Note that this is called for the key_press_event for the key-grab dialog, not for the wizard.
  */
 
-static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w)
+static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w, const GtkWidget* wizard_window)
 {
     DEBUG_FUNCTION ("wizard_dlg_key_grab");
     DEBUG_ASSERT (wizard_window != NULL);
