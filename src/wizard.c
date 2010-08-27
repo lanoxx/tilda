@@ -139,7 +139,7 @@ static void update_palette_color_button(gint idx);
 
 
 /* For use in get_display_dimension() */
-static enum dimensions { HEIGHT, WIDTH };
+enum dimensions { HEIGHT, WIDTH };
 
 /* This will hold the libglade representation of the .glade file.
  * We keep this global so that we can look up any element from any routine.
@@ -609,7 +609,8 @@ static void check_cursor_blinks_toggled_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), status);
+        vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
+                (status)?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
     }
 }
 
