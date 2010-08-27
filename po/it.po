@@ -24,20 +24,19 @@ msgstr "Configurazione di Tilda"
 
 #: tilda.glade:41
 msgid "Auto Hide Delay:"
-msgstr ""
+msgstr "Ritardo scomparsa automatica:"
 
 #: tilda.glade:59
 msgid "Hide when Tilda loses focus"
-msgstr ""
+msgstr "Nascondi tilda alla perdita del focus"
 
 #: tilda.glade:72
 msgid "Hide Tilda when mouse leaves it"
-msgstr ""
+msgstr "Nascondi tilda all'uscita del mouse"
 
 #: tilda.glade:90
-#, fuzzy
 msgid "<b>Auto Hide</b>"
-msgstr "<b>Titolo</b>"
+msgstr "<b>Nascondi Automaticamente</b>"
 
 #: tilda.glade:123
 msgid "Display on all workspaces"
@@ -117,11 +116,11 @@ msgstr "Generale"
 
 #: tilda.glade:478
 msgid "Word Characters"
-msgstr ""
+msgstr "Caratteri selezionabili come parola"
 
 #: tilda.glade:493
 msgid "<b>Select by Word</b>"
-msgstr ""
+msgstr "<b>Selezione Parole</b>"
 
 #: tilda.glade:541
 msgid "Web Browser"
@@ -290,24 +289,24 @@ msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
+"<small><i><b>Nota:</b> colori disponibili per le applicazioni da terminale."
+"</i></small>"
 
 #: tilda.glade:1460
 msgid "Custom"
-msgstr ""
+msgstr "Personalizzata"
 
 #: tilda.glade:1726
 msgid "Color palette:"
-msgstr ""
+msgstr "Tavolozza dei colori:"
 
 #: tilda.glade:1742
-#, fuzzy
 msgid "Built-in schemes:"
 msgstr "Schemi incorporati"
 
 #: tilda.glade:1766
-#, fuzzy
 msgid "<b>Palette</b>"
-msgstr "<b>Titolo</b>"
+msgstr "<b>Tavolozza</b>"
 
 #: tilda.glade:1790
 msgid "Colors"
@@ -366,7 +365,7 @@ msgid ""
 "applications and operating systems that expect different terminal behavior.</"
 "i></small>"
 msgstr ""
-"<small><i><b>Nota:</b> Queste opzioni potrebbero provocare un funzionamento "
+"<small><i><b>Nota:</b> queste opzioni potrebbero provocare un funzionamento "
 "non corretto di alcune applicazioni. Sono state rese disponibili per quelle "
 "applicazioni e sistemi operativi che si aspettano un diverso funzionamento "
 "del terminale.</i></small>"
@@ -403,85 +402,79 @@ msgstr "Compatibilità"
 #: tilda.glade:2586 tilda.glade:2622 tilda.glade:2656 tilda.glade:2694
 #: tilda.glade:2732 tilda.glade:2770
 msgid " "
-msgstr ""
+msgstr " "
 
 #: tilda.glade:2154
-#, fuzzy
 msgid "<b>Paste</b>"
-msgstr "<b>Titolo</b>"
+msgstr "<b>Incolla</b>"
 
 #: tilda.glade:2190
 msgid "<b>Go To Next Tab</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda sucessiva</b>"
 
 #: tilda.glade:2228
-#, fuzzy
 msgid "<b>Quit</b>"
-msgstr "<b>Titolo</b>"
+msgstr "<b>Esci</b>"
 
 #: tilda.glade:2264
-#, fuzzy
 msgid "<b>Add Tab</b>"
-msgstr "<b>Titolo</b>"
+msgstr "<b>Nuova scheda</b>"
 
 #: tilda.glade:2301
 msgid "<b>Go To Tab 10</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 10</b>"
 
 #: tilda.glade:2339
 msgid "<b>Go To Tab 5</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 5</b>"
 
 #: tilda.glade:2375
 msgid "<b>Go To Tab 4</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 4</b>"
 
 #: tilda.glade:2411
 msgid "<b>Go To Tab 3</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 3</b>"
 
 #: tilda.glade:2447
 msgid "<b>Go To Tab 2</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 3</b>"
 
 #: tilda.glade:2483
 msgid "<b>Go To Tab 1</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 1</b>"
 
 #: tilda.glade:2519
 msgid "<b>Go To Previous Tab</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda precedente</b>"
 
 #: tilda.glade:2557
-#, fuzzy
 msgid "<b>Close Tab</b>"
-msgstr "_Chiudi scheda"
+msgstr "<b>Chiudi scheda</b>"
 
 #: tilda.glade:2595
-#, fuzzy
 msgid "<b>Copy</b>"
-msgstr "<b>Carattere</b>"
+msgstr "<b>Copia</b>"
 
 #: tilda.glade:2631
-#, fuzzy
 msgid "<b>Pull Down Terminal</b>"
-msgstr "<b>Comparsa</b>"
+msgstr "<b>Comparsa terminale</b>"
 
 #: tilda.glade:2665
 msgid "<b>Go To Tab 6</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 6</b>"
 
 #: tilda.glade:2703
 msgid "<b>Go To Tab 7</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 7</b>"
 
 #: tilda.glade:2741
 msgid "<b>Go To Tab 8</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 8</b>"
 
 #: tilda.glade:2779
 msgid "<b>Go To Tab 9</b>"
-msgstr ""
+msgstr "<b>Vai alla scheda 9</b>"
 
 #: tilda.glade:2805
 msgid "Keybindings"
@@ -580,11 +573,12 @@ msgstr ""
 "Messaggio di errore: %s\n"
 
 #: src/tilda.c:604 src/wizard.c:298
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Comparsa terminale\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/tilda_terminal.c:385
 #, c-format
@@ -615,7 +609,7 @@ msgstr "_Chiudi scheda"
 
 #: src/tilda_terminal.c:728
 msgid "Toggle fullscreen"
-msgstr ""
+msgstr "Alterna Schermo Intero"
 
 #: src/tilda_terminal.c:814
 #, c-format
@@ -637,147 +631,154 @@ msgstr "Memoria insufficiente, non posso creare la scheda\n"
 
 #: src/wizard.c:131
 msgid "Tango"
-msgstr ""
+msgstr "Tango"
 
 #: src/wizard.c:132
 msgid "Linux console"
-msgstr ""
+msgstr "Console Linux"
 
 #: src/wizard.c:133
 msgid "XTerm"
-msgstr ""
+msgstr "XTerm"
 
 #: src/wizard.c:134
 msgid "Rxvt"
-msgstr ""
+msgstr "Rxvt"
 
 #: src/wizard.c:216
-#, fuzzy, c-format
 msgid "Tilda %d Config"
-msgstr "Configurazione di Tilda"
+msgstr "Configurazione di di Tilda - Sessione %d"
 
 #: src/wizard.c:302
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Add Tab\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Aggiungi scheda\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:304
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Close Tab\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Chiudi scheda\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:306
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Next Tab\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Scheda successiva\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:308
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Previous Tab\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Scheda precedente\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:310
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Copy\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Copia\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:312
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Paste\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Incolla\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:314
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Quit\" is invalid. Please choose another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Esci\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:316
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 1\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:318
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 2\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:320
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 3\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:322
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 4\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:324
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 5\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:326
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 6\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:328
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 7\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:330
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 8\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:332
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 9\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:334
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose "
 "another."
-msgstr "La scorciatoia da tastiera non è valida. Selezionarne un'altra."
+msgstr ""
+"La scorciatoia da tastiera scelta per \"Vai alla scheda 10\" non è valida. "
+"Selezionarne un'altra."
 
 #: src/wizard.c:679
 msgid "Invalid tab position setting, ignoring\n"
 msgstr "Posizionamento delle schede non valido, verrà ignorato\n"
-
-#~ msgid "gtk-close"
-#~ msgstr "gtk-close"
-
-#~ msgid "Key Binding"
-#~ msgstr "Tasto scorciatoia"
-
-#~ msgid "Grab Keybinding"
-#~ msgstr "Cattura la scorciatoia"
