@@ -64,7 +64,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("d_set_title", 3, CFGF_NONE),
     CFG_INT("command_exit", 2, CFGF_NONE),
     CFG_INT("scheme", 3, CFGF_NONE),
-    CFG_INT("slide_sleep_usec", 15000, CFGF_NONE),
+    CFG_INT("slide_sleep_usec", 20000, CFGF_NONE),
     CFG_INT("animation_orientation", 0, CFGF_NONE),
     CFG_INT("timer_resolution", 1000, CFGF_NONE),
     CFG_INT("auto_hide_time", 2000, CFGF_NONE),
