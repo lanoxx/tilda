@@ -36,7 +36,7 @@ msgstr "Nascondi tilda all'uscita del mouse"
 
 #: tilda.glade:90
 msgid "<b>Auto Hide</b>"
-msgstr "<b>Nascondi Automaticamente</b>"
+msgstr "<b>Scomparsa Automatica</b>"
 
 #: tilda.glade:123
 msgid "Display on all workspaces"
@@ -120,7 +120,7 @@ msgstr "Caratteri selezionabili come parola"
 
 #: tilda.glade:493
 msgid "<b>Select by Word</b>"
-msgstr "<b>Selezione Parole</b>"
+msgstr "<b>Seleziona Parole</b>"
 
 #: tilda.glade:541
 msgid "Web Browser"
@@ -609,7 +609,7 @@ msgstr "_Chiudi scheda"
 
 #: src/tilda_terminal.c:728
 msgid "Toggle fullscreen"
-msgstr "Alterna Schermo Intero"
+msgstr "Schermo Intero"
 
 #: src/tilda_terminal.c:814
 #, c-format
