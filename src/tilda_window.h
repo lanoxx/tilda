@@ -34,13 +34,6 @@ struct tilda_window_
     GList *terms;
     GtkAccelGroup * accel_group;
 
-    /* we dont save files directly in the home dir anymore
-     * instead we use the folders according to the
-     * FreeDesktop specification
-     */
-    gchar *user_config_home; //XDG_CONFIG_HOME
-    gchar *user_cache_home; //XDG_CACHE_HOME
-
     gchar *lock_file;
     gchar *config_file;
     gboolean config_writing_disabled;
