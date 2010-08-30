@@ -199,7 +199,7 @@ nomatch:
  * Success: returns 0
  * Failure: returns non-zero
  */
-static gint remove_stale_lock_files (gchar *home_directory)
+static gint remove_stale_lock_files (gchar *xdg_cache_home)
 {
     DEBUG_FUNCTION ("remove_stale_lock_files");
     DEBUG_ASSERT (home_directory != NULL);
@@ -223,7 +223,7 @@ static gint remove_stale_lock_files (gchar *home_directory)
     pclose (ps_output);
 
     struct lock_info *lock;
-    gchar *lock_dir = g_build_filename (home_directory, ".tilda", "locks", NULL);
+    gchar *lock_dir = g_build_filename (xdg_cache_home, "tilda", "locks", NULL);
     gchar *remove_file;
     gchar *filename;
     GDir *dir;
@@ -417,13 +417,13 @@ int find_centering_coordinate (const int screen_dimension, const int tilda_dimen
  * @param tw the tilda_window structure corresponding to this instance
  * @return a pointer to a string representation of the config file's name
  */
-static gchar *get_config_file_name (gchar *home_directory, gint instance)
+static gchar *get_config_file_name (gchar *user_config_home, gint instance)
 {
     DEBUG_FUNCTION ("get_config_file_name");
     DEBUG_ASSERT (home_directory != NULL);
     DEBUG_ASSERT (instance >= 0);
 
-    gchar *config_file_prefix = g_build_filename (home_directory, ".tilda", "config_", NULL);
+    gchar *config_file_prefix = g_build_filename (user_config_home, "tilda", "config_", NULL);
     gchar *config_file;
 
     config_file = g_strdup_printf ("%s%d", config_file_prefix, instance);
@@ -441,10 +441,10 @@ static gchar *get_config_file_name (gchar *home_directory, gint instance)
  * Success: return next available instance number (>=0)
  * Failure: return 0
  */
-static gint get_instance_number (gchar *home_directory)
+static gint get_instance_number (gchar *user_cache_home)
 {
     DEBUG_FUNCTION ("get_instance_number");
-    DEBUG_ASSERT (home_directory != NULL);
+    DEBUG_ASSERT (user_cache_home != NULL);
 
     gint i;
     gchar *name;
@@ -452,7 +452,7 @@ static gint get_instance_number (gchar *home_directory)
     GDir *dir;
     GSList *list = NULL;
     struct lock_info *lock;
-    gchar *lock_dir = g_build_filename (home_directory, ".tilda", "locks", NULL);
+    gchar *lock_dir = g_build_filename (user_cache_home, "tilda", "locks", NULL);
 
     /* Open the lock directory */
     dir = g_dir_open (lock_dir, 0, NULL);
@@ -501,6 +501,29 @@ static void termination_handler (gint signum)
     gtk_main_quit ();
 }
 
+/*
+ * This is to do the migration of config files from ~/.tilda to the
+ * XDG_*_HOME folders
+ */
+static int migrate_config_files(gchar *old_config_path, gchar *user_config_home, gchar *user_cache_home)
+{
+    gchar* old_locks_path = g_build_filename(old_config_path, "locks", NULL);
+    gchar* new_locks_path = g_build_filename(user_cache_home, "tilda", NULL);
+    gchar* new_config_path = g_build_filename(user_config_home, "tilda", NULL);
+    if(!g_file_test(new_locks_path, G_FILE_TEST_IS_DIR)) {
+           g_mkdir(new_locks_path, 0700);
+           g_free(new_locks_path);
+    }
+    new_locks_path = g_build_filename(user_cache_home, "tilda", "locks", NULL);
+    //we basically need to move the files from old_config_path to config and cache
+    g_rename(old_locks_path, new_locks_path);
+    //we must move the config files after we have moved the locks directory, otherwise it gets moved aswell
+    g_rename(old_config_path, new_config_path);
+    g_free(old_locks_path);
+    g_free(new_locks_path);
+    g_free(new_config_path);
+}
+
 int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("main");
@@ -510,17 +533,27 @@ int main (int argc, char *argv[])
     struct sigaction sa;
     struct lock_info lock;
     gboolean need_wizard = FALSE;
-    gchar *home_dir, *config_file, *lock_file;
+    gchar *user_config_home, *user_cache_home, *config_file, *lock_file, *old_config_path;
 
-    home_dir = g_strdup (g_get_home_dir ());
+    user_config_home = g_strdup (g_get_user_config_dir ());
+    user_cache_home = g_strdup (g_get_user_cache_dir ());
+    
+    /*
+     * Migration code to move old files to new XDG folders
+     */
+    old_config_path = g_build_filename(g_get_home_dir (), ".tilda", NULL);
+    if (g_file_test(old_config_path, G_FILE_TEST_IS_DIR)) {
+        migrate_config_files(old_config_path, user_config_home, user_cache_home);
+        g_free(old_config_path);
+    }
 
     /* Remove stale lock files */
-    remove_stale_lock_files (home_dir);
+    remove_stale_lock_files (user_cache_home);
 
     lock.pid = getpid ();
-    lock.instance = get_instance_number (home_dir);
-    config_file = get_config_file_name (home_dir, lock.instance);
-    lock_file = create_lock_file (home_dir, lock);
+    lock.instance = get_instance_number (user_cache_home);
+    config_file = get_config_file_name (user_config_home, lock.instance);
+    lock_file = create_lock_file (user_cache_home, lock);
 
 #if ENABLE_NLS
     /* Gettext Initialization */
@@ -579,7 +612,7 @@ int main (int argc, char *argv[])
     sigaction (SIGKILL, &sa, NULL);
 
     /* If the config file doesn't exist open up the wizard */
-    if (access (tw->config_file, R_OK) == -1)
+    if (access (tw->user_config_home, R_OK) == -1)
     {
         /* We probably need a default key, too ... */
         gchar *default_key = g_strdup_printf ("F%d", tw->instance+1);
@@ -630,7 +663,8 @@ tw_alloc_failed:
     g_remove (lock_file);
     g_free (lock_file);
     g_free (config_file);
-    g_free (home_dir);
+    g_free (user_config_home);
+    g_free (user_cache_home);
 
     return 0;
 }
