@@ -442,12 +442,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     /* Set the instance number */
     tw->instance = instance;
 
-    /* Get the user's config and cache directory 
-     * Comply with FreeDesktop XDG Spec
-     */
-    tw->user_config_home = g_build_filename(g_get_user_config_dir (), "tilda", NULL);
-    tw->user_cache_home = g_build_filename(g_get_user_cache_dir (), "tilda", NULL);
-
     /* Set the config file */
     tw->config_file = g_strdup (config_file);
 
@@ -542,9 +536,6 @@ gint tilda_window_free (tilda_window *tw)
     }
 
     g_free (tw->config_file);
-    g_free (tw->user_cache_home);
-    g_free (tw->user_config_home);
-
     g_free (tw);
 
     return 0;
