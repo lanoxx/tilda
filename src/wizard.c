@@ -386,7 +386,6 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_ERROR,
                               GTK_BUTTONS_CLOSE,
-                              NULL,
                               message);
 
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
