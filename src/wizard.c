@@ -139,7 +139,7 @@ static void update_palette_color_button(gint idx);
 
 
 /* For use in get_display_dimension() */
-static enum dimensions { HEIGHT, WIDTH };
+enum dimensions { HEIGHT, WIDTH };
 
 /* This will hold the libglade representation of the .glade file.
  * We keep this global so that we can look up any element from any routine.
@@ -213,7 +213,7 @@ gint wizard (tilda_window *ltw)
      * validation easier. */
     tilda_keygrabber_unbind (config_getstr ("key"));
 
-    window_title = g_strdup_printf ("Tilda %d Config", ltw->instance);
+    window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
     gtk_widget_show_all (wizard_window);
@@ -413,7 +413,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
  * Note that this is called for the key_press_event for the key-grab dialog, not for the wizard.
  */
 
-static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w)
+static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w, const GtkWidget* wizard_window)
 {
     DEBUG_FUNCTION ("wizard_dlg_key_grab");
     DEBUG_ASSERT (wizard_window != NULL);
@@ -609,7 +609,8 @@ static void check_cursor_blinks_toggled_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), status);
+        vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
+                (status)?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
     }
 }
 
@@ -740,6 +741,24 @@ static void entry_web_browser_changed (GtkWidget *w)
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
 
     config_setstr ("web_browser", web_browser);
+}
+
+static void entry_word_chars_changed (GtkWidget *w)
+{
+    gint i;
+    tilda_term *tt;
+    const gchar *word_chars = gtk_entry_get_text (GTK_ENTRY(w));
+
+    /* restore to default value if user clears this setting */
+    if (NULL == word_chars || '\0' == word_chars[0])
+        word_chars = DEFAULT_WORD_CHARS;
+
+    config_setstr ("word_chars", word_chars);
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
+    }
 }
 
 /*
@@ -1510,6 +1529,7 @@ static void set_wizard_state_from_config ()
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_custom_command", "run_command");
 
     TEXT_ENTRY ("entry_web_browser", "web_browser");
+    TEXT_ENTRY ("entry_word_chars", "word_chars");
 
     /* Appearance Tab */
     SPIN_BUTTON_SET_RANGE ("spin_height_percentage", 0, 100);
@@ -1639,6 +1659,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
+    CONNECT_SIGNAL ("entry_word_chars","changed",entry_word_chars_changed);
 
     /* Appearance Tab */
     CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb);

@@ -32,9 +32,7 @@
 #include <vte/vte.h>
 #include <string.h>
 
-
-#define DINGUS1 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?"
-#define DINGUS2 "(((news|telnet|nttp|file|http|ftp|https)://)|(www|ftp)[-A-Za-z0-9]*\\.)[-A-Za-z0-9\\.]+(:[0-9]*)?/[-A-Za-z0-9_\\$\\.\\+\\!\\*\\(\\),;:@&=\\?/~\\#\\%]*[^]'\\.}>\\) ,\\\"]"
+#define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
 GdkColor current_palette[TERMINAL_PALETTE_SIZE];
 
@@ -76,6 +74,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 
     int ret;
     struct tilda_term_ *term;
+    GError *error = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
 
@@ -143,9 +142,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(decrease_font_size_cb), tw->window);
 
     /* Match URL's, etc */
-    ret = vte_terminal_match_add (VTE_TERMINAL(term->vte_term), DINGUS1);
-    vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
-    ret = vte_terminal_match_add(VTE_TERMINAL (term->vte_term), DINGUS2);
+
+    term->http_regexp=g_regex_new(HTTP_REGEXP, G_REGEX_CASELESS, G_REGEX_MATCH_NOTEMPTY, &error);
+    ret = vte_terminal_match_add_gregex(VTE_TERMINAL(term->vte_term), term->http_regexp,0);
     vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
 
     /* Show the child widgets */
@@ -486,8 +485,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     gdouble transparency_level = 0.0;
     GdkColor fg, bg /*, tint, highlight, cursor, black */;
+    gchar* word_chars;
     gint i;
-
 
     /** Colors & Palette **/
     bg.red   =    config_getint ("back_red");
@@ -513,7 +512,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
 
     /** Cursor **/
-    vte_terminal_set_cursor_blinks (VTE_TERMINAL(tt->vte_term), config_getbool ("blinks"));
+    vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
+            (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
 
     /** Scrolling **/
     vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
@@ -565,6 +565,12 @@ static gint tilda_term_config_defaults (tilda_term *tt)
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
             break;
     }
+
+    /** Word chars **/
+    word_chars =  config_getstr ("word_chars");
+    if (NULL == word_chars || '\0' == word_chars)
+        word_chars = DEFAULT_WORD_CHARS;
+    vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
 
     /** Background **/
     if (config_getbool ("use_image"))
@@ -639,6 +645,16 @@ menu_add_tab_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
+menu_fullscreen_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("menu_fullscreen_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    toggle_fullscreen_cb (TILDA_WINDOW(data));
+}
+
+static void
 menu_close_tab_cb (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("menu_close_tab_cb");
@@ -681,6 +697,8 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
                 "<menuitem action=\"copy\" />"
                 "<menuitem action=\"paste\" />"
                 "<separator />"
+                "<menuitem action=\"fullscreen\" />"
+                "<separator />"
                 "<menuitem action=\"preferences\" />"
                 "<separator />"
                 "<menuitem action=\"quit\" />"
@@ -706,6 +724,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     action = gtk_action_new ("paste", NULL, NULL, GTK_STOCK_PASTE);
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("paste_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_paste_cb), tt);
+
+    action = gtk_action_new ("fullscreen", _("Toggle fullscreen"), NULL, NULL);
+    gtk_action_group_add_action (action_group, action);
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_fullscreen_cb), tw);
 
     action = gtk_action_new ("preferences", NULL, NULL, GTK_STOCK_PREFERENCES);
     gtk_action_group_add_action (action_group, action);

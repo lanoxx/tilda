@@ -34,7 +34,6 @@ struct tilda_window_
     GList *terms;
     GtkAccelGroup * accel_group;
 
-    gchar *home_dir;
     gchar *lock_file;
     gchar *config_file;
     gboolean config_writing_disabled;
@@ -56,6 +55,8 @@ struct tilda_window_
     /* Should Tilda hide itself when mouse leaves it? */
     gboolean auto_hide_on_mouse_leave;
 
+	gboolean fullscreen;
+
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
 };
@@ -66,6 +67,7 @@ gint tilda_window_add_tab (tilda_window *tw);
 gint tilda_window_close_tab (tilda_window *tw, gint tab_position);
 tilda_window *tilda_window_init (const gchar *config_file, const gint instance);
 gint tilda_window_free (tilda_window *tw);
+gint toggle_fullscreen_cb (tilda_window *tw);
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos);
 void tilda_window_close_current_tab (tilda_window *tw);

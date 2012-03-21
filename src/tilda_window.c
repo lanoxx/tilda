@@ -116,6 +116,23 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
     return 0;
 }
 
+
+gint toggle_fullscreen_cb (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("toggle_fullscreen_cb");
+    DEBUG_ASSERT (tw != NULL);
+    
+	if (tw->fullscreen != TRUE) {
+		tw->fullscreen = TRUE;
+		gtk_window_fullscreen (GTK_WINDOW (tw->window));
+	}
+	else {
+		gtk_window_unfullscreen (GTK_WINDOW (tw->window));
+		tw->fullscreen = FALSE;
+	}
+}
+
+
 static gint next_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("next_tab");
@@ -361,6 +378,7 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator("closetab_key", G_CALLBACK(tilda_window_close_current_tab), tw);
     tilda_add_config_accelerator("copy_key",     G_CALLBACK(ccopy),                          tw);
     tilda_add_config_accelerator("paste_key",    G_CALLBACK(cpaste),                         tw);
+    tilda_add_config_accelerator("fullscreen_key",    G_CALLBACK(toggle_fullscreen_cb),             tw);
  
     /* Set up keyboard shortcuts for Goto Tab # using key combinations defined in the config*/
     /* Know a better way? Then you do. */
@@ -424,9 +442,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     /* Set the instance number */
     tw->instance = instance;
 
-    /* Get the user's home directory */
-    tw->home_dir = g_strdup (g_get_home_dir ());
-
     /* Set the config file */
     tw->config_file = g_strdup (config_file);
 
@@ -442,6 +457,8 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tw->auto_hide_on_mouse_leave = config_getbool("auto_hide_on_mouse_leave");
     tw->auto_hide_on_focus_lost = config_getbool("auto_hide_on_focus_lost");
     tw->disable_auto_hide = FALSE;
+
+	tw->fullscreen = FALSE;
 
     /* Set up all window properties */
     if (config_getbool ("pinned"))
@@ -495,6 +512,9 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+
+	/* Create GDK resources now, to prevent crashes later on */
+    gtk_widget_realize (tw->window);
     generate_animation_positions (tw);
 
     return tw;
@@ -516,8 +536,6 @@ gint tilda_window_free (tilda_window *tw)
     }
 
     g_free (tw->config_file);
-    g_free (tw->home_dir);
-
     g_free (tw);
 
     return 0;
@@ -555,6 +573,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     index = gtk_notebook_prepend_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
     gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
+	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
     /* We should show the tabs if there are more than one tab in the notebook */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
