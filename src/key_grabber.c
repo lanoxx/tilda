@@ -31,7 +31,7 @@
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
-#include <gtk/gtkmain.h>
+#include <gtk/gtk.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
