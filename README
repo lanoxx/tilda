@@ -76,13 +76,17 @@ will be able to grab it for you.
 
 Files that Tilda creates
 ================================================================================
-On its first run, Tilda will attempt to create the directory ~/.tilda. Inside of
-this directory, it will create another directory ~/.tilda/locks. Inside the
-~/.tilda/locks directory, Tilda will create a file each time it starts, in order
-to keep track of how many instances are running. The naming of lock files follow
-the format "lock_$PID_$INSTANCE". Configuration files are stored inside
-~/.tilda, and have the format "config_$INSTANCE".
-
+Tilda now adheres to the XDG Base Directory Specification and creates its files
+in the $XDG_CONFIG_HOME and $XDG_CACHE_HOME folders which normally default to
+~/.config/ and ~/.cache/. Tilda will create a lock file in the cache directory
+each time it starts, to keep track of how many instances are running:
+    ~/.cache/tilda/locks/lock_$PID_$INSTANCE
+Tilda will also create the config files in:
+    ~/.config/tilda/config_$INSTANCE
+where $INSTANCE is the number of how many instances are running and
+$PID the process id. If you have been using the old version of tilda before,
+there is a migration function, that will automatically move the files at the
+old location ~/.tilda/ to the XDG folders for you.
 
 Getting more help
 ================================================================================
