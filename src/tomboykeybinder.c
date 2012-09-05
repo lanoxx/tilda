@@ -1,7 +1,6 @@
 #include <string.h>
 
 #include <gdk/gdk.h>
-#include <gdk/gdkwindow.h>
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 
