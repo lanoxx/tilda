@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2010-08-27 16:41+0200\n"
 "PO-Revision-Date: 2008-03-10 22:11+0000\n"
-"Last-Translator: Blacko <Unknown>\n"
+"Last-Translator: François Boulogne <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,24 +19,23 @@ msgstr ""
 
 #: tilda.glade:7
 msgid "Tilda Config"
-msgstr ""
+msgstr "Configuration de Tilda"
 
 #: tilda.glade:41
 msgid "Auto Hide Delay:"
-msgstr ""
+msgstr "Délais de masquage automatique"
 
 #: tilda.glade:59
 msgid "Hide when Tilda loses focus"
-msgstr ""
+msgstr "Masquer lorsque Tilda perd le focus"
 
 #: tilda.glade:72
 msgid "Hide Tilda when mouse leaves it"
-msgstr ""
+msgstr "Masquer Tilda lorsque le pointeur le quitte"
 
 #: tilda.glade:90
-#, fuzzy
 msgid "<b>Auto Hide</b>"
-msgstr "<b>Titre</b>"
+msgstr "<b>Masquage automatique</b>"
 
 #: tilda.glade:123
 msgid "Display on all workspaces"
@@ -84,17 +83,14 @@ msgid "Enable Antialiasing"
 msgstr "Activer l'Antialiasing"
 
 #: tilda.glade:327
-#, fuzzy
 msgid "Allow Bold Text"
 msgstr "Autoriser le texte en gras"
 
 #: tilda.glade:342
-#, fuzzy
 msgid "Position of Tabs:"
 msgstr "Position des onglets :"
 
 #: tilda.glade:355 tilda.glade:1216
-#, fuzzy
 msgid ""
 "Top\n"
 "Bottom\n"
@@ -124,7 +120,7 @@ msgstr ""
 
 #: tilda.glade:493
 msgid "<b>Select by Word</b>"
-msgstr ""
+msgstr "<b>Sélectionner par mots</b>"
 
 #: tilda.glade:541
 msgid "Web Browser"
@@ -132,7 +128,7 @@ msgstr "Navigateur Web"
 
 #: tilda.glade:556
 msgid "<b>URL Handling</b>"
-msgstr ""
+msgstr "<b>Traitement des URL</b>"
 
 #: tilda.glade:588
 msgid "Initial Title:"
@@ -143,7 +139,6 @@ msgid "Dynamically-set Title:"
 msgstr "Titre paramétré dynamiquement :"
 
 #: tilda.glade:621
-#, fuzzy
 msgid ""
 "Isn't displayed\n"
 "Goes after initial title\n"
@@ -160,7 +155,6 @@ msgid "<b>Title</b>"
 msgstr "<b>Titre</b>"
 
 #: tilda.glade:675
-#, fuzzy
 msgid "Run a custom command instead of the shell"
 msgstr "Exécuter une commande personnalisée au lieu du terminal"
 
@@ -169,19 +163,17 @@ msgid "Custom Command:"
 msgstr "Commande personnalisée :"
 
 #: tilda.glade:699
-#, fuzzy
 msgid "When Command Exits:"
-msgstr "Lorsque la commande existe :"
+msgstr "Lorsque la commande se termine :"
 
 #: tilda.glade:711
-#, fuzzy
 msgid ""
 "Hold the terminal open\n"
 "Restart the command\n"
 "Exit the terminal"
 msgstr ""
 "Garder le terminal ouvert\n"
-"Redémarrer le terminal\n"
+"Redémarrer la commande\n"
 "Quitter le terminal"
 
 #: tilda.glade:744
@@ -265,7 +257,6 @@ msgid "Built-in Schemes"
 msgstr ""
 
 #: tilda.glade:1326
-#, fuzzy
 msgid ""
 "Custom\n"
 "Green on Black\n"
@@ -302,20 +293,19 @@ msgstr ""
 
 #: tilda.glade:1460
 msgid "Custom"
-msgstr ""
+msgstr "Personnalisé"
 
 #: tilda.glade:1726
 msgid "Color palette:"
-msgstr ""
+msgstr "Palette de couleurs :"
 
 #: tilda.glade:1742
 msgid "Built-in schemes:"
 msgstr ""
 
 #: tilda.glade:1766
-#, fuzzy
 msgid "<b>Palette</b>"
-msgstr "<b>Titre</b>"
+msgstr "<b>Palette</b>"
 
 #: tilda.glade:1790
 msgid "Colors"
@@ -338,7 +328,6 @@ msgid "lines"
 msgstr "lignes"
 
 #: tilda.glade:1893
-#, fuzzy
 msgid ""
 "On the Left\n"
 "On the Right\n"
@@ -415,61 +404,56 @@ msgid " "
 msgstr ""
 
 #: tilda.glade:2154
-#, fuzzy
 msgid "<b>Paste</b>"
-msgstr "<b>Titre</b>"
+msgstr "<b>Coller</b>"
 
 #: tilda.glade:2190
 msgid "<b>Go To Next Tab</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet suivant</b>"
 
 #: tilda.glade:2228
-#, fuzzy
 msgid "<b>Quit</b>"
-msgstr "<b>Titre</b>"
+msgstr "<b>Quitter</b>"
 
 #: tilda.glade:2264
-#, fuzzy
 msgid "<b>Add Tab</b>"
-msgstr "<b>Titre</b>"
+msgstr "<b>Ajouter un onglet</b>"
 
 #: tilda.glade:2301
 msgid "<b>Go To Tab 10</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 10</b>"
 
 #: tilda.glade:2339
 msgid "<b>Go To Tab 5</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 5</b>"
 
 #: tilda.glade:2375
 msgid "<b>Go To Tab 4</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 4</b>"
 
 #: tilda.glade:2411
 msgid "<b>Go To Tab 3</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 3</b>"
 
 #: tilda.glade:2447
 msgid "<b>Go To Tab 2</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 2</b>"
 
 #: tilda.glade:2483
 msgid "<b>Go To Tab 1</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 1</b>"
 
 #: tilda.glade:2519
 msgid "<b>Go To Previous Tab</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet précédent</b>"
 
 #: tilda.glade:2557
-#, fuzzy
 msgid "<b>Close Tab</b>"
-msgstr "_Fermer l'onglet"
+msgstr "<b>Fermer l'onglet</b>"
 
 #: tilda.glade:2595
-#, fuzzy
 msgid "<b>Copy</b>"
-msgstr "<b>Police de caractères</b>"
+msgstr "<b>Copier</b>"
 
 #: tilda.glade:2631
 #, fuzzy
@@ -478,19 +462,19 @@ msgstr "<b>Affichage du terminal</b>"
 
 #: tilda.glade:2665
 msgid "<b>Go To Tab 6</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 6</b>"
 
 #: tilda.glade:2703
 msgid "<b>Go To Tab 7</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 7</b>"
 
 #: tilda.glade:2741
 msgid "<b>Go To Tab 8</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 8</b>"
 
 #: tilda.glade:2779
 msgid "<b>Go To Tab 9</b>"
-msgstr ""
+msgstr "<b>Aller à l'onglet 9</b>"
 
 #: tilda.glade:2805
 msgid "Keybindings"
@@ -501,9 +485,8 @@ msgid "Untitled"
 msgstr "Sans nom"
 
 #: src/callback_func.c:71
-#, fuzzy
 msgid "Bad value for \"d_set_title\" in config file\n"
-msgstr "Mauvaise valeur pour \"d_set_title\" dans le fichier config\n"
+msgstr "Mauvaise valeur pour \"d_set_title\" dans le fichier de configuration\n"
 
 #: src/configsys.c:172
 msgid "Problem parsing config file\n"
@@ -523,7 +506,7 @@ msgid "Unable to write the config file to %s\n"
 msgstr "Ne peut pas écrire le fichier de configuration dans %s\n"
 
 #: src/tilda.c:214
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "Impossible d'exécuter la commande : '%s'\n"
 
@@ -608,7 +591,7 @@ msgid "Launching default shell instead\n"
 msgstr ""
 
 #: src/tilda_terminal.c:402
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Impossible de lancer la commande personnalisée : %s\n"
 
@@ -618,23 +601,21 @@ msgid "Unable to launch default shell: %s\n"
 msgstr ""
 
 #: src/tilda_terminal.c:712
-#, fuzzy
 msgid "_New Tab"
 msgstr "_Nouvel onglet"
 
 #: src/tilda_terminal.c:716
-#, fuzzy
 msgid "_Close Tab"
 msgstr "_Fermer l'onglet"
 
 #: src/tilda_terminal.c:728
 msgid "Toggle fullscreen"
-msgstr ""
+msgstr "Passer en mode plein écran"
 
 #: src/tilda_terminal.c:814
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
-msgstr ""
+msgstr "Echec du lancement du navigateur web. La commande était `%s'\n"
 
 #: src/tilda_window.c:101
 msgid "You have a bad tab_pos in your configuration file\n"
@@ -653,7 +634,7 @@ msgstr "Plus de mémoire, ne peut pas créer l'onglet\n"
 
 #: src/wizard.c:131
 msgid "Tango"
-msgstr ""
+msgstr "Tango"
 
 #: src/wizard.c:132
 msgid "Linux console"
@@ -661,11 +642,11 @@ msgstr ""
 
 #: src/wizard.c:133
 msgid "XTerm"
-msgstr ""
+msgstr "Xterm"
 
 #: src/wizard.c:134
 msgid "Rxvt"
-msgstr ""
+msgstr "Rxvt"
 
 #: src/wizard.c:216
 #, c-format
