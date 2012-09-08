@@ -621,6 +621,9 @@ int main (int argc, char *argv[])
         need_wizard = TRUE;
     }
 
+    /* Whew! We're finally all set up and ready to run GTK ... */
+    gtk_main();
+
     /* Show the wizard if we need to.
      *
      * Note that the key will be bound upon exiting the wizard */
@@ -650,9 +653,6 @@ int main (int argc, char *argv[])
     {
         pull (tw, PULL_DOWN);
     }
-
-    /* Whew! We're finally all set up and ready to run GTK ... */
-    gtk_main();
 
     /* Ok, we're at the end of our run. Time to clean up ... */
     tilda_window_free (tw);
