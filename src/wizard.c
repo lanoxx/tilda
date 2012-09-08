@@ -386,7 +386,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_ERROR,
                               GTK_BUTTONS_CLOSE,
-                              message);
+                              "%s", message);
 
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gtk_dialog_run (GTK_DIALOG (dialog));
@@ -579,7 +579,6 @@ static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        //gtk_widget_set_double_buffered (VTE_TERMINAL(tt->vte_term), status);
         gtk_widget_set_double_buffered (GTK_WIDGET(tt->vte_term), status);
     }
 }
@@ -624,7 +623,9 @@ static void check_enable_antialiasing_toggled_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr ("font"), status);
+        PangoFontDescription *description =
+            pango_font_description_from_string (config_getstr ("font"));
+        vte_terminal_set_font (VTE_TERMINAL(tt->vte_term), description);
     }
 }
 
@@ -694,7 +695,9 @@ static void button_font_font_set_cb (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), font, antialias);
+        PangoFontDescription *description =
+            pango_font_description_from_string (font);
+        vte_terminal_set_font (VTE_TERMINAL(tt->vte_term), description);
     }
 }
 

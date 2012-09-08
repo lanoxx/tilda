@@ -24,6 +24,7 @@
 #include <configsys.h>
 #include <translation.h>
 #include <wizard.h> /* wizard */
+#include <gtk/gtk.h>
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
@@ -389,10 +390,17 @@ static gint start_shell (struct tilda_term_ *tt)
             goto launch_default_shell;
         }
 
-        ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-                    argv[0], argv, NULL,
-                    config_getstr ("working_dir"),
-                    TRUE, TRUE, TRUE);
+        ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
+            VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
+            config_getstr ("working_dir"), /* const char *working_directory */
+            argv, /* char **argv */
+            NULL, /* char **envv */
+            0,    /* GSpawnFlags spawn_flags */
+            NULL, /* GSpawnChildSetupFunc child_setup */
+            NULL, /* gpointer child_setup_data */
+            NULL, /* GPid *child_pid */
+            NULL  /* GError **error */
+            );
 
         g_strfreev (argv);
 
@@ -417,10 +425,17 @@ launch_default_shell:
     if (default_command == NULL)
         default_command = "/bin/sh";
 
-    ret = vte_terminal_fork_command (VTE_TERMINAL(tt->vte_term),
-                default_command, NULL, NULL,
-                config_getstr ("working_dir"),
-                TRUE, TRUE, TRUE);
+    ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
+        VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
+        config_getstr ("working_dir"), /* const char *working_directory */
+        argv, /* char **argv */
+        NULL, /* char **envv */
+        0,    /* GSpawnFlags spawn_flags */
+        NULL, /* GSpawnChildSetupFunc child_setup */
+        NULL, /* gpointer child_setup_data */
+        NULL, /* GPid *child_pid */
+        NULL  /* GError **error */
+        );
 
     if (ret == -1)
     {
@@ -526,7 +541,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     /** Text Properties **/
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
     gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
-    vte_terminal_set_font_from_string_full (VTE_TERMINAL(tt->vte_term), config_getstr ("font"), config_getbool ("antialias"));
+    PangoFontDescription *description =
+        pango_font_description_from_string (config_getstr ("font"));
+    vte_terminal_set_font (VTE_TERMINAL (tt->vte_term), description);
 
     /** Scrollback **/
     vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getint ("lines"));
@@ -787,7 +804,14 @@ static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer d
             break;
         case 1: /* Left Click */
             terminal  = VTE_TERMINAL(tt->vte_term);
-            vte_terminal_get_padding (terminal, &xpad, &ypad);
+            GtkBorder *border = NULL;
+            GValue *value;
+            g_value_init (value, G_TYPE_POINTER);
+            gtk_widget_style_get_property (GTK_WIDGET (terminal),
+                "inner-border", value);
+            border = g_value_get_pointer (value);
+            xpad = border->left;
+            ypad = border->bottom;
             match = vte_terminal_match_check (terminal,
                     (event->x - ypad) /
                     terminal->char_width,
