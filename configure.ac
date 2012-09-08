@@ -2,18 +2,24 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT([Tilda], [0.9.6], [http://bugs.launchpad.net/tilda])
+AC_PREREQ([2.68])
+AC_INIT([Tilda],[0.9.6],[http://bugs.launchpad.net/tilda],[tilda],[https://github.com/tsloughter/tilda])
 AM_INIT_AUTOMAKE
+
+# We are going to use silent builds which have a much
+# nicer output. More information can be foudn here:
+#     https://live.gnome.org/GnomeGoals/NicerBuilds
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AC_CONFIG_SRCDIR([src/tilda.c])
-AM_CONFIG_HEADER([tilda-config.h:tilda-config.h.in])
+AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.16.1])
 
 # Add optional debugging features
 AC_ARG_ENABLE([maintainer-flags],
-		[AC_HELP_STRING([--enable-maintainer-flags], [enable extra debugging (don't use as user)])])
+		[AS_HELP_STRING([--enable-maintainer-flags],[enable extra debugging (don't use as user)])])
 
 if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
@@ -22,14 +28,14 @@ if test "x$enable_maintainer_flags" = "xyes"; then
 	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations"
 fi
 
-AC_ARG_ENABLE([debug], [AC_HELP_STRING([--enable-debug], [enable extra debugging output])])
+AC_ARG_ENABLE([debug], [AS_HELP_STRING([--enable-debug],[enable extra debugging output])])
 
 if test "x$enable_debug" = "xyes"; then
 	AC_DEFINE([DEBUG], [1], [Enable extra debugging output])
 	CFLAGS="$CFLAGS -g -ggdb"
 fi
 
-AC_ARG_ENABLE([debug-functions], [AC_HELP_STRING([--enable-debug-functions], [enable function call tracing])])
+AC_ARG_ENABLE([debug-functions], [AS_HELP_STRING([--enable-debug-functions],[enable function call tracing])])
 
 if test "x$enable_debug_functions" = "xyes"; then
 	AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])

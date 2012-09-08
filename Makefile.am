@@ -3,6 +3,8 @@
 
 AUTOMAKE_OPTIONS = gnu
 
+MAKEFLAGS = -s
+
 SUBDIRS = po m4 src
 
 MAINTAINER_CLEAN_FILES = Makefile \
