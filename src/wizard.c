@@ -141,13 +141,13 @@ static void update_palette_color_button(gint idx);
 /* For use in get_display_dimension() */
 enum dimensions { HEIGHT, WIDTH };
 
-/* This will hold the libglade representation of the .glade file.
+/* This will hold the GtkBuilder representation of the .glade file.
  * We keep this global so that we can look up any element from any routine.
  *
- * Note that for libglade to autoconnect signals, the functions that it hooks
+ * Note that for GtkBuilder to autoconnect signals, the functions that it hooks
  * to must NOT be marked static. I decided against the autoconnect just to
  * keep things "in the code" so that they can be grepped for easily. */
-static GladeXML *xml = NULL;
+static GtkBuilder *xml = NULL;
 
 /* This is terrible. We're keeping a local copy of a variable that
  * should probably be project global, because we use it everywhere.
@@ -177,18 +177,26 @@ gint wizard (tilda_window *ltw)
         return 1;
     }
 
+    GError* error = NULL;
+    xml = gtk_builder_new ();
+
 #if ENABLE_NLS
-    xml = glade_xml_new (glade_file, NULL, PACKAGE);
-#else
-    xml = glade_xml_new (glade_file, NULL, NULL);
+    gtk_builder_set_translation_domain (xml, PACKAGE);
 #endif
+
+    if (!gtk_builder_add_from_file (xml, glade_file, &error)) {
+        g_warning ("Couldn't load builder file: %s", error->message);
+        g_error_free (error);
+    }
 
     if (!xml) {
         g_warning ("problem while loading the tilda.glade file");
         return 2;
     }
 
-    wizard_window = glade_xml_get_widget (xml, "wizard_window");
+    wizard_window = GTK_WIDGET (
+        gtk_builder_get_object (xml, "wizard_window")
+    );
 
     /* We're up and running now, so now connect all of the signal handlers.
      * NOTE: I decided to do this manually, since it is safer that way. */
@@ -259,7 +267,8 @@ gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window,
     }
 }
 
-# define GET_BUTTON_LABEL(BUTTON) ( gtk_button_get_label( GTK_BUTTON(glade_xml_get_widget(xml, BUTTON))))
+# define GET_BUTTON_LABEL(BUTTON) ( gtk_button_get_label( GTK_BUTTON( \
+    gtk_builder_get_object (xml, BUTTON))))
 
 /* Gets called just after the wizard is closed. This should clean up after
  * the wizard, and do anything that couldn't be done immediately during the
@@ -287,9 +296,10 @@ static void wizard_closed ()
     const gchar *gototab_9_key = GET_BUTTON_LABEL("button_keybinding_gototab9");
     const gchar *gototab_10_key = GET_BUTTON_LABEL("button_keybinding_gototab10");
 
-    const GtkWidget *entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
-    const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
-
+    const GtkWidget *entry_custom_command =
+        GTK_WIDGET (gtk_builder_get_object(xml, "entry_custom_command"));
+    const GtkWidget *wizard_window =
+        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
     const gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
 
     /* Validate our new shortcuts */
@@ -519,7 +529,8 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin, void (*
 
 static void button_wizard_close_clicked_cb (GtkWidget *w)
 {
-    const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
+    const GtkWidget *wizard_window =
+        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
 
     /* Call the clean-up function */
     wizard_closed ();
@@ -725,8 +736,10 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
 
     config_setbool ("run_command", status);
 
-    label_custom_command = glade_xml_get_widget (xml, "label_custom_command");
-    entry_custom_command = glade_xml_get_widget (xml, "entry_custom_command");
+    label_custom_command =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_custom_command"));
+    entry_custom_command =
+        GTK_WIDGET (gtk_builder_get_object (xml, "entry_custom_command"));
 
     gtk_widget_set_sensitive (GTK_WIDGET(label_custom_command), status);
     gtk_widget_set_sensitive (GTK_WIDGET(entry_custom_command), status);
@@ -777,7 +790,9 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w);
 
 static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 {
-    const GtkWidget *spin_height_pixels = glade_xml_get_widget (xml, "spin_height_pixels");
+    const GtkWidget *spin_height_pixels =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
+
     const gint h_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint h_pix = percentage2pixels (h_pct, HEIGHT);
 
@@ -797,7 +812,8 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 
 static void spin_height_pixels_value_changed_cb (GtkWidget *w)
 {
-    const GtkWidget *spin_height_percentage = glade_xml_get_widget (xml, "spin_height_percentage");
+    const GtkWidget *spin_height_percentage =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_percentage"));
     const gint h_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint h_pct = pixels2percentage (h_pix, HEIGHT);
 
@@ -817,7 +833,9 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
 
 static void spin_width_percentage_value_changed_cb (GtkWidget *w)
 {
-    const GtkWidget *spin_width_pixels = glade_xml_get_widget (xml, "spin_width_pixels");
+    const GtkWidget *spin_width_pixels =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
+
     const gint w_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint w_pix = percentage2pixels (w_pct, WIDTH);
 
@@ -837,7 +855,9 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
 
 static void spin_width_pixels_value_changed_cb (GtkWidget *w)
 {
-    const GtkWidget *spin_width_percentage = glade_xml_get_widget (xml, "spin_width_percentage");
+    const GtkWidget *spin_width_percentage =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_percentage"));
+
     const gint w_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint w_pct = pixels2percentage (w_pix, WIDTH);
 
@@ -858,8 +878,10 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
 static void check_centered_horizontally_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *label_x_position = glade_xml_get_widget (xml, "label_x_position");
-    const GtkWidget *spin_x_position = glade_xml_get_widget (xml, "spin_x_position");
+    const GtkWidget *label_x_position =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_x_position"));
+    const GtkWidget *spin_x_position =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_x_position"));
 
     config_setbool ("centered_horizontally", status);
 
@@ -894,8 +916,10 @@ static void spin_x_position_value_changed_cb (GtkWidget *w)
 static void check_centered_vertically_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *label_y_position = glade_xml_get_widget (xml, "label_y_position");
-    const GtkWidget *spin_y_position = glade_xml_get_widget (xml, "spin_y_position");
+    const GtkWidget *label_y_position =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_y_position"));
+    const GtkWidget *spin_y_position =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_y_position"));
 
     config_setbool ("centered_vertically", status);
 
@@ -930,8 +954,11 @@ static void spin_y_position_value_changed_cb (GtkWidget *w)
 static void check_enable_transparency_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *label_level_of_transparency = glade_xml_get_widget (xml, "label_level_of_transparency");
-    const GtkWidget *spin_level_of_transparency = glade_xml_get_widget (xml, "spin_level_of_transparency");
+    const GtkWidget *label_level_of_transparency =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_level_of_transparency"));
+    const GtkWidget *spin_level_of_transparency =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_level_of_transparency"));
+
     const gdouble transparency_level = (gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_level_of_transparency)) / 100.0);
     gint i;
     tilda_term *tt;
@@ -996,10 +1023,14 @@ static void combo_animation_orientation_changed_cb (GtkWidget *w)
 static void check_animated_pulldown_toggled_cb (GtkWidget *w)
 {
     const gint status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *label_animation_delay = glade_xml_get_widget (xml, "label_animation_delay");
-    const GtkWidget *spin_animation_delay = glade_xml_get_widget (xml, "spin_animation_delay");
-    const GtkWidget *label_animation_orientation = glade_xml_get_widget (xml, "label_animation_orientation");
-    const GtkWidget *combo_animation_orientation = glade_xml_get_widget (xml, "combo_animation_orientation");
+    const GtkWidget *label_animation_delay =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_animation_delay"));
+    const GtkWidget *spin_animation_delay =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_animation_delay"));
+    const GtkWidget *label_animation_orientation =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_animation_orientation"));
+    const GtkWidget *combo_animation_orientation =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_animation_orientation"));
 
     gtk_widget_set_sensitive (GTK_WIDGET(label_animation_delay), status);
     gtk_widget_set_sensitive (GTK_WIDGET(spin_animation_delay), status);
@@ -1031,7 +1062,9 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
 static void check_use_image_for_background_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *button_background_image = glade_xml_get_widget (xml, "button_background_image");
+    const GtkWidget *button_background_image =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_background_image"));
+
     const gchar *image = config_getstr ("image");
     gint i;
     tilda_term *tt;
@@ -1071,8 +1104,10 @@ static void button_background_image_selection_changed_cb (GtkWidget *w)
 static void combo_colorschemes_changed_cb (GtkWidget *w)
 {
     const gint scheme = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    const GtkWidget *colorbutton_text = glade_xml_get_widget (xml, "colorbutton_text");
-    const GtkWidget *colorbutton_back = glade_xml_get_widget (xml, "colorbutton_back");
+    const GtkWidget *colorbutton_text =
+        GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
+    const GtkWidget *colorbutton_back =
+        GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
     GdkColor gdk_text, gdk_back;
     tilda_term *tt;
     gint i;
@@ -1123,7 +1158,9 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
 
 static void colorbutton_text_color_set_cb (GtkWidget *w)
 {
-    const GtkWidget *combo_colorschemes = glade_xml_get_widget (xml, "combo_colorschemes");
+    const GtkWidget *combo_colorschemes =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
+
     gint i;
     tilda_term *tt;
     GdkColor gdk_text_color;
@@ -1146,7 +1183,8 @@ static void colorbutton_text_color_set_cb (GtkWidget *w)
 
 static void colorbutton_back_color_set_cb (GtkWidget *w)
 {
-    const GtkWidget *combo_colorschemes = glade_xml_get_widget (xml, "combo_colorschemes");
+    const GtkWidget *combo_colorschemes =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
     gint i;
     tilda_term *tt;
     GdkColor gdk_back_color;
@@ -1179,9 +1217,11 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
     i = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     if (i < G_N_ELEMENTS (palette_schemes))
     {
-        color_button = glade_xml_get_widget (xml, "colorbutton_text");
+        color_button =
+            GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
         gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
-        color_button = glade_xml_get_widget (xml, "colorbutton_back");
+        color_button =
+            GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
         gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
 
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
@@ -1214,7 +1254,8 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
 
 static void colorbutton_palette_n_set_cb (GtkWidget *w)
 {
-    const GtkWidget *combo_palette_scheme = glade_xml_get_widget (xml, "combo_palette_scheme");
+    const GtkWidget *combo_palette_scheme =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
     const gchar* name = gtk_widget_get_name(w);
     gint i;
     tilda_term *tt;
@@ -1247,9 +1288,11 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     }
 
     /* Set terminal palette. */
-    color_button = glade_xml_get_widget (xml, "colorbutton_text");
+    color_button =
+        GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
     gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
-    color_button = glade_xml_get_widget (xml, "colorbutton_back");
+    color_button =
+        GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
     gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
 
     for (i=0; i<g_list_length (tw->terms); i++) 
@@ -1368,8 +1411,10 @@ static void combo_delete_binding_changed_cb (GtkWidget *w)
 
 static void button_reset_compatibility_options_clicked_cb (GtkWidget *w)
 {
-    const GtkWidget *combo_backspace_binding = glade_xml_get_widget (xml, "combo_backspace_binding");
-    const GtkWidget *combo_delete_binding = glade_xml_get_widget (xml, "combo_delete_binding");
+    const GtkWidget *combo_backspace_binding =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_backspace_binding"));
+    const GtkWidget *combo_delete_binding =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_delete_binding"));
 
     config_setint ("backspace_key", 0);
     config_setint ("delete_key", 1);
@@ -1380,28 +1425,48 @@ static void button_reset_compatibility_options_clicked_cb (GtkWidget *w)
 
 static void button_keybinding_clicked_cb (GtkWidget *w)
 {
-    const GtkWidget *wizard_notebook = glade_xml_get_widget (xml, "wizard_notebook");
-    const GtkWidget *wizard_window = glade_xml_get_widget (xml, "wizard_window");
+    const GtkWidget *wizard_notebook =
+        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_notebook"));
+    const GtkWidget *wizard_window =
+        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
 
     /* Get all my keybinding buttons. */
-    const GtkWidget *button_keybinding_pulldown =  glade_xml_get_widget (xml, "button_keybinding_pulldown");
-    const GtkWidget *button_keybinding_addtab =    glade_xml_get_widget (xml, "button_keybinding_addtab");
-    const GtkWidget *button_keybinding_closetab =  glade_xml_get_widget (xml, "button_keybinding_closetab"); 
-    const GtkWidget *button_keybinding_nexttab =   glade_xml_get_widget (xml, "button_keybinding_nexttab");
-    const GtkWidget *button_keybinding_prevtab =   glade_xml_get_widget (xml, "button_keybinding_prevtab");
-    const GtkWidget *button_keybinding_copy =      glade_xml_get_widget (xml, "button_keybinding_copy");
-    const GtkWidget *button_keybinding_paste =     glade_xml_get_widget (xml, "button_keybinding_paste");
-    const GtkWidget *button_keybinding_quit =      glade_xml_get_widget (xml, "button_keybinding_quit");
-    const GtkWidget *button_keybinding_gototab1 =  glade_xml_get_widget (xml, "button_keybinding_gototab1");
-    const GtkWidget *button_keybinding_gototab2 =  glade_xml_get_widget (xml, "button_keybinding_gototab2");
-    const GtkWidget *button_keybinding_gototab3 =  glade_xml_get_widget (xml, "button_keybinding_gototab3");
-    const GtkWidget *button_keybinding_gototab4 =  glade_xml_get_widget (xml, "button_keybinding_gototab4");
-    const GtkWidget *button_keybinding_gototab5 =  glade_xml_get_widget (xml, "button_keybinding_gototab5");
-    const GtkWidget *button_keybinding_gototab6 =  glade_xml_get_widget (xml, "button_keybinding_gototab6");
-    const GtkWidget *button_keybinding_gototab7 =  glade_xml_get_widget (xml, "button_keybinding_gototab7");
-    const GtkWidget *button_keybinding_gototab8 =  glade_xml_get_widget (xml, "button_keybinding_gototab8");
-    const GtkWidget *button_keybinding_gototab9 =  glade_xml_get_widget (xml, "button_keybinding_gototab9");
-    const GtkWidget *button_keybinding_gototab10 = glade_xml_get_widget (xml, "button_keybinding_gototab10");
+    const GtkWidget *button_keybinding_pulldown =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_pulldown"));
+    const GtkWidget *button_keybinding_addtab =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_addtab"));
+    const GtkWidget *button_keybinding_closetab =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_closetab"));
+    const GtkWidget *button_keybinding_nexttab =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_nexttab"));
+    const GtkWidget *button_keybinding_prevtab =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_prevtab"));
+    const GtkWidget *button_keybinding_copy =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_copy"));
+    const GtkWidget *button_keybinding_paste =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_paste"));
+    const GtkWidget *button_keybinding_quit =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_quit"));
+    const GtkWidget *button_keybinding_gototab1 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab1"));
+    const GtkWidget *button_keybinding_gototab2 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab2"));
+    const GtkWidget *button_keybinding_gototab3 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab3"));
+    const GtkWidget *button_keybinding_gototab4 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab4"));
+    const GtkWidget *button_keybinding_gototab5 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab5"));
+    const GtkWidget *button_keybinding_gototab6 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab6"));
+    const GtkWidget *button_keybinding_gototab7 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab7"));
+    const GtkWidget *button_keybinding_gototab8 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab8"));
+    const GtkWidget *button_keybinding_gototab9 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab9"));
+    const GtkWidget *button_keybinding_gototab10 =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab10"));
 
     /* Make the preferences window and buttons non-sensitive while we are grabbing keys. */
     gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), FALSE);
@@ -1479,19 +1544,32 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
 
 
 /* Defines to make the process of setting all of the initial values easier */
-#define WIDGET_SET_INSENSITIVE(GLADE_NAME) gtk_widget_set_sensitive (glade_xml_get_widget (xml, (GLADE_NAME)), FALSE)
-#define CHECK_BUTTON(GLADE_NAME,CFG_BOOL) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
-#define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX(glade_xml_get_widget (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
-#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define BUTTON_LABEL_FROM_CFG(GLADE_NAME,CFG_STR) gtk_button_set_label (GTK_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define SPIN_BUTTON(GLADE_NAME,CFG_INT) gtk_spin_button_set_value (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
-#define SPIN_BUTTON_SET_RANGE(GLADE_NAME,LOWER,UPPER) gtk_spin_button_set_range (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), (LOWER), (UPPER))
-#define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), (VALUE))
-#define FILE_BUTTON(GLADE_NAME,CFG_STR) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(glade_xml_get_widget (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON(glade_xml_get_widget (xml, (GLADE_NAME))), (COLOR))
-#define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive (glade_xml_get_widget (xml, (GLADE_NAME)), config_getbool ((CFG_BOOL)))
-#define SET_SENSITIVE_BY_CONFIG_NBOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive (glade_xml_get_widget (xml, (GLADE_NAME)), !config_getbool ((CFG_BOOL)))
+#define WIDGET_SET_INSENSITIVE(GLADE_NAME) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME)), FALSE))
+#define CHECK_BUTTON(GLADE_NAME,CFG_BOOL) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
+#define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
+#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define BUTTON_LABEL_FROM_CFG(GLADE_NAME,CFG_STR) gtk_button_set_label (GTK_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define SPIN_BUTTON(GLADE_NAME,CFG_INT) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
+#define SPIN_BUTTON_SET_RANGE(GLADE_NAME,LOWER,UPPER) gtk_spin_button_set_range (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (LOWER), (UPPER))
+#define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (VALUE))
+#define FILE_BUTTON(GLADE_NAME,CFG_STR) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (COLOR))
+#define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
+#define SET_SENSITIVE_BY_CONFIG_NBOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), !config_getbool ((CFG_BOOL)))
 
 /* Read all state from the config system, and put it into
  * its visual representation in the wizard. */
@@ -1626,7 +1704,8 @@ static void set_wizard_state_from_config ()
     BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab10", "gototab_10_key");
 }
 
-#define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect (glade_xml_get_widget (xml, (GLADE_WIDGET)), (SIGNAL_NAME), GTK_SIGNAL_FUNC((SIGNAL_HANDLER)), NULL)
+#define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
+    gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), GTK_SIGNAL_FUNC((SIGNAL_HANDLER)), NULL)
 
 /* Connect all signals in the wizard. This should be done after setting all
  * values, that way all of the signal handlers don't get called */
@@ -1737,7 +1816,8 @@ static void connect_wizard_signals ()
 static void init_palette_scheme_menu (void)
 {
     gint i;
-    GtkWidget *combo_palette = glade_xml_get_widget (xml, "combo_palette_scheme");
+    GtkWidget *combo_palette =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
 
     i = G_N_ELEMENTS (palette_schemes);
     while (i > 0)
@@ -1749,7 +1829,9 @@ static void init_palette_scheme_menu (void)
 static void update_palette_color_button(gint idx)
 {
     char *s = g_strdup_printf ("colorbutton_palette_%d", idx);
-    GtkWidget *color_button = glade_xml_get_widget (xml, s);
+    GtkWidget *color_button =
+        GTK_WIDGET (gtk_builder_get_object (xml, s));
+
     g_free (s);
 
     gtk_color_button_set_color (GTK_COLOR_BUTTON (color_button), &current_palette[idx]);
