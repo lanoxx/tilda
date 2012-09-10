@@ -1562,8 +1562,8 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_builder_get_object (xml, (GLADE_NAME))), (LOWER), (UPPER))
 #define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
     gtk_builder_get_object (xml, (GLADE_NAME))), (VALUE))
-#define FILE_BUTTON(GLADE_NAME,CFG_STR) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define FILE_BUTTON(GLADE_NAME, FILENAME) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), FILENAME)
 #define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON( \
     gtk_builder_get_object (xml, (GLADE_NAME))), (COLOR))
 #define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
@@ -1640,7 +1640,11 @@ static void set_wizard_state_from_config ()
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
     COMBO_BOX ("combo_animation_orientation", "animation_orientation");
     CHECK_BUTTON ("check_use_image_for_background", "use_image");
-    FILE_BUTTON ("button_background_image", "image");
+
+    char* filename = config_getstr ("image");
+    if(filename != NULL) {
+        FILE_BUTTON ("button_background_image", filename);
+    }
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_animation_delay","animation");
