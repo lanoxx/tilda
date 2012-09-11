@@ -73,7 +73,7 @@
 #endif
 
 /* A macro that calls perror() with a consistent header string */
-#define TILDA_PERROR() perror("tilda")
+#define TILDA_PERROR() perror("Tilda encountered an error")
 
 
 #endif /* DEBUG_H */
