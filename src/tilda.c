@@ -577,17 +577,8 @@ int main (int argc, char *argv[])
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
 
-    if (!g_thread_supported ())
-        g_thread_init(NULL);
-
     /* Initialize GTK and libglade */
     gtk_init (&argc, &argv);
-
-    /*
-     * Not needed with the new glade:
-     * ====================================
-     * glade_init ();
-     */
 
     /* create new tilda_window */
     tw = tilda_window_init (config_file, lock.instance);
@@ -621,16 +612,13 @@ int main (int argc, char *argv[])
         need_wizard = TRUE;
     }
 
-    /* Whew! We're finally all set up and ready to run GTK ... */
-    gtk_main();
-
     /* Show the wizard if we need to.
      *
      * Note that the key will be bound upon exiting the wizard */
-    if (need_wizard)
+    if (need_wizard) {
+        g_print ("Starting the wizard to configure tilda options.");
         wizard (tw);
-    else
-    {
+    } else {
         gint ret = tilda_keygrabber_bind (config_getstr ("key"), tw);
 
         if (!ret)
@@ -653,6 +641,11 @@ int main (int argc, char *argv[])
     {
         pull (tw, PULL_DOWN);
     }
+
+    g_print ("Tilda has started. Press %s to pull down the window.\n",
+        config_getstr ("key"));
+    /* Whew! We're finally all set up and ready to run GTK ... */
+    gtk_main();
 
     /* Ok, we're at the end of our run. Time to clean up ... */
     tilda_window_free (tw);

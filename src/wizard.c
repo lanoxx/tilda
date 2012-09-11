@@ -184,8 +184,9 @@ gint wizard (tilda_window *ltw)
 #endif
 
     if (!gtk_builder_add_from_file (xml, glade_file, &error)) {
-        g_warning ("Couldn't load builder file: %s", error->message);
+        g_error ("Couldn't load builder file: %s", error->message);
         g_error_free (error);
+        return EXIT_FAILURE;
     }
 
     if (!xml) {
@@ -223,14 +224,12 @@ gint wizard (tilda_window *ltw)
     window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
+
     gtk_widget_show_all (wizard_window);
     g_free (window_title);
     
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
-
-    /* Block here until the wizard is closed successfully */
-    gtk_main ();
 
     return 0;
 }
@@ -379,9 +378,6 @@ static void wizard_closed ()
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
     config_write (tw->config_file);
-
-    /* This exits the wizard */
-    gtk_main_quit ();
     
     /* Enables auto hide */
     tw->disable_auto_hide = FALSE;

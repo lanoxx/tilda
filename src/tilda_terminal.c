@@ -428,6 +428,13 @@ launch_default_shell:
     if (default_command == NULL)
         default_command = "/bin/sh";
 
+    /* We need to create a NULL terminated list of arguments.
+     * The first item is the command to execute in the shell, in this
+     * case there are no further arguments being passed. */
+    argv = malloc(2 * sizeof(void *));
+    argv[0] = default_command;
+    argv[1] = NULL;
+
     ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
         VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
         config_getstr ("working_dir"), /* const char *working_directory */
@@ -439,6 +446,8 @@ launch_default_shell:
         NULL, /* GPid *child_pid */
         NULL  /* GError **error */
         );
+
+    g_free (argv);
 
     if (ret == -1)
     {
