@@ -1866,7 +1866,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBox" id="combo_palette_scheme">
+                                  <object class="GtkComboBoxText" id="combo_palette_scheme">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="model">model6</property>

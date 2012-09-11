@@ -39,20 +39,20 @@ static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
 {
     GdkScreen *screen;
-    GdkColormap *colormap;
+    GdkVisual *visual;
 
     screen = gtk_widget_get_screen (GTK_WIDGET (tw->window));
-    colormap = gdk_screen_get_rgba_colormap (screen);
-    if (colormap != NULL && gdk_screen_is_composited (screen))
-    {
+    visual = gdk_screen_get_rgba_visual (screen);
+    if (visual == NULL) {
+        visual = gdk_screen_get_system_visual (screen);
+    }
+    if (visual != NULL && gdk_screen_is_composited (screen)) {
         /* Set RGBA colormap if possible so VTE can use real alpha
          * channels for transparency. */
 
-        gtk_widget_set_colormap(GTK_WIDGET (tw->window), colormap);
+        gtk_widget_set_visual (GTK_WIDGET (tw->window), visual);
         tw->have_argb_visual = TRUE;
-    }
-    else
-    {
+    } else {
         tw->have_argb_visual = FALSE;
     }
 }
@@ -187,8 +187,10 @@ static void focus_term (GtkWidget *widget, gpointer data)
     GtkWidget *n = GTK_WIDGET (tw->notebook);
 
     box = gtk_notebook_get_nth_page (GTK_NOTEBOOK(n), gtk_notebook_get_current_page(GTK_NOTEBOOK(n)));
-    list = gtk_container_get_children (GTK_CONTAINER(box));
-    gtk_widget_grab_focus (list->data);
+    if (box != NULL) {
+        list = gtk_container_get_children (GTK_CONTAINER(box));
+        gtk_widget_grab_focus (list->data);
+    }
 }
 
 static gboolean auto_hide_tick(gpointer data)
@@ -494,11 +496,11 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     }
 
     /* Connect signal handlers */
-    g_signal_connect (G_OBJECT(tw->window), "delete_event", GTK_SIGNAL_FUNC(gtk_main_quit), tw);
-    g_signal_connect (G_OBJECT(tw->window), "show", GTK_SIGNAL_FUNC(focus_term), tw);
-    g_signal_connect (G_OBJECT(tw->window), "focus-out-event", GTK_SIGNAL_FUNC(focus_out_event_cb), tw);
-    g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", GTK_SIGNAL_FUNC(mouse_enter), tw);
-    g_signal_connect (G_OBJECT(tw->window), "leave-notify-event", GTK_SIGNAL_FUNC(mouse_leave), tw);
+    g_signal_connect (G_OBJECT(tw->window), "delete_event", G_CALLBACK (gtk_main_quit), tw);
+    g_signal_connect (G_OBJECT(tw->window), "show", G_CALLBACK (focus_term), tw);
+    g_signal_connect (G_OBJECT(tw->window), "focus-out-event", G_CALLBACK (focus_out_event_cb), tw);
+    g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", G_CALLBACK (mouse_enter), tw);
+    g_signal_connect (G_OBJECT(tw->window), "leave-notify-event", G_CALLBACK (mouse_leave), tw);
 
     /* Add the notebook to the window */
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
@@ -571,7 +573,6 @@ gint tilda_window_add_tab (tilda_window *tw)
     label = gtk_label_new ("Tilda");
     /* Strangely enough, prepend puts pages on the end */
     index = gtk_notebook_prepend_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
-    gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE, TRUE, GTK_PACK_END);
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
 	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 

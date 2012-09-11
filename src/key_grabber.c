@@ -123,9 +123,9 @@ void tilda_window_set_active (tilda_window *tw)
     DEBUG_FUNCTION ("tilda_window_set_active");
     DEBUG_ASSERT (tw != NULL);
 
-    Display *x11_display = GDK_WINDOW_XDISPLAY( tw->window->window );
-    Window x11_window = GDK_WINDOW_XWINDOW( tw->window->window );
-    Window x11_root_window = GDK_WINDOW_XWINDOW ( gtk_widget_get_root_window (tw->window) );
+    Display *x11_display = GDK_WINDOW_XDISPLAY (gtk_widget_get_window (tw->window) );
+    Window x11_window = GDK_WINDOW_XID (gtk_widget_get_window (tw->window) );
+    Window x11_root_window = GDK_WINDOW_XID ( gtk_widget_get_root_window (tw->window) );
     GdkScreen *screen = gtk_widget_get_screen (tw->window);
 
     XEvent event;
@@ -190,7 +190,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
          * Overriding the user time here seems to work a lot better than calling
          * gtk_window_present_with_time() here, or at the end of the function. I have
          * no idea why, they should do the same thing. */
-        gdk_x11_window_set_user_time (GTK_WIDGET(tw->window)->window,
+        gdk_x11_window_set_user_time (gtk_widget_get_window (tw->window),
                                       tomboy_keybinder_get_current_event_time());
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         gtk_widget_show (GTK_WIDGET(tw->window));
