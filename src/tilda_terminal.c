@@ -393,12 +393,16 @@ static gint start_shell (struct tilda_term_ *tt)
             goto launch_default_shell;
         }
 
+        char **envv = malloc(2*sizeof(void *));
+        envv[0] = getenv("PATH");
+        envv[1] = NULL;
+
         ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
             VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
             config_getstr ("working_dir"), /* const char *working_directory */
             argv, /* char **argv */
-            NULL, /* char **envv */
-            0,    /* GSpawnFlags spawn_flags */
+            envv, /* char **envv */
+            G_SPAWN_SEARCH_PATH,    /* GSpawnFlags spawn_flags */
             NULL, /* GSpawnChildSetupFunc child_setup */
             NULL, /* gpointer child_setup_data */
             NULL, /* GPid *child_pid */
@@ -406,6 +410,7 @@ static gint start_shell (struct tilda_term_ *tt)
             );
 
         g_strfreev (argv);
+        g_strfreev (envv);
 
         /* Check for error */
         if (ret == -1)
