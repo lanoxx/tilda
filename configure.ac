@@ -59,10 +59,8 @@ esac
 
 # Checks for libraries.
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.0.0])
-PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
-PKG_CHECK_MODULES([LIBGLADE], [libglade-2.0])
-PKG_CHECK_MODULES([VTE], [vte])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0.0])
+PKG_CHECK_MODULES([VTE], [vte-2.90])
 PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 
 # Checks for header files.

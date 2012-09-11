@@ -26,7 +26,6 @@
 #include <callback_func.h>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h> /* VTE_* constants, mostly */
 #include <stdio.h>
@@ -448,7 +447,7 @@ static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidge
 #endif
 
         /* Disconnect the key grabber */
-        g_signal_handlers_disconnect_by_func (GTK_OBJECT(dialog), GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
+        g_signal_handlers_disconnect_by_func (G_OBJECT(dialog), G_CALLBACK (wizard_dlg_key_grab), w);
 
 	/* Destroy the dialog */
         gtk_widget_destroy (dialog);
@@ -518,9 +517,9 @@ static void window_title_change_all ()
 
 static void set_spin_value_while_blocking_callback (GtkSpinButton *spin, void (*callback)(GtkWidget *w), gint new_val)
 {
-    g_signal_handlers_block_by_func (spin, GTK_SIGNAL_FUNC(*callback), NULL);
+    g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), NULL);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(spin), new_val);
-    g_signal_handlers_unblock_by_func (spin, GTK_SIGNAL_FUNC(*callback), NULL);
+    g_signal_handlers_unblock_by_func (spin, G_CALLBACK(*callback), NULL);
 }
 
 /******************************************************************************/
@@ -1498,7 +1497,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
                               "Enter keyboard shortcut");
 
     /* Connect the key grabber to the dialog */
-    g_signal_connect (GTK_OBJECT(dialog), "key_press_event", GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
+    g_signal_connect (G_OBJECT(dialog), "key_press_event", G_CALLBACK(wizard_dlg_key_grab), w);
  
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -1532,7 +1531,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
        Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
     if (response != -1)
     {
-        g_signal_handlers_disconnect_by_func (GTK_OBJECT(dialog), GTK_SIGNAL_FUNC(wizard_dlg_key_grab), w);
+        g_signal_handlers_disconnect_by_func (G_OBJECT(dialog), G_CALLBACK(wizard_dlg_key_grab), w);
         gtk_widget_destroy (dialog);
     }
 
@@ -1709,7 +1708,7 @@ static void set_wizard_state_from_config ()
 }
 
 #define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
-    gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), GTK_SIGNAL_FUNC((SIGNAL_HANDLER)), NULL)
+    gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), G_CALLBACK((SIGNAL_HANDLER)), NULL)
 
 /* Connect all signals in the wizard. This should be done after setting all
  * values, that way all of the signal handlers don't get called */
@@ -1824,9 +1823,8 @@ static void init_palette_scheme_menu (void)
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
 
     i = G_N_ELEMENTS (palette_schemes);
-    while (i > 0)
-    {
-        gtk_combo_box_prepend_text (GTK_COMBO_BOX (combo_palette), _(palette_schemes[--i].name));
+    while (i > 0) {
+        gtk_combo_box_text_prepend_text (GTK_COMBO_BOX_TEXT (combo_palette), _(palette_schemes[--i].name));
     }
 }
 
