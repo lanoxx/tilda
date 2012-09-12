@@ -175,6 +175,21 @@ is_hyper (const gchar *string)
 	  (string[6] == '>'));
 }
 
+static inline gboolean
+is_primary (const gchar *string)
+{
+  return ((string[0] == '<') &&
+    (string[1] == 'p' || string[1] == 'P') &&
+    (string[2] == 'r' || string[2] == 'R') &&
+    (string[3] == 'i' || string[3] == 'I') &&
+    (string[4] == 'm' || string[4] == 'M') &&
+    (string[5] == 'a' || string[5] == 'A') &&
+    (string[6] == 'r' || string[6] == 'R') &&
+    (string[7] == 'y' || string[7] == 'Y') &&
+    (string[8] == '>'));
+}
+
+
 /**
  * egg_accelerator_parse_virtual:
  * @accelerator:      string representing an accelerator
@@ -298,17 +313,23 @@ egg_accelerator_parse_virtual (const gchar            *accelerator,
 	      len -= 7;
 	      mods |= EGG_VIRTUAL_SUPER_MASK;
 	    }
-	  else
+          else if (len >= 9 && is_primary (accelerator))
+        {
+          accelerator += 9;
+          len -= 9;
+          mods |= EGG_VIRTUAL_CONTROL_MASK;
+        }
+	      else
 	    {
 	      gchar last_ch;
 	      
 	      last_ch = *accelerator;
 	      while (last_ch && last_ch != '>')
-		{
-		  last_ch = *accelerator;
-		  accelerator += 1;
-		  len -= 1;
-		}
+            {
+		      last_ch = *accelerator;
+		      accelerator += 1;
+		      len -= 1;
+		    }
 	    }
 	}
       else
