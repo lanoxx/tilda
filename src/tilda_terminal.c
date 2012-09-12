@@ -410,7 +410,7 @@ static gint start_shell (struct tilda_term_ *tt)
             );
 
         g_strfreev (argv);
-        g_strfreev (envv);
+        g_free (envv);
 
         /* Check for error */
         if (ret == -1)
