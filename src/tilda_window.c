@@ -25,7 +25,6 @@
 #include <tilda_window.h>
 #include <tilda_terminal.h>
 #include <key_grabber.h>
-#include <translation.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +32,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib-object.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <vte/vte.h>
 
 static void

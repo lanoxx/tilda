@@ -23,7 +23,8 @@
 #include <key_grabber.h>
 #include <tilda.h>
 #include <xerror.h>
-#include <translation.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <configsys.h>
 #include <tomboykeybinder.h>
 

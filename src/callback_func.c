@@ -21,9 +21,9 @@
 #include <debug.h>
 #include <configsys.h>
 #include <callback_func.h>
-#include <translation.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 #include <stdlib.h> /* exit */

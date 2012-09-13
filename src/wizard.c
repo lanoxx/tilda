@@ -21,12 +21,13 @@
 #include <tilda.h>
 #include <wizard.h>
 #include <key_grabber.h>
-#include <translation.h>
 #include <configsys.h>
 #include <callback_func.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <vte/vte.h> /* VTE_* constants, mostly */
 #include <stdio.h>
 #include <sys/types.h>
