@@ -22,9 +22,9 @@
 
 #include <xerror.h>
 #include <debug.h>
-#include <translation.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <X11/Xlib.h>
 
 static gboolean xerror_ignore = FALSE;

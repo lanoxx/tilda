@@ -14,8 +14,9 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 AC_CONFIG_SRCDIR([src/tilda.c])
 AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 
+IT_PROG_INTLTOOL([0.41.0])
+AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.16.1])
 
 # Add optional debugging features
 AC_ARG_ENABLE([maintainer-flags],
@@ -47,7 +48,7 @@ fi
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_PROG_LEX
+#AC_PROG_LEX
 
 # Notice if there are no versions of lex installed
 # and error out of the configure.
@@ -67,7 +68,7 @@ PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
-AC_CHECK_HEADERS([libintl.h locale.h])
+#AC_CHECK_HEADERS([libintl.h locale.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

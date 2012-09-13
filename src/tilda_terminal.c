@@ -22,7 +22,6 @@
 #include <tilda_terminal.h>
 #include <callback_func.h>
 #include <configsys.h>
-#include <translation.h>
 #include <wizard.h> /* wizard */
 #include <gtk/gtk.h>
 
@@ -30,6 +29,8 @@
 #include <stdlib.h> /* malloc */
 #include <gtk/gtk.h>
 #include <glib-object.h>
+#include <glib.h>
+#include <glib/gi18n.h>
 #include <vte/vte.h>
 #include <string.h>
 
