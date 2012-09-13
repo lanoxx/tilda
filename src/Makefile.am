@@ -16,7 +16,6 @@ tilda_SOURCES = callback_func.h callback_func.c \
 		debug.h \
 		eggaccelerators.h eggaccelerators.c \
 		gettext.h \
-		key_converter.h key_converter.l \
 		key_grabber.h key_grabber.c \
 		tilda.h tilda.c \
 		tilda_terminal.h tilda_terminal.c \
