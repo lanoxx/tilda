@@ -11,8 +11,6 @@
 
 #include <configsys.h>
 #include <translation.h>
-#include <key_converter.h>
-
 
 static cfg_t *tc;
 
@@ -126,8 +124,6 @@ static cfg_opt_t config_opts[] = {
     CFG_END()
 };
 
-static gboolean config_writing_disabled = FALSE;
-
 /* Define these here, so that we can enable a non-threadsafe version
  * without changing the code below. */
 #ifndef NO_THREADSAFE
@@ -143,7 +139,6 @@ static gboolean config_writing_disabled = FALSE;
 #define CONFIGS_SAME   0
 #define CONFIG1_NEWER  1
 
-static void try_to_update_config_file (const gchar *config_file);
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2);
 
 
@@ -159,29 +154,25 @@ gint config_init (const gchar *config_file)
 
 	tc = cfg_init (config_opts, 0);
 
-	/* I know that this is racy, but I can't think of a good
-	 * way to fix it ... */
-	if (g_file_test (config_file, G_FILE_TEST_IS_REGULAR)) {
-		/* Read the file, and try to upgrade it */
+	if (g_file_test (config_file,
+        G_FILE_TEST_IS_REGULAR))
+    {
+		/* Read in the existing configuration options */
 		ret = cfg_parse (tc, config_file);
 
-		if (ret == CFG_SUCCESS)
-			try_to_update_config_file (config_file);
-		else {
+		if (ret == CFG_PARSE_ERROR) {
 			DEBUG_ERROR ("Problem parsing config");
-			g_printerr (_("Problem parsing config file\n"));
+			g_printerr (_("Problem when opening config file\n"));
 			return 1;
-		}
+		} else if (ret == CFG_PARSE_ERROR) {
+			DEBUG_ERROR ("Problem parsing config");
+			g_printerr (_("Problem while parsing config file\n"));
+        } else if (ret != CFG_SUCCESS) {
+            DEBUG_ERROR ("Problem parsing config.");
+			g_printerr (_("An unexpected error occured while "
+                "parsing the config file\n"));
+        }
 	}
-	/* This is commented out because we don't want to do this. Basically, there
-	 * is no need to write the config until we have shown the wizard, which is
-	 * automatically shown on the first run. */
-#if 0
-	else {
-		/* Write out the defaults */
-		config_write (config_file);
-	}
-#endif
 
 	return 0;
 }
@@ -292,10 +283,6 @@ gint config_write (const gchar *config_file)
     gint ret = 0;
     FILE *fp;
 
-    /* Check to see if writing is disabled. Leave early if it is. */
-    if (config_writing_disabled)
-        return 1;
-
     fp = fopen(config_file, "w");
 
     if (fp != NULL)
@@ -386,91 +373,3 @@ static gboolean compare_config_versions (const gchar *config1, const gchar *conf
 
     return CONFIGS_SAME;
 }
-
-/*
- * Compare config file versions and see if we know about a new version.
- *
- * If we have a version newer than what we know about, we need to stop
- * anything from writing to the config file.
- *
- * If we are at the same config version, we're done, so exit early.
- *
- * If the config is older than we are now, update it and then write
- * it to disk.
- */
-static void try_to_update_config_file (const gchar *config_file)
-{
-    DEBUG_FUNCTION ("try_to_update_config_file");
-    DEBUG_ASSERT (config_file != NULL);
-
-    gboolean changed = FALSE;
-    gchar *current_config = config_getstr ("tilda_config_version");
-
-    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIGS_SAME)
-        return; // Same version as ourselves, we're done!
-
-    if (compare_config_versions (current_config, PACKAGE_VERSION) == CONFIG1_NEWER)
-    {
-        // We have a version newer than ourselves!
-        // Disable writing to the config for safety.
-        config_writing_disabled = TRUE;
-        return; // Out early, since we won't be able to update anyway!
-    }
-
-    /* NOTE: Start with the oldest config version first, and work our way up to the
-     * NOTE: newest that we support, updating our current version each time.
-     *
-     * NOTE: You may need to re-read the config each time! Probably not though,
-     * NOTE: since you should be updating VALUES not names directly in the config.
-     * NOTE: Try to rely on libconfuse to generate the configs :) */
-
-    /* Below is a template for creating new entries in the updater. If you ever
-     * change anything between versions, copy this, replacing YOUR_VERSION
-     * with the new version that you are making. */
-#if 0
-    if (compare_config_versions (current_config, YOUR_VERSION) == CONFIG1_OLDER)
-    {
-        // TODO: Add things here to migrate from whatever we are to YOUR_VERSION
-        current_config = YOUR_VERSION;
-        changed = TRUE;
-    }
-#endif
-
-    if (compare_config_versions (current_config, "0.09.4") == CONFIG1_OLDER)
-    {
-        /* Nothing to update here. All we did was add an option, there is no
-         * need to rewrite the config file here, since the writer at the end
-         * will automatically add the default value of the new option. */
-        current_config = "0.09.4";
-        changed = TRUE;
-    }
-
-    if (compare_config_versions (current_config, "0.9.5") == CONFIG1_OLDER)
-    {
-        char *old_key;
-        char *new_key;
-
-        old_key = config_getstr ("key");
-        new_key = upgrade_key_to_095 (old_key);
-
-        config_setstr ("key", new_key);
-        free (new_key);
-
-        current_config = "0.9.5";
-        changed = TRUE;
-    }
-
-    /* We've run through all the updates, so set our config file version to the
-     * version we're at now, then write out the config file.
-     *
-     * NOTE: this only happens if we upgraded the config, due to some early-exit
-     * logic above.
-     */
-
-    if (changed)
-    {
-        config_setstr ("tilda_config_version", current_config);
-        config_write (config_file);
-    }
-}
-
