@@ -14,13 +14,20 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 AC_CONFIG_SRCDIR([src/tilda.c])
 AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 
+# This will initialize the internationalization
+# capabilities of glib (glib/gi18n.h) and gettext
 IT_PROG_INTLTOOL([0.41.0])
 AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
 
-# Add optional debugging features
+# This registeres the option '--enable-maintainer-flags' to the ./configure script
+# If this option is set then it activates both the '--enable-debug' and '--enable-debug-functions'
+# options that are defined below. It also activates several flags to the compile such that it
+# will show more warnings and errors to indicate problems in the source code.
 AC_ARG_ENABLE([maintainer-flags],
 		[AS_HELP_STRING([--enable-maintainer-flags],[enable extra debugging (don't use as user)])])
+
+#' This comment fixes syntax highlighting
 
 if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
@@ -29,6 +36,9 @@ if test "x$enable_maintainer_flags" = "xyes"; then
 	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations"
 fi
 
+# This registers the option '--enable-debug' in the ./configure script
+# If this option is set, then the the options -g and -ggdb will be
+# passed to the compiler.
 AC_ARG_ENABLE([debug], [AS_HELP_STRING([--enable-debug],[enable extra debugging output])])
 
 if test "x$enable_debug" = "xyes"; then
@@ -36,27 +46,18 @@ if test "x$enable_debug" = "xyes"; then
 	CFLAGS="$CFLAGS -g -ggdb"
 fi
 
+# This registers the option '--debug-functions' in the ./configure script
+# If this option is set, then the name of each entered function will be
+# printed on the shell.
 AC_ARG_ENABLE([debug-functions], [AS_HELP_STRING([--enable-debug-functions],[enable function call tracing])])
 
 if test "x$enable_debug_functions" = "xyes"; then
 	AC_DEFINE([DEBUG_FUNCTIONS], [1], [Enable function call tracing])
 fi
 
-# Needed for libglade signal autoconnect
-# LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
-
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
-#AC_PROG_LEX
-
-# Notice if there are no versions of lex installed
-# and error out of the configure.
-case $LEX in
-	:)
-		AC_MSG_ERROR([No lex program found])
-		;;
-esac
 
 # Checks for libraries.
 PKG_PROG_PKG_CONFIG
@@ -68,7 +69,6 @@ PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
-#AC_CHECK_HEADERS([libintl.h locale.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
