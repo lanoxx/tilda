@@ -557,7 +557,10 @@ int main (int argc, char *argv[])
 
 #if ENABLE_NLS
     /* Gettext Initialization */
-    setlocale (LC_ALL, "");
+    char* locale = setlocale (LC_ALL, "");
+    if(!locale) {
+        g_warning ("Could not setup locale.");
+    }
     bindtextdomain (PACKAGE, LOCALEDIR);
     bind_textdomain_codeset (PACKAGE, "UTF-8");
     textdomain (PACKAGE);
