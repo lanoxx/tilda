@@ -17,7 +17,7 @@ AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 # This will initialize the internationalization
 # capabilities of glib (glib/gi18n.h) and gettext
 IT_PROG_INTLTOOL([0.41.0])
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 # This registeres the option '--enable-maintainer-flags' to the ./configure script
