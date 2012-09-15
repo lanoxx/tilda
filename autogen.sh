@@ -32,7 +32,12 @@ echo;
 
 # Autoconf will call run autopoint, aclocal, autoconf, autoheader and automake
 # to setup and configure the build environment
-autoreconf --verbose --install --symlink
+autoreconf --verbose --install --symlink || {
+    echo;
+    echo "autoreconf has encountered an error."
+    echo;
+    exit $?
+}
 # Afterwards we invoke the configure skript, "$@" will contain the arguments that
 # were passed to this skript.
 
