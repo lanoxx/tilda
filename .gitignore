@@ -39,4 +39,5 @@ tilda-config.h.in
 tilda-config.h.in~
 tilda.desktop
 ylwrap
-
+ABOUT-NLS
+INSTALL
