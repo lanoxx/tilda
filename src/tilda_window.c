@@ -443,6 +443,9 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     DEBUG_ASSERT (instance >= 0);
 
     tilda_window *tw;
+    GtkCssProvider *provider;
+    GdkDisplay *display;
+    GdkScreen *screen;
 
     tw = g_malloc (sizeof(tilda_window));
 
@@ -492,6 +495,34 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
     tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
+
+    provider = gtk_css_provider_new ();
+    display = gdk_display_get_default ();
+    screen = gdk_display_get_default_screen (display);
+    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    if(config_getbool("notebook_border")) {
+        /**
+         * It was easier to create the border through a padding than by setting
+         * the border property, because then the background color is the same
+         * as the rest of the notebook.
+         */
+        gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
+                                 " .notebook {\n"
+                                 "   padding: 3px;\n"
+                                 "   border-radius: 3px;\n"
+                                 "}\n", -1, NULL);
+    } else {
+        /**
+         * Calling gtk_notebook_set_show_border is not enough. We need to
+         * disable the border explicitly by using CSS.
+         */
+        gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
+                                 " .notebook {\n"
+                                 "   border: none;\n"
+                                 "}\n", -1, NULL);
+    }
+
+    g_object_unref (provider);
 
     /* Create the linked list of terminals */
     tw->terms = NULL;
