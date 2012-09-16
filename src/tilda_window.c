@@ -142,13 +142,14 @@ static gint next_tab (tilda_window *tw)
     int num_pages;
     int current_page;
 
+    /* If we are on the last page, go to first page */
     num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
     current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
 
-    if (num_pages != (current_page + num_pages))
-      gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
+    if ((num_pages - 1) == current_page)
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0);
     else
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), num_pages-1);
+      gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
 
     // It worked. Having this return true makes the callback not carry the
     // keystroke into the vte terminal widget.
@@ -166,10 +167,10 @@ static gint prev_tab (tilda_window *tw)
     num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
     current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
 
-    if ((num_pages-1) != current_page)
-      gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
+    if (current_page == 0)
+        gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), (num_pages -1));
     else
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0);
+      gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
 
     // It worked. Having this return true makes the callback not carry the
     // keystroke into the vte terminal widget.
