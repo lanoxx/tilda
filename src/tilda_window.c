@@ -417,6 +417,13 @@ static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
     return 0;
 }
 
+static gboolean delete_event_callback (GtkWidget *widget,
+                                GdkEvent  *event,
+                                gpointer   user_data)
+{
+    gtk_main_quit ();
+}
+
 /**
  * tilda_window_init ()
  *
@@ -497,7 +504,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     }
 
     /* Connect signal handlers */
-    g_signal_connect (G_OBJECT(tw->window), "delete_event", G_CALLBACK (gtk_main_quit), tw);
+    g_signal_connect (G_OBJECT(tw->window), "delete-event", G_CALLBACK (delete_event_callback), tw);
     g_signal_connect (G_OBJECT(tw->window), "show", G_CALLBACK (focus_term), tw);
     g_signal_connect (G_OBJECT(tw->window), "focus-out-event", G_CALLBACK (focus_out_event_cb), tw);
     g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", G_CALLBACK (mouse_enter), tw);
@@ -624,8 +631,16 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
 
     /* With no pages left, it's time to leave the program */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 1)
-        gtk_main_quit ();
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 1) {
+        /**
+         * It is necessary to check the main_level because if CTRL_C was used
+         * or the "Quit" option from the context menu then gtk_main_quit has
+         * already been called and cannot call it again.
+         */
+        if(gtk_main_level () > 0) {
+            gtk_main_quit ();
+        }
+    }
 
     /* Remove the tilda_term from the list of terminals */
     tw->terms = g_list_remove (tw->terms, tt);
