@@ -32,7 +32,7 @@ echo;
 
 # Autoconf will call run autopoint, aclocal, autoconf, autoheader and automake
 # to setup and configure the build environment
-autoreconf --verbose --install --symlink || {
+autoreconf --verbose --install --symlink --force || {
     echo;
     echo "autoreconf has encountered an error."
     echo;
