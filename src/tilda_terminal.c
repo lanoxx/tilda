@@ -94,7 +94,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     term->vte_term = vte_terminal_new ();
 
     /* Create the scrollbar for the terminal */
-    term->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_HORIZONTAL,
+    term->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL,
         gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (VTE_TERMINAL(term->vte_term))));
 
     /* Set properties of the terminal */
