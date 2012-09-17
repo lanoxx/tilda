@@ -445,8 +445,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
 
     tilda_window *tw;
     GtkCssProvider *provider;
-    GdkDisplay *display;
-    GdkScreen *screen;
+    GtkStyleContext *style_context;
 
     tw = g_malloc (sizeof(tilda_window));
 
@@ -498,9 +497,11 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
 
     provider = gtk_css_provider_new ();
-    display = gdk_display_get_default ();
-    screen = gdk_display_get_default_screen (display);
-    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    style_context = gtk_widget_get_style_context(tw->notebook);
+    gtk_style_context_add_provider (style_context,
+        GTK_STYLE_PROVIDER(provider),
+        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
     if(config_getbool("notebook_border")) {
         /**
          * It was easier to create the border through a padding than by setting
@@ -509,7 +510,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
          */
         gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
                                  " .notebook {\n"
-                                 "   padding: 3px;\n"
                                  "   border-radius: 3px;\n"
                                  "}\n", -1, NULL);
     } else {
@@ -518,9 +518,12 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
          * disable the border explicitly by using CSS.
          */
         gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
-                                 " .notebook {\n"
-                                 "   border: none;\n"
-                                 "}\n", -1, NULL);
+                                " .notebook {\n"
+                                "   border: none;\n"
+                                "   padding-bottom: 0px;\n"
+                                "   padding-left: 0px;\n"
+                                "   padding-right: 0px;\n"
+                                "}\n", -1, NULL);
     }
 
     g_object_unref (provider);
