@@ -491,9 +491,21 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     /* Create the notebook */
     tw->notebook = gtk_notebook_new ();
 
-    /* Set up all notebook properties */
+    /* Here we setup the CSS settings for the GtkNotebook.
+     * If the option "Show notebook border" in the preferences is not
+     * checked. Then we disable the border. Otherwise nothing is changed.
+     *
+     * Depending on the theme it might be necessary to set different
+     * CSS rules, so it is not possible to find a solution that fits
+     * everyone. The following configuration works well with the GNOME
+     * default theme Adwaita, but for example has problems under Ubuntu.
+     * Note that for bigger modifications the user can create a style.css
+     * file in tildas config directory, which will be parsed by the
+     * load_custom_css_file() function on start up.
+     */
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
-    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), config_getbool("notebook_border"));
+    gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook),
+        config_getbool("notebook_border"));
     tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
 
     provider = gtk_css_provider_new ();
@@ -502,17 +514,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
         GTK_STYLE_PROVIDER(provider),
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    if(config_getbool("notebook_border")) {
-        /**
-         * It was easier to create the border through a padding than by setting
-         * the border property, because then the background color is the same
-         * as the rest of the notebook.
-         */
-        gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
-                                 " .notebook {\n"
-                                 "   border-radius: 3px;\n"
-                                 "}\n", -1, NULL);
-    } else {
+    if(!config_getbool("notebook_border")) {
         /**
          * Calling gtk_notebook_set_show_border is not enough. We need to
          * disable the border explicitly by using CSS.
@@ -520,9 +522,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
         gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
                                 " .notebook {\n"
                                 "   border: none;\n"
-                                "   padding-bottom: 0px;\n"
-                                "   padding-left: 0px;\n"
-                                "   padding-right: 0px;\n"
                                 "}\n", -1, NULL);
     }
 

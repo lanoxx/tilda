@@ -527,6 +527,26 @@ static int migrate_config_files(char *old_config_path)
     g_free(new_config_dir);
 }
 
+static void load_custom_css_file () {
+    GtkCssProvider *provider;
+    char* cssfilename = g_build_filename(
+        g_get_user_config_dir (), "tilda", "style.css", NULL);
+    if (g_file_test (cssfilename, G_FILE_TEST_EXISTS)) {
+        g_print (_("Found style.css in the user config directory, "
+            "applying user css stlye.\n"));
+        provider = gtk_css_provider_new ();
+        gtk_style_context_add_provider_for_screen (
+            gdk_screen_get_default(),
+            GTK_STYLE_PROVIDER(provider),
+            GTK_STYLE_PROVIDER_PRIORITY_USER
+        );
+        GFile *cssfile = g_file_new_for_path (cssfilename);
+        gtk_css_provider_load_from_file (GTK_CSS_PROVIDER (provider),
+            cssfile, NULL);
+        g_object_unref (cssfile);
+    }
+}
+
 int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("main");
@@ -537,6 +557,7 @@ int main (int argc, char *argv[])
     struct lock_info lock;
     gboolean need_wizard = FALSE;
     gchar *config_file, *lock_file, *old_config_path;
+
     /*
      * Migration code to move old files to new XDG folders
      */
@@ -584,6 +605,8 @@ int main (int argc, char *argv[])
 
     /* Initialize GTK and libglade */
     gtk_init (&argc, &argv);
+
+    load_custom_css_file ();
 
     /* create new tilda_window */
     tw = tilda_window_init (config_file, lock.instance);
