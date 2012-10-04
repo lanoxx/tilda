@@ -3,7 +3,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([Tilda],[1.0.0],[http://bugs.launchpad.net/tilda],[tilda],[https://github.com/tsloughter/tilda])
+AC_INIT([Tilda],[1.0.2],[http://bugs.launchpad.net/tilda],[tilda],[https://github.com/tsloughter/tilda])
 AM_INIT_AUTOMAKE
 
 # We are going to use silent builds which have a much
