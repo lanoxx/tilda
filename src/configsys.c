@@ -66,6 +66,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("animation_orientation", 0, CFGF_NONE),
     CFG_INT("timer_resolution", 1000, CFGF_NONE),
     CFG_INT("auto_hide_time", 2000, CFGF_NONE),
+    CFG_INT("on_last_terminal_exit", 0, CFGF_NONE),
     CFG_INT("palette_scheme", 0, CFGF_NONE),
  
 /* int list */
