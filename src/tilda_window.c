@@ -90,7 +90,7 @@ void tilda_window_close_current_tab (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    tilda_window_close_tab (tw, pos);
+    tilda_window_close_tab (tw, pos, FALSE);
 }
 
 
@@ -574,7 +574,7 @@ gint tilda_window_free (tilda_window *tw)
     {
         /* Close the 0th tab, which should always exist while we have
          * some pages left in the notebook. */
-        tilda_window_close_tab (tw, 0);
+        tilda_window_close_tab (tw, 0, TRUE);
 
         num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
     }
@@ -639,7 +639,7 @@ gint tilda_window_add_tab (tilda_window *tw)
  * Success: return 0
  * Failure: return non-zero
  */
-gint tilda_window_close_tab (tilda_window *tw, gint tab_index)
+gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_exit)
 {
     DEBUG_FUNCTION ("tilda_window_close_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -664,15 +664,46 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index)
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
 
-    /* With no pages left, it's time to leave the program */
+    /* With no pages left, either leave the program or create a new
+     * terminal */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) < 1) {
-        /**
-         * It is necessary to check the main_level because if CTRL_C was used
-         * or the "Quit" option from the context menu then gtk_main_quit has
-         * already been called and cannot call it again.
-         */
-        if(gtk_main_level () > 0) {
-            gtk_main_quit ();
+        if (force_exit == TRUE) {
+            /**
+             * It is necessary to check the main_level because if CTRL_C was used
+             * or the "Quit" option from the context menu then gtk_main_quit has
+             * already been called and cannot call it again.
+             */
+            if(gtk_main_level () > 0) {
+                gtk_main_quit ();
+        } else {
+            /* These can stay here. They don't need to go into a header
+             * because they are only used at this point in the code. */
+            enum on_last_terminal_exit { EXIT_TILDA,
+                                         RESTART_TERMINAL,
+                                         RESTART_TERMINAL_AND_HIDE };
+
+            /* Check the user's preference for what to do when the last
+             * terminal is closed. Take the appropriate action */
+            switch (config_getint ("on_last_terminal_exit"))
+            {
+                case RESTART_TERMINAL:
+                    tilda_window_add_tab (tw);
+                    break;
+                case RESTART_TERMINAL_AND_HIDE:
+                    tilda_window_add_tab (tw);
+                    pull (tw, PULL_UP);
+                    break;
+                case EXIT_TILDA:
+                default:
+                    /**
+                     * It is necessary to check the main_level because if CTRL_C was used
+                     * or the "Quit" option from the context menu then gtk_main_quit has
+                     * already been called and cannot call it again.
+                     */
+                    if(gtk_main_level () > 0) {
+                        gtk_main_quit ();
+                    break;
+            }
         }
     }
 

@@ -748,6 +748,13 @@ static void combo_command_exit_changed_cb (GtkWidget *w)
     config_setint ("command_exit", status);
 }
 
+static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w)
+{
+    const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+
+    config_setint ("on_last_terminal_exit", status);
+}
+
 static void entry_web_browser_changed (GtkWidget *w)
 {
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
@@ -1602,6 +1609,7 @@ static void set_wizard_state_from_config ()
     CHECK_BUTTON ("check_run_custom_command", "run_command");
     TEXT_ENTRY ("entry_custom_command", "command");
     COMBO_BOX ("combo_command_exit", "command_exit");
+    COMBO_BOX ("combo_on_last_terminal_exit", "on_last_terminal_exit");
     SET_SENSITIVE_BY_CONFIG_BOOL ("entry_custom_command","run_command");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_custom_command", "run_command");
 
@@ -1739,6 +1747,7 @@ static void connect_wizard_signals ()
 
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
+    CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
     CONNECT_SIGNAL ("entry_word_chars","changed",entry_word_chars_changed);

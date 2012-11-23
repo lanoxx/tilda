@@ -53,6 +53,23 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name gchararray1 -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Close Tilda</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Open a new terminal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Open a new terminal and hide</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkListStore" id="model1">
     <columns>
       <!-- column-name gchararray -->
@@ -238,11 +255,9 @@
             <child>
               <object class="GtkButton" id="button_wizard_close">
                 <property name="label">gtk-close</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="button_wizard_close_clicked_cb" swapped="no"/>
               </object>
@@ -268,7 +283,7 @@
               <object class="GtkTable" id="table_general">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="n_rows">5</property>
+                <property name="n_rows">6</property>
                 <child>
                   <object class="GtkFrame" id="frame_window_auto_hide">
                     <property name="visible">True</property>
@@ -309,11 +324,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_auto_hide_on_focus_lost">
                                 <property name="label" translatable="yes">Hide when Tilda loses focus</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -325,11 +338,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_auto_hide_on_mouse_leave">
                                 <property name="label" translatable="yes">Hide Tilda when mouse leaves it</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -356,7 +367,7 @@
                   <packing>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -381,11 +392,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_display_on_all_workspaces">
                                 <property name="label" translatable="yes">Display on all workspaces</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -398,11 +407,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_always_on_top">
                                 <property name="label" translatable="yes">Always on top</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -417,11 +424,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_do_not_show_in_taskbar">
                                 <property name="label" translatable="yes">Do not show in taskbar</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -436,11 +441,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_start_tilda_hidden">
                                 <property name="label" translatable="yes">Start Tilda hidden</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -457,11 +460,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_show_notebook_border">
                                 <property name="label" translatable="yes">Show Notebook Border</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -476,11 +477,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_enable_double_buffering">
                                 <property name="label" translatable="yes">Enable Double Buffering</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -508,7 +507,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -532,11 +531,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_terminal_bell">
                                 <property name="label" translatable="yes">Audible Terminal Bell</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -549,11 +546,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_cursor_blinks">
                                 <property name="label" translatable="yes">Cursor Blinks</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -581,7 +576,7 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -606,11 +601,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_enable_antialiasing">
                                 <property name="label" translatable="yes">Enable Antialiasing</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -623,11 +616,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_allow_bold_text">
                                 <property name="label" translatable="yes">Allow Bold Text</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -677,13 +668,11 @@
                             </child>
                             <child>
                               <object class="GtkFontButton" id="button_font">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="font">Sans 12</property>
-                                <property name="preview_text"></property>
+                                <property name="preview_text"/>
                                 <property name="show_preview_entry">False</property>
                               </object>
                               <packing>
@@ -726,7 +715,7 @@
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -740,6 +729,74 @@
                     <property name="xpad">5</property>
                     <property name="ypad">5</property>
                     <property name="label" translatable="yes">Note: Some options require that tilda is restarted</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame_program_exit">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment24">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkGrid" id="grid1">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="column_spacing">5</property>
+                            <property name="column_homogeneous">True</property>
+                            <child>
+                              <object class="GtkLabel" id="label26">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
+                                <property name="label" translatable="yes">When last terminal is closed:</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBox" id="combo_on_last_terminal_exit">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="model">liststore1</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="renderer10"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label15">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Program Exit&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="top_attach">4</property>
@@ -825,7 +882,7 @@
                   <packing>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -892,7 +949,7 @@
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -987,7 +1044,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1012,11 +1069,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_run_custom_command">
                                 <property name="label" translatable="yes">Run a custom command instead of the shell</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -1107,7 +1162,7 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1218,7 +1273,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1310,7 +1365,7 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1334,11 +1389,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_centered_horizontally">
                                 <property name="label" translatable="yes">Centered Horizontally</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
@@ -1354,11 +1407,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_centered_vertically">
                                 <property name="label" translatable="yes">Centered Vertically</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
@@ -1452,7 +1503,7 @@
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1479,11 +1530,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_enable_transparency">
                                 <property name="label" translatable="yes">Enable Transparency</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -1525,11 +1574,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_animated_pulldown">
                                 <property name="label" translatable="yes">Animated Pulldown</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -1544,11 +1591,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_use_image_for_background">
                                 <property name="label" translatable="yes">Use Image for Background</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -1663,7 +1708,7 @@
                   <packing>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1779,11 +1824,9 @@
                             </child>
                             <child>
                               <object class="GtkColorButton" id="colorbutton_text">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="color">#000000000000</property>
                               </object>
                               <packing>
@@ -1797,11 +1840,9 @@
                             </child>
                             <child>
                               <object class="GtkColorButton" id="colorbutton_back">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="color">#000000000000</property>
                               </object>
                               <packing>
@@ -1827,7 +1868,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -1880,7 +1921,7 @@
                                   <packing>
                                     <property name="right_attach">2</property>
                                     <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
+                                    <property name="y_options"/>
                                   </packing>
                                 </child>
                                 <child>
@@ -1910,12 +1951,10 @@
                                     <property name="n_columns">8</property>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_14">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">6</property>
@@ -1923,33 +1962,29 @@
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
                                         <property name="x_options">GTK_FILL</property>
-                                        <property name="y_options"></property>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_6">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">6</property>
                                         <property name="right_attach">7</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_13">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">5</property>
@@ -1957,224 +1992,198 @@
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
                                         <property name="x_options">GTK_FILL</property>
-                                        <property name="y_options"></property>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_15">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">7</property>
                                         <property name="right_attach">8</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_12">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">4</property>
                                         <property name="right_attach">5</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_10">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">2</property>
                                         <property name="right_attach">3</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_11">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">3</property>
                                         <property name="right_attach">4</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_9">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_8">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="top_attach">1</property>
                                         <property name="bottom_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_7">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">7</property>
                                         <property name="right_attach">8</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_5">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">5</property>
                                         <property name="right_attach">6</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_4">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">4</property>
                                         <property name="right_attach">5</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_3">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">3</property>
                                         <property name="right_attach">4</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_2">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">2</property>
                                         <property name="right_attach">3</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_1">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                     <child>
                                       <object class="GtkColorButton" id="colorbutton_palette_0">
-                                        <property name="use_action_appearance">False</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="tooltip_text">dummy</property>
-                                        <property name="use_action_appearance">False</property>
                                         <property name="color">#000000000000</property>
                                       </object>
                                       <packing>
-                                        <property name="x_options"></property>
-                                        <property name="y_options"></property>
+                                        <property name="x_options"/>
+                                        <property name="y_options"/>
                                       </packing>
                                     </child>
                                   </object>
@@ -2201,7 +2210,7 @@
                                     <property name="top_attach">2</property>
                                     <property name="bottom_attach">3</property>
                                     <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
+                                    <property name="y_options"/>
                                   </packing>
                                 </child>
                                 <child>
@@ -2218,7 +2227,7 @@
                                     <property name="top_attach">1</property>
                                     <property name="bottom_attach">2</property>
                                     <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options"></property>
+                                    <property name="y_options"/>
                                   </packing>
                                 </child>
                               </object>
@@ -2244,7 +2253,7 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2289,11 +2298,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_scroll_on_output">
                                 <property name="label" translatable="yes">Scroll on Output</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -2308,11 +2315,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_scroll_on_keystroke">
                                 <property name="label" translatable="yes">Scroll on Keystroke</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -2327,11 +2332,9 @@
                             <child>
                               <object class="GtkCheckButton" id="check_scroll_background">
                                 <property name="label" translatable="yes">Scroll Background</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -2442,7 +2445,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2541,7 +2544,7 @@
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options"/>
                               </packing>
                             </child>
                             <child>
@@ -2555,7 +2558,7 @@
                               </object>
                               <packing>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options"/>
                               </packing>
                             </child>
                             <child>
@@ -2613,11 +2616,9 @@
                             <child>
                               <object class="GtkButton" id="button_reset_compatibility_options">
                                 <property name="label" translatable="yes">_Reset Compatibility Options to Defaults</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                               </object>
                             </child>
@@ -2677,11 +2678,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_paste">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2698,7 +2697,7 @@
                   <packing>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2716,11 +2715,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_nexttab">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2739,7 +2736,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2757,11 +2754,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_quit">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2778,7 +2773,7 @@
                   <packing>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2796,11 +2791,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_addtab">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2818,7 +2811,7 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2836,11 +2829,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab10">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2859,7 +2850,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">8</property>
                     <property name="bottom_attach">9</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2877,11 +2868,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab5">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2898,7 +2887,7 @@
                   <packing>
                     <property name="top_attach">8</property>
                     <property name="bottom_attach">9</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2916,11 +2905,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab4">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2937,7 +2924,7 @@
                   <packing>
                     <property name="top_attach">7</property>
                     <property name="bottom_attach">8</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2955,11 +2942,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab3">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -2976,7 +2961,7 @@
                   <packing>
                     <property name="top_attach">6</property>
                     <property name="bottom_attach">7</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -2994,11 +2979,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab2">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3015,7 +2998,7 @@
                   <packing>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3033,11 +3016,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab1">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3054,7 +3035,7 @@
                   <packing>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3072,11 +3053,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_prevtab">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3095,7 +3074,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3113,11 +3092,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_closetab">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3136,7 +3113,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3154,11 +3131,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_copy">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3175,7 +3150,7 @@
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3193,11 +3168,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_pulldown">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3212,7 +3185,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3230,11 +3203,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab6">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3253,7 +3224,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3271,11 +3242,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab7">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3294,7 +3263,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3312,11 +3281,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab8">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3335,7 +3302,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">6</property>
                     <property name="bottom_attach">7</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
@@ -3353,11 +3320,9 @@
                         <child>
                           <object class="GtkButton" id="button_keybinding_gototab9">
                             <property name="label" translatable="yes"> </property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                           </object>
                         </child>
                       </object>
@@ -3376,7 +3341,7 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">7</property>
                     <property name="bottom_attach">8</property>
-                    <property name="y_options"></property>
+                    <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>

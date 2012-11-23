@@ -490,7 +490,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
     switch (config_getint ("command_exit"))
     {
         case EXIT_TERMINAL:
-            tilda_window_close_tab (tt->tw, index);
+            tilda_window_close_tab (tt->tw, index, FALSE);
             break;
         case RESTART_COMMAND:
             vte_terminal_feed (VTE_TERMINAL(tt->vte_term), "\r\n\r\n", 4);

@@ -64,7 +64,7 @@ struct tilda_window_
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT };
 
 gint tilda_window_add_tab (tilda_window *tw);
-gint tilda_window_close_tab (tilda_window *tw, gint tab_position);
+gint tilda_window_close_tab (tilda_window *tw, gint tab_position, gboolean force_exit);
 tilda_window *tilda_window_init (const gchar *config_file, const gint instance);
 gint tilda_window_free (tilda_window *tw);
 gint toggle_fullscreen_cb (tilda_window *tw);
