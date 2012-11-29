@@ -28,6 +28,8 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("closetab_key", "<Shift><Control>w", CFGF_NONE),
     CFG_STR("nexttab_key", "<Control>Page_Down", CFGF_NONE),
     CFG_STR("prevtab_key", "<Control>Page_Up", CFGF_NONE),
+    CFG_STR("movetableft_key", "<Shift><Control>Page_Up", CFGF_NONE),
+    CFG_STR("movetabright_key", "<Shift><Control>Page_Down", CFGF_NONE),
     CFG_STR("gototab_1_key", "<Alt>1", CFGF_NONE),
     CFG_STR("gototab_2_key", "<Alt>2", CFGF_NONE),
     CFG_STR("gototab_3_key", "<Alt>3", CFGF_NONE),

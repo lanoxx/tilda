@@ -177,6 +177,65 @@ static gint prev_tab (tilda_window *tw)
     return TRUE;
 }
 
+static gint move_tab_left (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("move_tab_left");
+    DEBUG_ASSERT (tw != NULL);
+
+    int num_pages;
+    int current_page_index;
+    int new_page_index;
+    GtkWidget* current_page;
+
+    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
+    current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
+                                              current_page_index);
+
+    if (num_pages > 1) {
+      if (current_page_index < num_pages - 1) {
+        // Move current page one to the left
+        new_page_index = current_page_index + 1;
+      } else {
+        // Current page is at beginning: move to end
+        new_page_index = 0;
+      }
+
+      gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
+                                  new_page_index);
+    }
+
+    // It worked. Having this return true makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return TRUE;
+}
+
+static gint move_tab_right (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("move_tab_right");
+    DEBUG_ASSERT (tw != NULL);
+
+    int num_pages;
+    int current_page_index;
+    GtkWidget* current_page;
+
+    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
+    current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
+                                              current_page_index);
+
+    if (num_pages > 1) {
+      // Move current page one to the right. This automatically wraps
+      // when current_page_index - 1 is negative.
+      gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
+                                  current_page_index - 1);
+    }
+
+    // It worked. Having this return true makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return TRUE;
+}
+
 static void focus_term (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("focus_term");
@@ -373,16 +432,19 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tw->accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
  
-    /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab, Add Tab,
-       Close Tab, Copy, and Paste using key combinations defined in the config. */
-    tilda_add_config_accelerator("quit_key",     G_CALLBACK(gtk_main_quit),                  tw);
-    tilda_add_config_accelerator("nexttab_key",  G_CALLBACK(next_tab),                       tw);
-    tilda_add_config_accelerator("prevtab_key",  G_CALLBACK(prev_tab),                       tw);
-    tilda_add_config_accelerator("addtab_key",   G_CALLBACK(tilda_window_add_tab),           tw);
-    tilda_add_config_accelerator("closetab_key", G_CALLBACK(tilda_window_close_current_tab), tw);
-    tilda_add_config_accelerator("copy_key",     G_CALLBACK(ccopy),                          tw);
-    tilda_add_config_accelerator("paste_key",    G_CALLBACK(cpaste),                         tw);
-    tilda_add_config_accelerator("fullscreen_key",    G_CALLBACK(toggle_fullscreen_cb),             tw);
+    /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab,
+       Move Tab, Add Tab, Close Tab, Copy, and Paste using key
+       combinations defined in the config. */
+    tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(next_tab),                       tw);
+    tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(prev_tab),                       tw);
+    tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
+    tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
+    tilda_add_config_accelerator("addtab_key",       G_CALLBACK(tilda_window_add_tab),           tw);
+    tilda_add_config_accelerator("closetab_key",     G_CALLBACK(tilda_window_close_current_tab), tw);
+    tilda_add_config_accelerator("copy_key",         G_CALLBACK(ccopy),                          tw);
+    tilda_add_config_accelerator("paste_key",        G_CALLBACK(cpaste),                         tw);
+    tilda_add_config_accelerator("fullscreen_key",   G_CALLBACK(toggle_fullscreen_cb),           tw);
  
     /* Set up keyboard shortcuts for Goto Tab # using key combinations defined in the config*/
     /* Know a better way? Then you do. */
@@ -715,4 +777,3 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
 
     return 0;
 }
-
