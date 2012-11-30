@@ -737,6 +737,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
              */
             if(gtk_main_level () > 0) {
                 gtk_main_quit ();
+            }
         } else {
             /* These can stay here. They don't need to go into a header
              * because they are only used at this point in the code. */
@@ -764,6 +765,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
                      */
                     if(gtk_main_level () > 0) {
                         gtk_main_quit ();
+                    }
                     break;
             }
         }
