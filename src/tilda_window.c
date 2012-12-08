@@ -273,10 +273,28 @@ static gboolean auto_hide_tick(gpointer data)
 /* Start auto hide tick */
 static void start_auto_hide_tick(tilda_window *tw)
 {
-    if ((tw->auto_hide_tick_handler == 0) && (tw->disable_auto_hide == FALSE))
-    {
-        tw->auto_hide_current_time = 0;
-        tw->auto_hide_tick_handler = g_timeout_add(tw->timer_resolution, auto_hide_tick, tw);
+    // If the delay is less or equal to 1000ms then the timer is not precise
+    // enough, because it takes already about 200ms to register it, so we
+    // rather sleep for the given amount of time.
+    const int MAX_SLEEP_TIME = 1000;
+
+    if ((tw->auto_hide_tick_handler == 0) && (tw->disable_auto_hide == FALSE)) {
+        /* If there is not timer registered yet, then the auto_hide_tick_handler
+         * has a value of zero. Next we need to make sure that the auto hide
+         * max time is greater then zero, or else we can pull up immediately,
+         * without the trouble of registering a timer.
+         */
+        if (tw->auto_hide_max_time > MAX_SLEEP_TIME) {
+            tw->auto_hide_current_time = 0;
+            tw->auto_hide_tick_handler = g_timeout_add(tw->timer_resolution, auto_hide_tick, tw);
+        } else if (tw->auto_hide_max_time <= MAX_SLEEP_TIME) {
+            // auto_hide_max_time is in milli seconds, so we need to convert to
+            // microseconds by multiplying with 1000
+            g_usleep (tw->auto_hide_max_time * 1000);
+            pull(tw, PULL_UP);
+        } else {
+            pull(tw, PULL_UP);
+        }
     }
 }
 
