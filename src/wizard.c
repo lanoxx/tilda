@@ -59,6 +59,26 @@ terminal_palette_tango[TERMINAL_PALETTE_SIZE] =
 };
 
 const GdkColor
+terminal_palette_zenburn[TERMINAL_PALETTE_SIZE] = {
+    {0, 0x2222, 0x2222, 0x2222 }, //black
+    {0, 0x8080, 0x3232, 0x3232 }, //darkred
+    {0, 0x5b5b, 0x7676, 0x2f2f }, //darkgreen
+    {0, 0xaaaa, 0x9999, 0x4343 }, //brown
+    {0, 0x3232, 0x4c4c, 0x8080 }, //darkblue
+    {0, 0x7070, 0x6c6c, 0x9a9a }, //darkmagenta
+    {0, 0x9292, 0xb1b1, 0x9e9e }, //darkcyan
+    {0, 0xffff, 0xffff, 0xffff }, //lightgrey
+    {0, 0x2222, 0x2222, 0x2222 }, //darkgrey
+    {0, 0x9898, 0x2b2b, 0x2b2b }, //red
+    {0, 0x8989, 0xb8b8, 0x3f3f }, //green
+    {0, 0xefef, 0xefef, 0x6060 }, //yellow
+    {0, 0x2b2b, 0x4f4f, 0x9898 }, //blue
+    {0, 0x8282, 0x6a6a, 0xb1b1 }, //magenta
+    {0, 0xa1a1, 0xcdcd, 0xcdcd }, //cyan
+    {0, 0xdede, 0xdede, 0xdede }, //white}
+};
+
+const GdkColor
 terminal_palette_linux[TERMINAL_PALETTE_SIZE] =
 {
   { 0, 0x0000, 0x0000, 0x0000 },
@@ -128,10 +148,11 @@ typedef struct _TerminalPaletteScheme
 }TerminalPaletteScheme;
 
 static TerminalPaletteScheme palette_schemes[] = {
-  { N_("Tango"), terminal_palette_tango },
-  { N_("Linux console"), terminal_palette_linux },
-  { N_("XTerm"), terminal_palette_xterm },
-  { N_("Rxvt"), terminal_palette_rxvt }
+    { N_("Tango"), terminal_palette_tango },
+    { N_("Linux console"), terminal_palette_linux },
+    { N_("XTerm"), terminal_palette_xterm },
+    { N_("Rxvt"), terminal_palette_rxvt },
+    { N_("Zenburn"), terminal_palette_zenburn }
 };
 
 static void init_palette_scheme_menu (void);
