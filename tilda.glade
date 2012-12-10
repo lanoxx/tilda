@@ -740,7 +740,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkAlignment" id="alignment24">
                         <property name="visible">True</property>
