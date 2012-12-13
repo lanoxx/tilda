@@ -1,4 +1,4 @@
-// vim: set ts=8 sts=8 sw=8 noexpandtab textwidth=112:
+/* vim: set ts=4 sts=4 sw=4 expandtab textwidth=112: */
 
 #include <tilda-config.h>
 #include <debug.h>
