@@ -615,6 +615,9 @@ int main (int argc, char *argv[])
     if (tw == NULL)
         goto tw_alloc_failed;
 
+    /* Adding widget title for CSS selection */
+    gtk_widget_set_name (GTK_WIDGET(tw->window), "Main");
+
     /* Initialize and set up the keybinding to toggle tilda's visibility. */
     tomboy_keybinder_init ();
 
