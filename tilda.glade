@@ -280,217 +280,127 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkTable" id="table_general">
+              <object class="GtkGrid" id="table_general">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="n_rows">6</property>
-                <child>
-                  <object class="GtkFrame" id="frame_window_auto_hide">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label_xalign">0</property>
-                    <child>
-                      <object class="GtkAlignment" id="alignment33">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="left_padding">12</property>
-                        <child>
-                          <object class="GtkTable" id="table_wdisplay1">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="n_rows">2</property>
-                            <property name="n_columns">2</property>
-                            <property name="homogeneous">True</property>
-                            <child>
-                              <object class="GtkLabel" id="label22">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="xalign">1</property>
-                                <property name="xpad">10</property>
-                                <property name="label" translatable="yes">Auto Hide Delay:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="spin_auto_hide_time">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">adjustment1</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_auto_hide_on_focus_lost">
-                                <property name="label" translatable="yes">Hide when Tilda loses focus</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_auto_hide_on_mouse_leave">
-                                <property name="label" translatable="yes">Hide Tilda when mouse leaves it</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label20">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Auto Hide&lt;/b&gt;</property>
-                        <property name="use_markup">True</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="y_options"/>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">4</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkFrame" id="frame_window_display">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
                     <child>
                       <object class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <object class="GtkTable" id="table_wdisplay">
+                          <object class="GtkGrid" id="table_wdisplay">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">3</property>
-                            <property name="n_columns">2</property>
-                            <property name="homogeneous">True</property>
+                            <property name="column_spacing">5</property>
+                            <property name="column_homogeneous">True</property>
                             <child>
-                              <object class="GtkCheckButton" id="check_display_on_all_workspaces">
-                                <property name="label" translatable="yes">Display on all workspaces</property>
+                              <object class="GtkCheckButton" id="check_enable_double_buffering">
+                                <property name="label" translatable="yes">Enable Double Buffering</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_always_on_top">
-                                <property name="label" translatable="yes">Always on top</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_do_not_show_in_taskbar">
-                                <property name="label" translatable="yes">Do not show in taskbar</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="top_attach">2</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="check_start_tilda_hidden">
                                 <property name="label" translatable="yes">Start Tilda hidden</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_always_on_top">
+                                <property name="label" translatable="yes">Always on top</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_display_on_all_workspaces">
+                                <property name="label" translatable="yes">Display on all workspaces</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">2</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_do_not_show_in_taskbar">
+                                <property name="label" translatable="yes">Do not show in taskbar</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="check_show_notebook_border">
                                 <property name="label" translatable="yes">Show Notebook Border</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_enable_double_buffering">
-                                <property name="label" translatable="yes">Enable Double Buffering</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                           </object>
@@ -507,57 +417,67 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="y_options"/>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">4</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame_terminal_display">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
                     <child>
                       <object class="GtkAlignment" id="alignment2">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <object class="GtkTable" id="table_tdisplay">
+                          <object class="GtkGrid" id="table_tdisplay">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_columns">2</property>
-                            <property name="homogeneous">True</property>
-                            <child>
-                              <object class="GtkCheckButton" id="check_terminal_bell">
-                                <property name="label" translatable="yes">Audible Terminal Bell</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
+                            <property name="column_spacing">5</property>
+                            <property name="column_homogeneous">True</property>
                             <child>
                               <object class="GtkCheckButton" id="check_cursor_blinks">
                                 <property name="label" translatable="yes">Cursor Blinks</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_terminal_bell">
+                                <property name="label" translatable="yes">Audible Terminal Bell</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                           </object>
@@ -574,60 +494,84 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="y_options"/>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame_font">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
                     <child>
                       <object class="GtkAlignment" id="alignment3">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <object class="GtkTable" id="table_font">
+                          <object class="GtkGrid" id="table_font">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">3</property>
-                            <property name="n_columns">2</property>
-                            <property name="homogeneous">True</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">5</property>
+                            <property name="column_homogeneous">True</property>
+                            <child>
+                              <object class="GtkFontButton" id="button_font">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="font">Sans 12</property>
+                                <property name="preview_text"/>
+                                <property name="show_preview_entry">False</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">2</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
                             <child>
                               <object class="GtkCheckButton" id="check_enable_antialiasing">
                                 <property name="label" translatable="yes">Enable Antialiasing</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="check_allow_bold_text">
                                 <property name="label" translatable="yes">Allow Bold Text</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -638,10 +582,10 @@
                                 <property name="label" translatable="yes">Position of Tabs:</property>
                               </object>
                               <packing>
+                                <property name="left_attach">0</property>
                                 <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -658,30 +602,9 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="y_options">GTK_EXPAND</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkFontButton" id="button_font">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="font">Sans 12</property>
-                                <property name="preview_text"/>
-                                <property name="show_preview_entry">False</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -692,10 +615,10 @@
                                 <property name="label" translatable="yes">Font:</property>
                               </object>
                               <packing>
+                                <property name="left_attach">0</property>
                                 <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
                               </packing>
                             </child>
                           </object>
@@ -712,38 +635,136 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label21">
+                  <object class="GtkFrame" id="frame_window_auto_hide">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">1</property>
-                    <property name="xpad">5</property>
-                    <property name="ypad">5</property>
-                    <property name="label" translatable="yes">Note: Some options require that tilda is restarted</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
+                    <property name="label_xalign">0</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment33">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkGrid" id="table_wdisplay1">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="row_homogeneous">True</property>
+                            <property name="column_homogeneous">True</property>
+                            <child>
+                              <object class="GtkSpinButton" id="spin_auto_hide_time">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="invisible_char">●</property>
+                                <property name="adjustment">adjustment1</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_auto_hide_on_mouse_leave">
+                                <property name="label" translatable="yes">Hide Tilda when mouse leaves it</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">1</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label22">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
+                                <property name="xpad">10</property>
+                                <property name="label" translatable="yes">Auto Hide Delay:</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_auto_hide_on_focus_lost">
+                                <property name="label" translatable="yes">Hide when Tilda loses focus</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label20">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Auto Hide&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame_program_exit">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
                     <property name="label_xalign">0</property>
                     <child>
                       <object class="GtkAlignment" id="alignment24">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="margin_bottom">5</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkGrid" id="grid1">
@@ -798,8 +819,29 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label21">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">1</property>
+                    <property name="xpad">5</property>
+                    <property name="ypad">5</property>
+                    <property name="label" translatable="yes">Note: Some options require that tilda is restarted</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -2277,6 +2319,7 @@
               <object class="GtkTable" id="table_scrolling">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="n_rows">2</property>
                 <child>
                   <object class="GtkFrame" id="frame_scrolling">
                     <property name="visible">True</property>
@@ -2444,6 +2487,7 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="bottom_attach">2</property>
                     <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
@@ -2452,6 +2496,7 @@
               </object>
               <packing>
                 <property name="position">4</property>
+                <property name="tab_fill">False</property>
               </packing>
             </child>
             <child type="tab">
@@ -2680,6 +2725,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2719,6 +2765,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2756,6 +2803,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2793,6 +2841,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2831,6 +2880,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2870,6 +2920,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2907,6 +2958,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2944,6 +2996,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -2981,6 +3034,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3018,6 +3072,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3055,6 +3110,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3094,6 +3150,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3133,6 +3190,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3170,6 +3228,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3205,6 +3264,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3244,6 +3304,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3283,6 +3344,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3322,6 +3384,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">False</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3361,6 +3424,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
@@ -3398,6 +3462,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="margin_right">2</property>
                           </object>
                         </child>
                       </object>
