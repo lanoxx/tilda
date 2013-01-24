@@ -537,7 +537,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
         current_palette[i].green = config_getnint ("palette", i*3+1);
         current_palette[i].blue  = config_getnint ("palette", i*3+2);
     }
- 
+
     vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
 
     /** Bells **/
@@ -704,7 +704,7 @@ static void on_popup_hide (GtkWidget *widget, gpointer data)
     DEBUG_FUNCTION("on_popup_hide");
     DEBUG_ASSERT(widget != NULL);
     DEBUG_ASSERT(data != NULL);
-    
+
     tilda_window *tw = TILDA_WINDOW(data);
     tw->disable_auto_hide = FALSE;
 }
@@ -835,7 +835,7 @@ static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer d
                     &tag);
 
             /* Check if we can launch a web browser, and do so if possible */
-            if ((event->state & GDK_CONTROL_MASK) && match != NULL)
+            if (match != NULL)
             {
 #if DEBUG
                 g_print ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
