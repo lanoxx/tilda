@@ -772,8 +772,38 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(entry_custom_command), status);
 }
 
-static void combo_command_exit_changed_cb (GtkWidget *w)
-{
+
+/**
+ * Check that the value entered into the GtkEntry is a valid command
+ * which is accessible from the users PATH environment variable.
+ * If the command is not found on the users PATH then a small error
+ * icon is displayed on the end of the entry.
+ * This function can only be registered to Widgets of (sub)type GtkEntry
+ */
+static void validate_executable_command_cb (GtkWidget *w, GdkEvent *event, gpointer userdata) {
+    g_return_if_fail(w != NULL && GTK_IS_ENTRY(w));
+    const char* command = gtk_entry_get_text (GTK_ENTRY(w));
+    /* Check that the command exists */
+    char* command_filename = g_find_program_in_path(command);
+    if(command_filename == NULL) {
+        //wrong command
+        gtk_entry_set_icon_from_stock (GTK_ENTRY(w),
+            GTK_ENTRY_ICON_SECONDARY,
+            GTK_STOCK_DIALOG_ERROR);
+        gtk_entry_set_icon_tooltip_text(GTK_ENTRY(w),
+            GTK_ENTRY_ICON_SECONDARY,
+            "The command you have entered is not a valid command.\n"
+            "Make sure that the specified executable is in your PATH environment variable."
+        );
+    } else {
+        gtk_entry_set_icon_from_stock (GTK_ENTRY(w),
+            GTK_ENTRY_ICON_SECONDARY,
+            NULL);
+        free(command_filename);
+    }
+}
+
+static void combo_command_exit_changed_cb (GtkWidget *w) {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("command_exit", status);
@@ -786,8 +816,7 @@ static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w)
     config_setint ("on_last_terminal_exit", status);
 }
 
-static void entry_web_browser_changed (GtkWidget *w)
-{
+static void entry_web_browser_changed (GtkWidget *w) {
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
 
     config_setstr ("web_browser", web_browser);
@@ -1762,15 +1791,17 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("check_auto_hide_on_focus_lost","toggled",check_auto_hide_on_focus_lost_toggled_cb);
     CONNECT_SIGNAL ("check_auto_hide_on_mouse_leave","toggled",check_auto_hide_on_mouse_leave_toggled_cb);
 
+    CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb);
+
     /* Title and Command Tab */
     CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb);
     CONNECT_SIGNAL ("combo_dynamically_set_title","changed",combo_dynamically_set_title_changed_cb);
 
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
-    CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
+    CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb);
     CONNECT_SIGNAL ("entry_word_chars","changed",entry_word_chars_changed);
 
     /* Appearance Tab */

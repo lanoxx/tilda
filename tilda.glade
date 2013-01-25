@@ -860,7 +860,7 @@
               <object class="GtkTable" id="table_tc">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="n_rows">4</property>
+                <property name="n_rows">5</property>
                 <child>
                   <object class="GtkFrame" id="frame_word_chars">
                     <property name="visible">True</property>
@@ -899,7 +899,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <property name="xalign">1</property>
-                                <property name="label" translatable="yes">Word Characters</property>
+                                <property name="label" translatable="yes">Word Characters:</property>
                               </object>
                               <packing>
                                 <property name="x_padding">4</property>
@@ -966,7 +966,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                                 <property name="xalign">1</property>
-                                <property name="label" translatable="yes">Web Browser</property>
+                                <property name="label" translatable="yes">Web Browser*:</property>
                               </object>
                               <packing>
                                 <property name="x_padding">4</property>
@@ -1206,6 +1206,23 @@
                     <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label27">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">1</property>
+                    <property name="label" translatable="yes">* A valid command that can open a browser must be entered here. It is possible to use the name of a specific browser such as 'firefox' and 'google-chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The best command may be different depending on the system.</property>
+                    <property name="ellipsize">start</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_FILL</property>
                   </packing>
                 </child>
               </object>
