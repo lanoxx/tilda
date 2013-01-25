@@ -334,7 +334,7 @@ static gboolean parse_cli (int argc, char *argv[])
     {
         g_print ("%s\n\n", TILDA_VERSION);
 
-        g_print ("Copyright (c) 2012 Sebastian Geiger (lanoxx@gmx.net)")
+        g_print ("Copyright (c) 2012 Sebastian Geiger (lanoxx@gmx.net)");
         g_print ("Copyright (c) 2005-2009 Tristan Sloughter (sloutri@iit.edu)\n");
         g_print ("Copyright (c) 2005-2009 Ira W. Snyder (tilda@irasnyder.com)\n\n");
 
