@@ -1,3 +1,20 @@
+verson 1.0.2 (2012-10-01):
+	* Fixed next/prev tab hotkey
+	* Fix scrolling in terminal
+	* Fixed a border issue once more
+	* Add tabs at the end not the front
+
+version 1.0.1 (skipped):
+	* skipped because of wrong tag
+
+version 1.0.0 (2012-09-16):
+	* Port to GTK+3, VTE-2.90, GtkBuilder
+	* Use Modern Autotools
+	* Fixed compilation warnings und runtime errors
+	* Use glib i18n functions instead of separate libarary
+	* Removed some very old migrarion code for the config file
+	* Fixed a bug with the border
+
 version 0.9.6 (2008-4-28):
 	* Move bugtracker to http://bugs.launchpad.net/tilda
 	* Fix metacity-2.20 focus problems
