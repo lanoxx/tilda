@@ -117,7 +117,7 @@
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">Hold the terminal open</col>
+        <col id="0" translatable="yes">Drop to the default shell</col>
       </row>
       <row>
         <col id="0" translatable="yes">Restart the command</col>

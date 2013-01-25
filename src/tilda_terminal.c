@@ -38,7 +38,7 @@
 
 GdkColor current_palette[TERMINAL_PALETTE_SIZE];
 
-static gint start_shell (struct tilda_term_ *tt);
+static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command);
 static gint tilda_term_config_defaults (tilda_term *tt);
 static void child_exited_cb (GtkWidget *widget, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
@@ -155,7 +155,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     gtk_widget_show (term->hbox);
 
     /* Fork the appropriate command into the terminal */
-    ret = start_shell (term);
+    ret = start_shell (term, FALSE);
 
     if (ret)
         goto err_fork;
@@ -368,7 +368,7 @@ static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
  * SUCCESS: return 0
  * FAILURE: return non-zero
  */
-static gint start_shell (struct tilda_term_ *tt)
+static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command)
 {
     DEBUG_FUNCTION ("start_shell");
     DEBUG_ASSERT (tt != NULL);
@@ -380,7 +380,7 @@ static gint start_shell (struct tilda_term_ *tt)
 
     gchar *default_command;
 
-    if (config_getbool ("run_command"))
+    if (config_getbool ("run_command") && !ignore_custom_command)
     {
         ret = g_shell_parse_argv (config_getstr ("command"), &argc, &argv, &error);
 
@@ -483,7 +483,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
 
     /* These can stay here. They don't need to go into a header because
      * they are only used at this point in the code. */
-    enum command_exit { HOLD_TERMINAL_OPEN, RESTART_COMMAND, EXIT_TERMINAL };
+    enum command_exit { DROP_TO_DEFAULT_SHELL, RESTART_COMMAND, EXIT_TERMINAL };
 
     /* Check the user's preference for what to do when the child terminal
      * is closed. Take the appropriate action */
@@ -494,10 +494,10 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
             break;
         case RESTART_COMMAND:
             vte_terminal_feed (VTE_TERMINAL(tt->vte_term), "\r\n\r\n", 4);
-            start_shell (tt);
+            start_shell (tt, FALSE);
             break;
-        case HOLD_TERMINAL_OPEN:
-            break;
+        case DROP_TO_DEFAULT_SHELL:
+            start_shell (tt, TRUE);
         default:
             break;
     }
