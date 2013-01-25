@@ -334,11 +334,12 @@ static gboolean parse_cli (int argc, char *argv[])
     {
         g_print ("%s\n\n", TILDA_VERSION);
 
-        g_print ("Copyright (c) 2005-2008 Tristan Sloughter (sloutri@iit.edu)\n");
-        g_print ("Copyright (c) 2005-2008 Ira W. Snyder (tilda@irasnyder.com)\n\n");
+        g_print ("Copyright (c) 2012 Sebastian Geiger (lanoxx@gmx.net)")
+        g_print ("Copyright (c) 2005-2009 Tristan Sloughter (sloutri@iit.edu)\n");
+        g_print ("Copyright (c) 2005-2009 Ira W. Snyder (tilda@irasnyder.com)\n\n");
 
-        g_print ("General Information: http://launchpad.net/tilda\n");
-        g_print ("Bug Reports: http://bugs.launchpad.net/tilda\n\n");
+        g_print ("General Information: https://github.com/lanoxx/tilda\n");
+        g_print ("Bug Reports: https://github.com/lanoxx/tilda/issues?state=open\n\n");
 
         g_print ("This program comes with ABSOLUTELY NO WARRANTY.\n");
         g_print ("This is free software, and you are welcome to redistribute it\n");
