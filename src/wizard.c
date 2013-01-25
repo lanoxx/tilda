@@ -252,7 +252,7 @@ gint wizard (tilda_window *ltw)
 
     gtk_widget_show_all (wizard_window);
     g_free (window_title);
-    
+
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
 
@@ -279,7 +279,7 @@ gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window,
     guint accel_key;
     GdkModifierType accel_mods;
 
-    /* Parse the accelerator string. If it parses improperly, both values will be 0.*/ 
+    /* Parse the accelerator string. If it parses improperly, both values will be 0.*/
     gtk_accelerator_parse (accel, &accel_key, &accel_mods);
     if (! ((accel_key == 0) && (accel_mods == 0)) ) {
         return TRUE;
@@ -331,7 +331,7 @@ static void wizard_closed ()
      /* The pulldown key is validated differently (should it be?), so it gets its own function. */
     if (!validate_pulldown_keybinding(key, wizard_window, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
         return;
- 
+
      /* Check the rest of them */
     if (!validate_keybinding(addtab_key, wizard_window, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
         return;
@@ -371,7 +371,7 @@ static void wizard_closed ()
         return;
     if (!validate_keybinding(gototab_10_key, wizard_window, _("The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose another.")))
         return;
- 
+
     /* Now that our shortcuts are validated, store them back into the config. */
     config_setstr ("key", key);
     config_setstr ("addtab_key", addtab_key);
@@ -410,7 +410,7 @@ static void wizard_closed ()
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
     config_write (tw->config_file);
-    
+
     /* Enables auto hide */
     tw->disable_auto_hide = FALSE;
 }
@@ -479,7 +479,7 @@ static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidge
 
         /* Destroy the dialog */
         gtk_widget_destroy (dialog);
- 
+
         /* Copy the pressed key to the text entry */
         gtk_button_set_label (GTK_BUTTON(w), key);
 
@@ -1290,10 +1290,10 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
 
         /* Set terminal palette. */
-        for (j=0; j<g_list_length (tw->terms); j++) 
+        for (j=0; j<g_list_length (tw->terms); j++)
         {
             tt = g_list_nth_data (tw->terms, j);
-            vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE); 
+            vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
         }
 
         for (j=0; j<TERMINAL_PALETTE_SIZE; j++)
@@ -1358,10 +1358,10 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
     gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
 
-    for (i=0; i<g_list_length (tw->terms); i++) 
+    for (i=0; i<g_list_length (tw->terms); i++)
     {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE); 
+        vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
     }
 }
 
@@ -1548,7 +1548,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
 
     /* Connect the key grabber to the dialog */
     g_signal_connect (G_OBJECT(dialog), "key_press_event", G_CALLBACK(wizard_dlg_key_grab), w);
- 
+
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -1724,7 +1724,7 @@ static void set_wizard_state_from_config ()
         current_palette[i].red   = config_getnint ("palette", i*3);
         current_palette[i].green = config_getnint ("palette", i*3+1);
         current_palette[i].blue  = config_getnint ("palette", i*3+2);
- 
+
         update_palette_color_button(i);
     }
 
