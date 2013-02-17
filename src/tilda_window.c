@@ -580,8 +580,8 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
      * everyone. The following configuration works well with the GNOME
      * default theme Adwaita, but for example has problems under Ubuntu.
      * Note that for bigger modifications the user can create a style.css
-     * file in tildas config directory, which will be parsed by the
-     * load_custom_css_file() function on start up.
+     * file in tildas config directory, which will be parsed by
+     * load_custom_css_file() in tilda.c on start up.
      */
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook),

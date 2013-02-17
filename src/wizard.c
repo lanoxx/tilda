@@ -220,10 +220,6 @@ gint wizard (tilda_window *ltw)
         gtk_builder_get_object (xml, "wizard_window")
     );
 
-    /* We're up and running now, so now connect all of the signal handlers.
-     * NOTE: I decided to do this manually, since it is safer that way. */
-    //glade_xml_signal_autoconnect(xml);
-
     /* See the notes above, where the tw variable is declared.
      * I know how ugly this is ... */
     tw = ltw;
@@ -235,7 +231,8 @@ gint wizard (tilda_window *ltw)
 
     /* Connect all signal handlers. We do this after copying the state into
      * the wizard so that all of the handlers don't get called as we copy in
-     * the values. */
+     * the values. This function manually connects the required signals for
+     * all the widgets */
     connect_wizard_signals ();
 
     /* Unbind the current keybinding. I'm aware that this opens up an opportunity to

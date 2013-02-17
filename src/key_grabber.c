@@ -99,6 +99,7 @@ void generate_animation_positions (struct tilda_window_ *tw)
             posIV[2][i] = last_pos_x;
             posIV[1][i] = (gint)(posCFV[i]*last_height);
             posIV[0][i] = last_pos_y;
+            break;
         }
     }
 }
