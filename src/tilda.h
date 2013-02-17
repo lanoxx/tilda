@@ -28,8 +28,6 @@ G_BEGIN_DECLS
     (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
     strcmp ((a), (b)))
 
-extern int find_centering_coordinate (const int screen_dimension, const int tilda_dimension);
-
 struct lock_info
 {
     gint pid;

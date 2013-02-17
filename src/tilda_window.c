@@ -633,7 +633,6 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
 
     /* Position the window */
     tw->current_state = UP;
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 

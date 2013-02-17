@@ -14,7 +14,10 @@
 
 static cfg_t *tc;
 
-/* CONFIGURATION OPTIONS */
+/* CONFIGURATION OPTIONS
+ * In this array we set the default configuration options for the
+ * configuration file.
+ */
 static cfg_opt_t config_opts[] = {
 
     /* strings */
@@ -70,8 +73,10 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("auto_hide_time", 2000, CFGF_NONE),
     CFG_INT("on_last_terminal_exit", 0, CFGF_NONE),
     CFG_INT("palette_scheme", 0, CFGF_NONE),
+    /* The default monitor number is 0 */
+    CFG_INT("show_on_monitor_number", 0, CFGF_NONE),
  
-/* int list */
+    /* int list */
     CFG_INT_LIST("palette", "{\
         0x2e2e, 0x3434, 0x3636,\
         0xcccc, 0x0000, 0x0000,\
