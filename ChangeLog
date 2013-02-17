@@ -1,3 +1,37 @@
+version 1.1.0 (2012-02-17):
+	* Added multi-monitor awareness. The wizard
+	  now has a new drop down in the appearance
+	  tab that allows to choose the monitor.
+	  Tilda is now constrained to one monitor
+	  and automatically adjusts its size to the
+	  new monitor when the selected monitor
+	  changes.
+	* Added an option to respawn the terminal
+	  if the last one was closed. Options are
+	   - Close tilda
+	   - Open new terminal
+	   - Open new terminal and hide
+	* Tabs are movable now with a hotkey
+	* New color scheme 'zenburn'
+	* Added CSS selectors for the termial
+	  window and the wizard, which makes
+	  it possible to a styles to the tilda
+	  tabs without affecting the wizard.
+	* Fixed the choices of what to do when
+	  a custom command exits. The first choice
+	  is now "Drop to the default shell",
+	  the previous choice was to hold the
+	  terminal open, which made the terminal
+	  unusable because it had no running shell
+	  anymore.
+	* Fixed a bug that required to press
+	  CTRL while clicking on a link.
+	* Fixed a bug that made hiding the findow
+	  very slow.
+	* Fixed a border issue in the wizard and
+	  made some other clean ups so the wizard
+	  looks more consistent.
+
 verson 1.0.2 (2012-10-01):
 	* Fixed next/prev tab hotkey
 	* Fix scrolling in terminal
