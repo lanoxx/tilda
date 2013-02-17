@@ -41,3 +41,7 @@ tilda.desktop
 ylwrap
 ABOUT-NLS
 INSTALL
+*.anjuta*
+.project
+.cproject
+.kdev4
