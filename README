@@ -1,23 +1,29 @@
 Contacting the Developers / Questions and Comments
 ================================================================================
-Please email questions and comments to anyone listed in the AUTHORS file, or
-drop by on our IRC channel: #tilda on irc.oftc.net. One or more of the
-developers is almost always present in the IRC channel. Please see the section
-titled "Reporting Bugs" below for how to submit a bug report.
-
+Please use the Issue tracker on Github or email questions and comments to anyone
+listed in the AUTHORS file. Please see the section titled "Reporting Bugs" below
+for how to submit a bug report.
 
 Dependencies
 ================================================================================
-GLib >= 2.8 - http://developer.gnome.org/arch/gtk/glib.html
-Glade >= 2.0 - http://glade.gnome.org/
-VTE - http://developer.gnome.org/doc/API/2.0/vte/
+Glib >= 2.30 - http://developer.gnome.org/glib/2.30/
+Gtk+3 >= 3.0 - http://developer.gnome.org/gtk3/3.0/
+VTE >= 2.90 - http://developer.gnome.org/vte/0.30/
 libConfuse - http://www.nongnu.org/confuse/
 
 
 Installing from source
 ================================================================================
-See the INSTALL file for details.
+See the INSTALL file for details. Generally if you have installed the
+development packages (*-dev or *-devel) of the dependencies above then it
+should be possible to install with:
 
+    ./autogen.sh --prefix=/usr
+    make
+    sudo make install
+
+If you don't want to install to the /usr prefix, choose some other prefix,
+such as /opt/tilda and add it to your path.
 
 Running Tilda
 ================================================================================
@@ -101,17 +107,13 @@ Reporting Bugs
 We have done our best to make sure that Tilda is free from bugs, but it is
 inevitable that we have missed some.
 
-You may open bugs at http://bugs.launchpad.net/tilda or email them to the
-developers directly. If you post them to SourceForge.net's bug tracker, they
-will most likely be forgotten.
-
+You may open bugs at http://github.com/lanoxx/tilda/issues or email them to the
+developers directly.
 
 Contributing to Tilda
 ================================================================================
 If you would like to help us develop Tilda, please send an email to one (or all)
-of the developers, or just come into our IRC channel and say hello! We're very
-open to anyone who wants to help out, and we are willing to answer any questions
-you may have.
+of the developers or open an issue on Github.
 
 You can also look into the TODO file and see if there is something there that
 you would like to do.
