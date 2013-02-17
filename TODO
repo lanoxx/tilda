@@ -1,7 +1,5 @@
 Feature Requests / Improvements
 ================================================================================
-* Multimonitor support (Xinerama, etc)
-  -Tilda has  been tested and works with Xinerama (Jordan Wilberding)
 * Dragable bar at the bottom to change Tilda's height
 * Ability to disable keyboard accelerators (close tab, new tab, etc)
 * Configurable keyboard accelerators (close tab, new tab, etc)
