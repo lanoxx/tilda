@@ -431,6 +431,69 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
 }
 
 /******************************************************************************/
+/*                       Wizard set-up functions                              */
+/******************************************************************************/
+
+/* The following macro definitions are used to make the process of loading the
+ * configuration values a lot easier. Each macro takes the name of a GtkBuilder object
+ * and the name of a configuration option and sets the value for that widget to the value
+ * that is stored in this configuration option. The macros are mainly used in the function
+ * set_wizard_state_from_config() but they are used in some callback functions as well, so
+ * we need to define before the callback functions.
+ */
+
+/** Setters */
+#define WIDGET_SET_INSENSITIVE(GLADE_NAME) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME)), FALSE))
+#define CHECK_BUTTON(GLADE_NAME,CFG_BOOL) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
+#define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
+#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define BUTTON_LABEL_FROM_CFG(GLADE_NAME,CFG_STR) gtk_button_set_label (GTK_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
+#define SPIN_BUTTON(GLADE_NAME,CFG_INT) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
+#define SPIN_BUTTON_SET_RANGE(GLADE_NAME,LOWER,UPPER) gtk_spin_button_set_range (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (LOWER), (UPPER))
+#define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (VALUE))
+#define FILE_BUTTON(GLADE_NAME, FILENAME) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), FILENAME)
+#define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))), (COLOR))
+#define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
+#define SET_SENSITIVE_BY_CONFIG_NBOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
+    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), !config_getbool ((CFG_BOOL)))
+
+/** Getters */
+#define SPIN_BUTTON_GET_VALUE(GLADE_NAME) gtk_spin_button_get_value (GTK_SPIN_BUTTON( \
+    gtk_builder_get_object (xml, (GLADE_NAME))))
+#define SPIN_BUTTON_GET_RANGE(GLADE_NAME,MIN_POINTER,MAX_POINTER) gtk_spin_button_get_range (GTK_SPIN_BUTTON( \
+	gtk_builder_get_object (xml, (GLADE_NAME))), MIN_POINTER, MAX_POINTER)
+
+/******************************************************************************/
+/*      Utility functions to get the current monitors height and width        */
+/******************************************************************************/
+static int get_max_height() {
+	gdouble height_min;
+	gdouble height_max;
+	SPIN_BUTTON_GET_RANGE("spin_height_pixels", &height_min, &height_max);
+	return (int) height_max;
+}
+
+static int get_max_width() {
+	gdouble width_min;
+	gdouble width_max;
+	SPIN_BUTTON_GET_RANGE("spin_width_pixels", &width_min, &width_max);
+	return (int) width_max;
+}
+
+/******************************************************************************/
 /*               ALL static callback helpers are below                        */
 /******************************************************************************/
 
@@ -488,35 +551,77 @@ static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidge
     }
 }
 
-static int percentage_dimension (int current_size, enum dimensions dimension)
-{
+static int percentage_dimension (int max_size, int current_size) {
     DEBUG_FUNCTION ("percentage_dimension");
-    DEBUG_ASSERT (dimension == WIDTH || dimension == HEIGHT);
 
-    if (dimension == HEIGHT)
-        return (int) (((float) current_size) / ((float) gdk_screen_height ()) * 100.0);
-
-    return (int) (((float) current_size) / ((float) gdk_screen_width ()) * 100.0);
+    return (int) (((float) current_size) / ((float) max_size) * 100.0);
 }
 
-#define percentage_height(current_height) percentage_dimension(current_height, HEIGHT)
-#define percentage_width(current_width)   percentage_dimension(current_width, WIDTH)
+#define percentage_height(max_size, current_height) percentage_dimension(max_size, current_height)
+#define percentage_width(max_size, current_width)   percentage_dimension(max_size, current_width)
 
-#define pixels2percentage(PIXELS,DIMENSION) percentage_dimension ((PIXELS),(DIMENSION))
-#define percentage2pixels(PERCENTAGE,DIMENSION) (((PERCENTAGE) / 100.0) * get_display_dimension ((DIMENSION)))
+#define pixels2percentage(max_size,pixels) percentage_dimension ((max_size), (pixels))
+#define percentage2pixels(max_size,percentage) (((percentage) / 100.0) * max_size)
 
-static gint get_display_dimension (const enum dimensions dimension)
-{
-    DEBUG_FUNCTION ("get_display_dimension");
-    DEBUG_ASSERT (dimension == HEIGHT || dimension == WIDTH);
+/**
+ * Get the number of screens and load the monitor geometry for each screen,
+ * then set the position of the window according to the x and y offset
+ * of that monitor. This function does not actually move or resize the window
+ * but only sets changes the value of the spin buttons. The moving and resizing
+ * is then done by the callback functions of the respective widgets.
+ */
+static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
+	// Get the monitor number on which the window is currently shown
+	int last_monitor = config_getint("show_on_monitor_number");
+	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+	int num_monitors = gdk_screen_get_n_monitors(screen);
+	GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
+	int i;
+	for(i=0; i<num_monitors; i++) {
+		GdkRectangle* current_rectangle = rect+i;
+		gdk_screen_get_monitor_geometry(screen, i, current_rectangle);
+	}
+	int monitor;
+	GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
+	monitor = gtk_combo_box_get_active(combo_choose_monitor);
+	//Save the new monitor value
+	config_setint("show_on_monitor_number", monitor);
+	GdkRectangle* current_rectangle = rect + monitor;
+	GdkRectangle* last_rectangle = rect + last_monitor;
+	/* The dimensions of the monitor might have changed,
+	 * so we need to update the spinner widgets for height,
+	 * width, and their percentages as well as their ranges.
+	 * Keep in mind that we use the max range of the pixel spinners
+	 * to store the size of the screen. This only works well if we hide
+	 * the window before updating all the spinners.
+	 */
+	gtk_widget_hide(tw->window);
+	if(current_rectangle->width != last_rectangle->width) {
+		int width_percent = SPIN_BUTTON_GET_VALUE ("spin_width_percentage");
+		int new_max_width = current_rectangle->width;
+		int width = percentage2pixels(new_max_width, width_percent);
+		SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
+		SPIN_BUTTON_SET_VALUE ("spin_width_pixels", width);
 
-    if (dimension == HEIGHT)
-        return gdk_screen_height ();
+		gtk_window_resize (GTK_WINDOW(tw->window), width, config_getint("max_height"));
+	}
+	if(current_rectangle->height != last_rectangle->height) {
+		int height_percent = SPIN_BUTTON_GET_VALUE ("spin_height_percentage");
+		int new_max_height = current_rectangle->height;
+		int height = percentage2pixels(new_max_height, height_percent);
+		SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
+		SPIN_BUTTON_SET_VALUE ("spin_height_pixels", height);
 
-    if (dimension == WIDTH)
-        return gdk_screen_width ();
+		gtk_window_resize (GTK_WINDOW(tw->window), config_getint("max_width"), height);
+	}
 
-    return -1;
+	SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
+	SPIN_BUTTON_SET_VALUE("spin_x_position", current_rectangle->x);
+	SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
+	SPIN_BUTTON_SET_VALUE("spin_y_position", current_rectangle->y);
+
+    gtk_widget_show(tw->window);
+	return TRUE; //callback was handled
 }
 
 static void window_title_change_all ()
@@ -841,13 +946,45 @@ static void entry_word_chars_changed (GtkWidget *w)
 }
 
 /*
- * Prototypes for the next 4 functions. Since they depend on each other,
- * this is pretty much necessary.
+ * Finds the coordinate that will center the tilda window in the screen.
  *
- * Sorry about the mess!
+ * If you want to center the tilda window on the top or bottom of the screen,
+ * pass the screen width into screen_dimension and the tilda window's width
+ * into the tilda_dimension variable. The result will be the x coordinate that
+ * should be used in order to have the tilda window centered on the screen.
+ *
+ * Centering based on y coordinate is similar, just use the screen height and
+ * tilda window height.
  */
+int find_centering_coordinate (enum dimensions dimension)
+{
+    DEBUG_FUNCTION ("find_centering_coordinate");
+
+    gdouble screen_dimension;
+    gdouble tilda_dimension;
+    gdouble min, max;
+    if (dimension == HEIGHT) {
+        SPIN_BUTTON_GET_RANGE ("spin_y_position", &min, &max);
+        screen_dimension = max;
+        tilda_dimension = config_getint("max_height");
+    } else if (dimension == WIDTH) {
+        SPIN_BUTTON_GET_RANGE ("spin_x_position", &min, &max);
+        screen_dimension = max;
+        tilda_dimension = config_getint("max_width");
+    }
+    const float screen_center = screen_dimension / 2.0;
+    const float tilda_center  = tilda_dimension  / 2.0;
+
+    return screen_center - tilda_center;
+}
+
+/*
+ * Prototypes for the next 4 functions.
+ */
+//Both height functions depend on each other
 static void spin_height_percentage_value_changed_cb (GtkWidget *w);
 static void spin_height_pixels_value_changed_cb (GtkWidget *w);
+//Both width functions depend on each other
 static void spin_width_percentage_value_changed_cb (GtkWidget *w);
 static void spin_width_pixels_value_changed_cb (GtkWidget *w);
 
@@ -857,14 +994,14 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
 
     const gint h_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint h_pix = percentage2pixels (h_pct, HEIGHT);
+    const gint h_pix = percentage2pixels (get_max_height(), h_pct);
 
     config_setint ("max_height", h_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -873,19 +1010,20 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
+
 static void spin_height_pixels_value_changed_cb (GtkWidget *w)
 {
     const GtkWidget *spin_height_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_percentage"));
     const gint h_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint h_pct = pixels2percentage (h_pix, HEIGHT);
+    const gint h_pct = pixels2percentage (get_max_height(), h_pix);
 
     config_setint ("max_height", h_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
+        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -900,14 +1038,14 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
 
     const gint w_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint w_pix = percentage2pixels (w_pct, WIDTH);
+    const gint w_pix = percentage2pixels (get_max_width(), w_pct);
 
     config_setint ("max_width", w_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (WIDTH));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -922,14 +1060,15 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_percentage"));
 
     const gint w_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint w_pct = pixels2percentage (w_pix, WIDTH);
+    const gint w_pct = pixels2percentage (get_max_width(), w_pix);
 
     config_setint ("max_width", w_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage), &spin_width_percentage_value_changed_cb, w_pct);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage),
+        &spin_width_percentage_value_changed_cb, w_pct);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
+        config_setint ("x_pos", find_centering_coordinate (WIDTH));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -940,21 +1079,21 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
 
 static void check_centered_horizontally_toggled_cb (GtkWidget *w)
 {
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_x_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_x_position"));
     const GtkWidget *spin_x_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_x_position"));
 
-    config_setbool ("centered_horizontally", status);
+    config_setbool ("centered_horizontally", active);
 
-    if (status)
-        config_setint ("x_pos", find_centering_coordinate (gdk_screen_width(), config_getint ("max_width")));
+    if (active)
+        config_setint ("x_pos", find_centering_coordinate (WIDTH));
     else
         config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_x_position)));
 
-    gtk_widget_set_sensitive (GTK_WIDGET(label_x_position), !status);
-    gtk_widget_set_sensitive (GTK_WIDGET(spin_x_position), !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_x_position), !active);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_x_position), !active);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
 
@@ -978,21 +1117,21 @@ static void spin_x_position_value_changed_cb (GtkWidget *w)
 
 static void check_centered_vertically_toggled_cb (GtkWidget *w)
 {
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_y_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_y_position"));
     const GtkWidget *spin_y_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_y_position"));
 
-    config_setbool ("centered_vertically", status);
+    config_setbool ("centered_vertically", active);
 
-    if (status)
-        config_setint ("y_pos", find_centering_coordinate (gdk_screen_height(), config_getint ("max_height")));
+    if (active)
+        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
     else
         config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_y_position)));
 
-    gtk_widget_set_sensitive (GTK_WIDGET(label_y_position), !status);
-    gtk_widget_set_sensitive (GTK_WIDGET(spin_y_position), !status);
+    gtk_widget_set_sensitive (GTK_WIDGET(label_y_position), !active);
+    gtk_widget_set_sensitive (GTK_WIDGET(spin_y_position), !active);
 
     gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
 
@@ -1552,7 +1691,6 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
-
     /* Re-enable widgets. Doing it here instead of wizard_dlg_key_grab because it is possible to close
        the dialog without grabbing a key, by clicking. */
     gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), TRUE);
@@ -1581,46 +1719,76 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
 
     /* If the dialog was "programmatically destroyed" (we got a key), we don't want to destroy it again.
        Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
-    if (response != -1)
-    {
+    if (response != -1) {
         g_signal_handlers_disconnect_by_func (G_OBJECT(dialog), G_CALLBACK(wizard_dlg_key_grab), w);
         gtk_widget_destroy (dialog);
     }
-
 }
 
-/******************************************************************************/
-/*                       Wizard set-up functions                              */
-/******************************************************************************/
+static void initialize_combo_choose_monitor() {
+	/**
+	 * First we need to initialize the "combo_choose_monitor" widget,
+	 * with the numbers of each monitor attached to the system.
+	 */
+	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+	int num_monitors = gdk_screen_get_n_monitors(screen);
+	GtkComboBox* combo_choose_monitor =
+			GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
+	GtkListStore* monitor_model =
+			GTK_LIST_STORE(gtk_combo_box_get_model(combo_choose_monitor));
+	GtkTreeIter iter;
+	gint i;
+	/* The loop starts at 1 because 0 is already in the list store by default. This is set in
+	 * the list store definition in the GtkBuilder file. */
+	for (i = 1; i < num_monitors; i++) {
+		gtk_list_store_append(monitor_model, &iter);
+		gtk_list_store_set(monitor_model, &iter, 0, i, -1);
+	}
+	//select the monitor according to the config file
+	if (num_monitors > config_getint("show_on_monitor_number")) {
+		COMBO_BOX ("combo_choose_monitor", "show_on_monitor_number");
+	}
+}
 
+/**
+ * Here the geometry options in the appearance tab get initialized. The options are:
+ * height and width (both absolute and in percentage), x and y positions as well as the
+ * check boxes for centering.
+ * Because we might have multiple monitors we first need to get the monitor that
+ * is currently selected to show the window and then load its geometry information.
+ */
+void initialize_geometry_spinners() {
+	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+	int monitor = config_getint("show_on_monitor_number");
+	GdkRectangle rectangle;
+	gdk_screen_get_monitor_geometry(screen, monitor, &rectangle);
+	int monitor_height = rectangle.height;
+	int monitor_width = rectangle.width;
 
-/* Defines to make the process of setting all of the initial values easier */
-#define WIDGET_SET_INSENSITIVE(GLADE_NAME) gtk_widget_set_sensitive ( \
-    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME)), FALSE))
-#define CHECK_BUTTON(GLADE_NAME,CFG_BOOL) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
-#define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
-#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define BUTTON_LABEL_FROM_CFG(GLADE_NAME,CFG_STR) gtk_button_set_label (GTK_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
-#define SPIN_BUTTON(GLADE_NAME,CFG_INT) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
-#define SPIN_BUTTON_SET_RANGE(GLADE_NAME,LOWER,UPPER) gtk_spin_button_set_range (GTK_SPIN_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), (LOWER), (UPPER))
-#define SPIN_BUTTON_SET_VALUE(GLADE_NAME,VALUE) gtk_spin_button_set_value (GTK_SPIN_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), (VALUE))
-#define FILE_BUTTON(GLADE_NAME, FILENAME) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), FILENAME)
-#define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON( \
-    gtk_builder_get_object (xml, (GLADE_NAME))), (COLOR))
-#define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
-    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
-#define SET_SENSITIVE_BY_CONFIG_NBOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
-    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), !config_getbool ((CFG_BOOL)))
+	SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
+	SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (monitor_height, config_getint ("max_height")));
+    SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, monitor_height);
+	SPIN_BUTTON("spin_height_pixels", "max_height");
+
+	SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
+	SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (monitor_width, config_getint ("max_width")));
+    SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, monitor_width);
+	SPIN_BUTTON("spin_width_pixels", "max_width");
+
+	CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");
+	CHECK_BUTTON("check_centered_vertically", "centered_vertically");
+
+	SPIN_BUTTON_SET_RANGE("spin_x_position", 0, gdk_screen_width());
+	SPIN_BUTTON_SET_RANGE("spin_y_position", 0, gdk_screen_height());
+
+	SPIN_BUTTON("spin_x_position", "x_pos");
+	SPIN_BUTTON("spin_y_position", "y_pos");
+
+	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
+	SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
+	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_y_position", "centered_vertically");
+	SET_SENSITIVE_BY_CONFIG_NBOOL("label_y_position", "centered_vertically");
+}
 
 /* Read all state from the config system, and put it into
  * its visual representation in the wizard. */
@@ -1665,26 +1833,11 @@ static void set_wizard_state_from_config ()
     TEXT_ENTRY ("entry_word_chars", "word_chars");
 
     /* Appearance Tab */
-    SPIN_BUTTON_SET_RANGE ("spin_height_percentage", 0, 100);
-    SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (config_getint ("max_height")));
-    SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, gdk_screen_height());
-    SPIN_BUTTON ("spin_height_pixels", "max_height");
+    /* Initialize the monitor chooser combo box with the numbers of the monitor */
+	initialize_combo_choose_monitor();
 
-    SPIN_BUTTON_SET_RANGE ("spin_width_percentage", 0, 100);
-    SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (config_getint ("max_width")));
-    SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, gdk_screen_width());
-    SPIN_BUTTON ("spin_width_pixels", "max_width");
 
-    CHECK_BUTTON ("check_centered_horizontally", "centered_horizontally");
-    CHECK_BUTTON ("check_centered_vertically", "centered_vertically");
-    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
-    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
-    SPIN_BUTTON ("spin_x_position", "x_pos");
-    SPIN_BUTTON ("spin_y_position", "y_pos");
-    SET_SENSITIVE_BY_CONFIG_NBOOL ("spin_x_position","centered_horizontally");
-    SET_SENSITIVE_BY_CONFIG_NBOOL ("label_x_position","centered_horizontally");
-    SET_SENSITIVE_BY_CONFIG_NBOOL ("spin_y_position","centered_vertically");
-    SET_SENSITIVE_BY_CONFIG_NBOOL ("label_y_position","centered_vertically");
+	initialize_geometry_spinners();
 
     CHECK_BUTTON ("check_enable_transparency", "enable_transparency");
     SPIN_BUTTON ("spin_level_of_transparency", "transparency");
@@ -1805,6 +1958,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("entry_word_chars","changed",entry_word_chars_changed);
 
     /* Appearance Tab */
+    CONNECT_SIGNAL ("combo_choose_monitor", "changed", combo_monitor_selection_changed_cb);
     CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb);
     CONNECT_SIGNAL ("spin_height_pixels","value-changed",spin_height_pixels_value_changed_cb);
     CONNECT_SIGNAL ("spin_width_percentage","value-changed",spin_width_percentage_value_changed_cb);

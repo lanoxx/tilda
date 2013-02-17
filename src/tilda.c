@@ -386,27 +386,6 @@ static gboolean parse_cli (int argc, char *argv[])
     return show_config;
 }
 
-/*
- * Finds the coordinate that will center the tilda window in the screen.
- *
- * If you want to center the tilda window on the top or bottom of the screen,
- * pass the screen width into screen_dimension and the tilda window's width
- * into the tilda_dimension variable. The result will be the x coordinate that
- * should be used in order to have the tilda window centered on the screen.
- *
- * Centering based on y coordinate is similar, just use the screen height and
- * tilda window height.
- */
-int find_centering_coordinate (const int screen_dimension, const int tilda_dimension)
-{
-    DEBUG_FUNCTION ("find_centering_coordinate");
-
-    const float screen_center = screen_dimension / 2.0;
-    const float tilda_center  = tilda_dimension  / 2.0;
-
-    return screen_center - tilda_center;
-}
-
 /**
  * Get a pointer to the config file name for this instance.
  *
