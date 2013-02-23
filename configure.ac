@@ -19,6 +19,12 @@ AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
+# See http://www.gnu.org/savannah-checkouts/gnu/automake/manual/html_node/maintainer_002dmode.html
+# for an explanation of using this macro. The short explanation is:
+#     AM_MAINTAINER_MODE is bad but
+#     AM_MAINTAINER_MODE([enable]) is good
+AM_MAINTAINER_MODE([enable])
+
 # This registeres the option '--enable-maintainer-flags' to the ./configure script
 # If this option is set then it activates both the '--enable-debug' and '--enable-debug-functions'
 # options that are defined below. It also activates several flags to the compile such that it
