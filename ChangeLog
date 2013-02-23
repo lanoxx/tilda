@@ -1,3 +1,9 @@
+version 1.1.1 (2012-02-24):
+	* Made some minor changes to the build files
+	  to make package bulding easier. This includes
+	  no more silent builds and enabled maintainer
+	  mode.
+
 version 1.1.0 (2012-02-17):
 	* Added multi-monitor awareness. The wizard
 	  now has a new drop down in the appearance
