@@ -19,11 +19,12 @@ development packages (*-dev or *-devel) of the dependencies above then it
 should be possible to install with:
 
     ./autogen.sh --prefix=/usr
-    make
+    make --silent
     sudo make install
 
 If you don't want to install to the /usr prefix, choose some other prefix,
-such as /opt/tilda and add it to your path.
+such as /opt/tilda and add it to your path. Also I recomment do run make with
+the --silent (or -s) option.
 
 Running Tilda
 ================================================================================
