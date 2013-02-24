@@ -5,6 +5,8 @@ AUTOMAKE_OPTIONS = gnu
 
 SUBDIRS = po m4 src
 
+DISTCLEANFILES = tilda.desktop
+
 MAINTAINER_CLEAN_FILES = Makefile \
 		src/Makefile \
 		config.log \
