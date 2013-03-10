@@ -1,0 +1,20 @@
+Source: tilda
+Section: x11
+Priority: extra
+Maintainer: Sebastian Geiger <lanoxx@gmx.net>
+Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf
+Standards-Version: 3.9.4
+Homepage: http://github.com/lanoxx/tilda
+Vcs-Git: git://git.debian.org/collab-maint/tilda.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/tilda.git;a=summary
+
+Package: tilda
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Gtk based drop down terminal for Linux and Unix
+ Tilda is a terminal emulator similar to normal terminals like
+ gnome-terminal (Gnome) or Konsole (KDE), with the difference
+ that it drops down from the edge of a screen when a certain
+ hotkey is pressed. This is similar to the build in consoles in
+ games such as Quake or Half-live. Tilda is highly configureable
+ through a graphical wizard.

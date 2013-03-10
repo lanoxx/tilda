@@ -1,0 +1,107 @@
+tilda (1.1.4-1) unstable; urgency=low
+
+  * New upstream release (Closes: #695574, #692904)
+  * Added a watch file (Closes: #501739)
+  * Use x-www-browser as default (Closes: #552505)
+  * Use word characters setting, thanks to Liu Yubao
+    <yubao.liu@gmail.com> (Closes: #506855)
+  * Remove deprecated dpatch and upgrade to packaging format "3.0 quilt"
+    and update to Standards-Version to 3.9.3 and debhelper to 9,
+    thanks to Jari Aalto <jari.aalto@cante.net> (Closes: #664358)
+  * New maintainer (Sebastian Geiger), thanks to Davide Truffa for his
+    previous work (Closes: #583248)
+  * Update tilda.desktop file to be compatible with freedesktop.org,
+    thanks to Jekyll Wu (Closes: #678129)
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Sat, 23 Feb 2013 12:06:09 +0100
+tilda (0.09.6-2) unstable; urgency=low
+
+  * Fix "segfaults on startup" with 03_gtk_window_realize.dpatch
+    (Closes: #550123)
+
+ -- Filippo Giunchedi <filippo@debian.org>  Sat, 17 Oct 2009 19:26:52 +0100
+
+tilda (0.09.6-1) unstable; urgency=low
+
+  [ Davide Truffa ]
+  * New upstream release (Closes: #461123, #483722)
+    - updated italian translation
+  * debian/control
+    - updated Standard-Version to 3.8.0
+    - updated debhelper to >= 6
+    - removed build-depend on automake and cvs
+    - added Homepage field
+  * debian/compat
+    - updated debhelper compat level to 6
+
+  [ Filippo Giunchedi ]
+  * Fix "segfaults on startup"
+    (Closes: #550123)
+
+ -- Filippo Giunchedi <filippo@debian.org>  Sat, 17 Oct 2009 19:26:42 +0100
+
+tilda (0.09.4+cvs20071012-1) unstable; urgency=high
+
+  * New upstream release from CVS snapshot 20071012 (Closes: #446745, #432111)
+    - removed old patch
+    - added 01_general-fixes.patch to debianize this CVS snapshot
+    - new build depends on: automake, cvs, flex, libglade2-dev
+    - updated copyright file
+    - updated README.Debian
+  * Added Italian translation (02_italian-translation.dpatch)
+  * Updated menu structure
+
+ -- Davide Truffa <davide@catoblepa.org>  Sun, 11 Nov 2007 21:28:51 +0100
+
+tilda (0.09.4-4) unstable; urgency=low
+
+  * Fixed error when pulldown animation is inactivated (Closes: #430194)
+    - (new 01_segfault-fix.dpatch)
+  * Improved web-link launcher
+    - (now use ctrl+click to open urls)
+  * Added "/usr/share/doc/tilda/README.Debian" (Closes: #422235)
+    - (explain how to configure special keys)
+
+ -- Davide Truffa <davide@catoblepa.org>  Thu, 29 Jun 2007 19:32:43 +0200
+
+tilda (0.09.4-3) unstable; urgency=low
+
+  * Added web-link launcher
+    (patch by Davide Truffa)
+
+ -- Davide Truffa <davide@catoblepa.org>  Mon, 11 Jun 2007 21:19:59 +0200
+
+tilda (0.09.4-2) unstable; urgency=low
+
+  * Fixed segfaults when wrong keybinding (Closes: #336013).
+    (patch from Launchpad)
+  * New man page.
+
+ -- Davide Truffa <davide@catoblepa.org>  Tue, 24 Apr 2007 18:37:14 +0200
+
+tilda (0.09.4-1) unstable; urgency=low
+
+  * New upstream release (Closes: #391405).
+
+ -- Davide Truffa <davide@catoblepa.org>  Sat, 14 Apr 2007 14:24:56 +0200
+
+tilda (0.09.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fixed black-on-black font/background bug (Closes: #347628).
+
+ -- David Moreno Garza <damog@debian.org>  Fri, 21 Apr 2006 11:57:24 -0500
+
+tilda (0.09.1-2) unstable; urgency=low
+
+  * Correcting wrong information on manpage.
+  	- Closes: #345343.
+
+ -- David Moreno Garza <damog@debian.org>  Fri, 30 Dec 2005 13:04:32 -0600
+ 
+tilda (0.09.1-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- David Moreno Garza <damog@debian.org>  Sat,  8 Oct 2005 15:39:29 -0500
+

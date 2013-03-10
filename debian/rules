@@ -1,0 +1,88 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+#%:
+#	dh $@ --with autoreconf
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
+CROSS= --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+else
+CROSS= --build $(DEB_BUILD_GNU_TYPE)
+endif
+
+config.status:
+	dh_testdir
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+	dh_autoreconf
+	dh_auto_configure -- --disable-silent-rules $(shell DEB_LDFLAGS_MAINT_APPEND=-Wl,-z,defs dpkg-buildflags --export=configure)
+#	./configure $(CROSS) --prefix=/usr --disable-silent-rules --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info $(shell DEB_LDFLAGS_MAINT_APPEND=-Wl,-z,defs\
+#         dpkg-buildflags --export=configure)
+	cd $(CURDIR)/po && make update-gmo
+
+build: build-arch build-indep
+
+build-arch: build-stamp
+
+build-indep: build-stamp
+
+build-stamp:  config.status
+	dh_testdir
+	$(MAKE)
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp 
+	[ ! -f Makefile ] || $(MAKE) distclean
+	rm -f config.sub config.guess
+	dh_autoreconf_clean
+	dh_clean
+	rm -f $(CURDIR)/tilda.desktop
+	rm -f $(CURDIR)/po/*.gmo
+
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	dh_lintian
+	$(MAKE) DESTDIR=$(CURDIR)/debian/tilda install
+	mv $(CURDIR)/debian/tilda/usr/share/tilda.glade \
+		$(CURDIR)/debian/tilda/usr/share/tilda/
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installmenu
+	dh_installman debian/tilda.1
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build build-arch build-indep build-stamp clean binary-indep binary-arch binary install
