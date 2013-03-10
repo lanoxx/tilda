@@ -5,8 +5,15 @@ Source: https://github.com/lanoxx/tilda
 
 Files: *
 Copyright: 2004-2012, Tristan Sloughter <sloutri@iit.edu>, Ira Snyder <tilda@irasnyder.com>
-           2007-2008 Ken Dryer <kdreyer@chicagolug.org>
-           2012-2013 Sebastian Geiger <lanoxx@gmx.net>
+           2007-2008, Ken Dryer <kdreyer@chicagolug.org>
+           2012-2013, Sebastian Geiger <lanoxx@gmx.net>
+License: GPL-2+
+
+Files: debian/*
+Copyright: 2004-2013, Davide Truffa <davide@catoblepa.org>
+           2013,       Sebastian Geiger <lanoxx@gmx.net>
+License: GPL-2+
+
 License: GPL-2+
   This program is free software; you can redistribute it
   and/or modify it under the terms of the GNU General Public
@@ -29,9 +36,4 @@ License: GPL-2+
   License version 2 can be found in the file
   `/usr/share/common-licenses/GPL-2'.
 
-Files: debian/*
-Copyright: 2004-2013 Davide Truffa
-           2013      Sebastian Geiger
-License: GPL-2+
-  [LICENSE TEXT]
 
