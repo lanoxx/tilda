@@ -43,6 +43,5 @@ tilda_LDADD = $(AM_LDADD) \
 		$(LTLIBINTL) \
 		$(LEXLIB)
 
-maintainer-clean-generic:
-	-rm Makefile.in
+MAINTAINERCLEANFILES = Makefile.in
 
