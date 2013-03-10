@@ -11,7 +11,6 @@ MAINTAINERCLEANFILES = \
 		ABOUT-NLS \
 		Makefile.in \
 		aclocal.m4 \
-		src/Makefile \
 		stamp-h1 \
 		missing \
 		install-sh \
