@@ -1,21 +1,46 @@
-## Process this file with automake to produce to Makefile.in
-# vim: set ts=8 sts=8 sw=8:
+## Process this file with automake to produce a Makefile.in
+# vim: set noexpandtab ts=8 sts=8 sw=8:
 
 AUTOMAKE_OPTIONS = gnu
 
 SUBDIRS = po m4 src
 
-DISTCLEANFILES = tilda.desktop
+CLEANFILES = tilda.desktop
 
-MAINTAINER_CLEAN_FILES = Makefile \
+MAINTAINERCLEANFILES = \
+		ABOUT-NLS \
+		Makefile.in \
+		aclocal.m4 \
 		src/Makefile \
-		config.log \
-		config.status \
 		stamp-h1 \
-		tilda-config.h
+		missing \
+		install-sh \
+		decomp \
+		compile \
+		INSTALL \
+		m4/*.m4 \
+		tilda-config.h \
+		config.guess \
+		config.rpath \
+		config.sub \
+		configure \
+		depcomp \
+		m4/Makefile.in \
+		po/Makefile.in.in \
+		po/Makevars.template \
+		po/Rules-quot \
+		po/boldquot.sed \
+		po/en@boldquot.header \
+		po/en@quot.header \
+		po/insert-header.sin \
+		po/quot.sed \
+		po/remove-potcdate.sin \
+		po/tilda.pot \
+		tilda-config.h.in \
+		tilda-config.h.in~
 
-maintainer-clean-generic:
-	-rm $(MAINTAINER_CLEAN_FILES)
+#maintainer-clean-generic:
+#	-rm $(MAINTAINER_CLEAN_FILES)
 
 Applicationsdir = ${datadir}/applications
 Applications_DATA = tilda.desktop
@@ -29,6 +54,6 @@ EXTRA_DIST = tilda.desktop.in tilda.png tilda.glade
 
 tilda.desktop: tilda.desktop.in
 	sed -e 's|\@BINDIR\@|$(bindir)|' \
-	    -e 's|\@PIXMAPSDIR\@|$(datadir)/applications|' $< > $@
+		-e 's|\@PIXMAPSDIR\@|$(datadir)/applications|' $< > $@
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
