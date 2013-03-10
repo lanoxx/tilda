@@ -2,7 +2,7 @@ Source: tilda
 Section: x11
 Priority: extra
 Maintainer: Sebastian Geiger <lanoxx@gmx.net>
-Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf
+Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf, autopoint
 Standards-Version: 3.9.4
 Homepage: http://github.com/lanoxx/tilda
 Vcs-Git: git://github.com/lanoxx/tilda.git
