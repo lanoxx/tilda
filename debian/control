@@ -13,7 +13,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Gtk based drop down terminal for Linux and Unix
  Tilda is a terminal emulator similar to normal terminals like
- gnome-terminal (Gnome) or Konsole (KDE), with the difference
+ gnome-terminal (GNOME) or Konsole (KDE), with the difference
  that it drops down from the edge of a screen when a certain
  hotkey is pressed. This is similar to the build in consoles in
  games such as Quake or Half-live. Tilda is highly configureable
