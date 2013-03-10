@@ -5,8 +5,8 @@ Maintainer: Sebastian Geiger <lanoxx@gmx.net>
 Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf
 Standards-Version: 3.9.4
 Homepage: http://github.com/lanoxx/tilda
-Vcs-Git: git://git.debian.org/collab-maint/tilda.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/tilda.git;a=summary
+Vcs-Git: git://github.com/lanoxx/tilda.git
+Vcs-Browser: https://github.com/lanoxx/tilda/tree/tilda-debian-1-1
 
 Package: tilda
 Architecture: any
