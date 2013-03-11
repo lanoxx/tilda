@@ -1,5 +1,0 @@
-tilda source: configure-generated-file-in-source
-# We have the fortify flages enabled but lintian still complains
-# so we ignore it.
-hardening-no-fortify-functions
-

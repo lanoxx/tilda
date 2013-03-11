@@ -18,8 +18,6 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <tilda-config.h>
-
 #include <glib.h>
 #include <stdio.h>
 

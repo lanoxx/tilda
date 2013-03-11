@@ -2,7 +2,13 @@ Source: tilda
 Section: x11
 Priority: extra
 Maintainer: Sebastian Geiger <lanoxx@gmx.net>
-Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf, autopoint
+Build-Depends:
+ cmake,
+ debhelper (>= 9),
+ libconfuse-dev,
+ libglib2.0-dev,
+ libgtk-3-dev,
+ libvte-2.90-dev
 Standards-Version: 3.9.4
 Homepage: http://github.com/lanoxx/tilda
 Vcs-Git: git://github.com/lanoxx/tilda.git
@@ -10,7 +16,9 @@ Vcs-Browser: https://github.com/lanoxx/tilda/tree/tilda-debian-1-1
 
 Package: tilda
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
 Description: Gtk based drop down terminal for Linux and Unix
  Tilda is a terminal emulator similar to normal terminals like
  gnome-terminal (GNOME) or Konsole (KDE), with the difference
