@@ -38,4 +38,5 @@ ADD_DEFINITIONS(-DPACKAGE_VERSION="1.5.1")
 ADD_DEFINITIONS(-DDATADIR="${DATADIR}")
 
 #===========================================================
-
+ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src)
+#===========================================================
