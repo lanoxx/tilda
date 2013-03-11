@@ -29,12 +29,13 @@ INSTALL(FILES "${CMAKE_BINARY_DIR}/tilda.desktop" DESTINATION ${CMAKE_INSTALL_PR
 INSTALL(FILES "${CMAKE_SOURCE_DIR}/tilda.png" DESTINATION ${PIXMAPSDIR}/)
 INSTALL(FILES "${CMAKE_SOURCE_DIR}/tilda.glade" DESTINATION ${DATADIR}/)
 #===========================================================
+INCLUDE(po)
+COMPILE_PO_FILES(${CMAKE_SOURCE_DIR}/po MO_FILES)
+#===========================================================
 ADD_DEFINITIONS(${GTK3_DEFINITIONS})
 ADD_DEFINITIONS(-DPACKAGE_NAME="Tilda")
 ADD_DEFINITIONS(-DPACKAGE_VERSION="1.5.1")
 ADD_DEFINITIONS(-DDATADIR="${DATADIR}")
 
-#===========================================================
-ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src)
 #===========================================================
 
