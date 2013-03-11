@@ -27,6 +27,7 @@ SET(PIXMAPSDIR ${CMAKE_INSTALL_PREFIX}/share/tilda/pixmaps)
 CONFIGURE_FILE(tilda.desktop.in ${CMAKE_BINARY_DIR}/tilda.desktop)
 INSTALL(FILES "${CMAKE_BINARY_DIR}/tilda.desktop" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
 INSTALL(FILES "${CMAKE_SOURCE_DIR}/tilda.png" DESTINATION ${PIXMAPSDIR}/)
+INSTALL(FILES "${CMAKE_SOURCE_DIR}/tilda.glade" DESTINATION ${DATADIR}/)
 #===========================================================
 ADD_DEFINITIONS(${GTK3_DEFINITIONS})
 ADD_DEFINITIONS(-DPACKAGE_NAME="Tilda")
