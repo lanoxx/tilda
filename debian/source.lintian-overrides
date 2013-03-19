@@ -1,5 +1,6 @@
 tilda source: configure-generated-file-in-source
 # We have the fortify flages enabled but lintian still complains
-# so we ignore it.
+# so we ignore it. I have ran blhc to verify that there are
+# indeed no errors.
 hardening-no-fortify-functions
 
