@@ -3,8 +3,6 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-#%:
-#	dh $@ --with autoreconf
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -28,8 +26,6 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 endif
 	dh_autoreconf
 	dh_auto_configure -- --disable-silent-rules $(shell DEB_LDFLAGS_MAINT_APPEND=-Wl,-z,defs dpkg-buildflags --export=configure)
-#	./configure $(CROSS) --prefix=/usr --disable-silent-rules --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info $(shell DEB_LDFLAGS_MAINT_APPEND=-Wl,-z,defs\
-#         dpkg-buildflags --export=configure)
 	cd $(CURDIR)/po && make update-gmo
 
 build: build-arch build-indep
