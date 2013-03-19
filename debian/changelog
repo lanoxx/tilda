@@ -1,4 +1,4 @@
-tilda (1.1.4-1) unstable; urgency=low
+tilda (1.1.4-1) experimental; urgency=low
 
   * New upstream release (Closes: #695574, #692904)
   * Added a watch file (Closes: #501739)
