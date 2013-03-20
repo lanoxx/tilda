@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# vim: set ts=8 sts=8 sw=8:
+# vim: set noexpandtab ts=8 sts=8 sw=8:
 
 AUTOMAKE_OPTIONS = gnu
 
@@ -33,7 +33,8 @@ tilda_LDFLAGS = $(AM_LDFLAGS) \
 		$(GTK_LDFLAGS) \
 		$(LIBGLADE_LDFLAGS) \
 		$(VTE_LDFLAGS) \
-		$(LIBCONFUSE_LDFLAGS)
+		$(LIBCONFUSE_LDFLAGS) \
+		-Wl,--as-needed
 
 tilda_LDADD = $(AM_LDADD) \
 		$(GTK_LIBS) \
