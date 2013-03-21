@@ -38,9 +38,6 @@ MAINTAINERCLEANFILES = \
 		tilda-config.h.in \
 		tilda-config.h.in~
 
-#maintainer-clean-generic:
-#	-rm $(MAINTAINER_CLEAN_FILES)
-
 Applicationsdir = ${datadir}/applications
 Applications_DATA = tilda.desktop
 
