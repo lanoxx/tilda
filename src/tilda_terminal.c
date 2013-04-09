@@ -97,6 +97,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     term->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL,
         gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (VTE_TERMINAL(term->vte_term))));
 
+    /* Initialize to false, we have not yet dropped to the default shell */
+    term->dropped_to_default_shell = FALSE;
+
     /* Set properties of the terminal */
     tilda_term_config_defaults (term);
 
@@ -426,6 +429,20 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command)
     }
 
 launch_default_shell:
+
+    /* If we have dropped to the default shell before, then this time, we
+     * do not spawn a new shell, but instead close the current shell. This will
+     * cause the current tab to close.
+     */
+    if (tt->dropped_to_default_shell) {
+        gint index = gtk_notebook_page_num (GTK_NOTEBOOK(tt->tw->notebook),
+            tt->hbox);
+        tilda_window_close_tab (tt->tw, index, FALSE);
+        return 0;
+    }
+    if (ignore_custom_command) {
+        tt->dropped_to_default_shell = TRUE;
+    }
 
     /* No custom command, get it from the environment */
     default_command = (gchar *) g_getenv ("SHELL");
