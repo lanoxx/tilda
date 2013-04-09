@@ -1,3 +1,8 @@
+version 1.1.7 (2013-04-09):
+	* Install files to pkgdatadir
+	  instead of datadir to fix a
+	  bug in the debian package.
+
 version 1.1.6 (2013-03-21):
 	* Update Makefiles to allow a better
 	  building of the package on Debian.
