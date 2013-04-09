@@ -187,7 +187,7 @@ gint wizard (tilda_window *ltw)
     DEBUG_ASSERT (ltw != NULL);
 
     gchar *window_title;
-    const gchar *glade_file = g_build_filename (DATADIR, "tilda.glade", NULL);
+    const gchar *glade_file = g_build_filename (PKGDATADIR, "tilda.glade", NULL);
     GtkWidget *wizard_window;
 
     /* Make sure that there isn't already a wizard showing */
