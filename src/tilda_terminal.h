@@ -31,6 +31,11 @@ struct tilda_term_
     GtkWidget *hbox;
     GtkWidget *scrollbar;
     GRegex *http_regexp;
+    /* We remember if we have already dropped to the default
+     * shell before, if so, then we know that this time we can
+     * exit the program.
+     */
+    gboolean dropped_to_default_shell;
 
     struct tilda_window_ *tw;
 };
