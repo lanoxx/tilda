@@ -1,3 +1,10 @@
+tilda (1.1.7-1) experimental; urgency=low
+
+  * Fixed a bug in the packaging that
+    installed the tilda.glade file
+    in the wrong location.
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 09 Apr 2013 21:49:00 +0100
 tilda (1.1.5-1) experimental; urgency=low
 
   * New upstream release (Closes: #695574, #692904)

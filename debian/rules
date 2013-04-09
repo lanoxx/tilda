@@ -14,5 +14,3 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	dh_auto_install
-	mv $(CURDIR)/debian/tilda/usr/share/tilda.glade \
-		                $(CURDIR)/debian/tilda/usr/share/tilda/
