@@ -44,7 +44,7 @@ Applications_DATA = tilda.desktop
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
-data_DATA = tilda.glade
+pkgdata_DATA = tilda.glade
 
 EXTRA_DIST = tilda.desktop.in tilda.png tilda.glade
 
