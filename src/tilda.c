@@ -24,6 +24,7 @@
 #include <key_grabber.h> /* for pull */
 #include <wizard.h>
 #include <xerror.h>
+#include <tomboykeybinder.h>
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -238,7 +239,7 @@ static gint remove_stale_lock_files ()
 
     /* For each possible lock file, check if it is a lock, and see if
      * it matches one of the running tildas */
-    while (filename = (gchar*) g_dir_read_name (dir))
+    while ((filename = (gchar*) g_dir_read_name (dir)) != NULL)
     {
         lock = islockfile (filename);
 
@@ -488,7 +489,7 @@ static void termination_handler (gint signum)
  * This is to do the migration of config files from ~/.tilda to the
  * XDG_*_HOME folders
  */
-static int migrate_config_files(char *old_config_path)
+static void migrate_config_files(char *old_config_path)
 {
     gchar* old_lock_dir = g_build_filename(old_config_path, "locks", NULL);
     gchar* new_lock_dir = g_build_filename(g_get_user_cache_dir (), "tilda", "locks", NULL);
