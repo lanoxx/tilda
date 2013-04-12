@@ -855,7 +855,7 @@ static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer d
             if (match != NULL)
             {
 #if DEBUG
-                g_print ("Got a Ctrl+Left Click -- Matched: `%s' (%d)\n", match, tag);
+                g_print ("Got a Left Click -- Matched: `%s' (%d)\n", match, tag);
 #endif
                 web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
                 cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
