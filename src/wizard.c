@@ -155,10 +155,6 @@ static TerminalPaletteScheme palette_schemes[] = {
     { N_("Zenburn"), terminal_palette_zenburn }
 };
 
-static void init_palette_scheme_menu (void);
-static void update_palette_color_button(gint idx);
-
-
 /* For use in get_display_dimension() */
 enum dimensions { HEIGHT, WIDTH };
 
@@ -179,8 +175,14 @@ static GtkBuilder *xml = NULL;
 static tilda_window *tw = NULL;
 
 /* Prototypes for use in the wizard() */
-static void set_wizard_state_from_config ();
-static void connect_wizard_signals ();
+static void set_wizard_state_from_config (void);
+static void connect_wizard_signals (void);
+static void init_palette_scheme_menu (void);
+static void update_palette_color_button(gint idx);
+static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
+static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
+static int find_centering_coordinate (enum dimensions dimension);
+static void initialize_geometry_spinners(void);
 
 /* Show the wizard. This will show the wizard, then exit immediately. */
 gint wizard (tilda_window *ltw)
@@ -256,7 +258,7 @@ gint wizard (tilda_window *ltw)
     return 0;
 }
 
-gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
 {
     /* Try to grab the key. This is a good way to validate it :) */
     gboolean key_is_valid = tilda_keygrabber_bind (accel, tw);
@@ -271,7 +273,7 @@ gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizar
     }
 }
 
-gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
 {
     guint accel_key;
     GdkModifierType accel_mods;
@@ -656,11 +658,8 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin, void (*
 /*                       ALL Callbacks are below                              */
 /******************************************************************************/
 
-static void button_wizard_close_clicked_cb (GtkWidget *w)
+static void button_wizard_close_clicked_cb ()
 {
-    const GtkWidget *wizard_window =
-        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
-
     /* Call the clean-up function */
     wizard_closed ();
 }
@@ -712,7 +711,7 @@ static void check_start_tilda_hidden_toggled_cb (GtkWidget *w)
 static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("double_buffer", status);
@@ -726,7 +725,7 @@ static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
 static void check_terminal_bell_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("bell", status);
@@ -741,7 +740,7 @@ static void check_terminal_bell_toggled_cb (GtkWidget *w)
 static void check_cursor_blinks_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("blinks", status);
@@ -756,7 +755,7 @@ static void check_cursor_blinks_toggled_cb (GtkWidget *w)
 static void check_enable_antialiasing_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("antialias", status);
@@ -795,7 +794,7 @@ static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w)
 static void check_allow_bold_text_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("bold", status);
@@ -827,8 +826,7 @@ static void combo_tab_pos_changed_cb (GtkWidget *w)
 static void button_font_font_set_cb (GtkWidget *w)
 {
     const gchar *font = gtk_font_button_get_font_name (GTK_FONT_BUTTON (w));
-    const gboolean antialias = config_getbool ("antialias");
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setstr ("font", font);
@@ -926,7 +924,7 @@ static void entry_web_browser_changed (GtkWidget *w) {
 
 static void entry_word_chars_changed (GtkWidget *w)
 {
-    gint i;
+    guint i;
     tilda_term *tt;
     const gchar *word_chars = gtk_entry_get_text (GTK_ENTRY(w));
 
@@ -953,12 +951,12 @@ static void entry_word_chars_changed (GtkWidget *w)
  * Centering based on y coordinate is similar, just use the screen height and
  * tilda window height.
  */
-int find_centering_coordinate (enum dimensions dimension)
+static int find_centering_coordinate (enum dimensions dimension)
 {
     DEBUG_FUNCTION ("find_centering_coordinate");
 
-    gdouble screen_dimension;
-    gdouble tilda_dimension;
+    gdouble screen_dimension = 0;
+    gdouble tilda_dimension = 0;
     gdouble min, max;
     if (dimension == HEIGHT) {
         SPIN_BUTTON_GET_RANGE ("spin_y_position", &min, &max);
@@ -1159,7 +1157,7 @@ static void check_enable_transparency_toggled_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_level_of_transparency"));
 
     const gdouble transparency_level = (gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_level_of_transparency)) / 100.0);
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("enable_transparency", status);
@@ -1191,7 +1189,7 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gdouble transparency_level = (status / 100.0);
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setint ("transparency", status);
@@ -1265,7 +1263,7 @@ static void check_use_image_for_background_toggled_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "button_background_image"));
 
     const gchar *image = config_getstr ("image");
-    gint i;
+    guint i;
     tilda_term *tt;
 
 
@@ -1286,7 +1284,7 @@ static void check_use_image_for_background_toggled_cb (GtkWidget *w)
 static void button_background_image_selection_changed_cb (GtkWidget *w)
 {
     const gchar *image = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setstr ("image", image);
@@ -1360,7 +1358,7 @@ static void colorbutton_text_color_set_cb (GtkWidget *w)
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
 
-    gint i;
+    guint i;
     tilda_term *tt;
     GdkColor gdk_text_color;
 
@@ -1384,7 +1382,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
 {
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
-    gint i;
+    guint i;
     tilda_term *tt;
     GdkColor gdk_back_color;
 
@@ -1408,7 +1406,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
 
 static void combo_palette_scheme_changed_cb (GtkWidget *w)
 {
-    gint i, j;
+    guint i, j;
     tilda_term *tt;
     GdkColor fg, bg;
     GtkWidget *color_button;
@@ -1456,7 +1454,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     const GtkWidget *combo_palette_scheme =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
     const gchar* name = gtk_widget_get_name(w);
-    gint i;
+    guint i;
     tilda_term *tt;
     GtkWidget *color_button;
     GdkColor fg, bg;
@@ -1504,7 +1502,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
 static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setint ("scrollbar_pos", status);
@@ -1519,7 +1517,7 @@ static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setint ("lines", status);
@@ -1533,7 +1531,7 @@ static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
 static void check_scroll_on_output_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("scroll_on_output", status);
@@ -1547,7 +1545,7 @@ static void check_scroll_on_output_toggled_cb (GtkWidget *w)
 static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("scroll_on_key", status);
@@ -1561,7 +1559,7 @@ static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w)
 static void check_scroll_background_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setbool ("scroll_background", status);
@@ -1579,7 +1577,7 @@ static void combo_backspace_binding_changed_cb (GtkWidget *w)
                           VTE_ERASE_DELETE_SEQUENCE,
                           VTE_ERASE_ASCII_BACKSPACE,
                           VTE_ERASE_AUTO };
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setint ("backspace_key", status);
@@ -1597,7 +1595,7 @@ static void combo_delete_binding_changed_cb (GtkWidget *w)
                           VTE_ERASE_DELETE_SEQUENCE,
                           VTE_ERASE_ASCII_BACKSPACE,
                           VTE_ERASE_AUTO };
-    gint i;
+    guint i;
     tilda_term *tt;
 
     config_setint ("delete_key", status);
@@ -1608,7 +1606,7 @@ static void combo_delete_binding_changed_cb (GtkWidget *w)
     }
 }
 
-static void button_reset_compatibility_options_clicked_cb (GtkWidget *w)
+static void button_reset_compatibility_options_clicked_cb ()
 {
     const GtkWidget *combo_backspace_binding =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_backspace_binding"));
@@ -1754,7 +1752,7 @@ static void initialize_combo_choose_monitor() {
  * Because we might have multiple monitors we first need to get the monitor that
  * is currently selected to show the window and then load its geometry information.
  */
-void initialize_geometry_spinners() {
+static void initialize_geometry_spinners() {
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int monitor = config_getint("show_on_monitor_number");
 	GdkRectangle rectangle;
