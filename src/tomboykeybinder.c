@@ -30,21 +30,21 @@ static guint num_lock_mask, caps_lock_mask, scroll_lock_mask;
 static void
 lookup_ignorable_modifiers (GdkKeymap *keymap)
 {
-	egg_keymap_resolve_virtual_modifiers (keymap, 
+	egg_keymap_resolve_virtual_modifiers (keymap,
 					      EGG_VIRTUAL_LOCK_MASK,
 					      &caps_lock_mask);
 
-	egg_keymap_resolve_virtual_modifiers (keymap, 
+	egg_keymap_resolve_virtual_modifiers (keymap,
 					      EGG_VIRTUAL_NUM_LOCK_MASK,
 					      &num_lock_mask);
 
-	egg_keymap_resolve_virtual_modifiers (keymap, 
+	egg_keymap_resolve_virtual_modifiers (keymap,
 					      EGG_VIRTUAL_SCROLL_LOCK_MASK,
 					      &scroll_lock_mask);
 }
 
 static void
-grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin, 
+grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 				      Binding   *binding,
 				      gboolean   grab)
 {
@@ -62,23 +62,23 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 
 	for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
 		if (grab) {
-			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin), 
-				  binding->keycode, 
-				  binding->modifiers | mod_masks [i], 
+			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
+				  binding->keycode,
+				  binding->modifiers | mod_masks [i],
 				  GDK_WINDOW_XID (rootwin),
-				  False, 
+				  False,
 				  GrabModeAsync,
 				  GrabModeAsync);
 		} else {
 			XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
 				    binding->keycode,
-				    binding->modifiers | mod_masks [i], 
+				    binding->modifiers | mod_masks [i],
 				    GDK_WINDOW_XID (rootwin));
 		}
 	}
 }
 
-static gboolean 
+static gboolean
 do_grab_key (Binding *binding)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
@@ -90,14 +90,14 @@ do_grab_key (Binding *binding)
 	if (keymap == NULL || rootwin == NULL)
 		return FALSE;
 
-	if (!egg_accelerator_parse_virtual (binding->keystring, 
-					    &keysym, 
+	if (!egg_accelerator_parse_virtual (binding->keystring,
+					    &keysym,
 					    &virtual_mods))
 		return FALSE;
 
 	TRACE (g_print ("Got accel %d, %d\n", keysym, virtual_mods));
 
-	binding->keycode = XKeysymToKeycode (GDK_WINDOW_XDISPLAY (rootwin), 
+	binding->keycode = XKeysymToKeycode (GDK_WINDOW_XDISPLAY (rootwin),
 					     keysym);
 	if (binding->keycode == 0)
 		return FALSE;
@@ -112,8 +112,8 @@ do_grab_key (Binding *binding)
 
 	gdk_error_trap_push ();
 
-	grab_ungrab_with_ignorable_modifiers (rootwin, 
-					      binding, 
+	grab_ungrab_with_ignorable_modifiers (rootwin,
+					      binding,
 					      TRUE /* grab */);
 
 	gdk_flush ();
@@ -126,15 +126,15 @@ do_grab_key (Binding *binding)
 	return TRUE;
 }
 
-static gboolean 
+static gboolean
 do_ungrab_key (Binding *binding)
 {
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
 	TRACE (g_print ("Removing grab for '%s'\n", binding->keystring));
 
-	grab_ungrab_with_ignorable_modifiers (rootwin, 
-					      binding, 
+	grab_ungrab_with_ignorable_modifiers (rootwin,
+					      binding,
 					      FALSE /* ungrab */);
 
 	return TRUE;
@@ -152,31 +152,31 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 
 	switch (xevent->type) {
 	case KeyPress:
-		TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n", 
-				xevent->xkey.keycode, 
+		TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n",
+				xevent->xkey.keycode,
 				xevent->xkey.state));
 
-		/* 
+		/*
 		 * Set the last event time for use when showing
 		 * windows to avoid anti-focus-stealing code.
 		 */
 		processing_event = TRUE;
 		last_event_time = xevent->xkey.time;
 
-		event_mods = xevent->xkey.state & ~(num_lock_mask  | 
-						    caps_lock_mask | 
+		event_mods = xevent->xkey.state & ~(num_lock_mask  |
+						    caps_lock_mask |
 						    scroll_lock_mask);
 
 		for (iter = bindings; iter != NULL; iter = iter->next) {
 			Binding *binding = (Binding *) iter->data;
-						       
+
 			if (binding->keycode == xevent->xkey.keycode &&
 			    binding->modifiers == event_mods) {
 
-				TRACE (g_print ("Calling handler for '%s'...\n", 
+				TRACE (g_print ("Calling handler for '%s'...\n",
 						binding->keystring));
 
-				(binding->handler) (binding->keystring, 
+				(binding->handler) (binding->keystring,
 						    binding->user_data);
 			}
 		}
@@ -191,7 +191,7 @@ filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
 	return return_val;
 }
 
-static void 
+static void
 keymap_changed (GdkKeymap *map)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
@@ -212,7 +212,7 @@ keymap_changed (GdkKeymap *map)
 	}
 }
 
-void 
+void
 tomboy_keybinder_init (void)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
@@ -220,11 +220,11 @@ tomboy_keybinder_init (void)
 
 	lookup_ignorable_modifiers (keymap);
 
-	gdk_window_add_filter (rootwin, 
-			       filter_func, 
+	gdk_window_add_filter (rootwin,
+			       filter_func,
 			       NULL);
 
-	g_signal_connect (keymap, 
+	g_signal_connect (keymap,
 			  "keys_changed",
 			  G_CALLBACK (keymap_changed),
 			  NULL);
@@ -257,7 +257,7 @@ tomboy_keybinder_bind (const char           *keystring,
 }
 
 void
-tomboy_keybinder_unbind (const char           *keystring, 
+tomboy_keybinder_unbind (const char           *keystring,
 			 TomboyBindkeyHandler  handler)
 {
 	GSList *iter;
@@ -266,7 +266,7 @@ tomboy_keybinder_unbind (const char           *keystring,
 		Binding *binding = (Binding *) iter->data;
 
 		if (strcmp (keystring, binding->keystring) != 0 ||
-		    handler != binding->handler) 
+		    handler != binding->handler)
 			continue;
 
 		do_ungrab_key (binding);
@@ -279,7 +279,7 @@ tomboy_keybinder_unbind (const char           *keystring,
 	}
 }
 
-/* 
+/*
  * From eggcellrenderkeys.c.
  */
 gboolean
@@ -311,7 +311,7 @@ tomboy_keybinder_is_modifier (guint keycode)
 guint32
 tomboy_keybinder_get_current_event_time (void)
 {
-	if (processing_event) 
+	if (processing_event)
 		return last_event_time;
 	else
 		return GDK_CURRENT_TIME;
