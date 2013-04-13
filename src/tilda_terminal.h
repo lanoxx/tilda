@@ -78,7 +78,7 @@ void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollba
 
 #define TERMINAL_PALETTE_SIZE 16
 
-extern GdkColor current_palette[TERMINAL_PALETTE_SIZE];
+extern GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 G_END_DECLS
 

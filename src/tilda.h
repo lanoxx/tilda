@@ -34,6 +34,12 @@ struct lock_info
     gint instance;
 };
 
+#define GUINT16_TO_FLOAT(color) (color / (double) 0xFFFF)
+#define GUINT16_FROM_FLOAT(value) ((int) (value * 0xFFFF + 0.5d))
+
+#define RGB(r,g,b) (r) / (gdouble)G_MAXUINT16, \
+                     (g) / (gdouble)G_MAXUINT16, \
+                     (b) / (gdouble)G_MAXUINT16, 1.
 
 G_END_DECLS
 

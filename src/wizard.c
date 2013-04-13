@@ -37,114 +37,110 @@
 /* INT_MAX */
 #include <limits.h>
 
-const GdkColor
-terminal_palette_tango[TERMINAL_PALETTE_SIZE] =
-{
-  { 0, 0x2e2e, 0x3434, 0x3636 },
-  { 0, 0xcccc, 0x0000, 0x0000 },
-  { 0, 0x4e4e, 0x9a9a, 0x0606 },
-  { 0, 0xc4c4, 0xa0a0, 0x0000 },
-  { 0, 0x3434, 0x6565, 0xa4a4 },
-  { 0, 0x7575, 0x5050, 0x7b7b },
-  { 0, 0x0606, 0x9820, 0x9a9a },
-  { 0, 0xd3d3, 0xd7d7, 0xcfcf },
-  { 0, 0x5555, 0x5757, 0x5353 },
-  { 0, 0xefef, 0x2929, 0x2929 },
-  { 0, 0x8a8a, 0xe2e2, 0x3434 },
-  { 0, 0xfcfc, 0xe9e9, 0x4f4f },
-  { 0, 0x7272, 0x9f9f, 0xcfcf },
-  { 0, 0xadad, 0x7f7f, 0xa8a8 },
-  { 0, 0x3434, 0xe2e2, 0xe2e2 },
-  { 0, 0xeeee, 0xeeee, 0xecec }
+const GdkRGBA
+terminal_palette_tango[TERMINAL_PALETTE_SIZE] = {
+    { RGB(0x2e2e, 0x3434, 0x3636) },
+    { RGB(0xcccc, 0x0000, 0x0000) },
+    { RGB(0x4e4e, 0x9a9a, 0x0606) },
+    { RGB(0xc4c4, 0xa0a0, 0x0000) },
+    { RGB(0x3434, 0x6565, 0xa4a4) },
+    { RGB(0x7575, 0x5050, 0x7b7b) },
+    { RGB(0x0606, 0x9820, 0x9a9a) },
+    { RGB(0xd3d3, 0xd7d7, 0xcfcf) },
+    { RGB(0x5555, 0x5757, 0x5353) },
+    { RGB(0xefef, 0x2929, 0x2929) },
+    { RGB(0x8a8a, 0xe2e2, 0x3434) },
+    { RGB(0xfcfc, 0xe9e9, 0x4f4f) },
+    { RGB(0x7272, 0x9f9f, 0xcfcf) },
+    { RGB(0xadad, 0x7f7f, 0xa8a8) },
+    { RGB(0x3434, 0xe2e2, 0xe2e2) },
+    { RGB(0xeeee, 0xeeee, 0xecec) }
 };
 
-const GdkColor
+const GdkRGBA
 terminal_palette_zenburn[TERMINAL_PALETTE_SIZE] = {
-    {0, 0x2222, 0x2222, 0x2222 }, //black
-    {0, 0x8080, 0x3232, 0x3232 }, //darkred
-    {0, 0x5b5b, 0x7676, 0x2f2f }, //darkgreen
-    {0, 0xaaaa, 0x9999, 0x4343 }, //brown
-    {0, 0x3232, 0x4c4c, 0x8080 }, //darkblue
-    {0, 0x7070, 0x6c6c, 0x9a9a }, //darkmagenta
-    {0, 0x9292, 0xb1b1, 0x9e9e }, //darkcyan
-    {0, 0xffff, 0xffff, 0xffff }, //lightgrey
-    {0, 0x2222, 0x2222, 0x2222 }, //darkgrey
-    {0, 0x9898, 0x2b2b, 0x2b2b }, //red
-    {0, 0x8989, 0xb8b8, 0x3f3f }, //green
-    {0, 0xefef, 0xefef, 0x6060 }, //yellow
-    {0, 0x2b2b, 0x4f4f, 0x9898 }, //blue
-    {0, 0x8282, 0x6a6a, 0xb1b1 }, //magenta
-    {0, 0xa1a1, 0xcdcd, 0xcdcd }, //cyan
-    {0, 0xdede, 0xdede, 0xdede }, //white}
+    { RGB(0x2222, 0x2222, 0x2222) }, //black
+    { RGB(0x8080, 0x3232, 0x3232) }, //darkred
+    { RGB(0x5b5b, 0x7676, 0x2f2f) }, //darkgreen
+    { RGB(0xaaaa, 0x9999, 0x4343) }, //brown
+    { RGB(0x3232, 0x4c4c, 0x8080) }, //darkblue
+    { RGB(0x7070, 0x6c6c, 0x9a9a) }, //darkmagenta
+    { RGB(0x9292, 0xb1b1, 0x9e9e) }, //darkcyan
+    { RGB(0xffff, 0xffff, 0xffff) }, //lightgrey
+    { RGB(0x2222, 0x2222, 0x2222) }, //darkgrey
+    { RGB(0x9898, 0x2b2b, 0x2b2b) }, //red
+    { RGB(0x8989, 0xb8b8, 0x3f3f) }, //green
+    { RGB(0xefef, 0xefef, 0x6060) }, //yellow
+    { RGB(0x2b2b, 0x4f4f, 0x9898) }, //blue
+    { RGB(0x8282, 0x6a6a, 0xb1b1) }, //magenta
+    { RGB(0xa1a1, 0xcdcd, 0xcdcd) }, //cyan
+    { RGB(0xdede, 0xdede, 0xdede) }, //white}
 };
 
-const GdkColor
-terminal_palette_linux[TERMINAL_PALETTE_SIZE] =
-{
-  { 0, 0x0000, 0x0000, 0x0000 },
-  { 0, 0xaaaa, 0x0000, 0x0000 },
-  { 0, 0x0000, 0xaaaa, 0x0000 },
-  { 0, 0xaaaa, 0x5555, 0x0000 },
-  { 0, 0x0000, 0x0000, 0xaaaa },
-  { 0, 0xaaaa, 0x0000, 0xaaaa },
-  { 0, 0x0000, 0xaaaa, 0xaaaa },
-  { 0, 0xaaaa, 0xaaaa, 0xaaaa },
-  { 0, 0x5555, 0x5555, 0x5555 },
-  { 0, 0xffff, 0x5555, 0x5555 },
-  { 0, 0x5555, 0xffff, 0x5555 },
-  { 0, 0xffff, 0xffff, 0x5555 },
-  { 0, 0x5555, 0x5555, 0xffff },
-  { 0, 0xffff, 0x5555, 0xffff },
-  { 0, 0x5555, 0xffff, 0xffff },
-  { 0, 0xffff, 0xffff, 0xffff }
+const GdkRGBA
+terminal_palette_linux[TERMINAL_PALETTE_SIZE] = {
+    { RGB(0x0000, 0x0000, 0x0000) },
+    { RGB(0xaaaa, 0x0000, 0x0000) },
+    { RGB(0x0000, 0xaaaa, 0x0000) },
+    { RGB(0xaaaa, 0x5555, 0x0000) },
+    { RGB(0x0000, 0x0000, 0xaaaa) },
+    { RGB(0xaaaa, 0x0000, 0xaaaa) },
+    { RGB(0x0000, 0xaaaa, 0xaaaa) },
+    { RGB(0xaaaa, 0xaaaa, 0xaaaa) },
+    { RGB(0x5555, 0x5555, 0x5555) },
+    { RGB(0xffff, 0x5555, 0x5555) },
+    { RGB(0x5555, 0xffff, 0x5555) },
+    { RGB(0xffff, 0xffff, 0x5555) },
+    { RGB(0x5555, 0x5555, 0xffff) },
+    { RGB(0xffff, 0x5555, 0xffff) },
+    { RGB(0x5555, 0xffff, 0xffff) },
+    { RGB(0xffff, 0xffff, 0xffff) }
 };
 
-const GdkColor
-terminal_palette_xterm[TERMINAL_PALETTE_SIZE] =
-{
-    {0, 0x0000, 0x0000, 0x0000 },
-    {0, 0xcdcb, 0x0000, 0x0000 },
-    {0, 0x0000, 0xcdcb, 0x0000 },
-    {0, 0xcdcb, 0xcdcb, 0x0000 },
-    {0, 0x1e1a, 0x908f, 0xffff },
-    {0, 0xcdcb, 0x0000, 0xcdcb },
-    {0, 0x0000, 0xcdcb, 0xcdcb },
-    {0, 0xe5e2, 0xe5e2, 0xe5e2 },
-    {0, 0x4ccc, 0x4ccc, 0x4ccc },
-    {0, 0xffff, 0x0000, 0x0000 },
-    {0, 0x0000, 0xffff, 0x0000 },
-    {0, 0xffff, 0xffff, 0x0000 },
-    {0, 0x4645, 0x8281, 0xb4ae },
-    {0, 0xffff, 0x0000, 0xffff },
-    {0, 0x0000, 0xffff, 0xffff },
-    {0, 0xffff, 0xffff, 0xffff }
+const GdkRGBA
+terminal_palette_xterm[TERMINAL_PALETTE_SIZE] = {
+    {RGB(0x0000, 0x0000, 0x0000) },
+    {RGB(0xcdcb, 0x0000, 0x0000) },
+    {RGB(0x0000, 0xcdcb, 0x0000) },
+    {RGB(0xcdcb, 0xcdcb, 0x0000) },
+    {RGB(0x1e1a, 0x908f, 0xffff) },
+    {RGB(0xcdcb, 0x0000, 0xcdcb) },
+    {RGB(0x0000, 0xcdcb, 0xcdcb) },
+    {RGB(0xe5e2, 0xe5e2, 0xe5e2) },
+    {RGB(0x4ccc, 0x4ccc, 0x4ccc) },
+    {RGB(0xffff, 0x0000, 0x0000) },
+    {RGB(0x0000, 0xffff, 0x0000) },
+    {RGB(0xffff, 0xffff, 0x0000) },
+    {RGB(0x4645, 0x8281, 0xb4ae) },
+    {RGB(0xffff, 0x0000, 0xffff) },
+    {RGB(0x0000, 0xffff, 0xffff) },
+    {RGB(0xffff, 0xffff, 0xffff) }
 };
 
-const GdkColor
-terminal_palette_rxvt[TERMINAL_PALETTE_SIZE] =
-{
-  { 0, 0x0000, 0x0000, 0x0000 },
-  { 0, 0xcdcd, 0x0000, 0x0000 },
-  { 0, 0x0000, 0xcdcd, 0x0000 },
-  { 0, 0xcdcd, 0xcdcd, 0x0000 },
-  { 0, 0x0000, 0x0000, 0xcdcd },
-  { 0, 0xcdcd, 0x0000, 0xcdcd },
-  { 0, 0x0000, 0xcdcd, 0xcdcd },
-  { 0, 0xfafa, 0xebeb, 0xd7d7 },
-  { 0, 0x4040, 0x4040, 0x4040 },
-  { 0, 0xffff, 0x0000, 0x0000 },
-  { 0, 0x0000, 0xffff, 0x0000 },
-  { 0, 0xffff, 0xffff, 0x0000 },
-  { 0, 0x0000, 0x0000, 0xffff },
-  { 0, 0xffff, 0x0000, 0xffff },
-  { 0, 0x0000, 0xffff, 0xffff },
-  { 0, 0xffff, 0xffff, 0xffff }
+const GdkRGBA
+terminal_palette_rxvt[TERMINAL_PALETTE_SIZE] = {
+    { RGB(0x0000, 0x0000, 0x0000) },
+    { RGB(0xcdcd, 0x0000, 0x0000) },
+    { RGB(0x0000, 0xcdcd, 0x0000) },
+    { RGB(0xcdcd, 0xcdcd, 0x0000) },
+    { RGB(0x0000, 0x0000, 0xcdcd) },
+    { RGB(0xcdcd, 0x0000, 0xcdcd) },
+    { RGB(0x0000, 0xcdcd, 0xcdcd) },
+    { RGB(0xfafa, 0xebeb, 0xd7d7) },
+    { RGB(0x4040, 0x4040, 0x4040) },
+    { RGB(0xffff, 0x0000, 0x0000) },
+    { RGB(0x0000, 0xffff, 0x0000) },
+    { RGB(0xffff, 0xffff, 0x0000) },
+    { RGB(0x0000, 0x0000, 0xffff) },
+    { RGB(0xffff, 0x0000, 0xffff) },
+    { RGB(0x0000, 0xffff, 0xffff) },
+    { RGB(0xffff, 0xffff, 0xffff) }
 };
 
 typedef struct _TerminalPaletteScheme
 {
   const char *name;
-  const GdkColor *palette;
+  const GdkRGBA *palette;
 }TerminalPaletteScheme;
 
 static TerminalPaletteScheme palette_schemes[] = {
@@ -462,7 +458,7 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
     gtk_builder_get_object (xml, (GLADE_NAME))), (VALUE))
 #define FILE_BUTTON(GLADE_NAME, FILENAME) gtk_file_chooser_set_filename (GTK_FILE_CHOOSER( \
     gtk_builder_get_object (xml, (GLADE_NAME))), FILENAME)
-#define COLOR_BUTTON(GLADE_NAME,COLOR) gtk_color_button_set_color (GTK_COLOR_BUTTON( \
+#define COLOR_CHOOSER(GLADE_NAME,COLOR) gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER( \
     gtk_builder_get_object (xml, (GLADE_NAME))), (COLOR))
 #define SET_SENSITIVE_BY_CONFIG_BOOL(GLADE_NAME,CFG_BOOL) gtk_widget_set_sensitive ( \
     GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
@@ -1305,27 +1301,30 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
     const GtkWidget *colorbutton_back =
         GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
-    GdkColor gdk_text, gdk_back;
+    GdkRGBA gdk_text, gdk_back;
+
     tilda_term *tt;
     gint i;
     gboolean nochange = FALSE;
 
     config_setint ("scheme", scheme);
 
-    switch (scheme)
-    {
+    gdk_text.alpha = 1.0d;
+    gdk_back.alpha = 1.0d;
+
+    switch (scheme) {
         case 1:
-            gdk_text.red = gdk_text.blue = 0x0000;
-            gdk_text.green = 0xffff;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 0x0000;
+            gdk_text.red = gdk_text.blue = 0.0d;
+            gdk_text.green = 1.0d;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
         case 2:
-            gdk_text.red = gdk_text.green = gdk_text.blue = 0x0000;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 0xffff;
+            gdk_text.red = gdk_text.green = gdk_text.blue = 0.0d;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 1.0d;
             break;
         case 3:
-            gdk_text.red = gdk_text.green = gdk_text.blue = 0xffff;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 0x0000;
+            gdk_text.red = gdk_text.green = gdk_text.blue = 1.0d;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
         default:
             nochange = TRUE;
@@ -1335,20 +1334,20 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
     /* If we switched to "Custom", then don't do anything. Let the user continue
      * from the current color choice. */
     if (!nochange) {
-        config_setint ("back_red", gdk_back.red);
-        config_setint ("back_green", gdk_back.green);
-        config_setint ("back_blue", gdk_back.blue);
-        config_setint ("text_red", gdk_text.red);
-        config_setint ("text_green", gdk_text.green);
-        config_setint ("text_blue", gdk_text.blue);
+        config_setint ("back_red",   GUINT16_FROM_FLOAT(gdk_back.red));
+        config_setint ("back_green", GUINT16_FROM_FLOAT(gdk_back.green));
+        config_setint ("back_blue",  GUINT16_FROM_FLOAT(gdk_back.blue));
+        config_setint ("text_red",   GUINT16_FROM_FLOAT(gdk_text.red));
+        config_setint ("text_green", GUINT16_FROM_FLOAT(gdk_text.green));
+        config_setint ("text_blue",  GUINT16_FROM_FLOAT(gdk_text.blue));
 
-        gtk_color_button_set_color (GTK_COLOR_BUTTON(colorbutton_text), &gdk_text);
-        gtk_color_button_set_color (GTK_COLOR_BUTTON(colorbutton_back), &gdk_back);
+        gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(colorbutton_text), &gdk_text);
+        gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(colorbutton_back), &gdk_back);
 
         for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_color_foreground (VTE_TERMINAL(tt->vte_term), &gdk_text);
-            vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term), &gdk_back);
+            vte_terminal_set_color_foreground_rgba (VTE_TERMINAL(tt->vte_term), &gdk_text);
+            vte_terminal_set_color_background_rgba (VTE_TERMINAL(tt->vte_term), &gdk_back);
         }
     }
 }
@@ -1360,21 +1359,21 @@ static void colorbutton_text_color_set_cb (GtkWidget *w)
 
     guint i;
     tilda_term *tt;
-    GdkColor gdk_text_color;
+    GdkRGBA gdk_text_color;
 
     /* The user just changed colors manually, so set the scheme to "Custom" */
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_colorschemes), 0);
     config_setint ("scheme", 0);
 
     /* Now get the color that was set, save it, then set it */
-    gtk_color_button_get_color (GTK_COLOR_BUTTON(w), &gdk_text_color);
-    config_setint ("text_red", gdk_text_color.red);
-    config_setint ("text_green", gdk_text_color.green);
-    config_setint ("text_blue", gdk_text_color.blue);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(w), &gdk_text_color);
+    config_setint ("text_red",   GUINT16_FROM_FLOAT(gdk_text_color.red));
+    config_setint ("text_green", GUINT16_FROM_FLOAT(gdk_text_color.green));
+    config_setint ("text_blue",  GUINT16_FROM_FLOAT(gdk_text_color.blue));
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_color_foreground (VTE_TERMINAL(tt->vte_term), &gdk_text_color);
+        vte_terminal_set_color_foreground_rgba (VTE_TERMINAL(tt->vte_term), &gdk_text_color);
     }
 }
 
@@ -1384,21 +1383,21 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
     guint i;
     tilda_term *tt;
-    GdkColor gdk_back_color;
+    GdkRGBA gdk_back_color;
 
     /* The user just changed colors manually, so set the scheme to "Custom" */
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_colorschemes), 0);
     config_setint ("scheme", 0);
 
     /* Now get the color that was set, save it, then set it */
-    gtk_color_button_get_color (GTK_COLOR_BUTTON(w), &gdk_back_color);
-    config_setint ("back_red", gdk_back_color.red);
-    config_setint ("back_green", gdk_back_color.green);
-    config_setint ("back_blue", gdk_back_color.blue);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(w), &gdk_back_color);
+    config_setint ("back_red",   GUINT16_FROM_FLOAT(gdk_back_color.red));
+    config_setint ("back_green", GUINT16_FROM_FLOAT(gdk_back_color.green));
+    config_setint ("back_blue",  GUINT16_FROM_FLOAT(gdk_back_color.blue));
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term), &gdk_back_color);
+        vte_terminal_set_color_background_rgba (VTE_TERMINAL(tt->vte_term), &gdk_back_color);
     }
 }
 
@@ -1408,7 +1407,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
 {
     guint i, j;
     tilda_term *tt;
-    GdkColor fg, bg;
+    GdkRGBA fg, bg;
     GtkWidget *color_button;
 
     i = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -1416,10 +1415,10 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
     {
         color_button =
             GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
-        gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
+        gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &fg);
         color_button =
             GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
-        gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
+        gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &bg);
 
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
 
@@ -1427,7 +1426,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
         for (j=0; j<g_list_length (tw->terms); j++)
         {
             tt = g_list_nth_data (tw->terms, j);
-            vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+            vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
         }
 
         for (j=0; j<TERMINAL_PALETTE_SIZE; j++)
@@ -1435,9 +1434,9 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
             update_palette_color_button(j);
 
             /* Set palette in the config. */
-            config_setnint ("palette", current_palette[j].red,   j*3);
-            config_setnint ("palette", current_palette[j].green, j*3+1);
-            config_setnint ("palette", current_palette[j].blue,  j*3+2);
+            config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[j].red),   j*3);
+            config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[j].green), j*3+1);
+            config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[j].blue),  j*3+2);
         }
     }
     else
@@ -1457,7 +1456,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     guint i;
     tilda_term *tt;
     GtkWidget *color_button;
-    GdkColor fg, bg;
+    GdkRGBA fg, bg;
 
     /* The user just changed palette manually, so set the palette scheme to "Custom" */
     i = G_N_ELEMENTS (palette_schemes);
@@ -1468,7 +1467,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     i = atoi(&name[sizeof("colorbutton_palette_")-1]);
 
     /* Now get the color that was set, save it. */
-    gtk_color_button_get_color (GTK_COLOR_BUTTON(w), &current_palette[i]);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(w), &current_palette[i]);
 
     /* Why saving the whole palette, not the single color that was set,
      * is if the config file doesn't exist, and we save the single color,
@@ -1479,23 +1478,23 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
      */
     for (i=0; i<TERMINAL_PALETTE_SIZE; i++)
     {
-        config_setnint ("palette", current_palette[i].red,   i*3);
-        config_setnint ("palette", current_palette[i].green, i*3+1);
-        config_setnint ("palette", current_palette[i].blue,  i*3+2);
+        config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[i].red),   i*3);
+        config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[i].green), i*3+1);
+        config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[i].blue),  i*3+2);
     }
 
     /* Set terminal palette. */
     color_button =
         GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
-    gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &fg);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &fg);
     color_button =
         GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
-    gtk_color_button_get_color (GTK_COLOR_BUTTON(color_button), &bg);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &bg);
 
     for (i=0; i<g_list_length (tw->terms); i++)
     {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+        vte_terminal_set_colors_rgba (VTE_TERMINAL (tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
     }
 }
 
@@ -1787,9 +1786,8 @@ static void initialize_geometry_spinners() {
 
 /* Read all state from the config system, and put it into
  * its visual representation in the wizard. */
-static void set_wizard_state_from_config ()
-{
-    GdkColor text_color, back_color;
+static void set_wizard_state_from_config () {
+    GdkRGBA text_color, back_color;
     gint i;
 
     /* General Tab */
@@ -1855,23 +1853,24 @@ static void set_wizard_state_from_config ()
 
     /* Colors Tab */
     COMBO_BOX ("combo_colorschemes", "scheme");
-    text_color.red = config_getint ("text_red");
-    text_color.green = config_getint ("text_green");
-    text_color.blue = config_getint ("text_blue");
-    COLOR_BUTTON ("colorbutton_text", &text_color);
-    back_color.red = config_getint ("back_red");
-    back_color.green = config_getint ("back_green");
-    back_color.blue = config_getint ("back_blue");
-    COLOR_BUTTON ("colorbutton_back", &back_color);
+    text_color.red =   GUINT16_TO_FLOAT(config_getint ("text_red"));
+    text_color.green = GUINT16_TO_FLOAT(config_getint ("text_green"));
+    text_color.blue =  GUINT16_TO_FLOAT(config_getint ("text_blue"));
+    text_color.alpha = 1.0d;
+    COLOR_CHOOSER ("colorbutton_text", &text_color);
+    back_color.red =   GUINT16_TO_FLOAT(config_getint ("back_red"));
+    back_color.green = GUINT16_TO_FLOAT(config_getint ("back_green"));
+    back_color.blue =  GUINT16_TO_FLOAT(config_getint ("back_blue"));
+    back_color.alpha = 1.0d;
+    COLOR_CHOOSER ("colorbutton_back", &back_color);
 
     COMBO_BOX ("combo_palette_scheme", "palette_scheme");
 
-    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++)
-    {
-        current_palette[i].pixel = 0;
-        current_palette[i].red   = config_getnint ("palette", i*3);
-        current_palette[i].green = config_getnint ("palette", i*3+1);
-        current_palette[i].blue  = config_getnint ("palette", i*3+2);
+    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++) {
+        current_palette[i].red   = GUINT16_TO_FLOAT (config_getnint ("palette", i*3));
+        current_palette[i].green = GUINT16_TO_FLOAT (config_getnint ("palette", i*3+1));
+        current_palette[i].blue  = GUINT16_TO_FLOAT (config_getnint ("palette", i*3+2));
+        current_palette[i].alpha = 1.0d;
 
         update_palette_color_button(i);
     }
@@ -2045,6 +2044,6 @@ static void update_palette_color_button(gint idx)
 
     g_free (s);
 
-    gtk_color_button_set_color (GTK_COLOR_BUTTON (color_button), &current_palette[idx]);
+    gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (color_button), &current_palette[idx]);
 }
 
