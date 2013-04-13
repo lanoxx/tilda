@@ -36,7 +36,7 @@
 
 #define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
-GdkColor current_palette[TERMINAL_PALETTE_SIZE];
+GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command);
 static gint tilda_term_config_defaults (tilda_term *tt);
@@ -534,28 +534,29 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     DEBUG_ASSERT (tt != NULL);
 
     gdouble transparency_level = 0.0;
-    GdkColor fg, bg /*, tint, highlight, cursor, black */;
+    GdkRGBA fg, bg;
     gchar* word_chars;
     gint i;
 
     /** Colors & Palette **/
-    bg.red   =    config_getint ("back_red");
-    bg.green =    config_getint ("back_green");
-    bg.blue  =    config_getint ("back_blue");
+    bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
+    bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
+    bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
+    bg.alpha =    1.0d;
 
-    fg.red   =    config_getint ("text_red");
-    fg.green =    config_getint ("text_green");
-    fg.blue  =    config_getint ("text_blue");
+    fg.red   =    GUINT16_TO_FLOAT(config_getint ("text_red"));
+    fg.green =    GUINT16_TO_FLOAT(config_getint ("text_green"));
+    fg.blue  =    GUINT16_TO_FLOAT(config_getint ("text_blue"));
+    fg.alpha =    1.0d;
 
-    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++)
-    {
-        current_palette[i].pixel = 0;
-        current_palette[i].red   = config_getnint ("palette", i*3);
-        current_palette[i].green = config_getnint ("palette", i*3+1);
-        current_palette[i].blue  = config_getnint ("palette", i*3+2);
+    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++) {
+        current_palette[i].red   = GUINT16_TO_FLOAT(config_getnint ("palette", i*3));
+        current_palette[i].green = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+1));
+        current_palette[i].blue  = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+2));
+        current_palette[i].alpha = 1.0d;
     }
 
-    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+    vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
 
     /** Bells **/
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
