@@ -29,6 +29,11 @@ extern void generate_animation_positions (tilda_window *tw);
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw);
 void tilda_keygrabber_unbind (const gchar *keystr);
 
+/**
+ * This function will make the tilda window active after it starts
+ */
+void tilda_window_set_active (tilda_window *tw);
+
 G_END_DECLS
 
 #endif

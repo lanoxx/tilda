@@ -313,10 +313,11 @@ static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
     DEBUG_FUNCTION ("mouse_enter");
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
-    
+
+    GdkEventCrossing *ev = (GdkEventCrossing*)event;
     tilda_window *tw = TILDA_WINDOW(data);
     stop_auto_hide_tick(tw);
-    if (tw->disable_auto_hide == FALSE)
+    if (tw->disable_auto_hide == FALSE && ev->time != 0)
         tilda_window_set_active(tw);
 }
  
