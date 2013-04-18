@@ -141,54 +141,53 @@ do_ungrab_key (Binding *binding)
 }
 
 static GdkFilterReturn
-filter_func (GdkXEvent *gdk_xevent, GdkEvent *event, gpointer data)
-{
-	GdkFilterReturn return_val = GDK_FILTER_CONTINUE;
-	XEvent *xevent = (XEvent *) gdk_xevent;
-	guint event_mods;
-	GSList *iter;
+filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
+    XEvent *xevent = (XEvent *) gdk_xevent;
+    guint event_mods;
+    GSList *iter;
 
-	TRACE (g_print ("Got Event! %d, %d\n", xevent->type, event->type));
+    switch (xevent->type) {
+        case KeyPress:
+            TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n",
+                    xevent->xkey.keycode,
+                    xevent->xkey.state));
 
-	switch (xevent->type) {
-	case KeyPress:
-		TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n",
-				xevent->xkey.keycode,
-				xevent->xkey.state));
+            /*
+             * Set the last event time for use when showing
+             * windows to avoid anti-focus-stealing code.
+             */
+            processing_event = TRUE;
+            last_event_time = xevent->xkey.time;
+            TRACE (g_print ("Current event time %d\n", last_event_time));
 
-		/*
-		 * Set the last event time for use when showing
-		 * windows to avoid anti-focus-stealing code.
-		 */
-		processing_event = TRUE;
-		last_event_time = xevent->xkey.time;
+            event_mods = xevent->xkey.state & ~(num_lock_mask  |
+                                caps_lock_mask |
+                                scroll_lock_mask);
 
-		event_mods = xevent->xkey.state & ~(num_lock_mask  |
-						    caps_lock_mask |
-						    scroll_lock_mask);
+            for (iter = bindings; iter != NULL; iter = iter->next) {
+                Binding *binding = (Binding *) iter->data;
 
-		for (iter = bindings; iter != NULL; iter = iter->next) {
-			Binding *binding = (Binding *) iter->data;
+                if (binding->keycode == xevent->xkey.keycode &&
+                    binding->modifiers == event_mods) {
 
-			if (binding->keycode == xevent->xkey.keycode &&
-			    binding->modifiers == event_mods) {
+                    TRACE (g_print ("Calling handler for '%s'...\n",
+                            binding->keystring));
 
-				TRACE (g_print ("Calling handler for '%s'...\n",
-						binding->keystring));
+                    (binding->handler) (binding->keystring,
+                                binding->user_data);
+                }
+            }
 
-				(binding->handler) (binding->keystring,
-						    binding->user_data);
-			}
-		}
-
-		processing_event = FALSE;
-		break;
-	case KeyRelease:
-		TRACE (g_print ("Got KeyRelease! \n"));
-		break;
+            processing_event = FALSE;
+            break;
+        case KeyRelease:
+            TRACE (g_print ("Got KeyRelease! \n"));
+            break;
+        default:
+            break;
 	}
 
-	return return_val;
+	return GDK_FILTER_CONTINUE;
 }
 
 static void
