@@ -225,7 +225,6 @@ static gint remove_stale_lock_files ()
     gchar *remove_file;
     gchar *filename;
     GDir *dir;
-    gint pid;
 
     /* Open the lock directory for reading */
     dir = g_dir_open (lock_dir, 0, NULL);
@@ -451,7 +450,7 @@ static gint get_instance_number ()
 
     /* Look through every file in the lock directory, and see if it is a lock file.
      * If it is a lock file, store it's instance number in the list. */
-    while (name = (gchar*)g_dir_read_name (dir))
+    while ((name = (gchar*)g_dir_read_name (dir)) != NULL)
     {
         lock = islockfile (name);
 

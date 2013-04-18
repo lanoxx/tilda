@@ -276,7 +276,7 @@ static void start_auto_hide_tick(tilda_window *tw)
     // If the delay is less or equal to 1000ms then the timer is not precise
     // enough, because it takes already about 200ms to register it, so we
     // rather sleep for the given amount of time.
-    const int MAX_SLEEP_TIME = 1000;
+    const guint32 MAX_SLEEP_TIME = 1000;
 
     if ((tw->auto_hide_tick_handler == 0) && (tw->disable_auto_hide == FALSE)) {
         /* If there is not timer registered yet, then the auto_hide_tick_handler
@@ -357,7 +357,7 @@ static void goto_tab (tilda_window *tw, guint i)
     gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), i);
 }
 
-static gboolean goto_tab_generic (tilda_window *tw, gint tab_number)
+static gboolean goto_tab_generic (tilda_window *tw, guint tab_number)
 {
     DEBUG_FUNCTION ("goto_tab_generic");
     DEBUG_ASSERT (tw != NULL);
@@ -422,7 +422,7 @@ static gint cpaste (tilda_window *tw)
 }
 
 /* Tie a single keyboard shortcut to a callback function */
-gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw)
+static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw)
 {
     guint accel_key;
     GdkModifierType accel_mods;
@@ -636,7 +636,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
-	/* Create GDK resources now, to prevent crashes later on */
+    /* Create GDK resources now, to prevent crashes later on */
     gtk_widget_realize (tw->window);
     generate_animation_positions (tw);
 
