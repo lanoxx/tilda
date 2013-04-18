@@ -131,6 +131,10 @@ gint toggle_fullscreen_cb (tilda_window *tw)
 		gtk_window_unfullscreen (GTK_WINDOW (tw->window));
 		tw->fullscreen = FALSE;
 	}
+
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return GDK_EVENT_STOP;
 }
 
 
@@ -151,9 +155,9 @@ static gint next_tab (tilda_window *tw)
     else
       gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
 
-    // It worked. Having this return true makes the callback not carry the
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 static gint prev_tab (tilda_window *tw)
@@ -172,9 +176,9 @@ static gint prev_tab (tilda_window *tw)
     else
       gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
 
-    // It worked. Having this return true makes the callback not carry the
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 static gint move_tab_left (tilda_window *tw)
@@ -205,9 +209,9 @@ static gint move_tab_left (tilda_window *tw)
                                   new_page_index);
     }
 
-    // It worked. Having this return true makes the callback not carry the
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 static gint move_tab_right (tilda_window *tw)
@@ -231,12 +235,12 @@ static gint move_tab_right (tilda_window *tw)
                                   current_page_index - 1);
     }
 
-    // It worked. Having this return true makes the callback not carry the
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
-static void focus_term (GtkWidget *widget, gpointer data)
+static gboolean focus_term (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("focus_term");
     DEBUG_ASSERT (data != NULL);
@@ -252,6 +256,10 @@ static void focus_term (GtkWidget *widget, gpointer data)
         list = gtk_container_get_children (GTK_CONTAINER(box));
         gtk_widget_grab_focus (list->data);
     }
+
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return GDK_EVENT_STOP;
 }
 
 static gboolean auto_hide_tick(gpointer data)
@@ -267,6 +275,7 @@ static gboolean auto_hide_tick(gpointer data)
         tw->auto_hide_tick_handler = 0;
         return FALSE;
     }
+
     return TRUE;
 }
 
@@ -319,9 +328,11 @@ static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
     stop_auto_hide_tick(tw);
     if (tw->disable_auto_hide == FALSE && ev->time != 0)
         tilda_window_set_active(tw);
+
+    return GDK_EVENT_STOP;
 }
- 
-static void mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
+
+static gboolean mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("mouse_leave");
     DEBUG_ASSERT (data != NULL);
@@ -331,12 +342,14 @@ static void mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
     tilda_window *tw = TILDA_WINDOW(data);
 
     if ((ev->mode != GDK_CROSSING_NORMAL) || (tw->auto_hide_on_mouse_leave == FALSE))
-        return;
-    
+        return GDK_EVENT_STOP;
+
     start_auto_hide_tick(tw);
+
+    return GDK_EVENT_STOP;
 }
 
-static void focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+static gboolean focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("focus_out_event_cb");
     DEBUG_ASSERT (data != NULL);
@@ -345,9 +358,11 @@ static void focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer dat
     tilda_window *tw = TILDA_WINDOW(data);
 
     if (tw->auto_hide_on_focus_lost == FALSE)
-        return;
-    
+        return GDK_EVENT_PROPAGATE;
+
     start_auto_hide_tick(tw);
+
+    return GDK_EVENT_PROPAGATE;
 }
 
 static void goto_tab (tilda_window *tw, guint i)
