@@ -122,7 +122,7 @@ gint toggle_fullscreen_cb (tilda_window *tw)
 {
     DEBUG_FUNCTION ("toggle_fullscreen_cb");
     DEBUG_ASSERT (tw != NULL);
-    
+
 	if (tw->fullscreen != TRUE) {
 		tw->fullscreen = TRUE;
 		gtk_window_fullscreen (GTK_WINDOW (tw->window));
@@ -258,7 +258,7 @@ static gboolean auto_hide_tick(gpointer data)
 {
     DEBUG_FUNCTION ("auto_hide_tick");
     DEBUG_ASSERT (data != NULL);
-    
+
     tilda_window *tw = TILDA_WINDOW(data);
     tw->auto_hide_current_time += tw->timer_resolution;
     if ((tw->auto_hide_current_time >= tw->auto_hide_max_time) || tw->current_state == UP)
@@ -325,10 +325,10 @@ static void mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
     DEBUG_FUNCTION ("mouse_leave");
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
-    
+
     GdkEventCrossing *ev = (GdkEventCrossing*)event;
     tilda_window *tw = TILDA_WINDOW(data);
-    
+
     if ((ev->mode != GDK_CROSSING_NORMAL) || (tw->auto_hide_on_mouse_leave == FALSE))
         return;
     
@@ -340,9 +340,9 @@ static void focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer dat
     DEBUG_FUNCTION ("focus_out_event_cb");
     DEBUG_ASSERT (data != NULL);
     DEBUG_ASSERT (widget != NULL);
-    
+
     tilda_window *tw = TILDA_WINDOW(data);
-    
+
     if (tw->auto_hide_on_focus_lost == FALSE)
         return;
     
@@ -427,29 +427,29 @@ gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, til
     guint accel_key;
     GdkModifierType accel_mods;
     GClosure *temp;
- 
+
     gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
     if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
     {
         temp = g_cclosure_new_swap (callback_func, tw, NULL);
         gtk_accel_group_connect (tw->accel_group, accel_key, accel_mods , GTK_ACCEL_VISIBLE, temp);
     }
- 
+
     return 0;
 }
- 
+
 gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
 {
- 
+
     /* If we already have an tw->accel_group (which would happen if we're redefining accelerators in the config window)
        we want to remove it before creating a new one. */
     if (tw->accel_group != NULL)
         gtk_window_remove_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
- 
+
     /* Create Accel Group to add key codes for quit, next, prev and new tabs */
     tw->accel_group = gtk_accel_group_new ();
     gtk_window_add_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
- 
+
     /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab,
        Move Tab, Add Tab, Close Tab, Copy, and Paste using key
        combinations defined in the config. */
@@ -463,7 +463,7 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator("copy_key",         G_CALLBACK(ccopy),                          tw);
     tilda_add_config_accelerator("paste_key",        G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator("fullscreen_key",   G_CALLBACK(toggle_fullscreen_cb),           tw);
- 
+
     /* Set up keyboard shortcuts for Goto Tab # using key combinations defined in the config*/
     /* Know a better way? Then you do. */
     tilda_add_config_accelerator("gototab_1_key",  G_CALLBACK(goto_tab_1),  tw);
@@ -476,7 +476,7 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator("gototab_8_key",  G_CALLBACK(goto_tab_8),  tw);
     tilda_add_config_accelerator("gototab_9_key",  G_CALLBACK(goto_tab_9),  tw);
     tilda_add_config_accelerator("gototab_10_key", G_CALLBACK(goto_tab_10), tw);
-    
+
     return 0;
 }
 
@@ -540,10 +540,10 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
 
     /* Create the main window */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    
+
     /* Generic timer resolution */
     tw->timer_resolution = config_getint("timer_resolution");
-    
+
     /* Auto hide support */
     tw->auto_hide_tick_handler = 0;
     tw->auto_hide_max_time = config_getint("auto_hide_time");
