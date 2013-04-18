@@ -317,7 +317,7 @@ static void stop_auto_hide_tick(tilda_window *tw)
     }
 }
 
-static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
+static gboolean mouse_enter (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("mouse_enter");
     DEBUG_ASSERT (data != NULL);
@@ -332,7 +332,7 @@ static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
     return GDK_EVENT_STOP;
 }
 
-static gboolean mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
+static gboolean mouse_leave (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("mouse_leave");
     DEBUG_ASSERT (data != NULL);
@@ -349,7 +349,7 @@ static gboolean mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
     return GDK_EVENT_STOP;
 }
 
-static gboolean focus_out_event_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+static gboolean focus_out_event_cb (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, gpointer data)
 {
     DEBUG_FUNCTION ("focus_out_event_cb");
     DEBUG_ASSERT (data != NULL);
@@ -514,9 +514,9 @@ static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
     return 0;
 }
 
-static gboolean delete_event_callback (GtkWidget *widget,
-                                GdkEvent  *event,
-                                gpointer   user_data)
+static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
+                                G_GNUC_UNUSED GdkEvent  *event,
+                                G_GNUC_UNUSED gpointer   user_data)
 {
     gtk_main_quit ();
 }

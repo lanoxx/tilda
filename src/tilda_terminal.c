@@ -211,7 +211,7 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     g_free (title);
 }
 
-static void status_line_changed_cb (GtkWidget *widget, gpointer data)
+static void status_line_changed_cb (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
     DEBUG_FUNCTION ("status_line_changed_cb");
     DEBUG_ASSERT (widget != NULL);
@@ -219,7 +219,7 @@ static void status_line_changed_cb (GtkWidget *widget, gpointer data)
     g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
 }
 
-static void iconify_window_cb (GtkWidget *widget, gpointer data)
+static void iconify_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("iconify_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -229,7 +229,7 @@ static void iconify_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_iconify (gtk_widget_get_window ((GTK_WIDGET (data))));
 }
 
-static void deiconify_window_cb (GtkWidget *widget, gpointer data)
+static void deiconify_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("deiconify_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -239,7 +239,7 @@ static void deiconify_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_deiconify (gtk_widget_get_window ((GTK_WIDGET (data))));
 }
 
-static void raise_window_cb (GtkWidget *widget, gpointer data)
+static void raise_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("raise_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -249,7 +249,7 @@ static void raise_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_raise (gtk_widget_get_window (GTK_WIDGET (data)));
 }
 
-static void lower_window_cb (GtkWidget *widget, gpointer data)
+static void lower_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("lower_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -259,7 +259,7 @@ static void lower_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_lower (gtk_widget_get_window (GTK_WIDGET (data)));
 }
 
-static void maximize_window_cb (GtkWidget *widget, gpointer data)
+static void maximize_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("maximize_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -269,7 +269,7 @@ static void maximize_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_maximize (gtk_widget_get_window (GTK_WIDGET(data)));
 }
 
-static void restore_window_cb (GtkWidget *widget, gpointer data)
+static void restore_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("restore_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -279,7 +279,7 @@ static void restore_window_cb (GtkWidget *widget, gpointer data)
             gdk_window_unmaximize (gtk_widget_get_window (GTK_WIDGET (data)));
 }
 
-static void refresh_window_cb (GtkWidget *widget, gpointer data)
+static void refresh_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION ("refresh_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -299,7 +299,7 @@ static void refresh_window_cb (GtkWidget *widget, gpointer data)
     }
 }
 
-static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data)
+static void move_window_cb (G_GNUC_UNUSED GtkWidget *widgets, guint x, guint y, gpointer data)
 {
     DEBUG_FUNCTION ("move_window_cb");
     DEBUG_ASSERT (data != NULL);
@@ -680,7 +680,7 @@ menu_preferences_cb (GtkWidget *widget, gpointer data)
 }
 
 static void
-menu_quit_cb (GtkWidget *widget, gpointer data)
+menu_quit_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
     DEBUG_FUNCTION ("menu_quit_cb");
 
@@ -815,7 +815,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     gtk_widget_show_all(menu);
 }
 
-static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data)
+static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
     DEBUG_FUNCTION ("button_press_cb");
     DEBUG_ASSERT (data != NULL);

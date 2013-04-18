@@ -477,7 +477,7 @@ static gint get_instance_number ()
     return i;
 }
 
-static void termination_handler (gint signum)
+static void termination_handler (G_GNUC_UNUSED gint signum)
 {
     DEBUG_FUNCTION ("termination_handler");
 

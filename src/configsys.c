@@ -147,7 +147,7 @@ static cfg_opt_t config_opts[] = {
 #define CONFIGS_SAME   0
 #define CONFIG1_NEWER  1
 
-static gboolean compare_config_versions (const gchar *config1, const gchar *config2);
+static gboolean compare_config_versions (const gchar *config1, const gchar *config2) G_GNUC_UNUSED;
 
 
 

@@ -191,7 +191,7 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
 }
 
 static void
-keymap_changed (GdkKeymap *map)
+keymap_changed (G_GNUC_UNUSED GdkKeymap *map)
 {
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GSList *iter;
