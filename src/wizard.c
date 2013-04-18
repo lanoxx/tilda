@@ -1304,7 +1304,7 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
     GdkRGBA gdk_text, gdk_back;
 
     tilda_term *tt;
-    gint i;
+    guint i;
     gboolean nochange = FALSE;
 
     config_setint ("scheme", scheme);
