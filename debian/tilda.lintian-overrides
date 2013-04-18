@@ -1,2 +1,1 @@
-tilda binary: hardening-no-fortify-functions usr/bin/tilda
-
+tilda: hardening-no-fortify-functions usr/bin/tilda
