@@ -876,7 +876,10 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
  * icon is displayed on the end of the entry.
  * This function can only be registered to Widgets of (sub)type GtkEntry
  */
-static void validate_executable_command_cb (GtkWidget *w, GdkEvent *event, gpointer userdata) {
+static void validate_executable_command_cb (GtkWidget *w,
+                                            G_GNUC_UNUSED GdkEvent *event,
+                                            G_GNUC_UNUSED gpointer userdata)
+{
     g_return_if_fail(w != NULL && GTK_IS_ENTRY(w));
     const char* command = gtk_entry_get_text (GTK_ENTRY(w));
     /* Check that the command exists */
