@@ -165,6 +165,15 @@
       <row>
         <col id="0" translatable="yes">White on Black</col>
       </row>
+      <row>
+  	    <col id="0" translatable="yes">Zenburn</col>
+      </row>
+      <row>
+		    <col id="0" translatable="yes">Solarized Light</col>
+      </row>
+      <row>
+		    <col id="0" translatable="yes">Solarized Dark</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="model6">
