@@ -137,6 +137,46 @@ terminal_palette_rxvt[TERMINAL_PALETTE_SIZE] = {
     { RGB(0xffff, 0xffff, 0xffff) }
 };
 
+const GdkRGBA
+terminal_palette_solarizedL[TERMINAL_PALETTE_SIZE] = {
+	{ RGB(0xeeee, 0xe8e8, 0xd5d5) },
+	{ RGB(0xdcdc, 0x3232, 0x2f2f) },
+	{ RGB(0x8585, 0x9999, 0x0000) },
+	{ RGB(0xb5b5, 0x8989, 0x0000) },
+	{ RGB(0x2626, 0x8b8b, 0xd2d2) },
+	{ RGB(0xd3d3, 0x3636, 0x8282) },
+	{ RGB(0x2a2a, 0xa1a1, 0x9898) },
+	{ RGB(0x0707, 0x3636, 0x4242) },
+	{ RGB(0xfdfd, 0xf6f6, 0xe3e3) },
+	{ RGB(0xcbcb, 0x4b4b, 0x1616) },
+	{ RGB(0x9393, 0xa1a1, 0xa1a1) },
+	{ RGB(0x8383, 0x9494, 0x9696) },
+	{ RGB(0x6565, 0x7b7b, 0x8383) },
+	{ RGB(0x6c6c, 0x7171, 0xc4c4) },
+	{ RGB(0x5858, 0x6e6e, 0x7575) },
+	{ RGB(0x0000, 0x2b2b, 0x3636) }
+};
+
+const GdkRGBA
+terminal_palette_solarizedD[TERMINAL_PALETTE_SIZE] = {
+	{ RGB(0x0707, 0x3636, 0x4242) },
+	{ RGB(0xdcdc, 0x3232, 0x2f2f) },
+	{ RGB(0x8585, 0x9999, 0x0000) },
+	{ RGB(0xb5b5, 0x8989, 0x0000) },
+	{ RGB(0x2626, 0x8b8b, 0xd2d2) },
+	{ RGB(0xd3d3, 0x3636, 0x8282) },
+	{ RGB(0x2a2a, 0xa1a1, 0x9898) },
+	{ RGB(0xeeee, 0xe8e8, 0xd5d5) },
+	{ RGB(0x0000, 0x2b2b, 0x3636) },
+	{ RGB(0xcbcb, 0x4b4b, 0x1616) },
+	{ RGB(0x5858, 0x6e6e, 0x7575) },
+	{ RGB(0x8383, 0x9494, 0x9696) },
+	{ RGB(0x6565, 0x7b7b, 0x8383) },
+	{ RGB(0x6c6c, 0x7171, 0xc4c4) },
+	{ RGB(0x9393, 0xa1a1, 0xa1a1) },
+	{ RGB(0xfdfd, 0xf6f6, 0xe3e3) }
+};
+
 typedef struct _TerminalPaletteScheme
 {
   const char *name;
@@ -148,7 +188,9 @@ static TerminalPaletteScheme palette_schemes[] = {
     { N_("Linux console"), terminal_palette_linux },
     { N_("XTerm"), terminal_palette_xterm },
     { N_("Rxvt"), terminal_palette_rxvt },
-    { N_("Zenburn"), terminal_palette_zenburn }
+    { N_("Zenburn"), terminal_palette_zenburn },
+    { N_("Solarized Light"), terminal_palette_solarizedL },
+    { N_("Solarized Dark"), terminal_palette_solarizedD }
 };
 
 /* For use in get_display_dimension() */
@@ -1329,6 +1371,31 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
             gdk_text.red = gdk_text.green = gdk_text.blue = 1.0d;
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
+
+        /* Zenburn */
+        case 4: 
+	    gdk_text.red = 0.86d;
+	    gdk_text.green = gdk_text.blue = 0.64d;
+	    gdk_back.red = gdk_back.green = gdk_back.blue = 0.25d;
+	    break;
+	/* Solarized Light */
+	case 5:
+	    gdk_text.red = 0.4d;
+	    gdk_text.green = 0.48d;
+	    gdk_text.blue = 0.51d;
+	    gdk_back.red = 0.99d;
+	    gdk_back.green = 0.96d;
+	    gdk_back.blue = 0.89d;
+	    break;
+	/* Solarized Dark */
+	case 6:
+	    gdk_text.red = 0.51d;
+	    gdk_text.green = 0.58d;
+	    gdk_text.blue = 0.59d;
+	    gdk_back.red = 0.0d;
+	    gdk_back.green = 0.17d;
+	    gdk_back.blue = 0.21d;
+	    break;
         default:
             nochange = TRUE;
             break;
