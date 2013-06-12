@@ -1371,6 +1371,31 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
             gdk_text.red = gdk_text.green = gdk_text.blue = 1.0d;
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
+
+        /* Zenburn */
+        case 4: 
+	    gdk_text.red = 0.86d;
+	    gdk_text.green = gdk_text.blue = 0.64d;
+	    gdk_back.red = gdk_back.green = gdk_back.blue = 0.25d;
+	    break;
+	/* Solarized Light */
+	case 5:
+	    gdk_text.red = 0.4d;
+	    gdk_text.green = 0.48d;
+	    gdk_text.blue = 0.51d;
+	    gdk_back.red = 0.99d;
+	    gdk_back.green = 0.96d;
+	    gdk_back.blue = 0.89d;
+	    break;
+	/* Solarized Dark */
+	case 6:
+	    gdk_text.red = 0.51d;
+	    gdk_text.green = 0.58d;
+	    gdk_text.blue = 0.59d;
+	    gdk_back.red = 0.0d;
+	    gdk_back.green = 0.17d;
+	    gdk_back.blue = 0.21d;
+	    break;
         default:
             nochange = TRUE;
             break;
