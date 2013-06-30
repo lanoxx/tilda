@@ -325,8 +325,8 @@ static gboolean parse_cli (int argc, char *argv[])
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
     {
-        const char *msg = _("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n");
-        g_printerr (msg, error->message);
+        g_printerr (_("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n"),
+                    error->message);
 
         exit (EXIT_FAILURE);
     }

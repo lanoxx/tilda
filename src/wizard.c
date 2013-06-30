@@ -550,7 +550,7 @@ static int get_max_width() {
  * Note that this is called for the key_press_event for the key-grab dialog, not for the wizard.
  */
 
-static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w, const GtkWidget* wizard_window)
+static gpointer wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w, const GtkWidget* wizard_window)
 {
     DEBUG_FUNCTION ("wizard_dlg_key_grab");
     DEBUG_ASSERT (wizard_window != NULL);
@@ -586,6 +586,7 @@ static void wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidge
         /* Free the string */
         g_free (key);
     }
+    return GDK_EVENT_PROPAGATE;
 }
 
 static int percentage_dimension (int max_size, int current_size) {
