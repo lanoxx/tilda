@@ -846,7 +846,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             xpad = border.left;
             ypad = border.bottom;
             match = vte_terminal_match_check (terminal,
-                    (event->x - ypad) /
+                    (event->x - xpad) /
                     vte_terminal_get_char_width (terminal),
                     (event->y - ypad) /
                     vte_terminal_get_char_height (terminal),
