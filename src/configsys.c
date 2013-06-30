@@ -1,5 +1,8 @@
 /* vim: set ts=4 sts=4 sw=4 expandtab textwidth=112: */
 
+#define _POSIX_SOURCE /* feature test macro for fileno */
+#define _XOPEN_SOURCE /* feature test macro for fsync */
+
 #include <tilda-config.h>
 #include <debug.h>
 
