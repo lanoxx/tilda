@@ -35,8 +35,8 @@ AC_ARG_ENABLE([maintainer-flags],
 if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
 	enable_debug_functions="yes"
-	CFLAGS="$CFLAGS -Wall -Wextra -pedantic -fno-common -Wstrict-aliasing=2"
-	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations"
+	CFLAGS="$CFLAGS -Wall -Wextra -fno-common -Wstrict-aliasing=2"
+	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations -DDEBUG"
 fi
 
 # This registers the option '--enable-debug' in the ./configure script
