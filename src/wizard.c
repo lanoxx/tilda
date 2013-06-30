@@ -184,6 +184,7 @@ typedef struct _TerminalPaletteScheme
 }TerminalPaletteScheme;
 
 static TerminalPaletteScheme palette_schemes[] = {
+    { N_("Custom"), NULL },
     { N_("Tango"), terminal_palette_tango },
     { N_("Linux console"), terminal_palette_linux },
     { N_("XTerm"), terminal_palette_xterm },
@@ -1489,8 +1490,8 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w) {
     GtkWidget *color_button;
 
     i = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    if (i < G_N_ELEMENTS (palette_schemes))
-    {
+    /* i = 0 means custom, in that case we do nothing */
+    if (i > 0 && i < G_N_ELEMENTS (palette_schemes)) {
         color_button =
             GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_text"));
         gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &fg);
@@ -1501,14 +1502,16 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w) {
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
 
         /* Set terminal palette. */
-        for (j=0; j<g_list_length (tw->terms); j++)
-        {
+        for (j=0; j<g_list_length (tw->terms); j++) {
             tt = g_list_nth_data (tw->terms, j);
-            vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+            vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term),
+                                          &fg,
+                                          &bg,
+                                          current_palette,
+                                          TERMINAL_PALETTE_SIZE);
         }
 
-        for (j=0; j<TERMINAL_PALETTE_SIZE; j++)
-        {
+        for (j=0; j<TERMINAL_PALETTE_SIZE; j++) {
             update_palette_color_button(j);
 
             /* Set palette in the config. */
@@ -1517,15 +1520,15 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w) {
             config_setnint ("palette", GUINT16_FROM_FLOAT(current_palette[j].blue),  j*3+2);
         }
     }
-    else
-    {
-        /* "Custom" selected, do nothing. */
-    }
 
     /* Set palette scheme in the config*/
     config_setint ("palette_scheme", i);
 }
 
+/**
+ *  This function is called, if the user has changed a single color. The function
+ *  handles this color change, and sets the color schema to "Custom".
+ */
 static void colorbutton_palette_n_set_cb (GtkWidget *w)
 {
 	DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
@@ -1537,10 +1540,11 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     GtkWidget *color_button;
     GdkRGBA fg, bg;
 
-    /* The user just changed palette manually, so set the palette scheme to "Custom" */
-    i = G_N_ELEMENTS (palette_schemes);
-    gtk_combo_box_set_active (GTK_COMBO_BOX(combo_palette_scheme), i);
-    config_setint ("palette_scheme", i);
+    /* The user just changed the palette manually, so we set the palette scheme to "Custom".
+     * "Custom" is the 0th element in the palette_schemes.
+     */
+    gtk_combo_box_set_active (GTK_COMBO_BOX(combo_palette_scheme), 0);
+    config_setint ("palette_scheme", 0);
 
     /* Get the index number of color button which was set */
     i = atoi(&name[sizeof("colorbutton_palette_")-1]);
