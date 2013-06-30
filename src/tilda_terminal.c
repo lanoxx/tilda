@@ -44,7 +44,6 @@ static void child_exited_cb (GtkWidget *widget, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static void status_line_changed_cb (GtkWidget *widget, gpointer data);
 static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
-static void status_line_changed_cb (GtkWidget *widget, gpointer data);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
 static void raise_window_cb (GtkWidget *widget, gpointer data);

@@ -35,8 +35,28 @@ AC_ARG_ENABLE([maintainer-flags],
 if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
 	enable_debug_functions="yes"
-	CFLAGS="$CFLAGS -Wall -Wextra -fno-common -Wstrict-aliasing=2"
-	CFLAGS="$CFLAGS -Wshadow -Wmissing-prototypes -Wmissing-declarations -DDEBUG"
+	CFLAGS="$CFLAGS \
+            -Wall \
+            -Wextra \
+            -fno-common \
+            -Wstrict-aliasing=2 \
+            -Wshadow \
+            -Wmissing-prototypes \
+            -Wmissing-declarations \
+            -Wcast-align \
+            -Wuninitialized \
+            -Wno-strict-aliasing \
+            -Werror=pointer-arith \
+            -Werror=missing-declarations \
+            -Werror=redundant-decls \
+            -Werror=empty-body \
+            -Werror=format \
+            -Werror=format-security \
+            -Werror=format-nonliteral \
+            -Werror=init-self \
+            -Werror=vla \
+            -DDEBUG \
+           "
 fi
 
 # This registers the option '--enable-debug' in the ./configure script
@@ -48,6 +68,9 @@ if test "x$enable_debug" = "xyes"; then
 	AC_DEFINE([DEBUG], [1], [Enable extra debugging output])
 	CFLAGS="$CFLAGS -g -ggdb"
 fi
+
+#Use C99 compilation mode
+CFLAGS="$CFLAGS -std=c99"
 
 # This registers the option '--debug-functions' in the ./configure script
 # If this option is set, then the name of each entered function will be

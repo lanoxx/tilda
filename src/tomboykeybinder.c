@@ -17,8 +17,8 @@ typedef struct _Binding {
 	TomboyBindkeyHandler  handler;
 	gpointer              user_data;
 	char                 *keystring;
-	uint                  keycode;
-	uint                  modifiers;
+	unsigned int          keycode;
+	unsigned int          modifiers;
 } Binding;
 
 static GSList *bindings = NULL;

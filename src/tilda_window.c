@@ -517,6 +517,7 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
                                 G_GNUC_UNUSED gpointer   user_data)
 {
     gtk_main_quit ();
+    return FALSE;
 }
 
 /**
