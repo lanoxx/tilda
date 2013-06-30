@@ -30,9 +30,7 @@ AM_MAINTAINER_MODE([enable])
 # options that are defined below. It also activates several flags to the compile such that it
 # will show more warnings and errors to indicate problems in the source code.
 AC_ARG_ENABLE([maintainer-flags],
-		[AS_HELP_STRING([--enable-maintainer-flags],[enable extra debugging (don't use as user)])])
-
-#' This comment fixes syntax highlighting
+		[AS_HELP_STRING([--enable-maintainer-flags],[enable extra debugging (do not use as user)])])
 
 if test "x$enable_maintainer_flags" = "xyes"; then
 	enable_debug="yes"
