@@ -13,6 +13,8 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#define _POSIX_SOURCE /* feature test macro for signal functions */
+#define _XOPEN_SOURCE /* feature test macro for popen */
 
 #include <tilda-config.h>
 
