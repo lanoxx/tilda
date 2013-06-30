@@ -686,7 +686,9 @@ static void window_title_change_all ()
     }
 }
 
-static void set_spin_value_while_blocking_callback (GtkSpinButton *spin, void (*callback)(GtkWidget *w), gint new_val)
+static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
+                                                    void (*callback)(GtkWidget *w),
+                                                    gint new_val)
 {
     g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), NULL);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(spin), new_val);
@@ -1359,44 +1361,47 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
     gdk_back.alpha = 1.0d;
 
     switch (scheme) {
+        /* Green on black */
         case 1:
             gdk_text.red = gdk_text.blue = 0.0d;
             gdk_text.green = 1.0d;
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
+        /* Black on white */
         case 2:
             gdk_text.red = gdk_text.green = gdk_text.blue = 0.0d;
             gdk_back.red = gdk_back.green = gdk_back.blue = 1.0d;
             break;
+        /* White on black */
         case 3:
             gdk_text.red = gdk_text.green = gdk_text.blue = 1.0d;
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
             break;
-
         /* Zenburn */
         case 4: 
-	    gdk_text.red = 0.86d;
-	    gdk_text.green = gdk_text.blue = 0.64d;
-	    gdk_back.red = gdk_back.green = gdk_back.blue = 0.25d;
-	    break;
-	/* Solarized Light */
-	case 5:
-	    gdk_text.red = 0.4d;
-	    gdk_text.green = 0.48d;
-	    gdk_text.blue = 0.51d;
-	    gdk_back.red = 0.99d;
-	    gdk_back.green = 0.96d;
-	    gdk_back.blue = 0.89d;
-	    break;
-	/* Solarized Dark */
-	case 6:
-	    gdk_text.red = 0.51d;
-	    gdk_text.green = 0.58d;
-	    gdk_text.blue = 0.59d;
-	    gdk_back.red = 0.0d;
-	    gdk_back.green = 0.17d;
-	    gdk_back.blue = 0.21d;
-	    break;
+			gdk_text.red = 0.86d;
+			gdk_text.green = gdk_text.blue = 0.64d;
+			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25d;
+			break;
+		/* Solarized Light */
+		case 5:
+			gdk_text.red = 0.4d;
+			gdk_text.green = 0.48d;
+			gdk_text.blue = 0.51d;
+			gdk_back.red = 0.99d;
+			gdk_back.green = 0.96d;
+			gdk_back.blue = 0.89d;
+			break;
+		/* Solarized Dark */
+		case 6:
+			gdk_text.red = 0.51d;
+			gdk_text.green = 0.58d;
+			gdk_text.blue = 0.59d;
+			gdk_back.red = 0.0d;
+			gdk_back.green = 0.17d;
+			gdk_back.blue = 0.21d;
+			break;
+	    /* Custom */
         default:
             nochange = TRUE;
             break;
@@ -1473,9 +1478,11 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
 }
 
 
-
-static void combo_palette_scheme_changed_cb (GtkWidget *w)
-{
+/**
+ * This function is called if a different color scheme is selected from the combo box.
+ */
+static void combo_palette_scheme_changed_cb (GtkWidget *w) {
+	DEBUG_FUNCTION("combo_palette_scheme_changed_cb");
     guint i, j;
     tilda_term *tt;
     GdkRGBA fg, bg;
@@ -1521,6 +1528,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w)
 
 static void colorbutton_palette_n_set_cb (GtkWidget *w)
 {
+	DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
     const GtkWidget *combo_palette_scheme =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
     const gchar* name = gtk_widget_get_name(w);
@@ -1565,7 +1573,11 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     for (i=0; i<g_list_length (tw->terms); i++)
     {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_colors_rgba (VTE_TERMINAL (tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+        vte_terminal_set_colors_rgba (VTE_TERMINAL (tt->vte_term),
+                                      &fg,
+                                      &bg,
+                                      current_palette,
+                                      TERMINAL_PALETTE_SIZE);
     }
 }
 

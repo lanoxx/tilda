@@ -566,7 +566,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tw->auto_hide_on_focus_lost = config_getbool("auto_hide_on_focus_lost");
     tw->disable_auto_hide = FALSE;
 
-	tw->fullscreen = FALSE;
+    tw->fullscreen = FALSE;
 
     /* Set up all window properties */
     if (config_getbool ("pinned"))
@@ -635,6 +635,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     /* Connect signal handlers */
     g_signal_connect (G_OBJECT(tw->window), "delete-event", G_CALLBACK (delete_event_callback), tw);
     g_signal_connect (G_OBJECT(tw->window), "show", G_CALLBACK (focus_term), tw);
+
     g_signal_connect (G_OBJECT(tw->window), "focus-out-event", G_CALLBACK (focus_out_event_cb), tw);
     g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", G_CALLBACK (mouse_enter), tw);
     g_signal_connect (G_OBJECT(tw->window), "leave-notify-event", G_CALLBACK (mouse_leave), tw);

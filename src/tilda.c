@@ -479,10 +479,8 @@ static gint get_instance_number ()
     return i;
 }
 
-static void termination_handler (G_GNUC_UNUSED gint signum)
-{
+static void termination_handler (G_GNUC_UNUSED gint signum) {
     DEBUG_FUNCTION ("termination_handler");
-
     gtk_main_quit ();
 }
 
@@ -490,8 +488,7 @@ static void termination_handler (G_GNUC_UNUSED gint signum)
  * This is to do the migration of config files from ~/.tilda to the
  * XDG_*_HOME folders
  */
-static void migrate_config_files(char *old_config_path)
-{
+static void migrate_config_files(char *old_config_path) {
     gchar* old_lock_dir = g_build_filename(old_config_path, "locks", NULL);
     gchar* new_lock_dir = g_build_filename(g_get_user_cache_dir (), "tilda", "locks", NULL);
     gchar* new_config_dir = g_build_filename(g_get_user_config_dir (), "tilda", NULL);
