@@ -1534,7 +1534,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
 	DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
     const GtkWidget *combo_palette_scheme =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
-    const gchar* name = gtk_widget_get_name(w);
+    const gchar* name = gtk_buildable_get_name(GTK_BUILDABLE(w));
     guint i;
     tilda_term *tt;
     GtkWidget *color_button;
@@ -1546,8 +1546,12 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_palette_scheme), 0);
     config_setint ("palette_scheme", 0);
 
-    /* Get the index number of color button which was set */
-    i = atoi(&name[sizeof("colorbutton_palette_")-1]);
+    /* We need the index part of the name string, which looks like this:
+     * "colorbutton_palette_12", so we set the button_index_str to the
+     * position of the first digit and then convert it into an integer.
+     */
+    const char* button_index_str = &name[sizeof("colorbutton_palette_")-1];
+    i = atoi(button_index_str);
 
     /* Now get the color that was set, save it. */
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(w), &current_palette[i]);
