@@ -160,7 +160,7 @@ void tilda_window_set_active (tilda_window *tw)
     {
         /* The WM doesn't support the EWMH standards. We'll print a warning and
          * try this, though it probably won't work... */
-        g_printerr ("WARNING: Window manager (%s) does not support EWMH hints\n",
+        g_printerr (_("WARNING: Window manager (%s) does not support EWMH hints\n"),
                     gdk_x11_screen_get_window_manager_name (screen));
         XRaiseWindow (x11_display, x11_window);
     }
