@@ -512,7 +512,7 @@ static void load_custom_css_file () {
         g_get_user_config_dir (), "tilda", "style.css", NULL);
     if (g_file_test (cssfilename, G_FILE_TEST_EXISTS)) {
         g_print (_("Found style.css in the user config directory, "
-            "applying user css stlye.\n"));
+            "applying user css style.\n"));
         provider = gtk_css_provider_new ();
         gtk_style_context_add_provider_for_screen (
             gdk_screen_get_default(),
