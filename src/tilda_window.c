@@ -378,7 +378,7 @@ static gboolean goto_tab_generic (tilda_window *tw, guint tab_number)
 
     if (g_list_length (tw->terms) > (tab_number-1))
     {
-        goto_tab (tw, g_list_length (tw->terms) - tab_number);
+        goto_tab (tw, tab_number - 1);
         return TRUE;
     }
 
