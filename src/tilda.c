@@ -645,8 +645,7 @@ int main (int argc, char *argv[])
         /* It does not cause graphical glitches to make tilda hidden on start this way.
          * It does make tilda appear much faster on it's first appearance, so I'm leaving
          * it this way, because it has a good benefit, and no apparent drawbacks. */
-        gtk_widget_show (GTK_WIDGET(tw->window));
-        gtk_widget_hide (GTK_WIDGET(tw->window));
+        pull (tw, PULL_UP);
     }
     else
     {
