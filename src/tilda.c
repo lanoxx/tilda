@@ -639,18 +639,7 @@ int main (int argc, char *argv[])
         }
     }
 
-    if (config_getbool ("hidden"))
-    {
-        /* It does not cause graphical glitches to make tilda hidden on start this way.
-         * It does make tilda appear much faster on it's first appearance, so I'm leaving
-         * it this way, because it has a good benefit, and no apparent drawbacks. */
-        gtk_widget_show (GTK_WIDGET(tw->window));
-        gtk_widget_hide (GTK_WIDGET(tw->window));
-    }
-    else
-    {
-        pull (tw, PULL_DOWN);
-    }
+    pull (tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN);
 
     g_print ("Tilda has started. Press %s to pull down the window.\n",
         config_getstr ("key"));
