@@ -1,3 +1,8 @@
+version 1.1.8 (2013-09-23):
+	* Fixed an issue which caused
+	  tilda to show a grey window on
+	  certain window managers.
+
 version 1.1.7 (2013-04-09):
 	* Install files to pkgdatadir
 	  instead of datadir to fix a
