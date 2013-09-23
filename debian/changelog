@@ -1,3 +1,10 @@
+tilda (1.1.8-1) experimental; urgency=low
+
+  * On certain window managers tilda only shows a grey
+    box if the option "Start Tilda hidden" is selected
+    (Closes: #723961)
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 24 Sep 2013 00:53:00 +0100
 tilda (1.1.7-1) experimental; urgency=low
 
   * Fixed a bug in the packaging that
