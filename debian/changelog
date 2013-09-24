@@ -1,10 +1,25 @@
-tilda (1.1.8-1) experimental; urgency=low
+tilda (1.1.8-1) unstable; urgency=low
 
   * On certain window managers tilda only shows a grey
     box if the option "Start Tilda hidden" is selected
     (Closes: #723961)
 
  -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 24 Sep 2013 00:53:00 +0100
+
+tilda (1.1.7-1.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Move package from experimental to unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 17 Sep 2013 08:37:46 +0200
+
+tilda (1.1.7-1.1) experimental; urgency=low
+
+  * Non-maintainer upload.
+  * Move package from experimental to unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 17 Sep 2013 08:16:59 +0200
+
 tilda (1.1.7-1) experimental; urgency=low
 
   * Fixed a bug in the packaging that
@@ -12,6 +27,7 @@ tilda (1.1.7-1) experimental; urgency=low
     in the wrong location.
 
  -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 09 Apr 2013 21:49:00 +0100
+
 tilda (1.1.5-1) experimental; urgency=low
 
   * New upstream release (Closes: #695574, #692904)
@@ -28,6 +44,7 @@ tilda (1.1.5-1) experimental; urgency=low
     thanks to Jekyll Wu (Closes: #678129)
 
  -- Sebastian Geiger <lanoxx@gmx.net>  Sat, 23 Feb 2013 12:06:09 +0100
+
 tilda (0.09.6-2) unstable; urgency=low
 
   * Fix "segfaults on startup" with 03_gtk_window_realize.dpatch
