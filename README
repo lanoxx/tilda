@@ -23,7 +23,7 @@ should be possible to install with:
     sudo make install
 
 If you don't want to install to the /usr prefix, choose some other prefix,
-such as /opt/tilda and add it to your path. Also I recomment do run make with
+such as /opt/tilda and add it to your path. Also I recomment to run make with
 the --silent (or -s) option.
 
 Running Tilda
