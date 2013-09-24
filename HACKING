@@ -1,0 +1,54 @@
+This document gives a quick overview on how to compile and package tilda.
+
+Building the software locally
+=============================
+
+If you have checked out tilda from git, then the following steps
+will give you an idea of how to compile tilda:
+
+ * Run the autogen.sh script (if necessary make it executable first):
+       ./autogen.sh --prefix=/usr
+ * make
+
+Now you can start hacking and develop new features or fix bugs. When
+you are finished commit your changes. Then go to the next section
+and create a package.
+
+Building a package
+==================
+
+In order to build a package which can be uploaded to some
+Debian based distribution the following steps are necessary.
+Replace '#' with the number of the current minor release.
+
+ 1. Check out the latest stable branch (e.g. tilda-1-1)
+   and commit any changes or patches which you want to include,
+   then commit these changes.
+ 2. Update the changelog with a message such as:
+       "Update the change log for 1.1.#"
+ 3. Update the version number in configure.ac and make
+   a commit with the version number:
+       "1.1.#"
+ 4. Rebase the tilda-debian-1-1 ontop of the latest stable HEAD.
+   This is not very nice currently as this branch needs to be
+   rebased every time a new release is made. I am still looking
+   for a better solution.
+ 5. Change debian/changelog and update the Debian specific changelog.
+ 6. Create a tarball using git-archive:
+        git archive --prefix=tilda-1.1.#/ -o ../tilda_1.1.#.orig.tar.gz HEAD
+
+You now have a tarball which can be build into a package. The following steps
+are just to document the basic commands that are required to build the package,
+then verify its correct and upload the package to mentors. However the steps which
+are required to setup such a development environment are not explained here:
+
+ 7. cd ..; tar -xf tilda_1.1.#.orig.tar.gz
+ 8. cd tilda-1.1.#
+ 9. Run debuild
+10. If debuild finishes without a problem next run pbuilder, this will verify that
+    the packge is buildable (without warnings or errors) in a clean environment:
+        sudo pbuilder --build --basetgz ~/pbuilder/unstable-base.tgz tilda_1.1.8-1.dsc
+11. If pbuilder does not complain and you don't see any warnings in lintian, then
+    upload the package to mentors:
+        dput mentors tilda_1.1.#-1_amd64.changes
+
