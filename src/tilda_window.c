@@ -601,6 +601,7 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook),
         config_getbool("notebook_border"));
+    gtk_notebook_set_scrollable (GTK_NOTEBOOK(tw->notebook), TRUE);
     tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
 
     provider = gtk_css_provider_new ();
