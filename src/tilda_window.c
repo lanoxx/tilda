@@ -121,14 +121,18 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     DEBUG_FUNCTION ("toggle_fullscreen_cb");
     DEBUG_ASSERT (tw != NULL);
 
-	if (tw->fullscreen != TRUE) {
-		tw->fullscreen = TRUE;
-		gtk_window_fullscreen (GTK_WINDOW (tw->window));
-	}
-	else {
-		gtk_window_unfullscreen (GTK_WINDOW (tw->window));
-		tw->fullscreen = FALSE;
-	}
+    if (tw->fullscreen != TRUE) {
+        tw->fullscreen = TRUE;
+        gtk_window_fullscreen (GTK_WINDOW (tw->window));
+    }
+    else {
+        gtk_window_unfullscreen (GTK_WINDOW (tw->window));
+        // This appears to be necssary on (at least) xfwm4 if you tabbed out
+        // while fullscreened.
+        gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+        tw->fullscreen = FALSE;
+    }
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
