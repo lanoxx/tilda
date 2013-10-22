@@ -5,7 +5,6 @@ AUTOMAKE_OPTIONS = gnu
 
 # Define a C macro LOCALEDIR indicating where catalogs 
 # will be installed.
-#localedir = $(datadir)/locale
 DEFS += -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
 
 bin_PROGRAMS = tilda

@@ -121,3 +121,22 @@ AC_CONFIG_FILES([Makefile
                  m4/Makefile
                  po/Makefile.in])
 AC_OUTPUT
+
+dnl ---------------------------------------------------------------------------
+dnl - Show summary
+dnl ---------------------------------------------------------------------------
+
+echo "
+              ${PACKAGE} $VERSION
+              `echo ${PACKAGE} $VERSION | sed "s/./=/g"`
+
+        prefix:                        ${prefix}
+        datarootdir:                   ${datarootdir}
+        datadir:                       ${datadir}
+        pkgdatadir:                    `if -z ${pkgdatadir}; then echo ${pkgdatadir}; else echo ${datadir}/${PACKAGE}; fi`
+        source code location:          ${srcdir}
+        compiler:                      ${CC}
+        cflags:                        ${CFLAGS}
+        Maintainer mode:               ${USE_MAINTAINER_MODE}
+        Use *_DISABLE_DEPRECATED:      ${enable_deprecation_flags}
+"
