@@ -44,6 +44,7 @@ Applications_DATA = tilda.desktop
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
+# This will install tilda.glade to ${pkgdatadir}
 pkgdata_DATA = tilda.glade
 
 EXTRA_DIST = tilda.desktop.in tilda.png tilda.glade
@@ -53,3 +54,12 @@ tilda.desktop: tilda.desktop.in
 		-e 's|\@PIXMAPSDIR\@|$(datadir)/applications|' $< > $@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+
+
+# We register this uninstall hook to remove the ${pkgdatadir}, which
+# is created by the pkgdata_DATA directive above. Without this hook
+# the folder would be left over after a make uninstall.
+# We wrap it into and if-then because otherwise make distcheck would
+# fail.
+uninstall-hook:
+	if test -d ${pkgdatadir}; then rmdir ${pkgdatadir}; fi
