@@ -17,6 +17,8 @@
 
 #include <tilda-config.h>
 
+#include <errno.h>
+
 #include <debug.h>
 #include <tilda.h>
 #include <wizard.h>
@@ -682,7 +684,18 @@ static void window_title_change_all ()
         title = get_window_title (tt->vte_term);
         page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), i);
         label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
-        gtk_label_set_label (GTK_LABEL(label), title);
+
+        gint length = config_getint ("title_max_length");
+
+        if(config_getbool("title_max_length_flag") && strlen(title) > length) {
+            gchar *titleOffset = title + strlen(title) - length;
+            gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
+            gtk_label_set_text (GTK_LABEL(label), shortTitle);
+            g_free(shortTitle);
+        } else {
+            gtk_label_set_text (GTK_LABEL(label), title);
+        }
+
         g_free (title);
     }
 }
@@ -894,6 +907,32 @@ static void combo_dynamically_set_title_changed_cb (GtkWidget *w)
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("d_set_title", status);
+    window_title_change_all ();
+}
+
+static void check_max_title_length_cb (GtkWidget *w)
+{
+    DEBUG_FUNCTION ("check_max_title_length_cb");
+
+    GtkWidget *entry = GTK_WIDGET(
+        gtk_builder_get_object (xml, ("spin_title_max_length"))
+    );
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w))) {
+        config_setbool("title_max_length_flag", TRUE);
+        gtk_editable_set_editable (GTK_EDITABLE(entry), TRUE);
+    } else {
+        config_setbool("title_max_length_flag", FALSE);
+        gtk_editable_set_editable (GTK_EDITABLE(entry), FALSE);
+    }
+}
+
+static void spin_max_title_length_changed_cb (GtkWidget *w)
+{
+    DEBUG_FUNCTION ("spin_max_title_length_changed_cb");
+
+    int length = gtk_spin_button_get_value (GTK_SPIN_BUTTON (w));
+
+    config_setint ("title_max_length", length);
     window_title_change_all ();
 }
 
@@ -1905,6 +1944,12 @@ static void set_wizard_state_from_config () {
     /* Title and Command Tab */
     TEXT_ENTRY ("entry_title", "title");
     COMBO_BOX ("combo_dynamically_set_title", "d_set_title");
+    // Whether to limit the length of the title
+    CHECK_BUTTON ("check_title_max_length", "title_max_length_flag");
+    // The maximum length of the title
+    SPIN_BUTTON_SET_RANGE ("spin_title_max_length", 0, 99999);
+    SPIN_BUTTON_SET_VALUE ("spin_title_max_length", config_getint ("title_max_length"));
+    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_title_max_length", "title_max_length_flag");
 
     CHECK_BUTTON ("check_run_custom_command", "run_command");
     TEXT_ENTRY ("entry_custom_command", "command");
@@ -2034,6 +2079,8 @@ static void connect_wizard_signals ()
     /* Title and Command Tab */
     CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb);
     CONNECT_SIGNAL ("combo_dynamically_set_title","changed",combo_dynamically_set_title_changed_cb);
+    CONNECT_SIGNAL ("check_title_max_length","toggled",check_max_title_length_cb);
+    CONNECT_SIGNAL ("spin_title_max_length","value-changed", spin_max_title_length_changed_cb);
 
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);

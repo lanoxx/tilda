@@ -36,6 +36,8 @@
 
 #define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
+#define MAX_TITLE_LENGTH 25
+
 GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command);
@@ -205,7 +207,17 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
-    gtk_label_set_text (GTK_LABEL(label), title);
+
+    gint length = config_getint ("title_max_length");
+
+    if(config_getbool("title_max_length_flag") && strlen(title) > length) {
+        gchar *titleOffset = title + strlen(title) - length;
+        gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
+        gtk_label_set_text (GTK_LABEL(label), shortTitle);
+        g_free(shortTitle);
+    } else {
+        gtk_label_set_text (GTK_LABEL(label), title);
+    }
 
     g_free (title);
 }

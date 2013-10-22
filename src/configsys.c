@@ -78,6 +78,8 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("palette_scheme", 0, CFGF_NONE),
     /* The default monitor number is 0 */
     CFG_INT("show_on_monitor_number", 0, CFGF_NONE),
+    /* The length of a tab title */
+    CFG_INT("title_max_length", 25, CFGF_NONE),
 
     /* int list */
     CFG_INT_LIST("palette", "{\
@@ -132,6 +134,8 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("double_buffer", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_focus_lost", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
+    /* Whether we limit the length of a tab title */
+    CFG_BOOL("title_max_length_flag", TRUE, CFGF_NONE),
     CFG_END()
 };
 
