@@ -11,6 +11,11 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment11">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
@@ -166,13 +171,13 @@
         <col id="0" translatable="yes">White on Black</col>
       </row>
       <row>
-  	    <col id="0" translatable="yes">Zenburn</col>
+        <col id="0" translatable="yes">Zenburn</col>
       </row>
       <row>
-		    <col id="0" translatable="yes">Solarized Light</col>
+        <col id="0" translatable="yes">Solarized Light</col>
       </row>
       <row>
-		    <col id="0" translatable="yes">Solarized Dark</col>
+        <col id="0" translatable="yes">Solarized Dark</col>
       </row>
     </data>
   </object>
@@ -858,7 +863,6 @@
                     <property name="label" translatable="yes">&lt;small&gt;&lt;i&gt;&lt;b&gt;Note:&lt;/b&gt; Some options require that tilda is restarted.&lt;/i&gt;&lt;/small&gt;</property>
                     <property name="use_markup">True</property>
                     <property name="justify">center</property>
-                    
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -1032,7 +1036,7 @@
                           <object class="GtkTable" id="table_title">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">2</property>
+                            <property name="n_rows">3</property>
                             <property name="n_columns">2</property>
                             <property name="homogeneous">True</property>
                             <child>
@@ -1090,6 +1094,44 @@
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
+                                <property name="x_padding">4</property>
+                                <property name="y_padding">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="alignment39">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
+                                <property name="xscale">0</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="check_title_max_length">
+                                    <property name="label" translatable="yes">Limit maximum length of tab title:</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="xalign">1</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spin_title_max_length">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="invisible_char">●</property>
+                                <property name="adjustment">adjustment11</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
                                 <property name="x_padding">4</property>
                                 <property name="y_padding">4</property>
                               </packing>
