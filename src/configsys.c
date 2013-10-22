@@ -142,9 +142,9 @@ static cfg_opt_t config_opts[] = {
 /* Define these here, so that we can enable a non-threadsafe version
  * without changing the code below. */
 #ifndef NO_THREADSAFE
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
-	#define config_mutex_lock() g_static_mutex_lock (&mutex)
-	#define config_mutex_unlock() g_static_mutex_unlock (&mutex)
+	static GMutex mutex;
+	#define config_mutex_lock() g_mutex_lock (&mutex)
+	#define config_mutex_unlock() g_mutex_unlock (&mutex)
 #else
 	#define config_mutex_lock()
 	#define config_mutex_unlock()
@@ -188,6 +188,10 @@ gint config_init (const gchar *config_file)
                 "parsing the config file\n"));
         }
 	}
+
+    #ifndef NO_THREADSAFE
+        g_mutex_init(&mutex);
+    #endif
 
 	return 0;
 }
