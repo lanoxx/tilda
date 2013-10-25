@@ -2895,7 +2895,7 @@
               <object class="GtkTable" id="table_keybindings">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="n_rows">10</property>
+                <property name="n_rows">11</property>
                 <property name="n_columns">2</property>
                 <child>
                   <object class="GtkFrame" id="frame_keybinding_paste">
@@ -3669,6 +3669,47 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
+                    <property name="y_options"/>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame_keybinding_fullscreen">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label_xalign">0</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment40">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkButton" id="button_keybinding_fullscreen">
+                            <property name="label" translatable="yes"> </property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="receives_default">True</property>
+                            <property name="margin_right">2</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label_keybinding_fullscreen">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Toggle Fullscreen&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="top_attach">10</property>
+                    <property name="bottom_attach">11</property>
                     <property name="y_options"/>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
