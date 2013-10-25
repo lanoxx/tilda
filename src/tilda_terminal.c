@@ -208,7 +208,7 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
 
-    gint length = config_getint ("title_max_length");
+    guint length = config_getint ("title_max_length");
 
     if(config_getbool("title_max_length_flag") && strlen(title) > length) {
         gchar *titleOffset = title + strlen(title) - length;

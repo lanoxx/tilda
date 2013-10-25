@@ -689,7 +689,7 @@ static void window_title_change_all ()
         page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), i);
         label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
 
-        gint length = config_getint ("title_max_length");
+        guint length = config_getint ("title_max_length");
 
         if(config_getbool("title_max_length_flag") && strlen(title) > length) {
             gchar *titleOffset = title + strlen(title) - length;
