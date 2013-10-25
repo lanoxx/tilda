@@ -524,19 +524,6 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
-/**
- * tilda_window_init ()
- *
- * Create a new tilda_window * and return it. It will also initialize and set up
- * as much of the window as possible using the values in the configuation system.
- *
- * @param instance the instance number of this tilda_window
- *
- * Success: return a non-NULL tilda_window *
- * Failure: return NULL
- *
- * Notes: The configuration system must be up and running before calling this function.
- */
 tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
 {
     DEBUG_FUNCTION ("tilda_window_init");
@@ -685,14 +672,6 @@ gint tilda_window_free (tilda_window *tw)
     return 0;
 }
 
-/**
- * tilda_window_add_tab ()
- *
- * Create and add a new tab at the end of the notebook
- *
- * Success: the new tab's index (>=0)
- * Failure: -1
- */
 gint tilda_window_add_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_add_tab");
@@ -731,14 +710,6 @@ gint tilda_window_add_tab (tilda_window *tw)
     return TRUE; //index;
 }
 
-/**
- * tilda_window_close_tab ()
- *
- * Closes the tab at the given tab index (starting from 0)
- *
- * Success: return 0
- * Failure: return non-zero
- */
 gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_exit)
 {
     DEBUG_FUNCTION ("tilda_window_close_tab");
