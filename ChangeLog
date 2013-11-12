@@ -1,3 +1,8 @@
+version 1.1.9 (2013-11-12):
+	* Backport fix for the goto tab
+	  hotkey (previously ordering was
+	  backwards).
+
 version 1.1.8 (2013-09-23):
 	* Fixed an issue which caused
 	  tilda to show a grey window on
