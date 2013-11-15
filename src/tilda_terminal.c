@@ -781,6 +781,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("closetab_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
 
+    action = gtk_action_new ("rename-tab", _("_Rename Tab"), NULL, GTK_STOCK_CLOSE);
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("renametab_key"));
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
+
     action = gtk_action_new ("copy", NULL, NULL, GTK_STOCK_COPY);
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("copy_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_copy_cb), tt);

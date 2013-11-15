@@ -342,6 +342,7 @@ static void wizard_closed ()
     const gchar *key = GET_BUTTON_LABEL("button_keybinding_pulldown");
     const gchar *addtab_key = GET_BUTTON_LABEL("button_keybinding_addtab");
     const gchar *closetab_key = GET_BUTTON_LABEL("button_keybinding_closetab");
+    const gchar *renametab_key = GET_BUTTON_LABEL("button_keybinding_renametab");
     const gchar *nexttab_key = GET_BUTTON_LABEL("button_keybinding_nexttab");
     const gchar *prevtab_key = GET_BUTTON_LABEL("button_keybinding_prevtab");
     const gchar *movetableft_key = GET_BUTTON_LABEL("button_keybinding_movetableft");
@@ -377,6 +378,8 @@ static void wizard_closed ()
     if (!validate_keybinding(addtab_key, wizard_window, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
         return;
     if (!validate_keybinding(closetab_key, wizard_window, _("The keybinding you chose for \"Close Tab\" is invalid. Please choose another.")))
+        return;
+    if (!validate_keybinding(renametab_key, wizard_window, _("The keybinding you chose for \"Rename Tab\" is invalid. Please choose another.")))
         return;
     if (!validate_keybinding(nexttab_key, wizard_window, _("The keybinding you chose for \"Next Tab\" is invalid. Please choose another.")))
         return;
@@ -419,6 +422,7 @@ static void wizard_closed ()
     config_setstr ("key", key);
     config_setstr ("addtab_key", addtab_key);
     config_setstr ("closetab_key", closetab_key);
+    config_setstr ("renametab_key", renametab_key);
     config_setstr ("nexttab_key", nexttab_key);
     config_setstr ("prevtab_key", prevtab_key);
     config_setstr ("movetableft_key", movetableft_key);
@@ -1764,6 +1768,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     const GtkWidget *button_keybinding_pulldown =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_pulldown"));
     const GtkWidget *button_keybinding_addtab =       GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_addtab"));
     const GtkWidget *button_keybinding_closetab =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_closetab"));
+    const GtkWidget *button_keybinding_renametab =    GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_renametab"));
     const GtkWidget *button_keybinding_nexttab =      GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_nexttab"));
     const GtkWidget *button_keybinding_prevtab =      GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_prevtab"));
     const GtkWidget *button_keybinding_movetableft =  GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_movetableft"));
@@ -1789,6 +1794,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), FALSE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_renametab), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetableft), FALSE);
@@ -1829,6 +1835,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), TRUE);
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_renametab), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetableft), TRUE);
@@ -2033,6 +2040,7 @@ static void set_wizard_state_from_config () {
     BUTTON_LABEL_FROM_CFG ("button_keybinding_pulldown", "key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_addtab", "addtab_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_closetab", "closetab_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_renametab", "renametab_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_nexttab", "nexttab_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_prevtab", "prevtab_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_movetableft", "movetableft_key");
@@ -2146,6 +2154,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_keybinding_quit","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_addtab","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_closetab","clicked",button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_renametab","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_nexttab","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_prevtab","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_movetableft","clicked",button_keybinding_clicked_cb);

@@ -84,6 +84,16 @@ gint tilda_window_add_tab (tilda_window *tw);
 gint tilda_window_close_tab (tilda_window *tw, gint tab_position, gboolean force_exit);
 
 /**
+ * tilda_window_rename_tab ()
+ *
+ * Renames the tab at the given tab index (starting from 0)
+ *
+ * Success: return 0
+ * Failure: return non-zero
+ */
+gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, gchar* title);
+
+/**
  * tilda_window_init ()
  *
  * Create a new tilda_window * and return it. It will also initialize and set up
@@ -115,9 +125,16 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
 /**
  * tilda_window_close_tab ()
  *
- * Closes the tab current tab
+ * Closes the current tab
  */
 void tilda_window_close_current_tab (tilda_window *tw);
+
+/**
+ * tilda_window_renam_tab ()
+ *
+ * Renames the current tab
+ */
+void tilda_window_rename_current_tab (tilda_window *tw, gchar* title);
 
 /**
  * This registers the keyboard shortcuts to the values which the user has

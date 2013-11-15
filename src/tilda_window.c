@@ -91,6 +91,15 @@ void tilda_window_close_current_tab (tilda_window *tw)
     tilda_window_close_tab (tw, pos, FALSE);
 }
 
+void tilda_window_rename_current_tab (tilda_window *tw, gchar* title)
+{
+    DEBUG_FUNCTION ("close_current_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    tilda_window_rename_tab (tw, pos, title);
+}
+
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
@@ -471,13 +480,14 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab,
        Move Tab, Add Tab, Close Tab, Copy, and Paste using key
        combinations defined in the config. */
-    tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                tw);
     tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(next_tab),                       tw);
     tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(prev_tab),                       tw);
     tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
     tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
     tilda_add_config_accelerator("addtab_key",       G_CALLBACK(tilda_window_add_tab),           tw);
     tilda_add_config_accelerator("closetab_key",     G_CALLBACK(tilda_window_close_current_tab), tw);
+    tilda_add_config_accelerator("renametab_key",    G_CALLBACK(tilda_window_rename_current_tab),tw);
     tilda_add_config_accelerator("copy_key",         G_CALLBACK(ccopy),                          tw);
     tilda_add_config_accelerator("paste_key",        G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator("fullscreen_key",   G_CALLBACK(toggle_fullscreen_cb),           tw);
@@ -785,6 +795,38 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
 
     /* Free the terminal, we are done with it */
     tilda_term_free (tt);
+
+    return 0;
+}
+
+gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, gchar* title) {
+
+    DEBUG_FUNCTION ("tilda_window_rename_tab");
+    DEBUG_ASSERT (tw != NULL);
+    DEBUG_ASSERT (tab_index >= 0);
+
+    tilda_term *tt;
+    GtkWidget *label;
+
+    tt = find_tt_in_g_list (tw, tab_index);
+    label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
+
+    if (label == NULL)
+    {
+        DEBUG_ERROR ("Bad tab_index specified");
+        return -1;
+    }
+
+    guint length = config_getint ("title_max_length");
+
+	if(config_getbool("title_max_length_flag") && strlen(title) > length) {
+		gchar *titleOffset = title + strlen(title) - length;
+		gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
+		gtk_label_set_text (GTK_LABEL(label), shortTitle);
+		g_free(shortTitle);
+	} else {
+		gtk_label_set_text (GTK_LABEL(label), "test");
+	}
 
     return 0;
 }
