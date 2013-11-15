@@ -728,6 +728,17 @@ menu_close_tab_cb (GtkWidget *widget, gpointer data)
     tilda_window_close_current_tab (TILDA_WINDOW(data));
 }
 
+static void
+menu_rename_tab_cb (GtkWidget *widget, gpointer data)
+{
+    DEBUG_FUNCTION ("menu_rename_tab_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
+
+    tilda_window_rename_current_tab (TILDA_WINDOW(data), "test");
+}
+
+
 static void on_popup_hide (GtkWidget *widget, gpointer data)
 {
     DEBUG_FUNCTION("on_popup_hide");
@@ -757,6 +768,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
             "<popup name=\"popup-menu\">"
                 "<menuitem action=\"new-tab\" />"
                 "<menuitem action=\"close-tab\" />"
+    			"<menuitem action=\"rename-tab\" />"
                 "<separator />"
                 "<menuitem action=\"copy\" />"
                 "<menuitem action=\"paste\" />"
@@ -781,9 +793,9 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("closetab_key"));
     g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
 
-    action = gtk_action_new ("rename-tab", _("_Rename Tab"), NULL, GTK_STOCK_CLOSE);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("renametab_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
+    action = gtk_action_new ("rename-tab", _("_Rename Tab"), NULL, GTK_STOCK_REFRESH);
+    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("closetab_key"));
+    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_rename_tab_cb), tw);
 
     action = gtk_action_new ("copy", NULL, NULL, GTK_STOCK_COPY);
     gtk_action_group_add_action_with_accel (action_group, action, config_getstr("copy_key"));
