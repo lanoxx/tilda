@@ -129,30 +129,6 @@ void tilda_window_rename_current_tab (tilda_window *tw)
 	}
 }
 
-
-void create_dialog(GtkWidget *button, gpointer window) {
-
-    GtkWidget *dialog, *label, *content_area;
-
-    /* New label for dialog content */
-    label = gtk_label_new("This is a dialog!");
-
-    /* Make a new dialog with an 'OK' button */
-    dialog = gtk_dialog_new_with_buttons("This is a dialog, which (shouldn't | can't) be resized!", window, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
-
-    /* Add label to dialog */
-    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    gtk_container_add(GTK_CONTAINER(content_area), label);
-
-    /* Destroy dialog properly */
-    g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), dialog);
-
-    /* Set dialog to not resize. */
-    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
-
-    gtk_widget_show_all(dialog);
-}
-
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
     switch (pos)
