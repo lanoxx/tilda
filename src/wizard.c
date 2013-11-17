@@ -1815,7 +1815,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), FALSE);
 
     /* Bring up the dialog that will accept the new keybinding */
-    GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
+    GtkWidget* dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
                               GTK_DIALOG_DESTROY_WITH_PARENT,
                               GTK_MESSAGE_QUESTION,
                               GTK_BUTTONS_CANCEL,

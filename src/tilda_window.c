@@ -91,15 +91,67 @@ void tilda_window_close_current_tab (tilda_window *tw)
     tilda_window_close_tab (tw, pos, FALSE);
 }
 
-void tilda_window_rename_current_tab (tilda_window *tw, gchar* title)
-{
-    DEBUG_FUNCTION ("close_current_tab");
-    DEBUG_ASSERT (tw != NULL);
+void rename_text_callback(GtkWidget* button, rename_data* data) {
 
-    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    tilda_window_rename_tab (tw, pos, title);
+	const gchar* resp = gtk_entry_get_text(GTK_ENTRY(data->entry));
+	gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK(data->tw->notebook));
+	tilda_window_rename_tab (data->tw, pos, resp);
+	gtk_widget_destroy(GTK_WIDGET(data->dialog));
 }
 
+
+void tilda_window_rename_current_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("rename_current_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    GtkWidget *dialog, *entry;
+    const gchar* resp;
+    rename_data data;
+
+    dialog = gtk_dialog_new();
+	entry = gtk_entry_new();
+	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), entry);
+
+	data.tw = tw;
+	data.dialog = GTK_DIALOG(dialog);
+	data.entry = entry;
+
+	g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(rename_text_callback), (gpointer*) &data);
+
+	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+	gtk_window_set_title(GTK_WINDOW(dialog), "Insert the tab name");
+	gtk_widget_show_all(dialog);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (GTK_IS_WIDGET(dialog)) {
+		gtk_widget_destroy(dialog);
+	}
+}
+
+
+void create_dialog(GtkWidget *button, gpointer window) {
+
+    GtkWidget *dialog, *label, *content_area;
+
+    /* New label for dialog content */
+    label = gtk_label_new("This is a dialog!");
+
+    /* Make a new dialog with an 'OK' button */
+    dialog = gtk_dialog_new_with_buttons("This is a dialog, which (shouldn't | can't) be resized!", window, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
+
+    /* Add label to dialog */
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    gtk_container_add(GTK_CONTAINER(content_area), label);
+
+    /* Destroy dialog properly */
+    g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), dialog);
+
+    /* Set dialog to not resize. */
+    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+
+    gtk_widget_show_all(dialog);
+}
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
@@ -799,7 +851,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     return 0;
 }
 
-gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, gchar* title) {
+gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, const gchar* title) {
 
     DEBUG_FUNCTION ("tilda_window_rename_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -825,7 +877,7 @@ gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, gchar* title) {
 		gtk_label_set_text (GTK_LABEL(label), shortTitle);
 		g_free(shortTitle);
 	} else {
-		gtk_label_set_text (GTK_LABEL(label), "test");
+		gtk_label_set_text (GTK_LABEL(label), title);
 	}
 
     return 0;

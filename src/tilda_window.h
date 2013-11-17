@@ -61,6 +61,14 @@ struct tilda_window_
     enum tilda_positions { UP, DOWN } current_state;
 };
 
+typedef struct rename_data_ rename_data;
+
+struct rename_data_ {
+	tilda_window* tw;
+	GtkDialog* dialog;
+	GtkWidget* entry;
+};
+
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT };
 
 /**
@@ -91,7 +99,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_position, gboolean force
  * Success: return 0
  * Failure: return non-zero
  */
-gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, gchar* title);
+gint tilda_window_rename_tab (tilda_window *tw, gint tab_index, const gchar* title);
 
 /**
  * tilda_window_init ()
@@ -134,7 +142,7 @@ void tilda_window_close_current_tab (tilda_window *tw);
  *
  * Renames the current tab
  */
-void tilda_window_rename_current_tab (tilda_window *tw, gchar* title);
+void tilda_window_rename_current_tab (tilda_window *tw);
 
 /**
  * This registers the keyboard shortcuts to the values which the user has

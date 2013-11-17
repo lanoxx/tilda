@@ -23,7 +23,6 @@
 #include <callback_func.h>
 #include <configsys.h>
 #include <wizard.h> /* wizard */
-#include <gtk/gtk.h>
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
@@ -735,7 +734,7 @@ menu_rename_tab_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (widget != NULL);
     DEBUG_ASSERT (data != NULL);
 
-    tilda_window_rename_current_tab (TILDA_WINDOW(data), "test");
+    tilda_window_rename_current_tab(TILDA_WINDOW(data));
 }
 
 
