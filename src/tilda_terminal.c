@@ -835,7 +835,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     tilda_term *tt;
     gchar *match;
     gint tag;
-    gint xpad, ypad;
+    gint ypad;
     gchar *cmd;
     gchar *web_browser_cmd;
     gboolean ret = FALSE;
@@ -854,10 +854,10 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             GtkBorder border;
             gtk_widget_style_get (GTK_WIDGET (terminal),
                 "inner-border", &border, NULL);
-            xpad = border.left;
+
             ypad = border.bottom;
             match = vte_terminal_match_check (terminal,
-                    (event->x - xpad) /
+                    (event->x - ypad) /
                     vte_terminal_get_char_width (terminal),
                     (event->y - ypad) /
                     vte_terminal_get_char_height (terminal),
