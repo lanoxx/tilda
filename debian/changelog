@@ -1,4 +1,14 @@
+tilda (1.1.10-1) unstable; urgency=low
+
+  * Fixed a bug with the custom color
+    palette saving.
+  * Fixed a wrong path to icon in the
+    .desktop file.
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Sun, 01 Dec 2013 22:35:00 +0100
+
 tilda (1.1.9-1) unstable; urgency=low
+  
   * Fixed tab ordering bug of the goto-tab hotkeys.
 
  -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 12 Nov 2013 13:15:00 +0100
