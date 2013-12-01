@@ -3,7 +3,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([Tilda],[1.1.9],[https://github.com/lanoxx/tilda/issues],[tilda],[https://github.com/lanoxx/tilda])
+AC_INIT([Tilda],[1.1.10],[https://github.com/lanoxx/tilda/issues],[tilda],[https://github.com/lanoxx/tilda])
 AM_INIT_AUTOMAKE
 
 # We are going to use silent builds which have a much
