@@ -11,6 +11,8 @@ Gtk+3 >= 3.0 - http://developer.gnome.org/gtk3/3.0/
 VTE >= 2.90 - http://developer.gnome.org/vte/0.30/
 libConfuse - http://www.nongnu.org/confuse/
 
+On Ubuntu based system install dependencies with:
+sudo apt-get install libgtk-3-dev libvte-2.90-dev libconfuse-dev
 
 Installing from source
 ================================================================================
