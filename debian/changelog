@@ -1,3 +1,12 @@
+tilda (1.1.11-1) unstable; urgency=low
+  * Fixed an issue where the
+    window grows bigger than
+    max_width if there are too
+    many tabs open. Fixed by
+    making the tab bar scrollable.
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Fri, 13 Dec 2013 17:00:00 +0100
+
 tilda (1.1.10-1) unstable; urgency=low
 
   * Fixed a bug with the custom color
