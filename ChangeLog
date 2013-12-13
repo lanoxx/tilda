@@ -1,3 +1,10 @@
+version 1.1.11 (2013-12-13):
+	* Fixed an issue where the
+	  window grows bigger than
+	  max_width if there are too
+	  many tabs open. Fixed by
+	  making the tab bar scrollable.
+
 version 1.1.10 (2013-12-01):
 	* Fix custom color support and
 	  add a "Custom" entry in the
