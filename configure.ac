@@ -126,6 +126,21 @@ dnl ---------------------------------------------------------------------------
 dnl - Show summary
 dnl ---------------------------------------------------------------------------
 
+dnl The following for block, splits the CFLAGS variable into multiple lines of 4 options per line
+cflaglines=""
+cflagcount=0
+for flag in ${CFLAGS}; do
+    cflaglines=$cflaglines$flag" "
+    cflagcount=$(($cflagcount+1))
+    if (( $cflagcount % 4 == 0)); then
+       dnl Here we concatenate the current cflaglines variable with a newline and enough spaces
+       dnl such that the lines are correctly indented. Do not try to indent or reformat the
+       dnl position of the double quotes (").
+       cflaglines=$cflaglines"
+                                       "
+    fi
+done;
+
 echo "
               ${PACKAGE} $VERSION
               `echo ${PACKAGE} $VERSION | sed "s/./=/g"`
@@ -136,7 +151,7 @@ echo "
         pkgdatadir:                    `if -z ${pkgdatadir}; then echo ${pkgdatadir}; else echo ${datadir}/${PACKAGE}; fi`
         source code location:          ${srcdir}
         compiler:                      ${CC}
-        cflags:                        ${CFLAGS}
+        cflags:                        ${cflaglines}
         Maintainer mode:               ${USE_MAINTAINER_MODE}
         Use *_DISABLE_DEPRECATED:      ${enable_deprecation_flags}
 "
