@@ -75,8 +75,18 @@ if test "x$enable_debug" = "xyes"; then
 	CFLAGS="$CFLAGS -g -ggdb"
 fi
 
+AC_ARG_ENABLE([clang],
+    [AS_HELP_STRING([--enable-clang],[use clang instead of gcc as C compiler.])])
+
 #Use C99 compilation mode
-CFLAGS="$CFLAGS -std=c99"
+if test "x$enable_clang" = "xyes"; then
+    # clang uses c99 mode by default, so we just set CC to clang and we are done
+    CC="clang";
+else
+    # We do not need to set CC as the default is gcc, but we need to set it to
+    # use C99 compilation mode
+    CFLAGS="$CFLAGS -std=c99";
+fi
 
 # This registers the option '--debug-functions' in the ./configure script
 # If this option is set, then the name of each entered function will be
