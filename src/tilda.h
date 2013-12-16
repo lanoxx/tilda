@@ -35,7 +35,7 @@ struct lock_info
 };
 
 #define GUINT16_TO_FLOAT(color) (color / (double) 0xFFFF)
-#define GUINT16_FROM_FLOAT(value) ((int) (value * 0xFFFF + 0.5d))
+#define GUINT16_FROM_FLOAT(value) ((int) (value * 0xFFFF + 0.5))
 
 #define RGB(r,g,b) (r) / (gdouble)G_MAXUINT16, \
                      (g) / (gdouble)G_MAXUINT16, \

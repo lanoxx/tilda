@@ -1401,49 +1401,49 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
 
     config_setint ("scheme", scheme);
 
-    gdk_text.alpha = 1.0d;
-    gdk_back.alpha = 1.0d;
+    gdk_text.alpha = 1.0;
+    gdk_back.alpha = 1.0;
 
     switch (scheme) {
         /* Green on black */
         case 1:
-            gdk_text.red = gdk_text.blue = 0.0d;
-            gdk_text.green = 1.0d;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
+            gdk_text.red = gdk_text.blue = 0.0;
+            gdk_text.green = 1.0;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0;
             break;
         /* Black on white */
         case 2:
-            gdk_text.red = gdk_text.green = gdk_text.blue = 0.0d;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 1.0d;
+            gdk_text.red = gdk_text.green = gdk_text.blue = 0.0;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 1.0;
             break;
         /* White on black */
         case 3:
-            gdk_text.red = gdk_text.green = gdk_text.blue = 1.0d;
-            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0d;
+            gdk_text.red = gdk_text.green = gdk_text.blue = 1.0;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 0.0;
             break;
         /* Zenburn */
         case 4: 
-			gdk_text.red = 0.86d;
-			gdk_text.green = gdk_text.blue = 0.64d;
-			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25d;
+			gdk_text.red = 0.86;
+			gdk_text.green = gdk_text.blue = 0.64;
+			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25;
 			break;
 		/* Solarized Light */
 		case 5:
-			gdk_text.red = 0.4d;
-			gdk_text.green = 0.48d;
-			gdk_text.blue = 0.51d;
-			gdk_back.red = 0.99d;
-			gdk_back.green = 0.96d;
-			gdk_back.blue = 0.89d;
+			gdk_text.red = 0.4;
+			gdk_text.green = 0.48;
+			gdk_text.blue = 0.51;
+			gdk_back.red = 0.99;
+			gdk_back.green = 0.96;
+			gdk_back.blue = 0.89;
 			break;
 		/* Solarized Dark */
 		case 6:
-			gdk_text.red = 0.51d;
-			gdk_text.green = 0.58d;
-			gdk_text.blue = 0.59d;
-			gdk_back.red = 0.0d;
-			gdk_back.green = 0.17d;
-			gdk_back.blue = 0.21d;
+			gdk_text.red = 0.51;
+			gdk_text.green = 0.58;
+			gdk_text.blue = 0.59;
+			gdk_back.red = 0.0;
+			gdk_back.green = 0.17;
+			gdk_back.blue = 0.21;
 			break;
 	    /* Custom */
         default:
@@ -1999,12 +1999,12 @@ static void set_wizard_state_from_config () {
     text_color.red =   GUINT16_TO_FLOAT(config_getint ("text_red"));
     text_color.green = GUINT16_TO_FLOAT(config_getint ("text_green"));
     text_color.blue =  GUINT16_TO_FLOAT(config_getint ("text_blue"));
-    text_color.alpha = 1.0d;
+    text_color.alpha = 1.0;
     COLOR_CHOOSER ("colorbutton_text", &text_color);
     back_color.red =   GUINT16_TO_FLOAT(config_getint ("back_red"));
     back_color.green = GUINT16_TO_FLOAT(config_getint ("back_green"));
     back_color.blue =  GUINT16_TO_FLOAT(config_getint ("back_blue"));
-    back_color.alpha = 1.0d;
+    back_color.alpha = 1.0;
     COLOR_CHOOSER ("colorbutton_back", &back_color);
 
     COMBO_BOX ("combo_palette_scheme", "palette_scheme");
@@ -2013,7 +2013,7 @@ static void set_wizard_state_from_config () {
         current_palette[i].red   = GUINT16_TO_FLOAT (config_getnint ("palette", i*3));
         current_palette[i].green = GUINT16_TO_FLOAT (config_getnint ("palette", i*3+1));
         current_palette[i].blue  = GUINT16_TO_FLOAT (config_getnint ("palette", i*3+2));
-        current_palette[i].alpha = 1.0d;
+        current_palette[i].alpha = 1.0;
 
         update_palette_color_button(i);
     }

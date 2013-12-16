@@ -553,18 +553,18 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
-    bg.alpha =    1.0d;
+    bg.alpha =    1.0;
 
     fg.red   =    GUINT16_TO_FLOAT(config_getint ("text_red"));
     fg.green =    GUINT16_TO_FLOAT(config_getint ("text_green"));
     fg.blue  =    GUINT16_TO_FLOAT(config_getint ("text_blue"));
-    fg.alpha =    1.0d;
+    fg.alpha =    1.0;
 
     for(i = 0;i < TERMINAL_PALETTE_SIZE; i++) {
         current_palette[i].red   = GUINT16_TO_FLOAT(config_getnint ("palette", i*3));
         current_palette[i].green = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+1));
         current_palette[i].blue  = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+2));
-        current_palette[i].alpha = 1.0d;
+        current_palette[i].alpha = 1.0;
     }
 
     vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
