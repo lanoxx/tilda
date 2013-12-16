@@ -158,7 +158,7 @@ echo "
         prefix:                        ${prefix}
         datarootdir:                   ${datarootdir}
         datadir:                       ${datadir}
-        pkgdatadir:                    `if -z ${pkgdatadir}; then echo ${pkgdatadir}; else echo ${datadir}/${PACKAGE}; fi`
+        pkgdatadir:                    `if test x${pkgdatadir} != "x"; then echo ${pkgdatadir}; else echo ${datadir}/${PACKAGE}; fi`
         source code location:          ${srcdir}
         compiler:                      ${CC}
         cflags:                        ${cflaglines}
