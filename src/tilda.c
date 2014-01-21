@@ -479,9 +479,25 @@ static gint get_instance_number ()
     return i;
 }
 
+tilda_window *tw = NULL;
 static void termination_handler (G_GNUC_UNUSED gint signum) {
-    DEBUG_FUNCTION ("termination_handler");
-    gtk_main_quit ();
+    if(signum==SIGHUP){
+        DEBUG_FUNCTION ("reload_handler");
+        gint instance=get_instance_number();
+        gchar *config_file=get_config_file_name(instance);
+        DEBUG_FUNCTION (config_file);
+        config_init (config_file);
+        const gchar *font=config_getstr ("font");
+        tilda_term *tt;
+        for (int i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            PangoFontDescription *description = pango_font_description_from_string (font);
+            vte_terminal_set_font (VTE_TERMINAL(tt->vte_term), description);
+        }
+    }else{
+        DEBUG_FUNCTION ("termination_handler");
+        gtk_main_quit ();
+    }
 }
 
 /*
@@ -529,8 +545,6 @@ static void load_custom_css_file () {
 int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("main");
-
-    tilda_window *tw = NULL;
 
     struct sigaction sa;
     struct lock_info lock;
@@ -610,6 +624,7 @@ int main (int argc, char *argv[])
     sigaction (SIGABRT, &sa, NULL);
     sigaction (SIGTERM, &sa, NULL);
     sigaction (SIGKILL, &sa, NULL);
+    sigaction (SIGHUP,  &sa, NULL);
 
     /* If the config file doesn't exist open up the wizard */
     if (access (tw->config_file, R_OK) == -1)
@@ -657,4 +672,3 @@ tw_alloc_failed:
 
     return 0;
 }
-
