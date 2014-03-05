@@ -12,7 +12,14 @@ VTE >= 2.90 - http://developer.gnome.org/vte/0.30/
 libConfuse - http://www.nongnu.org/confuse/
 
 On Ubuntu based system install dependencies with:
-sudo apt-get install libgtk-3-dev libvte-2.90-dev libconfuse-dev
+
+    sudo apt-get install git automake libgtk-3-dev libvte-2.90-dev libconfuse-dev
+
+You possibly need other packages such as gettext, automake, autoconf, autopoint
+    
+On Fedora:
+
+    sudo yum install git automake libconfuse-devel vte3-devel gtk3-devel glib-devel gettext-devel
 
 Installing from source
 ================================================================================
