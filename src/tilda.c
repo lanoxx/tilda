@@ -435,7 +435,7 @@ static gint get_instance_number ()
     gchar *name;
 
     GDir *dir;
-    GSList *list = NULL;
+    gint lowest_lock_instance = INT_MAX;
     struct lock_info *lock;
     gchar *lock_dir = g_build_filename (g_get_user_cache_dir (), "tilda", "locks", NULL);
 
@@ -451,32 +451,27 @@ static gint get_instance_number ()
     }
 
     /* Look through every file in the lock directory, and see if it is a lock file.
-     * If it is a lock file, store it's instance number in the list. */
+     * If it is a lock file, check if it's the lowest lock instance (and store it if it is). */
     while ((name = (gchar*)g_dir_read_name (dir)) != NULL)
     {
         lock = islockfile (name);
 
         if (lock != NULL)
         {
-            list = g_slist_append (list, GINT_TO_POINTER (lock->instance));
+            lowest_lock_instance = min(lock->instance, lowest_lock_instance);
             g_free (lock);
         }
     }
 
     g_dir_close (dir);
-
-    /* Find the lowest available instance.
-     *
-     * This is not the most efficient algorithm ever, but the
-     * list should not be too big, so it's ok for now. */
-    for (i=0; i<INT_MAX; i++)
-        if (!g_slist_find (list, GINT_TO_POINTER (i)))
-            break;
-
     g_free (lock_dir);
-    g_slist_free (list);
 
-    return i;
+    /**
+     * If no lockfile exists, then the lowest_lock_instance will still be
+     * set to INT_MAX. In that case we need to return 0, otherwise we should return
+     * the next free lock instance, which is one more then the lowest_lock_instance.
+     */
+    return (lowest_lock_instance == INT_MAX ? 0 : lowest_lock_instance + 1);
 }
 
 static void termination_handler (G_GNUC_UNUSED gint signum) {
