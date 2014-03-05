@@ -23,9 +23,8 @@ On Fedora:
 
 Installing from source
 ================================================================================
-See the INSTALL file for details. Generally if you have installed the
-development packages (*-dev or *-devel) of the dependencies above then it
-should be possible to install with:
+Generally if you have installed the development packages (*-dev or *-devel) of
+the dependencies above then it should be possible to install with:
 
     ./autogen.sh --prefix=/usr
     make --silent
