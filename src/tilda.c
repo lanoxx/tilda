@@ -435,7 +435,7 @@ static gint get_instance_number ()
     gchar *name;
 
     GDir *dir;
-    gint lowest_lock_instance = INT_MAX;
+    gint lowest_lock_instance = INT_MIN;
     struct lock_info *lock;
     gchar *lock_dir = g_build_filename (g_get_user_cache_dir (), "tilda", "locks", NULL);
 
@@ -458,7 +458,7 @@ static gint get_instance_number ()
 
         if (lock != NULL)
         {
-            lowest_lock_instance = min(lock->instance, lowest_lock_instance);
+            lowest_lock_instance = max(lock->instance, lowest_lock_instance);
             g_free (lock);
         }
     }
@@ -471,7 +471,7 @@ static gint get_instance_number ()
      * set to INT_MAX. In that case we need to return 0, otherwise we should return
      * the next free lock instance, which is one more then the lowest_lock_instance.
      */
-    return (lowest_lock_instance == INT_MAX ? 0 : lowest_lock_instance + 1);
+    return (lowest_lock_instance == INT_MIN ? 0 : lowest_lock_instance + 1);
 }
 
 static void termination_handler (G_GNUC_UNUSED gint signum) {
