@@ -113,7 +113,6 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     if (tw->fullscreen != TRUE) {
-        tw->fullscreen = TRUE;
         gtk_window_fullscreen (GTK_WINDOW (tw->window));
     }
     else {
@@ -122,8 +121,8 @@ gint toggle_fullscreen_cb (tilda_window *tw)
         // while fullscreened.
         gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
         gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        tw->fullscreen = FALSE;
     }
+    tw->fullscreen = !tw->fullscreen;
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
@@ -189,14 +188,7 @@ static gint move_tab_left (tilda_window *tw)
                                               current_page_index);
 
     if (num_pages > 1) {
-      if (current_page_index < num_pages - 1) {
-        // Move current page one to the left
-        new_page_index = current_page_index + 1;
-      } else {
-        // Current page is at beginning: move to end
-        new_page_index = 0;
-      }
-
+      new_page_index = (current_page_index + 1) % num_pages;
       gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
                                   new_page_index);
     }
