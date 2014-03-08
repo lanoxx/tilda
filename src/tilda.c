@@ -351,19 +351,28 @@ static gboolean parse_cli (int argc, char *argv[])
     }
 
     /* Now set the options in the config, if they changed */
-    if (background_color != config_getstr ("background_color"))
+    if (background_color != config_getstr ("background_color")) {
         config_setstr ("background_color", background_color);
+        g_free(background_color);
+    }
     if (command != config_getstr ("command"))
     {
         config_setbool ("run_command", TRUE);
         config_setstr ("command", command);
+        g_free(command);
     }
-    if (font != config_getstr ("font"))
+    if (font != config_getstr ("font")) {
         config_setstr ("font", font);
-    if (image != config_getstr ("image"))
+        g_free(font);
+    }
+    if (image != config_getstr ("image")) {
         config_setstr ("image", image);
-    if (working_dir != config_getstr ("working_dir"))
+        g_free(image);
+    }
+    if (working_dir != config_getstr ("working_dir")) {
         config_setstr ("working_dir", working_dir);
+        g_free(working_dir);
+    }
 
     if (lines != config_getint ("lines"))
         config_setint ("lines", lines);
