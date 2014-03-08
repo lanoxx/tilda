@@ -524,19 +524,13 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
-tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
+tilda_window *tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_init");
     DEBUG_ASSERT (instance >= 0);
 
-    tilda_window *tw;
     GtkCssProvider *provider;
     GtkStyleContext *style_context;
-
-    tw = g_malloc (sizeof(tilda_window));
-
-    if (tw == NULL)
-        return NULL;
 
     /* Set the instance number */
     tw->instance = instance;

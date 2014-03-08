@@ -525,7 +525,7 @@ int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION ("main");
 
-    tilda_window *tw = NULL;
+    tilda_window tw;
 
     struct sigaction sa;
     struct lock_info lock;
@@ -583,14 +583,10 @@ int main (int argc, char *argv[])
     load_custom_css_file ();
 
     /* create new tilda_window */
-    tw = tilda_window_init (config_file, lock.instance);
-
-    /* Check the allocations above */
-    if (tw == NULL)
-        goto tw_alloc_failed;
+    tilda_window_init (config_file, lock.instance, &tw);
 
     /* Adding widget title for CSS selection */
-    gtk_widget_set_name (GTK_WIDGET(tw->window), "Main");
+    gtk_widget_set_name (GTK_WIDGET(tw.window), "Main");
 
     /* Initialize and set up the keybinding to toggle tilda's visibility. */
     tomboy_keybinder_init ();
@@ -607,10 +603,10 @@ int main (int argc, char *argv[])
     sigaction (SIGKILL, &sa, NULL);
 
     /* If the config file doesn't exist open up the wizard */
-    if (access (tw->config_file, R_OK) == -1)
+    if (access (tw.config_file, R_OK) == -1)
     {
         /* We probably need a default key, too ... */
-        gchar *default_key = g_strdup_printf ("F%d", tw->instance+1);
+        gchar *default_key = g_strdup_printf ("F%d", tw.instance+1);
         config_setstr ("key", default_key);
         g_free (default_key);
 
@@ -622,19 +618,19 @@ int main (int argc, char *argv[])
      * Note that the key will be bound upon exiting the wizard */
     if (need_wizard) {
         g_print ("Starting the wizard to configure tilda options.");
-        wizard (tw);
+        wizard (&tw);
     } else {
-        gint ret = tilda_keygrabber_bind (config_getstr ("key"), tw);
+        gint ret = tilda_keygrabber_bind (config_getstr ("key"), &tw);
 
         if (!ret)
         {
             /* The key was unbindable, so we need to show the wizard */
             show_invalid_keybinding_dialog (NULL, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another."));
-            wizard (tw);
+            wizard (&tw);
         }
     }
 
-    pull (tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN);
+    pull (&tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN);
 
     g_print ("Tilda has started. Press %s to pull down the window.\n",
         config_getstr ("key"));
@@ -642,9 +638,6 @@ int main (int argc, char *argv[])
     gtk_main();
 
     /* Ok, we're at the end of our run. Time to clean up ... */
-    tilda_window_free (tw);
-
-tw_alloc_failed:
     config_free (config_file);
     g_remove (lock_file);
     g_free (lock_file);
