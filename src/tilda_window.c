@@ -172,9 +172,11 @@ gint tilda_window_prev_tab (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-static gint move_tab_left (tilda_window *tw)
+enum tab_direction { TAB_LEFT = 1, TAB_RIGHT = -1 };
+
+static gint move_tab (tilda_window *tw, int direction)
 {
-    DEBUG_FUNCTION ("move_tab_left");
+    DEBUG_FUNCTION ("move_tab");
     DEBUG_ASSERT (tw != NULL);
 
     int num_pages;
@@ -183,45 +185,34 @@ static gint move_tab_left (tilda_window *tw)
     GtkWidget* current_page;
 
     num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
-    current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
-                                              current_page_index);
 
     if (num_pages > 1) {
-      new_page_index = (current_page_index + 1) % num_pages;
-      gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
-                                  new_page_index);
+        current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+        current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
+                                                  current_page_index);
+
+        /* wrap over if new_page_index over-/underflows */
+        new_page_index = (current_page_index + direction) % num_pages;
+
+        gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
+                                    new_page_index);
     }
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
     return GDK_EVENT_STOP;
+
+}
+static gint move_tab_left (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("move_tab_left");
+    return move_tab(tw, LEFT);
 }
 
 static gint move_tab_right (tilda_window *tw)
 {
     DEBUG_FUNCTION ("move_tab_right");
-    DEBUG_ASSERT (tw != NULL);
-
-    int num_pages;
-    int current_page_index;
-    GtkWidget* current_page;
-
-    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
-    current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
-                                              current_page_index);
-
-    if (num_pages > 1) {
-      // Move current page one to the right. This automatically wraps
-      // when current_page_index - 1 is negative.
-      gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
-                                  current_page_index - 1);
-    }
-
-    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
-    // keystroke into the vte terminal widget.
-    return GDK_EVENT_STOP;
+    return move_tab(tw, RIGHT);
 }
 
 static gboolean focus_term (GtkWidget *widget, gpointer data)
