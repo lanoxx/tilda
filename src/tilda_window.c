@@ -94,23 +94,14 @@ void tilda_window_close_current_tab (tilda_window *tw)
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
-    switch (pos)
-    {
-        default: /* default is top */
-            g_printerr (_("You have a bad tab_pos in your configuration file\n"));
-        case NB_TOP:
-            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_TOP);
-            break;
-        case NB_BOTTOM:
-            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_BOTTOM);
-            break;
-        case NB_LEFT:
-            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_LEFT);
-            break;
-        case NB_RIGHT:
-            gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), GTK_POS_RIGHT);
-            break;
+    const gint gtk_pos[] = { GTK_POS_TOP, GTK_POS_BOTTOM, GTK_POS_LEFT, GTK_POS_RIGHT };
+
+    if ((pos < 0) || (pos > 3)) {
+        g_printerr (_("You have a bad tab_pos in your configuration file\n"));
+        pos = NB_TOP;
     }
+
+    gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), gtk_pos[pos]);
 
     return 0;
 }
