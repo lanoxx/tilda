@@ -624,6 +624,12 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
         return NULL;
     }
 
+    /* This is required in key_grabber.c to get the x11 server time,
+     * since the specification requires this flag to be set when
+     * gdk_x11_get_server_time() is called.
+     **/
+    gtk_widget_add_events (tw->window, GDK_PROPERTY_CHANGE_MASK );
+
     /* Connect signal handlers */
     g_signal_connect (G_OBJECT(tw->window), "delete-event", G_CALLBACK (delete_event_callback), tw);
     g_signal_connect (G_OBJECT(tw->window), "show", G_CALLBACK (focus_term), tw);
