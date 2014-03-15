@@ -177,22 +177,13 @@ void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollba
     DEBUG_ASSERT (tt != NULL);
     DEBUG_ASSERT (pos == LEFT || pos == RIGHT || pos == DISABLED);
 
-    switch (pos)
-    {
-        case LEFT:
-            gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 0);
-            gtk_widget_show (tt->scrollbar);
-            break;
-
-        case RIGHT:
-            gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, 1);
-            gtk_widget_show (tt->scrollbar);
-            break;
-
-        case DISABLED:
-        default:
-            gtk_widget_hide (tt->scrollbar);
-            break;
+    if (pos == DISABLED) {
+        gtk_widget_hide (tt->scrollbar);
+    } else {
+        /* We have already asserted that it's either disabled (already taken care of),
+         * left, or right, so no need to check twice. */
+        gtk_box_reorder_child (GTK_BOX(tt->hbox), tt->scrollbar, (pos == LEFT) ? 0 : 1);
+        gtk_widget_show (tt->scrollbar);
     }
 }
 
