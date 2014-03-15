@@ -94,6 +94,23 @@ else
     CFLAGS="$CFLAGS -std=c99";
 fi
 
+AC_ARG_ENABLE([lto],
+    [AS_HELP_STRING([--enable-lto],[Optimize at link time. This enables the compiler \
+                                    to do a better job at optimization and (hopefully) \
+                                    produce smaller binaries.])])
+
+if test "x$enable_lto" = "xyes"; then
+    CFLAGS="$CFLAGS -flto"
+    if test "$CC" != "clang"; then
+        # If the user has enabled lto explicitly, we assume he has made sure
+        # that his toolchain can indeed handle lto objects.
+        CFLAGS="$CFLAGS -fno-fat-lto-objects"
+    fi
+    # In the case of lto optimizations, we need to pass the optimization options
+    # to the linker as well as telling it to use the linker plugin.
+    LDFLAGS="$LDFLAGS $CFLAGS -fuse-linker-plugin"
+fi
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
