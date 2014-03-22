@@ -328,7 +328,7 @@ static gboolean mouse_enter (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, g
     GdkEventCrossing *ev = (GdkEventCrossing*)event;
     tilda_window *tw = TILDA_WINDOW(data);
     stop_auto_hide_tick(tw);
-    if (tw->disable_auto_hide == TRUE && ev->time != 0)
+    if (tw->disable_auto_hide == FALSE && ev->time != 0)
         tilda_window_set_active(tw);
 
     return GDK_EVENT_STOP;
