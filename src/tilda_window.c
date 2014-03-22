@@ -701,7 +701,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     /* Strangely enough, prepend puts pages on the end */
     index = gtk_notebook_append_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
-	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
+    gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
     /* We should show the tabs if there are more than one tab in the notebook */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
