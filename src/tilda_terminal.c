@@ -838,6 +838,12 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
 
     switch (event->button)
     {
+        case 9:
+            tilda_window_next_tab (tt->tw);
+            break;
+        case 8:
+            tilda_window_prev_tab (tt->tw);
+            break;
         case 3: /* Right Click */
             popup_menu (tt->tw, tt);
             break;

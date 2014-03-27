@@ -139,8 +139,7 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-
-static gint next_tab (tilda_window *tw)
+gint tilda_window_next_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("next_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -162,7 +161,7 @@ static gint next_tab (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-static gint prev_tab (tilda_window *tw)
+gint tilda_window_prev_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("prev_tab");
     DEBUG_ASSERT (tw != NULL);
@@ -472,8 +471,8 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
        Move Tab, Add Tab, Close Tab, Copy, and Paste using key
        combinations defined in the config. */
     tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                  tw);
-    tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(next_tab),                       tw);
-    tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(prev_tab),                       tw);
+    tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(tilda_window_next_tab),          tw);
+    tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(tilda_window_prev_tab),          tw);
     tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
     tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
     tilda_add_config_accelerator("addtab_key",       G_CALLBACK(tilda_window_add_tab),           tw);
