@@ -794,3 +794,23 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
 
     return 0;
 }
+
+gint tilda_window_next_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_window_next_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    next_tab (tw);
+
+    return 0;
+}
+
+gint tilda_window_prev_tab (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_window_prev_tab");
+    DEBUG_ASSERT (tw != NULL);
+
+    prev_tab (tw);
+
+    return 0;
+}
