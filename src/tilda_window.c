@@ -473,7 +473,9 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
        combinations defined in the config. */
     tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                  tw);
     tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(next_tab),                       tw);
+    tilda_add_config_accelerator("nexttab_xf_key",   G_CALLBACK(next_tab),                       tw);
     tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(prev_tab),                       tw);
+    tilda_add_config_accelerator("prevtab_xf_key",   G_CALLBACK(prev_tab),                       tw);
     tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
     tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
     tilda_add_config_accelerator("addtab_key",       G_CALLBACK(tilda_window_add_tab),           tw);
