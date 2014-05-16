@@ -46,6 +46,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static void status_line_changed_cb (GtkWidget *widget, gpointer data);
 static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
+static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
 static void raise_window_cb (GtkWidget *widget, gpointer data);
@@ -123,6 +124,8 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(status_line_changed_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
                       G_CALLBACK(button_press_cb), term);
+    g_signal_connect (G_OBJECT(term->vte_term), "key-press-event",
+		      G_CALLBACK(key_press_cb), term); //needs GDK_KEY_PRESS_MASK
 
     /* Connect to application request signals. */
     g_signal_connect (G_OBJECT(term->vte_term), "iconify-window",
@@ -887,6 +890,19 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     }
 
     return FALSE;
+}
+
+gboolean key_press_cb (GtkWidget *widget,
+                       GdkEvent  *event,
+                       tilda_term *terminal)
+{
+    if(event->type == GDK_KEY_PRESS) {
+	GdkEventKey *keyevent = (GdkEventKey*) event;
+	if(keyevent->keyval == GDK_KEY_Menu) {
+	    popup_menu(terminal->tw, terminal);
+	}
+    }
+    return GDK_EVENT_PROPAGATE;
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
