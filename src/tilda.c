@@ -606,7 +606,11 @@ int main (int argc, char *argv[])
     load_custom_css_file ();
 
     /* create new tilda_window */
-    tilda_window_init (config_file, lock.instance, &tw);
+    gboolean success = tilda_window_init (config_file, lock.instance, &tw);
+
+    if(!success) {
+        goto initialization_failed;
+    }
 
     /* Adding widget title for CSS selection */
     gtk_widget_set_name (GTK_WIDGET(tw.window), "Main");
@@ -660,6 +664,7 @@ int main (int argc, char *argv[])
     /* Whew! We're finally all set up and ready to run GTK ... */
     gtk_main();
 
+initialization_failed:
     tilda_window_free(&tw);
 
     /* Ok, we're at the end of our run. Time to clean up ... */

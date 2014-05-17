@@ -493,7 +493,7 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
-void tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
+gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_init");
     DEBUG_ASSERT (instance >= 0);
@@ -583,8 +583,7 @@ void tilda_window_init (const gchar *config_file, const gint instance, tilda_win
     /* Add the initial terminal */
     if (!tilda_window_add_tab (tw))
     {
-        free (tw);
-        return NULL;
+        return FALSE;
     }
 
     /* This is required in key_grabber.c to get the x11 server time,
@@ -616,6 +615,8 @@ void tilda_window_init (const gchar *config_file, const gint instance, tilda_win
     /* Create GDK resources now, to prevent crashes later on */
     gtk_widget_realize (tw->window);
     generate_animation_positions (tw);
+
+    return TRUE;
 }
 
 gint tilda_window_free (tilda_window *tw)

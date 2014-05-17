@@ -113,7 +113,7 @@ gint tilda_window_prev_tab (tilda_window *tw);
  *
  * Notes: The configuration system must be up and running before calling this function.
  */
-void tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw);
+gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw);
 
 /**
  * Releases resources that are being used by the tilda window, such as the tabs
