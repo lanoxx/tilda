@@ -660,6 +660,8 @@ int main (int argc, char *argv[])
     /* Whew! We're finally all set up and ready to run GTK ... */
     gtk_main();
 
+    tilda_window_free(&tw);
+
     /* Ok, we're at the end of our run. Time to clean up ... */
     config_free (config_file);
     g_remove (lock_file);

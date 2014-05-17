@@ -634,7 +634,6 @@ gint tilda_window_free (tilda_window *tw)
     }
 
     g_free (tw->config_file);
-    g_free (tw);
 
     return 0;
 }

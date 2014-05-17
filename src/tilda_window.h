@@ -116,6 +116,12 @@ gint tilda_window_prev_tab (tilda_window *tw);
 void tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw);
 
 /**
+ * Releases resources that are being used by the tilda window, such as the tabs
+ * or the config file.
+ */
+gint tilda_window_free (tilda_window *tw);
+
+/**
  * This toggles the fullscreen mode on or off. This is intended to be registered
  * as a GCallback in order to be invoked after some user action.
  */
