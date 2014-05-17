@@ -379,10 +379,9 @@ static gboolean goto_tab_generic (tilda_window *tw, guint tab_number)
     if (g_list_length (tw->terms) > (tab_number-1))
     {
         goto_tab (tw, tab_number - 1);
-        return TRUE;
     }
 
-    return FALSE;
+    return TRUE;
 }
 
 /* These all just call the generic function since they're all basically the same
@@ -697,7 +696,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     /* Strangely enough, prepend puts pages on the end */
     index = gtk_notebook_append_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
-	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
+    gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
     /* We should show the tabs if there are more than one tab in the notebook */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
