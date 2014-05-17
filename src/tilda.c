@@ -444,7 +444,6 @@ static gint get_instance_number ()
 {
     DEBUG_FUNCTION ("get_instance_number");
 
-    gint i;
     gchar *name;
 
     GSequence *seq;
