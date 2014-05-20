@@ -1,3 +1,10 @@
+version 1.1.12 (2014-05-20):
+	* Fixed an issue where the
+	  keystroke for the fullscreen
+	  hotkey was carried into the
+	  terminal and causes a '~' key
+	  to be printed.
+
 version 1.1.11 (2013-12-13):
 	* Fixed an issue where the
 	  window grows bigger than
