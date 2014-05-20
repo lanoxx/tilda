@@ -1,3 +1,12 @@
+tilda (1.1.12-1) unstable; urgency=low
+  * Fixed an issue where the
+    keystroke for the fullscreen
+    hotkey was carried into the
+    terminal and caused a '~' key
+    to be printed.
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Tue, 20 May 2014 14:30:00 +0100
+
 tilda (1.1.11-1) unstable; urgency=low
   * Fixed an issue where the
     window grows bigger than
