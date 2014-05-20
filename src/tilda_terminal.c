@@ -903,10 +903,10 @@ gboolean key_press_cb (GtkWidget *widget,
                        tilda_term *terminal)
 {
     if(event->type == GDK_KEY_PRESS) {
-	GdkEventKey *keyevent = (GdkEventKey*) event;
-	if(keyevent->keyval == GDK_KEY_Menu) {
-	    popup_menu(terminal->tw, terminal);
-	}
+        GdkEventKey *keyevent = (GdkEventKey*) event;
+        if(keyevent->keyval == GDK_KEY_Menu) {
+            popup_menu(terminal->tw, terminal);
+        }
     }
     return GDK_EVENT_PROPAGATE;
 }
