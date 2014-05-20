@@ -131,6 +131,10 @@ gint toggle_fullscreen_cb (tilda_window *tw)
 		gtk_window_unfullscreen (GTK_WINDOW (tw->window));
 		tw->fullscreen = FALSE;
 	}
+
+    // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
+    // keystroke into the vte terminal widget.
+    return GDK_EVENT_STOP;
 }
 
 
