@@ -3,7 +3,7 @@ Section: x11
 Priority: extra
 Maintainer: Sebastian Geiger <lanoxx@gmx.net>
 Build-Depends: debhelper (>= 9), autotools-dev, dh-autoreconf, autopoint, pkg-config, libgtk-3-dev, libvte-2.90-dev, libconfuse-dev
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://github.com/lanoxx/tilda
 Vcs-Git: git://github.com/lanoxx/tilda.git
 Vcs-Browser: https://github.com/lanoxx/tilda/tree/tilda-debian-1-1
