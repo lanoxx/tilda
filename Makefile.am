@@ -3,7 +3,7 @@
 
 AUTOMAKE_OPTIONS = gnu
 
-SUBDIRS = po m4 src
+SUBDIRS = po
 
 CLEANFILES = tilda.desktop
 
@@ -55,6 +55,10 @@ tilda.desktop: tilda.desktop.in
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
+
+bin_PROGRAMS = 
+
+include src/Makefile.am
 
 # We register this uninstall hook to remove the ${pkgdatadir}, which
 # is created by the pkgdata_DATA directive above. Without this hook

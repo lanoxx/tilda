@@ -4,11 +4,11 @@
 
 AC_PREREQ([2.68])
 AC_INIT([Tilda],[1.2-alpha],[https://github.com/lanoxx/tilda/issues],[tilda],[https://github.com/lanoxx/tilda])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 # We are going to use silent builds which have a much
 # nicer output. More information can be foudn here:
-#     https://live.gnome.org/GnomeGoals/NicerBuilds
+#     https://wiki.gnome.org/Initiatives/GnomeGoals/NicerBuilds
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 
@@ -144,8 +144,6 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([mkdir strcasecmp strchr strncasecmp strstr strtol])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile
-                 m4/Makefile
                  po/Makefile.in])
 AC_OUTPUT
 
@@ -153,7 +151,7 @@ dnl ---------------------------------------------------------------------------
 dnl - Show summary
 dnl ---------------------------------------------------------------------------
 
-dnl The following for block, splits the CFLAGS variable into multiple lines of 4 options per line
+dnl The following 'for' block splits the CFLAGS variable into multiple lines of 4 options per line
 cflaglines=""
 cflagcount=0
 for flag in ${CFLAGS}; do
@@ -162,7 +160,7 @@ for flag in ${CFLAGS}; do
     if (( $cflagcount % 4 == 0)); then
        dnl Here we concatenate the current cflaglines variable with a newline and enough spaces
        dnl such that the lines are correctly indented. Do not try to indent or reformat the
-       dnl position of the double quotes (").
+       dnl position of the double quotes (\").
        cflaglines=$cflaglines"
                                        "
     fi
