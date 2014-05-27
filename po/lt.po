@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2013-11-24 03:29+0100\n"
+"POT-Creation-Date: 2014-05-27 12:21+0200\n"
 "PO-Revision-Date: 2013-08-09 18:39+0200\n"
 "Last-Translator: Algimantas Margevičius <margevicius.algimantas@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -609,7 +609,7 @@ msgstr "Negalima įrašyti į konfigūravimo failą %s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "Negalima paleisit komandos: `%s'\n"
 
-#: src/tilda.c:236 src/tilda.c:448
+#: src/tilda.c:236 src/tilda.c:464
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Negalima atidaryti užrakinto katalogo: %s\n"
@@ -671,23 +671,23 @@ msgstr ""
 "\n"
 "Klaidos žinutė: %s\n"
 
-#: src/tilda.c:408
+#: src/tilda.c:417
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr "Kuriamas aplankas: „%s“\n"
 
-#: src/tilda.c:514
+#: src/tilda.c:532
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 "Naudotojo konfigūracijos aplanke rasta „style.css“, pritaikomas naudotojo "
 "stilius.\n"
 
-#: src/tilda.c:545
+#: src/tilda.c:563
 msgid "Migrating old config path to XDG folders\n"
 msgstr "Perkeliamas senas konfigūracijos kelias į XDG aplankus\n"
 
-#: src/tilda.c:637 src/wizard.c:373
+#: src/tilda.c:655 src/wizard.c:373
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -695,34 +695,34 @@ msgstr ""
 "Jūsų pasirinktas klavišų susiejimas skirtas „Išskleisti terminalą“ yra "
 "netinkamas. Pasirinkite kitą."
 
-#: src/tilda_terminal.c:404
+#: src/tilda_terminal.c:398
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Klaida analizuojant komandą: %s\n"
 
-#: src/tilda_terminal.c:405 src/tilda_terminal.c:434
+#: src/tilda_terminal.c:399 src/tilda_terminal.c:428
 msgid "Launching default shell instead\n"
 msgstr "Paleisti numatytąją konsolę vietoj\n"
 
-#: src/tilda_terminal.c:433
+#: src/tilda_terminal.c:427
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nepavyko paleisti komandos: %s\n"
 
-#: src/tilda_terminal.c:488
+#: src/tilda_terminal.c:482
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Negalima paleisti numatytosios konsolės: %s\n"
 
-#: src/tilda_terminal.c:776
+#: src/tilda_terminal.c:770
 msgid "_New Tab"
 msgstr "_Nauja kortelė"
 
-#: src/tilda_terminal.c:780
+#: src/tilda_terminal.c:774
 msgid "_Close Tab"
 msgstr "_Užverti kortelę"
 
-#: src/tilda_terminal.c:792
+#: src/tilda_terminal.c:786
 msgid "Toggle fullscreen"
 msgstr "Perjungti viso ekrano veikseną"
 
@@ -735,12 +735,12 @@ msgstr "Nepavyko paleisti interneto naršyklės. Komanda buvo `%s'\n"
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "Jūs turite blogai nustatytą tab_pos konfigūracijos faile\n"
 
-#: src/tilda_window.c:509
+#: src/tilda_window.c:478
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Negalima nustatyti Tildos piktogramos: %s\n"
 
-#: src/tilda_window.c:689
+#: src/tilda_window.c:656
 msgid "Out of memory, cannot create tab\n"
 msgstr "Trūksta atminties, negalima sukurti kortelės\n"
 

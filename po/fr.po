@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2013-11-24 03:29+0100\n"
+"POT-Creation-Date: 2014-05-27 12:21+0200\n"
 "PO-Revision-Date: 2008-03-10 22:11+0000\n"
 "Last-Translator: François Boulogne <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -623,7 +623,7 @@ msgstr "Ne peut pas écrire le fichier de configuration dans %s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "Impossible d'exécuter la commande : '%s'\n"
 
-#: src/tilda.c:236 src/tilda.c:448
+#: src/tilda.c:236 src/tilda.c:464
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
@@ -685,21 +685,21 @@ msgstr ""
 "\n"
 "Message d'erreur : %s\n"
 
-#: src/tilda.c:408
+#: src/tilda.c:417
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:514
+#: src/tilda.c:532
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:545
+#: src/tilda.c:563
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:637 src/wizard.c:373
+#: src/tilda.c:655 src/wizard.c:373
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
@@ -708,34 +708,34 @@ msgstr ""
 "Le raccourcis clavier que vous avez choisi est invalide. S'il-vous-plaît, "
 "choisissez en un autre."
 
-#: src/tilda_terminal.c:404
+#: src/tilda_terminal.c:398
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:405 src/tilda_terminal.c:434
+#: src/tilda_terminal.c:399 src/tilda_terminal.c:428
 msgid "Launching default shell instead\n"
 msgstr ""
 
-#: src/tilda_terminal.c:433
+#: src/tilda_terminal.c:427
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Impossible de lancer la commande personnalisée : %s\n"
 
-#: src/tilda_terminal.c:488
+#: src/tilda_terminal.c:482
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:776
+#: src/tilda_terminal.c:770
 msgid "_New Tab"
 msgstr "_Nouvel onglet"
 
-#: src/tilda_terminal.c:780
+#: src/tilda_terminal.c:774
 msgid "_Close Tab"
 msgstr "_Fermer l'onglet"
 
-#: src/tilda_terminal.c:792
+#: src/tilda_terminal.c:786
 msgid "Toggle fullscreen"
 msgstr "Passer en mode plein écran"
 
@@ -750,12 +750,12 @@ msgstr ""
 "Vous avez un mauvais positionnement des onglets dans votre fichier de "
 "configuration\n"
 
-#: src/tilda_window.c:509
+#: src/tilda_window.c:478
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Ne peut pas paramétrer l'icône de tilda : %s\n"
 
-#: src/tilda_window.c:689
+#: src/tilda_window.c:656
 msgid "Out of memory, cannot create tab\n"
 msgstr "Plus de mémoire, ne peut pas créer l'onglet\n"
 

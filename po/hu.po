@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2013-11-24 03:29+0100\n"
+"POT-Creation-Date: 2014-05-27 12:21+0200\n"
 "PO-Revision-Date: 2008-03-05 00:28+0000\n"
 "Last-Translator: Pittmann Tamás <zaivaldi@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -629,7 +629,7 @@ msgstr "Nem tudom írni a konfigfájlt: %s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "A '%s' parancs futtatása nem sikerült\n"
 
-#: src/tilda.c:236 src/tilda.c:448
+#: src/tilda.c:236 src/tilda.c:464
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Nem tudom megnyitni a zárolási könyvtárat :%s\n"
@@ -690,55 +690,55 @@ msgstr ""
 "\n"
 "Hiba: %s\n"
 
-#: src/tilda.c:408
+#: src/tilda.c:417
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:514
+#: src/tilda.c:532
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:545
+#: src/tilda.c:563
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:637 src/wizard.c:373
+#: src/tilda.c:655 src/wizard.c:373
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr "A választott gyorsbillentyű érvénytelen. Válasszon másikat."
 
-#: src/tilda_terminal.c:404
+#: src/tilda_terminal.c:398
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Parancs értelmezési hiba: %s\n"
 
-#: src/tilda_terminal.c:405 src/tilda_terminal.c:434
+#: src/tilda_terminal.c:399 src/tilda_terminal.c:428
 msgid "Launching default shell instead\n"
 msgstr "Helyette indítom az alapértelmezett héjat.\n"
 
-#: src/tilda_terminal.c:433
+#: src/tilda_terminal.c:427
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nem tudom elindítani a megadott felhasználói parancsot: %s\n"
 
-#: src/tilda_terminal.c:488
+#: src/tilda_terminal.c:482
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Nem tudom elindítani az alapértelmezett héjat: %s\n"
 
-#: src/tilda_terminal.c:776
+#: src/tilda_terminal.c:770
 msgid "_New Tab"
 msgstr "Új _fül"
 
-#: src/tilda_terminal.c:780
+#: src/tilda_terminal.c:774
 msgid "_Close Tab"
 msgstr "Fül _bezárása"
 
-#: src/tilda_terminal.c:792
+#: src/tilda_terminal.c:786
 msgid "Toggle fullscreen"
 msgstr ""
 
@@ -751,12 +751,12 @@ msgstr "Nem tudtam elindítani a böngészőt, parancs: %s\n"
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "A konfigfájlban hibás a fülek pozíciója\n"
 
-#: src/tilda_window.c:509
+#: src/tilda_window.c:478
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Nem tudom a tilda ikonját beállítani: %s\n"
 
-#: src/tilda_window.c:689
+#: src/tilda_window.c:656
 msgid "Out of memory, cannot create tab\n"
 msgstr "Elfogyott a memória. a fül nem hozható létre\n"
 

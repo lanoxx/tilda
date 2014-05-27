@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2013-11-24 03:29+0100\n"
+"POT-Creation-Date: 2014-05-27 12:21+0200\n"
 "PO-Revision-Date: 2008-03-27 19:11+0000\n"
 "Last-Translator: Jorge Rodríguez <yitano@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -641,7 +641,7 @@ msgstr "Incapaz de escribir el fichero de configuración en %s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "Incapaz de ejecutar el comando: `%s'\n"
 
-#: src/tilda.c:236 src/tilda.c:448
+#: src/tilda.c:236 src/tilda.c:464
 #, fuzzy, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Incapaz de abrir el fichero protegido %s\n"
@@ -704,56 +704,56 @@ msgstr ""
 "\n"
 "Mensaje de error: %s\n"
 
-#: src/tilda.c:408
+#: src/tilda.c:417
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:514
+#: src/tilda.c:532
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:545
+#: src/tilda.c:563
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:637 src/wizard.c:373
+#: src/tilda.c:655 src/wizard.c:373
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr "El atajo de teclado que definió es inválido. Seleccione otro."
 
-#: src/tilda_terminal.c:404
+#: src/tilda_terminal.c:398
 #, fuzzy, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problema analizando comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:405 src/tilda_terminal.c:434
+#: src/tilda_terminal.c:399 src/tilda_terminal.c:428
 #, fuzzy
 msgid "Launching default shell instead\n"
 msgstr "En su lugar, ejecutando terminal predeterminado\n"
 
-#: src/tilda_terminal.c:433
+#: src/tilda_terminal.c:427
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Incapaz de ejecutar el comando personalizado %s\n"
 
-#: src/tilda_terminal.c:488
+#: src/tilda_terminal.c:482
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Incapaz de ejecutar el terminal predeterminado: %s\n"
 
-#: src/tilda_terminal.c:776
+#: src/tilda_terminal.c:770
 msgid "_New Tab"
 msgstr "_Nueva pestaña"
 
-#: src/tilda_terminal.c:780
+#: src/tilda_terminal.c:774
 msgid "_Close Tab"
 msgstr "_Cerrar pestaña"
 
-#: src/tilda_terminal.c:792
+#: src/tilda_terminal.c:786
 msgid "Toggle fullscreen"
 msgstr ""
 
@@ -766,12 +766,12 @@ msgstr "Fallo al ejecutar el navegador web. El comando fue '%s'\n"
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "Tiene un tab_pos erróneo en su archivo de configuración\n"
 
-#: src/tilda_window.c:509
+#: src/tilda_window.c:478
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Incapaz de establecer el ícono de Tilda: %s\n"
 
-#: src/tilda_window.c:689
+#: src/tilda_window.c:656
 msgid "Out of memory, cannot create tab\n"
 msgstr "No hay memoria disponible, no se puede crear pestaña\n"
 
