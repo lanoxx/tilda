@@ -30,6 +30,7 @@ struct tilda_term_
     GtkWidget *hbox;
     GtkWidget *scrollbar;
     GRegex *http_regexp;
+    GPid pid;
     /* We remember if we have already dropped to the default
      * shell before, if so, then we know that this time we can
      * exit the program.
@@ -72,6 +73,7 @@ gint tilda_term_free (struct tilda_term_ *term);
 
 
 void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos);
+char* tilda_term_get_cwd(tilda_term* tt);
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 
