@@ -40,7 +40,7 @@
 
 GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
-static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command);
+static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
 static gint tilda_term_config_defaults (tilda_term *tt);
 static void child_exited_cb (GtkWidget *widget, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
@@ -79,12 +79,18 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     int ret;
     struct tilda_term_ *term;
     GError *error = NULL;
+    tilda_term *current_tt;
+    gint current_tt_index;
+    char *current_tt_dir = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
 
     /* Check for a failed allocation */
     if (!term)
         return NULL;
+
+    /* Set the PID to unset value */
+    term->pid = -1;
 
     /* Add the parent window reference */
     term->tw = tw;
@@ -161,8 +167,18 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     gtk_widget_show (term->vte_term);
     gtk_widget_show (term->hbox);
 
+    /* Get current term's working directory */
+    current_tt_index = gtk_notebook_get_current_page (GTK_NOTEBOOK(tw->notebook));
+    current_tt = g_list_nth_data (tw->terms, current_tt_index);
+    if (current_tt != NULL)
+    {
+        current_tt_dir = tilda_term_get_cwd(current_tt);
+    }
+
     /* Fork the appropriate command into the terminal */
-    ret = start_shell (term, FALSE);
+    ret = start_shell (term, FALSE, current_tt_dir);
+
+    g_free(current_tt_dir);
 
     if (ret)
         goto err_fork;
@@ -369,6 +385,37 @@ static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
     adjust_font_size (widget, data, -1);
 }
 
+/* Returns the working directory of the terminal
+ *
+ * @param tt the tilda_term to get working directory of
+ *
+ * SUCCESS: return non-NULL char* that should be freed with g_free when done
+ * FAILURE: return NULL
+*/
+char* tilda_term_get_cwd(struct tilda_term_* tt)
+{
+    char *file;
+    char *cwd;
+    GError *error = NULL;
+
+    if (tt->pid < 0)
+    {
+        return NULL;
+    }
+
+    file = g_strdup_printf ("/proc/%d/cwd", tt->pid);
+    cwd = g_file_read_link (file, &error);
+    g_free (file);
+
+    if (cwd == NULL)
+    {
+        g_printerr (_("Problem reading link %s: %s\n"), file, error->message);
+        g_error_free (error);
+    }
+
+    return cwd;
+}
+
 /* Fork a shell into the VTE Terminal
  *
  * @param tt the tilda_term to fork into
@@ -376,7 +423,7 @@ static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
  * SUCCESS: return 0
  * FAILURE: return non-zero
  */
-static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command)
+static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir)
 {
     DEBUG_FUNCTION ("start_shell");
     DEBUG_ASSERT (tt != NULL);
@@ -387,6 +434,11 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command)
     GError *error = NULL;
 
     gchar *default_command;
+
+    if (working_dir == NULL || config_getbool ("inherit_working_dir") == FALSE)
+    {
+        working_dir = config_getstr ("working_dir");
+    }
 
     if (config_getbool ("run_command") && !ignore_custom_command)
     {
@@ -408,13 +460,13 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command)
 
         ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
             VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-            config_getstr ("working_dir"), /* const char *working_directory */
+            working_dir, /* const char *working_directory */
             argv, /* char **argv */
             envv, /* char **envv */
             G_SPAWN_SEARCH_PATH,    /* GSpawnFlags spawn_flags */
             NULL, /* GSpawnChildSetupFunc child_setup */
             NULL, /* gpointer child_setup_data */
-            NULL, /* GPid *child_pid */
+            &tt->pid, /* GPid *child_pid */
             NULL  /* GError **error */
             );
 
@@ -465,13 +517,13 @@ launch_default_shell:
 
     ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
         VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-        config_getstr ("working_dir"), /* const char *working_directory */
+        working_dir, /* const char *working_directory */
         argv, /* char **argv */
         NULL, /* char **envv */
         0,    /* GSpawnFlags spawn_flags */
         NULL, /* GSpawnChildSetupFunc child_setup */
         NULL, /* gpointer child_setup_data */
-        NULL, /* GPid *child_pid */
+        &tt->pid, /* GPid *child_pid */
         NULL  /* GError **error */
         );
 
@@ -516,10 +568,10 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
             break;
         case RESTART_COMMAND:
             vte_terminal_feed (VTE_TERMINAL(tt->vte_term), "\r\n\r\n", 4);
-            start_shell (tt, FALSE);
+            start_shell (tt, FALSE, NULL);
             break;
         case DROP_TO_DEFAULT_SHELL:
-            start_shell (tt, TRUE);
+            start_shell (tt, TRUE, NULL);
         default:
             break;
     }

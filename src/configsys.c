@@ -136,6 +136,8 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
     /* Whether we limit the length of a tab title */
     CFG_BOOL("title_max_length_flag", TRUE, CFGF_NONE),
+    /* Whether to set a new tab's working dir to the current tab's */
+    CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_END()
 };
 
