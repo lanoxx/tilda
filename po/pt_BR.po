@@ -165,11 +165,11 @@ msgstr "Efeito do cursor"
 
 #: tilda.glade:494
 msgid "Audible Terminal Bell"
-msgstr "Sino do terminal audível"
+msgstr "Som do terminal audível"
 
 #: tilda.glade:516
 msgid "<b>Terminal Display</b>"
-msgstr "Visor do terminal"
+msgstr "<b>Visor do terminal</b>"
 
 #: tilda.glade:572
 msgid "Enable Antialiasing"
@@ -185,7 +185,7 @@ msgstr "Posições das abas"
 
 #: tilda.glade:640
 msgid "Font:"
-msgstr "Fonte"
+msgstr "Fonte:"
 
 #: tilda.glade:657
 msgid "<b>Font</b>"
