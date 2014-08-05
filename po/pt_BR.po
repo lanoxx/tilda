@@ -8,111 +8,108 @@ msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2014-05-27 12:21+0200\n"
-"PO-Revision-Date: 2007-05-30 01:49+0000\n"
-"Last-Translator: Drak[X] <laetemn@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"PO-Revision-Date: 2014-08-04 22:29+0000\n"
+"Last-Translator: NatanJMai <natan.mai@hotmail.com>\n"
 "Language: pt_BR\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
 
 #: tilda.glade:68
 msgid "Close Tilda"
-msgstr ""
+msgstr "Fechar Tilda"
 
 #: tilda.glade:71
 msgid "Open a new terminal"
-msgstr ""
+msgstr "Abrir um novo terminal"
 
 #: tilda.glade:74
 msgid "Open a new terminal and hide"
-msgstr ""
+msgstr "Abrir um novo terminal e esconder"
 
 #: tilda.glade:85 tilda.glade:142
 msgid "Top"
-msgstr ""
+msgstr "Topo"
 
 #: tilda.glade:88 tilda.glade:145
 msgid "Bottom"
-msgstr ""
+msgstr "Inferior"
 
 #: tilda.glade:91 tilda.glade:148
 msgid "Left"
-msgstr ""
+msgstr "Esquerda"
 
 #: tilda.glade:94 tilda.glade:151
 msgid "Right"
-msgstr ""
+msgstr "Direita"
 
 #: tilda.glade:105
 msgid "Isn't displayed"
-msgstr ""
+msgstr "Não é exibido"
 
 #: tilda.glade:108
 msgid "Goes after initial title"
-msgstr ""
+msgstr "Vá após o título inicial"
 
 #: tilda.glade:111
 msgid "Goes before initial title"
-msgstr ""
+msgstr "Vá antes do título inicial"
 
 #: tilda.glade:114
 msgid "Replace initial title"
-msgstr ""
+msgstr "Substituir título inicial"
 
 #: tilda.glade:125
 msgid "Drop to the default shell"
-msgstr ""
+msgstr "Mudar para o shell padrão"
 
 #: tilda.glade:128
 msgid "Restart the command"
-msgstr ""
+msgstr "Reiniciar o comando"
 
 #: tilda.glade:131
 msgid "Exit the terminal"
-msgstr ""
+msgstr "Fechar o terminal"
 
 #: tilda.glade:162 tilda.glade:191 src/wizard.c:189
 msgid "Custom"
-msgstr ""
+msgstr "Personalizado"
 
 #: tilda.glade:165
 msgid "Green on Black"
-msgstr ""
+msgstr "Verde no Preto"
 
 #: tilda.glade:168
 msgid "Black on White"
-msgstr ""
+msgstr "Preto no Branco"
 
 #: tilda.glade:171
 msgid "White on Black"
-msgstr ""
+msgstr "Branco no Preto"
 
 #: tilda.glade:174 src/wizard.c:194
 msgid "Zenburn"
-msgstr ""
+msgstr "Zenburn"
 
 #: tilda.glade:177 src/wizard.c:195
 msgid "Solarized Light"
-msgstr ""
+msgstr "Luz solarizada"
 
 #: tilda.glade:180 src/wizard.c:196
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Escuro solarizado"
 
 #: tilda.glade:202
 msgid "On the Left"
-msgstr ""
+msgstr "À esquerda"
 
 #: tilda.glade:205
 msgid "On the Right"
-msgstr ""
+msgstr "À direita"
 
 #: tilda.glade:208
 msgid "Disabled"
-msgstr ""
+msgstr "Inválido"
 
 #: tilda.glade:219 tilda.glade:236
 msgid "ASCII DEL"
@@ -132,109 +129,111 @@ msgstr ""
 
 #: tilda.glade:260
 msgid "Tilda Config"
-msgstr ""
+msgstr "Configurações Tilda"
 
 #: tilda.glade:337
 msgid "Enable Double Buffering"
-msgstr ""
+msgstr "Ativar Double Buffering"
 
 #: tilda.glade:353 src/tilda.c:302
 msgid "Start Tilda hidden"
-msgstr ""
+msgstr "Iniciar Tilda escondido"
 
 #: tilda.glade:369
 msgid "Always on top"
-msgstr ""
+msgstr "Sempre no topo"
 
 #: tilda.glade:385
 msgid "Display on all workspaces"
-msgstr ""
+msgstr "Mostrar em todos os espaços de trabalho"
 
 #: tilda.glade:401
 msgid "Do not show in taskbar"
-msgstr ""
+msgstr "Não mostrar na barra de tarefas"
 
 #: tilda.glade:417
 msgid "Show Notebook Border"
-msgstr ""
+msgstr "Mostrar borda do notebook"
 
 #: tilda.glade:439
 msgid "<b>Window Display</b>"
-msgstr ""
+msgstr "Vitrine"
 
 #: tilda.glade:478
 msgid "Cursor Blinks"
-msgstr ""
+msgstr "Efeito do cursor"
 
 #: tilda.glade:494
 msgid "Audible Terminal Bell"
-msgstr ""
+msgstr "Sino do terminal audível"
 
 #: tilda.glade:516
 msgid "<b>Terminal Display</b>"
-msgstr ""
+msgstr "Visor do terminal"
 
 #: tilda.glade:572
 msgid "Enable Antialiasing"
-msgstr ""
+msgstr "Ativar suavização"
 
 #: tilda.glade:588
 msgid "Allow Bold Text"
-msgstr ""
+msgstr "Permitir texto em negrito"
 
 #: tilda.glade:607
 msgid "Position of Tabs:"
-msgstr ""
+msgstr "Posições das abas"
 
 #: tilda.glade:640
 msgid "Font:"
-msgstr ""
+msgstr "Fonte"
 
 #: tilda.glade:657
 msgid "<b>Font</b>"
-msgstr ""
+msgstr "<b>Fonte</b>"
 
 #: tilda.glade:710
 msgid "Hide Tilda when mouse leaves it"
-msgstr ""
+msgstr "Ocultar Tilda quando mouse sair"
 
 #: tilda.glade:730
 msgid "Auto Hide Delay:"
-msgstr ""
+msgstr "Tempo para esconder automaticamente"
 
 #: tilda.glade:741
 msgid "Hide when Tilda loses focus"
-msgstr ""
+msgstr "Esconder Tilda quando perder o foco"
 
 #: tilda.glade:763
 msgid "<b>Auto Hide</b>"
-msgstr ""
+msgstr "<b>Esconder Automaticamente</b>"
 
 #: tilda.glade:805
 msgid "When last terminal is closed:"
-msgstr ""
+msgstr "Quando o último terminal é fechado:"
 
 #: tilda.glade:841
 msgid "<b>Program Exit</b>"
-msgstr ""
+msgstr "<b>Sair do Programa</b>"
 
 #: tilda.glade:863
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr ""
+"<small><i><b>Note:</b> Algumas opções requere que o Tilda seja reiniciado.</i></"
+"small>"
 
 #: tilda.glade:880
 msgid "General"
-msgstr ""
+msgstr "Geral"
 
 #: tilda.glade:929
 msgid "Word Characters:"
-msgstr ""
+msgstr "Caracteres:"
 
 #: tilda.glade:945
 msgid "<b>Select by Word</b>"
-msgstr ""
+msgstr "<b>Selecione por palavra</b>"
 
 #: tilda.glade:996
 msgid "Web Browser *:"
@@ -246,7 +245,7 @@ msgstr ""
 
 #: tilda.glade:1047
 msgid "Initial Title:"
-msgstr ""
+msgstr "Título Inicial:"
 
 #: tilda.glade:1059
 msgid "Dynamically-set Title:"
@@ -254,27 +253,27 @@ msgstr ""
 
 #: tilda.glade:1109
 msgid "Limit maximum length of tab title:"
-msgstr ""
+msgstr "Limite de comprimento máximo do título da aba:"
 
 #: tilda.glade:1147
 msgid "<b>Title</b>"
-msgstr ""
+msgstr "<b>Título</b>"
 
 #: tilda.glade:1177
 msgid "Run a custom command instead of the shell"
-msgstr ""
+msgstr "Executar um comando personalizado em vez do shell"
 
 #: tilda.glade:1194
 msgid "Custom Command:"
-msgstr ""
+msgstr "Comando personalizado:"
 
 #: tilda.glade:1208
 msgid "When Command Exits:"
-msgstr ""
+msgstr "Quando o comando sair:"
 
 #: tilda.glade:1263
 msgid "<b>Command</b>"
-msgstr ""
+msgstr "<b>Comandoz</b>"
 
 #: tilda.glade:1288
 msgid ""
@@ -290,91 +289,91 @@ msgstr ""
 
 #: tilda.glade:1339 tilda.glade:1432
 msgid "Percentage"
-msgstr ""
+msgstr "Percentual"
 
 #: tilda.glade:1366 tilda.glade:1445
 msgid "In Pixels"
-msgstr ""
+msgstr "Em Pixels"
 
 #: tilda.glade:1398
 msgid "<b>Height</b>"
-msgstr ""
+msgstr "<b>Altura</b>"
 
 #: tilda.glade:1491
 msgid "<b>Width</b>"
-msgstr ""
+msgstr "<b>Largura</b>"
 
 #: tilda.glade:1523
 msgid "Centered Horizontally"
-msgstr ""
+msgstr "Centralizado Horizontalmente"
 
 #: tilda.glade:1541
 msgid "Centered Vertically"
-msgstr ""
+msgstr "Centralizado Verticalmente"
 
 #: tilda.glade:1563 src/tilda.c:309
 msgid "X Position"
-msgstr ""
+msgstr "Posição X"
 
 #: tilda.glade:1578 src/tilda.c:310
 msgid "Y Position"
-msgstr ""
+msgstr "Posição Y"
 
 #: tilda.glade:1630
 msgid "<b>Position</b>"
-msgstr ""
+msgstr "<b>Posição</b>"
 
 #: tilda.glade:1665
 msgid "Enable Transparency"
-msgstr ""
+msgstr "Habilitar Transparência"
 
 #: tilda.glade:1683
 msgid "Level of Transparency"
-msgstr ""
+msgstr "Nível de Transparência"
 
 #: tilda.glade:1709
 msgid "Animated Pulldown"
-msgstr ""
+msgstr "Animar a descida"
 
 #: tilda.glade:1726
 msgid "Use Image for Background"
-msgstr ""
+msgstr "Usar imagem como plano de fundo"
 
 #: tilda.glade:1746
 msgid "Animation Delay (usec)"
-msgstr ""
+msgstr "Tempo de animação"
 
 #: tilda.glade:1763
 msgid "Animation Orientation"
-msgstr ""
+msgstr "Orientação da Animação"
 
 #: tilda.glade:1836
 msgid "<b>Extras</b>"
-msgstr ""
+msgstr "<b>Extras</b>"
 
 #: tilda.glade:1871
 msgid "Monitor:"
-msgstr ""
+msgstr "Monitor:"
 
 #: tilda.glade:1934
 msgid "<b>Select monitor</b>"
-msgstr ""
+msgstr "<b>Selecione o monitor</b>"
 
 #: tilda.glade:1954
 msgid "Appearance"
-msgstr ""
+msgstr "Aparência"
 
 #: tilda.glade:2000
 msgid "Built-in Schemes"
-msgstr ""
+msgstr "Esquemas embutidos"
 
 #: tilda.glade:2031
 msgid "Text Color"
-msgstr ""
+msgstr "Cor do Texto"
 
 #: tilda.glade:2045
 msgid "Background Color"
-msgstr ""
+msgstr "Cor do plano de fundo"
 
 #: tilda.glade:2094
 msgid "<b>Foreground and Background Colors</b>"
@@ -382,7 +381,7 @@ msgstr ""
 
 #: tilda.glade:2125 tilda.glade:2729
 msgid "    "
-msgstr ""
+msgstr "	"
 
 #: tilda.glade:2146
 msgid ""
@@ -392,19 +391,19 @@ msgstr ""
 
 #: tilda.glade:2433
 msgid "Color palette:"
-msgstr ""
+msgstr "Paleta de cores:"
 
 #: tilda.glade:2450
 msgid "Built-in schemes:"
-msgstr ""
+msgstr "Esquemas Embutidos:"
 
 #: tilda.glade:2477
 msgid "<b>Palette</b>"
-msgstr ""
+msgstr "<b>Paleta</b>"
 
 #: tilda.glade:2499
 msgid "Colors"
-msgstr ""
+msgstr "Cores"
 
 #: tilda.glade:2530
 msgid "Scroll on Output"
@@ -420,7 +419,7 @@ msgstr ""
 
 #: tilda.glade:2601
 msgid "lines"
-msgstr ""
+msgstr "Linhas"
 
 #: tilda.glade:2641
 msgid "Scrollback:"
@@ -440,7 +439,7 @@ msgstr ""
 
 #: tilda.glade:2712
 msgid "<b>Compatibility</b>"
-msgstr ""
+msgstr "Compatibilidade"
 
 #: tilda.glade:2748
 msgid ""
