@@ -49,11 +49,11 @@ msgstr "Não é exibido"
 
 #: tilda.glade:108
 msgid "Goes after initial title"
-msgstr "Vá após o título inicial"
+msgstr "Após o título inicial"
 
 #: tilda.glade:111
 msgid "Goes before initial title"
-msgstr "Vá antes do título inicial"
+msgstr "Antes do título inicial"
 
 #: tilda.glade:114
 msgid "Replace initial title"
@@ -61,7 +61,7 @@ msgstr "Substituir título inicial"
 
 #: tilda.glade:125
 msgid "Drop to the default shell"
-msgstr "Mudar para o shell padrão"
+msgstr "Alterar para o shell padrão"
 
 #: tilda.glade:128
 msgid "Restart the command"
@@ -113,7 +113,7 @@ msgstr "Inválido"
 
 #: tilda.glade:219 tilda.glade:236
 msgid "ASCII DEL"
-msgstr ""
+msgstr "ASCII DEL"
 
 #: tilda.glade:222 tilda.glade:239
 msgid "Escape sequence"
@@ -121,11 +121,11 @@ msgstr ""
 
 #: tilda.glade:225 tilda.glade:242
 msgid "Control-H"
-msgstr ""
+msgstr "Control-H"
 
 #: tilda.glade:253
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: tilda.glade:260
 msgid "Tilda Config"
@@ -137,7 +137,7 @@ msgstr "Ativar Double Buffering"
 
 #: tilda.glade:353 src/tilda.c:302
 msgid "Start Tilda hidden"
-msgstr "Iniciar Tilda escondido"
+msgstr "Iniciar escondido"
 
 #: tilda.glade:369
 msgid "Always on top"
@@ -165,7 +165,7 @@ msgstr "Efeito do cursor"
 
 #: tilda.glade:494
 msgid "Audible Terminal Bell"
-msgstr "Som do terminal audível"
+msgstr "Som do terminal"
 
 #: tilda.glade:516
 msgid "<b>Terminal Display</b>"
@@ -220,7 +220,7 @@ msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr ""
-"<small><i><b>Note:</b> Algumas opções requere que o Tilda seja reiniciado.</i></"
+"<small><i><b>Note:</b> Algumas opções requerem que o Tilda seja reiniciado.</i></"
 "small>"
 
 #: tilda.glade:880
@@ -237,7 +237,7 @@ msgstr "<b>Selecione por palavra</b>"
 
 #: tilda.glade:996
 msgid "Web Browser *:"
-msgstr ""
+msgstr "Navegador *:"
 
 #: tilda.glade:1012
 msgid "<b>URL Handling</b>"
@@ -273,7 +273,7 @@ msgstr "Quando o comando sair:"
 
 #: tilda.glade:1263
 msgid "<b>Command</b>"
-msgstr "<b>Comandoz</b>"
+msgstr "<b>Comando</b>"
 
 #: tilda.glade:1288
 msgid ""
@@ -285,7 +285,7 @@ msgstr ""
 
 #: tilda.glade:1306
 msgid "Title and Command"
-msgstr ""
+msgstr "Título e Comando"
 
 #: tilda.glade:1339 tilda.glade:1432
 msgid "Percentage"
@@ -439,7 +439,7 @@ msgstr ""
 
 #: tilda.glade:2712
 msgid "<b>Compatibility</b>"
-msgstr "Compatibilidade"
+msgstr "<b>Compatibilidade</b>"
 
 #: tilda.glade:2748
 msgid ""
@@ -459,11 +459,11 @@ msgstr ""
 
 #: tilda.glade:2850
 msgid "_Reset Compatibility Options to Defaults"
-msgstr ""
+msgstr "Voltar opções padrões de compatibilidade"
 
 #: tilda.glade:2887
 msgid "Compatibility"
-msgstr ""
+msgstr "Compatibilidade"
 
 #: tilda.glade:2912 tilda.glade:2952 tilda.glade:2990 tilda.glade:3028
 #: tilda.glade:3067 tilda.glade:3107 tilda.glade:3145 tilda.glade:3183
@@ -472,7 +472,7 @@ msgstr ""
 #: tilda.glade:3531 tilda.glade:3571 tilda.glade:3611 tilda.glade:3649
 #: tilda.glade:3692
 msgid " "
-msgstr ""
+msgstr " "
 
 #: tilda.glade:2925
 msgid "<b>Paste</b>"
@@ -480,71 +480,71 @@ msgstr ""
 
 #: tilda.glade:2965
 msgid "<b>Go To Next Tab</b>"
-msgstr ""
+msgstr "<b>Ir para próxima aba</b>"
 
 #: tilda.glade:3003
 msgid "<b>Quit</b>"
-msgstr ""
+msgstr "<b>Fechar</b>"
 
 #: tilda.glade:3041
 msgid "<b>Add Tab</b>"
-msgstr ""
+msgstr "<b>Adicionar Aba</b>"
 
 #: tilda.glade:3080
 msgid "<b>Go To Tab 10</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 10</b>"
 
 #: tilda.glade:3120
 msgid "<b>Go To Tab 5</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 5</b>"
 
 #: tilda.glade:3158
 msgid "<b>Go To Tab 4</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 4</b>"
 
 #: tilda.glade:3196
 msgid "<b>Go To Tab 3</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 3</b>"
 
 #: tilda.glade:3234
 msgid "<b>Go To Tab 2</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 2</b>"
 
 #: tilda.glade:3272
 msgid "<b>Go To Tab 1</b>"
-msgstr ""
+msgstr "<b>Ir para a aba 1</b>"
 
 #: tilda.glade:3310
 msgid "<b>Go To Previous Tab</b>"
-msgstr ""
+msgstr "<b>Ir para a aba anterior</b>"
 
 #: tilda.glade:3350
 msgid "<b>Close Tab</b>"
-msgstr ""
+msgstr "<b>Fechar Aba</b>"
 
 #: tilda.glade:3390
 msgid "<b>Copy</b>"
-msgstr ""
+msgstr "<b>Copiar</b>"
 
 #: tilda.glade:3428
 msgid "<b>Pull Down Terminal</b>"
-msgstr ""
+msgstr "<b></b>"
 
 #: tilda.glade:3464
 msgid "<b>Go To Tab 6</b>"
-msgstr ""
+msgstr "<b>Ir para a Aba 6</b>"
 
 #: tilda.glade:3504
 msgid "<b>Go To Tab 7</b>"
-msgstr ""
+msgstr "<b>Ir para a Aba 7</b>"
 
 #: tilda.glade:3544
 msgid "<b>Go To Tab 8</b>"
-msgstr ""
+msgstr "<b>Ir para a Aba 8</b>"
 
 #: tilda.glade:3584
 msgid "<b>Go To Tab 9</b>"
-msgstr ""
+msgstr "<b>Ir para a Aba 9</b>"
 
 #: tilda.glade:3624
 msgid "<b>Move Tab Left</b>"
@@ -564,7 +564,7 @@ msgstr ""
 
 #: src/callback_func.c:53
 msgid "Untitled"
-msgstr ""
+msgstr "Sem título"
 
 #: src/callback_func.c:71
 msgid "Bad value for \"d_set_title\" in config file\n"
@@ -611,7 +611,7 @@ msgstr ""
 
 #: src/tilda.c:300
 msgid "Set the background color"
-msgstr ""
+msgstr "Mudar a cor de fundo"
 
 #: src/tilda.c:301
 msgid "Run a command at startup"
@@ -619,7 +619,7 @@ msgstr ""
 
 #: src/tilda.c:303
 msgid "Set the font to the following string"
-msgstr ""
+msgstr "Mudar a fonte para a seguinte frase"
 
 #: src/tilda.c:304
 msgid "Scrollback Lines"
@@ -635,15 +635,15 @@ msgstr ""
 
 #: src/tilda.c:307
 msgid "Print the version, then exit"
-msgstr ""
+msgstr "Mostrar a versão, quando fechado"
 
 #: src/tilda.c:308
 msgid "Set Initial Working Directory"
-msgstr ""
+msgstr "Mudar Diretório de Trabalho inicial"
 
 #: src/tilda.c:311
 msgid "Set Background Image"
-msgstr ""
+msgstr "Alterar imagem de fundo"
 
 #: src/tilda.c:312
 msgid "Show Configuration Wizard"
@@ -661,7 +661,7 @@ msgstr ""
 #: src/tilda.c:417
 #, c-format
 msgid "Creating directory:'%s'\n"
-msgstr ""
+msgstr "Criando diretório:'%s'\n"
 
 #: src/tilda.c:532
 msgid ""
@@ -699,11 +699,11 @@ msgstr ""
 
 #: src/tilda_terminal.c:770
 msgid "_New Tab"
-msgstr ""
+msgstr "_Nova Aba"
 
 #: src/tilda_terminal.c:774
 msgid "_Close Tab"
-msgstr ""
+msgstr "_Fechar Aba"
 
 #: src/tilda_terminal.c:786
 msgid "Toggle fullscreen"
@@ -733,15 +733,15 @@ msgstr ""
 
 #: src/wizard.c:191
 msgid "Linux console"
-msgstr ""
+msgstr "Terminal do Linux"
 
 #: src/wizard.c:192
 msgid "XTerm"
-msgstr ""
+msgstr "XTerm"
 
 #: src/wizard.c:193
 msgid "Rxvt"
-msgstr ""
+msgstr "Rxvt"
 
 #: src/wizard.c:289
 #, c-format
@@ -868,4 +868,4 @@ msgstr ""
 
 #: src/wizard.c:1816
 msgid "Enter keyboard shortcut"
-msgstr ""
+msgstr "Adicione um atalho de teclado"
