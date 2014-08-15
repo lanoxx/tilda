@@ -507,6 +507,7 @@ static gboolean delete_event_callback (GtkWidget *widget,
                                 gpointer   user_data)
 {
     gtk_main_quit ();
+    return GDK_EVENT_PROPAGATE;
 }
 
 /**

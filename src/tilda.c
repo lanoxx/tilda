@@ -488,7 +488,7 @@ static void termination_handler (gint signum)
  * This is to do the migration of config files from ~/.tilda to the
  * XDG_*_HOME folders
  */
-static int migrate_config_files(char *old_config_path)
+static void migrate_config_files(char *old_config_path)
 {
     gchar* old_lock_dir = g_build_filename(old_config_path, "locks", NULL);
     gchar* new_lock_dir = g_build_filename(g_get_user_cache_dir (), "tilda", "locks", NULL);
