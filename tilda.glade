@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
@@ -2526,57 +2527,6 @@
                             <property name="n_rows">5</property>
                             <property name="n_columns">2</property>
                             <child>
-                              <object class="GtkCheckButton" id="check_scroll_on_output">
-                                <property name="label" translatable="yes">Scroll on Output</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">3</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_scroll_on_keystroke">
-                                <property name="label" translatable="yes">Scroll on Keystroke</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="check_scroll_background">
-                                <property name="label" translatable="yes">Scroll Background</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="receives_default">False</property>
-                                <property name="xalign">0</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkHBox" id="hbox1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -2635,20 +2585,6 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label_scrollback">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Scrollback:</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">1</property>
-                                <property name="bottom_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="x_padding">4</property>
-                                <property name="y_padding">4</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkLabel" id="label_scrollbar_pos">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -2656,6 +2592,74 @@
                               </object>
                               <packing>
                                 <property name="x_options">GTK_FILL</property>
+                                <property name="x_padding">4</property>
+                                <property name="y_padding">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_infinite_scrollback">
+                                <property name="label" translatable="yes">Limit scrollback to:</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">Unselect for unlimited scrollback.</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_padding">4</property>
+                                <property name="y_padding">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_scroll_on_output">
+                                <property name="label" translatable="yes">Scroll on Output</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_padding">4</property>
+                                <property name="y_padding">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_scroll_on_keystroke">
+                                <property name="label" translatable="yes">Scroll on Keystroke</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                                <property name="x_padding">4</property>
+                                <property name="y_padding">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="check_scroll_background">
+                                <property name="label" translatable="yes">Scroll Background</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="receives_default">False</property>
+                                <property name="xalign">0</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
                                 <property name="x_padding">4</property>
                                 <property name="y_padding">4</property>
                               </packing>
@@ -2897,6 +2901,9 @@
                 <property name="can_focus">False</property>
                 <property name="n_rows">11</property>
                 <property name="n_columns">2</property>
+                <child>
+                  <placeholder/>
+                </child>
                 <child>
                   <object class="GtkFrame" id="frame_keybinding_paste">
                     <property name="visible">True</property>
@@ -3673,9 +3680,6 @@
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame_keybinding_fullscreen">

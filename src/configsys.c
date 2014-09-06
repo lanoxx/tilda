@@ -111,6 +111,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("text_blue", 0xffff, CFGF_NONE),
 
     /* booleans */
+    CFG_BOOL("scroll_history_infinite", FALSE, CFGF_NONE),
     CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
     CFG_BOOL("scroll_on_output", FALSE, CFGF_NONE),
     CFG_BOOL("notebook_border", FALSE, CFGF_NONE),

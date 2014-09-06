@@ -1650,6 +1650,7 @@ static void combo_scrollbar_position_changed_cb (GtkWidget *w)
 static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
+
     guint i;
     tilda_term *tt;
 
@@ -1658,6 +1659,33 @@ static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), status);
+    }
+}
+
+static void check_infinite_scrollback_toggled_cb(GtkWidget *w)
+{
+    // if status is false then scrollback is infinite, otherwise the spinner is active
+    const gboolean hasScrollbackLimit = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("scroll_history_infinite", hasScrollbackLimit);
+
+    GtkWidget *spinner = (GtkWidget *) gtk_builder_get_object(xml, "spin_scrollback_amount");
+    gint scrollback_lines = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinner));
+    GtkWidget *label = (GtkWidget *) gtk_builder_get_object(xml, "label_scrollback_lines");
+
+    gtk_widget_set_sensitive(spinner, hasScrollbackLimit);
+    gtk_widget_set_sensitive(label, hasScrollbackLimit);
+
+    guint i;
+    tilda_term *tt;
+
+    if(!hasScrollbackLimit) {
+        scrollback_lines = -1;
+    }
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_scrollback_lines(VTE_TERMINAL(tt->vte_term), scrollback_lines);
     }
 }
 
@@ -2021,6 +2049,9 @@ static void set_wizard_state_from_config () {
     /* Scrolling Tab */
     COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
     SPIN_BUTTON ("spin_scrollback_amount", "lines");
+    CHECK_BUTTON ("check_infinite_scrollback", "scroll_history_infinite");
+    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_scrollback_amount", "scroll_history_infinite");
+    SET_SENSITIVE_BY_CONFIG_BOOL ("label_scrollback_lines", "scroll_history_infinite");
     CHECK_BUTTON ("check_scroll_on_output", "scroll_on_output");
     CHECK_BUTTON ("check_scroll_on_keystroke", "scroll_on_key");
     CHECK_BUTTON ("check_scroll_background", "scroll_background");
@@ -2132,6 +2163,7 @@ static void connect_wizard_signals ()
     /* Scrolling Tab */
     CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb);
     CONNECT_SIGNAL ("spin_scrollback_amount","value-changed",spin_scrollback_amount_value_changed_cb);
+    CONNECT_SIGNAL ("check_infinite_scrollback", "toggled", check_infinite_scrollback_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_on_output","toggled",check_scroll_on_output_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_on_keystroke","toggled",check_scroll_on_keystroke_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb);
