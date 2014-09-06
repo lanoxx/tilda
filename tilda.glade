@@ -2183,7 +2183,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 15</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">6</property>
@@ -2199,7 +2199,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 7</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">6</property>
@@ -2213,7 +2213,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 14</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">5</property>
@@ -2229,7 +2229,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 16</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">7</property>
@@ -2245,7 +2245,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 13</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">4</property>
@@ -2261,7 +2261,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 11</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">2</property>
@@ -2277,7 +2277,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 12</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">3</property>
@@ -2293,7 +2293,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 10</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -2309,7 +2309,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 9</property>
                                       </object>
                                       <packing>
                                         <property name="top_attach">1</property>
@@ -2323,7 +2323,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 8</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">7</property>
@@ -2337,7 +2337,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 6</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">5</property>
@@ -2351,7 +2351,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 5</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">4</property>
@@ -2365,7 +2365,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 4</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">3</property>
@@ -2379,7 +2379,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 3</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">2</property>
@@ -2393,7 +2393,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 2</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -2407,7 +2407,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip_text">dummy</property>
+                                        <property name="tooltip_text">Choose color 1</property>
                                         <property name="color">#000000000000</property>
                                       </object>
                                       <packing>
