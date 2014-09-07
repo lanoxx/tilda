@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the tilda package.
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
-# jcsl <trcs@gmx.com>, 2014.
+# micrococo <micrococo@gmx.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2014-05-27 12:21+0200\n"
 "PO-Revision-Date: 2014-08-21 11:53+0200\n"
-"Last-Translator: jcsl <trcs@gmx.com>\n"
+"Last-Translator: micrococo <micrococo@gmx.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
