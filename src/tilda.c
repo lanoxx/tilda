@@ -373,6 +373,14 @@ static gboolean parse_cli (int argc, char *argv[])
     /* Now set the options in the config, if they changed */
     if (background_color != config_getstr ("background_color")) {
         config_setstr ("background_color", background_color);
+
+        GdkColor col;
+        if (gdk_color_parse(background_color, &col)) {
+            config_setint("back_red", col.red);
+            config_setint("back_green", col.green);
+            config_setint("back_blue", col.blue);
+        }
+
         g_free(background_color);
     }
     if (command != config_getstr ("command"))
