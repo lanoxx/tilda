@@ -18,7 +18,7 @@
 #define _XOPEN_SOURCE /* feature test macro for fsync */
 
 #include <tilda-config.h>
-#include <debug.h>
+#include "debug.h"
 
 #include <confuse.h>
 #include <glib.h>
@@ -27,7 +27,7 @@
 #include <stdlib.h> /* atoi */
 #include <unistd.h> /* fsync */
 
-#include <configsys.h>
+#include "configsys.h"
 
 static cfg_t *tc;
 

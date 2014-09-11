@@ -16,7 +16,7 @@
 #ifndef TILDA_H
 #define TILDA_H
 
-#include <tilda_window.h>
+#include "tilda_window.h"
 
 #include <gtk/gtk.h>
 

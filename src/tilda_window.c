@@ -15,13 +15,13 @@
 
 #include <tilda-config.h>
 
-#include <debug.h>
-#include <tilda.h>
-#include <callback_func.h>
-#include <configsys.h>
-#include <tilda_window.h>
-#include <tilda_terminal.h>
-#include <key_grabber.h>
+#include "debug.h"
+#include "tilda.h"
+#include "callback_func.h"
+#include "configsys.h"
+#include "tilda_window.h"
+#include "tilda_terminal.h"
+#include "key_grabber.h"
 
 #include <stdio.h>
 #include <stdlib.h>

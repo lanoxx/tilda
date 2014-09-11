@@ -17,15 +17,15 @@
 
 #include <tilda-config.h>
 
-#include <debug.h>
-#include <tilda.h>
-#include <callback_func.h>
-#include <configsys.h>
-#include <tilda_window.h>
-#include <key_grabber.h> /* for pull */
-#include <wizard.h>
-#include <xerror.h>
-#include <tomboykeybinder.h>
+#include "debug.h"
+#include "tilda.h"
+#include "callback_func.h"
+#include "configsys.h"
+#include "tilda_window.h"
+#include "key_grabber.h" /* for pull */
+#include "wizard.h"
+#include "xerror.h"
+#include "tomboykeybinder.h"
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -48,13 +48,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xlibint.h>
-#include <X11/Xproto.h>
-#include <X11/extensions/Xrandr.h>
 
 #include <vte/vte.h>
 #include <glib/gstdio.h>
-#include <zlib.h>
-
 
 /**
 * If lock->pid is 0 then the file is not opened exclusively. Instead flock() must be used to obtain a lock.

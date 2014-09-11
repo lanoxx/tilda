@@ -21,8 +21,8 @@
 
 #include <tilda-config.h>
 
-#include <xerror.h>
-#include <debug.h>
+#include "xerror.h"
+#include "debug.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>

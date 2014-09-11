@@ -18,14 +18,14 @@
 
 #include <tilda-config.h>
 
-#include <debug.h>
-#include <key_grabber.h>
-#include <tilda.h>
-#include <xerror.h>
+#include "debug.h"
+#include "key_grabber.h"
+#include "tilda.h"
+#include "xerror.h"
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <configsys.h>
-#include <tomboykeybinder.h>
+#include "configsys.h"
+#include "tomboykeybinder.h"
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>

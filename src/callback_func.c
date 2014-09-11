@@ -18,9 +18,9 @@
 
 #include <tilda-config.h>
 
-#include <debug.h>
-#include <configsys.h>
-#include <callback_func.h>
+#include "debug.h"
+#include "configsys.h"
+#include "callback_func.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>

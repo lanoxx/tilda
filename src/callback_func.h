@@ -17,8 +17,8 @@
 #ifndef CALLBACK_FUNC_H
 #define CALLBACK_FUNC_H
 
-#include <tilda_window.h>
-#include <tilda_terminal.h>
+#include "tilda_window.h"
+#include "tilda_terminal.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>

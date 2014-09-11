@@ -18,12 +18,12 @@
 
 #include <errno.h>
 
-#include <debug.h>
-#include <tilda.h>
-#include <wizard.h>
-#include <key_grabber.h>
-#include <configsys.h>
-#include <callback_func.h>
+#include "debug.h"
+#include "tilda.h"
+#include "wizard.h"
+#include "key_grabber.h"
+#include "configsys.h"
+#include "callback_func.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>

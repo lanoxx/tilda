@@ -133,11 +133,11 @@ PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0.0])
 PKG_CHECK_MODULES([VTE], [vte-2.90])
 PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
+PKG_CHECK_MODULES([X11], [x11])
 
 # Checks for header files.
-AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h confuse.h])
+AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

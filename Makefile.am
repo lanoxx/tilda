@@ -57,10 +57,3 @@ bin_PROGRAMS =
 
 include src/Makefile.am
 
-# We register this uninstall hook to remove the ${pkgdatadir}, which
-# is created by the pkgdata_DATA directive above. Without this hook
-# the folder would be left over after a make uninstall.
-# We wrap it into and if-then because otherwise make distcheck would
-# fail.
-uninstall-hook:
-	if test -d ${pkgdatadir}; then rmdir ${pkgdatadir}; fi

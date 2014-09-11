@@ -18,13 +18,11 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <tilda-config.h>
+#include "tilda-config.h"
 #include <libgen.h>
 
 #include <glib.h>
 #include <stdio.h>
-
-
 
 /* Debug Macros
  *

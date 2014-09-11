@@ -15,14 +15,13 @@
 
 #include <tilda-config.h>
 
-#include <debug.h>
-#include <tilda.h>
-#include <tilda_window.h>
-#include <tilda_terminal.h>
-#include <callback_func.h>
-#include <configsys.h>
-#include <wizard.h> /* wizard */
-#include <gtk/gtk.h>
+#include "debug.h"
+#include "tilda.h"
+#include "tilda_window.h"
+#include "tilda_terminal.h"
+#include "callback_func.h"
+#include "configsys.h"
+#include "wizard.h" /* wizard */
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */

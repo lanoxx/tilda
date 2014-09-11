@@ -1,29 +1,25 @@
 # vim: set noexpandtab ts=8 sts=8 sw=8:
 
-# Define a C macro LOCALEDIR indicating where catalogs 
-# will be installed.
-DEFS += -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\"
-
 bin_PROGRAMS += src/tilda
 
 # Rules to compile resources
 src/glade-resources.h: src/glade-resources.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=src
+	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
 src/glade-resources.c: src/glade-resources.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=src
+	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
 
 # Dependencies rule, and do not forget to do a make after
 # editing the UI with glade!
 src/glade-resources.c src/glade-resources.h: \
     src/glade-resources.gresource.xml \
-    $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies src/glade-resources.gresource.xml --sourcedir=src)
+    $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(srcdir)/src/glade-resources.gresource.xml --sourcedir=$(srcdir)/src)
 
 src_tilda_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
     -I$(top_builddir)/src \
     -DDATADIR='"$(datadir)"' \
-    -DMODULEDIR='"$(moduledir)"' \
-    -DLIBEXECDIR='"$(libexecdir)"'
+    -DLOCALEDIR='"$(localedir)"' \
+    -DPKGDATADIR='"$(pkgdatadir)"'
 
 # Keep the headers here so that make dist-bzip2 works
 src_tilda_SOURCES = src/callback_func.h src/callback_func.c \
@@ -37,7 +33,8 @@ src_tilda_SOURCES = src/callback_func.h src/callback_func.c \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
 		src/wizard.h src/wizard.c \
 		src/xerror.h src/xerror.c \
-		src/glade-resources.h src/glade-resources.c
+		src/glade-resources.h src/glade-resources.c \
+		src/glade-resources.gresource.xml
 
 src_tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \
@@ -60,4 +57,7 @@ src_tilda_LDADD = $(AM_LDADD) \
 		$(LTLIBINTL) \
 		$(LEXLIB)
 
-CLEANNFILES=src/glade-resources.h src/glade-resources.c
+EXTRA_DIST += src/glade-resources.gresource.xml \
+		src/tilda.ui
+
+CLEANFILES += src/glade-resources.h src/glade-resources.c

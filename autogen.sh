@@ -32,7 +32,9 @@ echo;
 
 # Autoconf will call run autopoint, aclocal, autoconf, autoheader and automake
 # to setup and configure the build environment
-autoreconf --verbose --install --symlink --force || {
+test -n "$srcdir" || srcdir=`dirname "$0"`
+test -n "$srcdir" || srcdir=.
+autoreconf --verbose --install --symlink --force "$srcdir" || {
     echo;
     echo "autoreconf has encountered an error."
     echo;
@@ -44,4 +46,4 @@ autoreconf --verbose --install --symlink --force || {
 echo
 echo "Running configure now"
 echo
-./configure "$@"
+test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"
