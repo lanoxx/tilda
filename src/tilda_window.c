@@ -123,6 +123,7 @@ gint toggle_fullscreen_cb (tilda_window *tw)
         // while fullscreened.
         gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
         gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+        gtk_window_move(GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
     tw->fullscreen = !tw->fullscreen;
 
