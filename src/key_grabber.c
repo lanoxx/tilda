@@ -186,8 +186,17 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
     gint i;
 
-    if (tw->current_state == UP && state != PULL_UP)
-    {
+    if (tw->current_state == DOWN && !tw->focus_loss_on_keypress) {
+        /**
+        * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
+        * This case will only focus tilda but it does not actually pull the window up.
+        */
+        TRACE (g_print("Tilda window not focused but visible\n"));
+        gdk_x11_window_set_user_time(gtk_widget_get_window(tw->window),
+                tomboy_keybinder_get_current_event_time());
+        tilda_window_set_active(tw);
+    } else
+    if (tw->current_state == UP && state != PULL_UP) {
         /* Keep things here just like they are. If you use gtk_window_present() here, you
          * will introduce some weird graphical glitches. Also, calling gtk_window_move()
          * before showing the window avoids yet more glitches. You should probably not use

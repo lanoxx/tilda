@@ -59,6 +59,7 @@ struct tilda_window_
 
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
+    gboolean focus_loss_on_keypress;
 };
 
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT };

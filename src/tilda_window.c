@@ -33,6 +33,8 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <vte/vte.h>
+#include <X11/Xlib.h>
+#include <gdk/gdkx.h>
 
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
@@ -330,6 +332,27 @@ static gboolean focus_out_event_cb (GtkWidget *widget, G_GNUC_UNUSED GdkEvent *e
 
     tilda_window *tw = TILDA_WINDOW(data);
 
+    /**
+    * When the tilda 'key' to pull down/up the tilda window is pressed, then tilda will inevitably loose focus. The
+    * problem is that we cannot distinguish whether it was focused before the key press occurred. Checking the xevent
+    * type here allows us to distinguish these two cases:
+    *
+    *  * We loose focus because of a KeyPress event
+    *  * We loose focus because another window gained focus or some other reason.
+    *
+    *  Depending on one of the two cases we set the tw->focus_loss_on_keypress to true or false. We can then
+    *  check this flag in the pull() function that shows or hides the tilda window. This helps us to decide if
+    *  we just need to focus tilda or if we should hide it.
+    */
+    XEvent xevent;
+    XPeekEvent(gdk_x11_display_get_xdisplay(gdk_window_get_display(gtk_widget_get_window(tw->window))), &xevent);
+
+    if(xevent.type == KeyPress) {
+        tw->focus_loss_on_keypress = TRUE;
+    } else {
+        tw->focus_loss_on_keypress = FALSE;
+    }
+
     if (tw->auto_hide_on_focus_lost == FALSE)
         return GDK_EVENT_PROPAGATE;
 
@@ -520,6 +543,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     tw->auto_hide_on_mouse_leave = config_getbool("auto_hide_on_mouse_leave");
     tw->auto_hide_on_focus_lost = config_getbool("auto_hide_on_focus_lost");
     tw->disable_auto_hide = FALSE;
+    tw->focus_loss_on_keypress = FALSE;
 
     tw->fullscreen = FALSE;
 
