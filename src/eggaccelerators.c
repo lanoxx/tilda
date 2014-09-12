@@ -37,8 +37,6 @@ enum {
     EGG_MODMAP_ENTRY_LAST    = 8
 };
 
-#define MODMAP_ENTRY_TO_MODIFIER(x) (1 << (x))
-
 typedef struct {
     EggVirtualModifierType mapping[EGG_MODMAP_ENTRY_LAST];
 } EggModmap;

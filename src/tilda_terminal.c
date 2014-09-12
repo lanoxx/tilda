@@ -36,8 +36,6 @@
 
 #define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
-#define MAX_TITLE_LENGTH 25
-
 GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command);
