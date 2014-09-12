@@ -6,12 +6,7 @@
 
 #include "eggaccelerators.h"
 #include "tomboykeybinder.h"
-
-#ifdef DEBUG
-#  define TRACE(x) x
-#else
-#  define TRACE(x) do {} while (FALSE);
-#endif
+#include "debug.h"
 
 typedef struct _Binding {
 	TomboyBindkeyHandler  handler;

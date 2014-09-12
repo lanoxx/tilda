@@ -19,9 +19,12 @@
 #define DEBUG_H
 
 #include <tilda-config.h>
+#include <libgen.h>
 
 #include <glib.h>
 #include <stdio.h>
+
+
 
 /* Debug Macros
  *
@@ -64,7 +67,7 @@
 
 #if DEBUG_FUNCTIONS
 
-    #define DEBUG_FUNCTION(NAME) g_printerr("FUNCTION ENTERED: %s\n", (NAME))
+    #define DEBUG_FUNCTION(NAME) g_printerr("%s: FUNCTION ENTERED: %s\n", basename(__FILE__), (NAME))
 
 #else
 
@@ -75,6 +78,11 @@
 /* A macro that calls perror() with a consistent header string */
 #define TILDA_PERROR() perror("Tilda encountered an error")
 
+#ifdef DEBUG
+#  define TRACE(x) x
+#else
+#  define TRACE(x) do {} while (FALSE);
+#endif
 
 #endif /* DEBUG_H */
 
