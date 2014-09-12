@@ -265,6 +265,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
 static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user_data)
 {
+	DEBUG_FUNCTION("onKeybindingPull");
 	tilda_window *tw = TILDA_WINDOW(user_data);
 	pull (tw, PULL_TOGGLE);
 }

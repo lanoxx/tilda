@@ -137,6 +137,7 @@ do_ungrab_key (Binding *binding)
 
 static GdkFilterReturn
 filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
+    DEBUG_FUNCTION("filter_func");
     XEvent *xevent = (XEvent *) gdk_xevent;
     guint event_mods;
     GSList *iter;
