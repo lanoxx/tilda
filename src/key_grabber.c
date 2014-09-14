@@ -177,18 +177,23 @@ static void process_all_pending_gtk_events ()
     gdk_flush ();
 }
 
-void pull (struct tilda_window_ *tw, enum pull_state state)
+/**
+* @force_hide: This option is used by the auto hide feature, so we can ignore the checks to focus tilda instead
+* of pulling up.
+*/
+void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
 {
     DEBUG_FUNCTION ("pull");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (state == PULL_UP || state == PULL_DOWN || state == PULL_TOGGLE);
 
     gint i;
+    gboolean needsFocus = !tw->focus_loss_on_keypress && !gtk_window_is_active(GTK_WINDOW(tw->window)) && !force_hide;
 
-    if (tw->current_state == DOWN && !tw->focus_loss_on_keypress && !gtk_window_is_active(GTK_WINDOW(tw->window))) {
+    if (tw->current_state == DOWN && needsFocus) {
         /**
         * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
-        * This case will only focus tilda but it does not actually pull the window up.
+        * This conditional branch will only focus tilda but it does not actually pull the window up.
         */
         TRACE (g_print("Tilda window not focused but visible\n"));
         gdk_x11_window_set_user_time(gtk_widget_get_window(tw->window),
@@ -266,7 +271,7 @@ static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user
 {
 	DEBUG_FUNCTION("onKeybindingPull");
 	tilda_window *tw = TILDA_WINDOW(user_data);
-	pull (tw, PULL_TOGGLE);
+	pull (tw, PULL_TOGGLE, FALSE);
 }
 
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)

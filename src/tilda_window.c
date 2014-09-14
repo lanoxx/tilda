@@ -248,7 +248,7 @@ static gboolean auto_hide_tick(gpointer data)
     tw->auto_hide_current_time += tw->timer_resolution;
     if ((tw->auto_hide_current_time >= tw->auto_hide_max_time) || tw->current_state == UP)
     {
-        pull(tw, PULL_UP);
+        pull(tw, PULL_UP, TRUE);
         tw->auto_hide_tick_handler = 0;
         return FALSE;
     }
@@ -278,9 +278,9 @@ static void start_auto_hide_tick(tilda_window *tw)
             // auto_hide_max_time is in milli seconds, so we need to convert to
             // microseconds by multiplying with 1000
             g_usleep (tw->auto_hide_max_time * 1000);
-            pull(tw, PULL_UP);
+            pull(tw, PULL_UP, TRUE);
         } else {
-            pull(tw, PULL_UP);
+            pull(tw, PULL_UP, TRUE);
         }
     }
 }
@@ -755,7 +755,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
                     break;
                 case RESTART_TERMINAL_AND_HIDE:
                     tilda_window_add_tab (tw);
-                    pull (tw, PULL_UP);
+                    pull (tw, PULL_UP, TRUE);
                     break;
                 case EXIT_TILDA:
                 default:

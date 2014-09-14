@@ -656,7 +656,7 @@ int main (int argc, char *argv[])
         }
     }
 
-    pull (&tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN);
+    pull (&tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN, FALSE);
 
     g_print ("Tilda has started. Press %s to pull down the window.\n",
         config_getstr ("key"));
