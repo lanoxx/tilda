@@ -186,7 +186,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state)
 
     gint i;
 
-    if (tw->current_state == DOWN && !tw->focus_loss_on_keypress) {
+    if (tw->current_state == DOWN && !tw->focus_loss_on_keypress && !gtk_window_is_active(GTK_WINDOW(tw->window))) {
         /**
         * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
         * This case will only focus tilda but it does not actually pull the window up.
