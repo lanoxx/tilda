@@ -552,6 +552,13 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     tw->disable_auto_hide = FALSE;
     tw->focus_loss_on_keypress = FALSE;
 
+    if(1 == config_getint("non_focus_pull_up_behaviour")) {
+        tw->hide_non_focused = TRUE;
+    }
+    else {
+        tw->hide_non_focused = FALSE;
+    }
+
     tw->fullscreen = FALSE;
 
     /* Set up all window properties */

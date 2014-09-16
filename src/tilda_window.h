@@ -54,6 +54,9 @@ struct tilda_window_
     /* Should Tilda hide itself when mouse leaves it? */
     gboolean auto_hide_on_mouse_leave;
 
+    /* Should Tilda hide itself even if not focused */
+    gboolean hide_non_focused;
+
 	gboolean fullscreen;
 
     /* This field MUST be set before calling pull()! */

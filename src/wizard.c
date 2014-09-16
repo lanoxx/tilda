@@ -861,6 +861,26 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
     }
 }
 
+static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w)
+{
+    const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+
+    if (status < 0 || status > 1) {
+        DEBUG_ERROR ("Non-focus pull up behaviour invalid");
+        g_printerr (_("Invalid non-focus pull up behaviour, ignoring\n"));
+        return;
+    }
+
+    if(1 == status) {
+        tw->hide_non_focused = TRUE;
+    }
+    else {
+        tw->hide_non_focused = FALSE;
+    }
+
+    config_setint ("non_focus_pull_up_behaviour", status);
+}
+
 static void combo_tab_pos_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -1969,6 +1989,7 @@ static void set_wizard_state_from_config () {
     CHECK_BUTTON ("check_start_tilda_hidden", "hidden");
     CHECK_BUTTON ("check_show_notebook_border", "notebook_border");
     CHECK_BUTTON ("check_enable_double_buffering", "double_buffer");
+    COMBO_BOX ("combo_non_focus_pull_up_behaviour", "non_focus_pull_up_behaviour");
 
     CHECK_BUTTON ("check_terminal_bell", "bell");
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
@@ -2107,6 +2128,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb);
     CONNECT_SIGNAL ("check_start_tilda_hidden","toggled",check_start_tilda_hidden_toggled_cb);
     CONNECT_SIGNAL ("check_enable_double_buffering","toggled",check_enable_double_buffering_toggled_cb);
+    CONNECT_SIGNAL ("combo_non_focus_pull_up_behaviour","changed",combo_non_focus_pull_up_behaviour_cb);
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb);
     CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb);
