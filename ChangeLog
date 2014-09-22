@@ -1,3 +1,14 @@
+version 1.1.13 (2014-09-22):
+	* Fixed focus stealing issue
+	  on mouse enter. This caused
+	  the tilda window to become
+	  active when the mouse
+	  entered the window.
+	* Fixed two functions which prevented
+	  building on systems with
+	  '-Wreturn-type' enabled in the
+	  compiler.
+
 version 1.1.12 (2014-05-20):
 	* Fixed an issue where the
 	  keystroke for the fullscreen
