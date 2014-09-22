@@ -140,20 +140,20 @@ egg_accelerator_parse_virtual (const gchar            *accelerator,
 {
     guint keyval;
     GdkModifierType mods;
-    gint len;
+    size_t len;
     gboolean bad_keyval;
 
     if (accelerator_key)
       *accelerator_key = 0;
     if (accelerator_mods)
-      *accelerator_mods = 0;
+      *accelerator_mods = (EggVirtualModifierType) 0;
 
     g_return_val_if_fail (accelerator != NULL, FALSE);
 
     bad_keyval = FALSE;
 
     keyval = 0;
-    mods = 0;
+    mods = (GdkModifierType) 0;
     len = strlen (accelerator);
     while (len) {
         if (*accelerator == '<') {
@@ -238,7 +238,7 @@ egg_accelerator_parse_virtual (const gchar            *accelerator,
     if (accelerator_key)
         *accelerator_key = gdk_keyval_to_lower (keyval);
     if (accelerator_mods)
-        *accelerator_mods = mods;
+        *accelerator_mods = (EggVirtualModifierType) mods;
 
     return !bad_keyval;
 }
@@ -430,7 +430,7 @@ egg_keymap_virtualize_modifiers (GdkKeymap              *keymap,
         ++i;
 	}
 
-	*virtual_mods = virtual;
+	*virtual_mods = (EggVirtualModifierType) virtual;
 }
 
 static void
