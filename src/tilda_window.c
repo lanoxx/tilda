@@ -320,8 +320,6 @@ static void mouse_enter (GtkWidget *widget, GdkEvent *event, gpointer data)
     
     tilda_window *tw = TILDA_WINDOW(data);
     stop_auto_hide_tick(tw);
-    if (tw->disable_auto_hide == FALSE)
-        tilda_window_set_active(tw);
 }
  
 static void mouse_leave (GtkWidget *widget, GdkEvent *event, gpointer data)
