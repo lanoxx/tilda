@@ -44,20 +44,12 @@ const EggModmap* egg_keymap_get_modmap (GdkKeymap *keymap);
 static inline gboolean
 is_alt (const gchar *string)
 {
-    return ((string[0] == '<') &&
-            (string[1] == 'a' || string[1] == 'A') &&
-            (string[2] == 'l' || string[2] == 'L') &&
-            (string[3] == 't' || string[3] == 'T') &&
-            (string[4] == '>'));
+    return g_ascii_strcasecmp(string, "<ALT>") == 0;
 }
 
 static inline gboolean
 is_ctl (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'c' || string[1] == 'C') &&
-            (string[2] == 't' || string[2] == 'T') &&
-            (string[3] == 'l' || string[3] == 'L') &&
-            (string[4] == '>'));
+    return g_ascii_strcasecmp(string, "<CTL>") == 0;
 }
 
 static inline gboolean
@@ -72,104 +64,47 @@ is_modx (const gchar *string) {
 
 static inline gboolean
 is_ctrl (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'c' || string[1] == 'C') &&
-            (string[2] == 't' || string[2] == 'T') &&
-            (string[3] == 'r' || string[3] == 'R') &&
-            (string[4] == 'l' || string[4] == 'L') &&
-            (string[5] == '>'));
+    return g_ascii_strcasecmp(string, "<CTRL>") == 0;
 }
 
 static inline gboolean
 is_shft (const gchar *string) {
-    return ((string[0] == '<') &&
-        (string[1] == 's' || string[1] == 'S') &&
-        (string[2] == 'h' || string[2] == 'H') &&
-        (string[3] == 'f' || string[3] == 'F') &&
-        (string[4] == 't' || string[4] == 'T') &&
-        (string[5] == '>'));
+    return g_ascii_strcasecmp(string, "<SHFT>") == 0;
 }
 
 static inline gboolean
 is_shift (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 's' || string[1] == 'S') &&
-            (string[2] == 'h' || string[2] == 'H') &&
-            (string[3] == 'i' || string[3] == 'I') &&
-            (string[4] == 'f' || string[4] == 'F') &&
-            (string[5] == 't' || string[5] == 'T') &&
-            (string[6] == '>'));
+    return g_ascii_strcasecmp(string, "<SHIFT>") == 0;
 }
 
 static inline gboolean
 is_control (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'c' || string[1] == 'C') &&
-            (string[2] == 'o' || string[2] == 'O') &&
-            (string[3] == 'n' || string[3] == 'N') &&
-            (string[4] == 't' || string[4] == 'T') &&
-            (string[5] == 'r' || string[5] == 'R') &&
-            (string[6] == 'o' || string[6] == 'O') &&
-            (string[7] == 'l' || string[7] == 'L') &&
-            (string[8] == '>'));
+    return g_ascii_strcasecmp(string, "<CONTROL>") == 0;
 }
 
 static inline gboolean
 is_release (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'r' || string[1] == 'R') &&
-            (string[2] == 'e' || string[2] == 'E') &&
-            (string[3] == 'l' || string[3] == 'L') &&
-            (string[4] == 'e' || string[4] == 'E') &&
-            (string[5] == 'a' || string[5] == 'A') &&
-            (string[6] == 's' || string[6] == 'S') &&
-            (string[7] == 'e' || string[7] == 'E') &&
-            (string[8] == '>'));
+    return g_ascii_strcasecmp(string, "<RELEASE>") == 0;
 }
 
 static inline gboolean
 is_meta (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'm' || string[1] == 'M') &&
-            (string[2] == 'e' || string[2] == 'E') &&
-            (string[3] == 't' || string[3] == 'T') &&
-            (string[4] == 'a' || string[4] == 'A') &&
-            (string[5] == '>'));
+    return g_ascii_strcasecmp(string, "<META>") == 0;
 }
 
 static inline gboolean
 is_super (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 's' || string[1] == 'S') &&
-            (string[2] == 'u' || string[2] == 'U') &&
-            (string[3] == 'p' || string[3] == 'P') &&
-            (string[4] == 'e' || string[4] == 'E') &&
-            (string[5] == 'r' || string[5] == 'R') &&
-            (string[6] == '>'));
+    return g_ascii_strcasecmp(string, "<SUPER>") == 0;
 }
 
 static inline gboolean
 is_hyper (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'h' || string[1] == 'H') &&
-            (string[2] == 'y' || string[2] == 'Y') &&
-            (string[3] == 'p' || string[3] == 'P') &&
-            (string[4] == 'e' || string[4] == 'E') &&
-            (string[5] == 'r' || string[5] == 'R') &&
-            (string[6] == '>'));
+    return g_ascii_strcasecmp(string, "<HYPER>") == 0;
 }
 
 static inline gboolean
 is_primary (const gchar *string) {
-    return ((string[0] == '<') &&
-            (string[1] == 'p' || string[1] == 'P') &&
-            (string[2] == 'r' || string[2] == 'R') &&
-            (string[3] == 'i' || string[3] == 'I') &&
-            (string[4] == 'm' || string[4] == 'M') &&
-            (string[5] == 'a' || string[5] == 'A') &&
-            (string[6] == 'r' || string[6] == 'R') &&
-            (string[7] == 'y' || string[7] == 'Y') &&
-            (string[8] == '>'));
+    return g_ascii_strcasecmp(string, "<PRIMARY>") == 0;
 }
 
 
