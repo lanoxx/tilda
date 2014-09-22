@@ -34,6 +34,7 @@ src/Makefile.in
 src/key_converter.c
 src/tilda
 stamp-h1
+tilda.glade~
 tilda-config.h
 tilda-config.h.in
 tilda-config.h.in~
