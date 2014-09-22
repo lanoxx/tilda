@@ -14,8 +14,6 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tilda-config.h>
-
 #include <errno.h>
 
 #include <debug.h>

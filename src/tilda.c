@@ -15,8 +15,6 @@
 #define _POSIX_SOURCE /* feature test macro for signal functions */
 #define _XOPEN_SOURCE /* feature test macro for popen */
 
-#include <tilda-config.h>
-
 #include <debug.h>
 #include <tilda.h>
 #include <callback_func.h>
