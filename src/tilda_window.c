@@ -95,14 +95,21 @@ void tilda_window_close_current_tab (tilda_window *tw)
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
-    const gint gtk_pos[] = { GTK_POS_TOP, GTK_POS_BOTTOM, GTK_POS_LEFT, GTK_POS_RIGHT };
+    const GtkPositionType gtk_pos[] = {GTK_POS_TOP, GTK_POS_BOTTOM, GTK_POS_LEFT, GTK_POS_RIGHT };
 
-    if ((pos < 0) || (pos > 3)) {
+    if ((pos < 0) || (pos > 4)) {
         g_printerr (_("You have a bad tab_pos in your configuration file\n"));
         pos = NB_TOP;
     }
 
-    gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), gtk_pos[pos]);
+    if(NB_HIDDEN == pos) {
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
+    }
+    else {
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK (tw->notebook), gtk_pos[pos]);
+        if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
+            gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), TRUE);
+    }
 
     return 0;
 }
@@ -689,8 +696,10 @@ gint tilda_window_add_tab (tilda_window *tw)
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
     gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
-    /* We should show the tabs if there are more than one tab in the notebook */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1)
+    /* We should show the tabs if there are more than one tab in the notebook,
+     * and tab position is not set to hidden */
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 &&
+            config_getint("tab_pos") != NB_HIDDEN)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
 
     /* Add to GList list of tilda_term structures in tilda_window structure */

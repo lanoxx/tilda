@@ -61,7 +61,7 @@ struct tilda_window_
     gboolean focus_loss_on_keypress;
 };
 
-enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT };
+enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
 
 /**
  * tilda_window_add_tab ()

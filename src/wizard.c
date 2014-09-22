@@ -864,7 +864,8 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
 static void combo_tab_pos_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    const gint positions[] = { GTK_POS_TOP,
+    const GtkPositionType positions[] = {
+                             GTK_POS_TOP,
                              GTK_POS_BOTTOM,
                              GTK_POS_LEFT,
                              GTK_POS_RIGHT };
@@ -876,7 +877,16 @@ static void combo_tab_pos_changed_cb (GtkWidget *w)
     }
 
     config_setint ("tab_pos", status);
-    gtk_notebook_set_tab_pos (GTK_NOTEBOOK(tw->notebook), positions[status]);
+
+    if(NB_HIDDEN == status) {
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
+    }
+    else {
+        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK (tw->notebook)) > 1) {
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tw->notebook), TRUE);
+        }
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK(tw->notebook), positions[status]);
+    }
 }
 
 static void button_font_font_set_cb (GtkWidget *w)
