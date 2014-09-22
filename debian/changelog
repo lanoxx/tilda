@@ -1,3 +1,10 @@
+tilda (1.1.13-1) unstable; urgency=low
+  * Fixed a focus stealing issue that
+    causes the tilda window to become active
+    when the mouse enters the tilda window.
+
+ -- Sebastian Geiger <lanoxx@gmx.net>  Mon, 22 Sep 2014 13:14:00 +0100
+
 tilda (1.1.12-1) unstable; urgency=low
   * Fixed an issue where the
     keystroke for the fullscreen
