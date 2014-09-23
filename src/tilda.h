@@ -31,6 +31,7 @@ struct lock_info
 {
     gint pid;
     gint instance;
+    gint file_descriptor;
 };
 
 #define GUINT16_TO_FLOAT(color) (color / (double) 0xFFFF)
