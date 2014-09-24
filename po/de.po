@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-09-24 14:17+0200\n"
+"POT-Creation-Date: 2014-09-24 15:32+0200\n"
 "PO-Revision-Date: 2013-07-13 11:12+0000\n"
 "Last-Translator: Christian Weber <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -30,191 +30,195 @@ msgstr "Neues Terminal öffnen"
 msgid "Open a new terminal and hide"
 msgstr "Neues Terminal öffnen und ausblenden"
 
-#: src/tilda.ui:86 src/tilda.ui:143
+#: src/tilda.ui:86 src/tilda.ui:146
 msgid "Top"
 msgstr "Oben"
 
-#: src/tilda.ui:89 src/tilda.ui:146
+#: src/tilda.ui:89 src/tilda.ui:149
 msgid "Bottom"
 msgstr "Unten"
 
-#: src/tilda.ui:92 src/tilda.ui:149
+#: src/tilda.ui:92 src/tilda.ui:152
 msgid "Left"
 msgstr "Links"
 
-#: src/tilda.ui:95 src/tilda.ui:152
+#: src/tilda.ui:95 src/tilda.ui:155
 msgid "Right"
 msgstr "Rechts"
 
-#: src/tilda.ui:106
+#: src/tilda.ui:98
+msgid "Hidden"
+msgstr ""
+
+#: src/tilda.ui:109
 msgid "Isn't displayed"
 msgstr "Nicht angezeigt"
 
-#: src/tilda.ui:109
+#: src/tilda.ui:112
 msgid "Goes after initial title"
 msgstr "Kommt nach Anfangstitel"
 
-#: src/tilda.ui:112
+#: src/tilda.ui:115
 msgid "Goes before initial title"
 msgstr "Kommt vor Anfangstitel"
 
-#: src/tilda.ui:115
+#: src/tilda.ui:118
 msgid "Replace initial title"
 msgstr "Ersetzt Anfangstitel"
 
-#: src/tilda.ui:126
+#: src/tilda.ui:129
 msgid "Drop to the default shell"
 msgstr "Standard-Shell öffnen"
 
-#: src/tilda.ui:129
+#: src/tilda.ui:132
 msgid "Restart the command"
 msgstr "Befehl erneut ausführen"
 
-#: src/tilda.ui:132
+#: src/tilda.ui:135
 msgid "Exit the terminal"
 msgstr "Terminal beenden"
 
-#: src/tilda.ui:163 src/tilda.ui:192 src/wizard.c:188
+#: src/tilda.ui:166 src/tilda.ui:195 src/wizard.c:188
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
-#: src/tilda.ui:166
+#: src/tilda.ui:169
 msgid "Green on Black"
 msgstr "Grün auf Schwarz"
 
-#: src/tilda.ui:169
+#: src/tilda.ui:172
 msgid "Black on White"
 msgstr "Schwarz auf Weiß"
 
-#: src/tilda.ui:172
+#: src/tilda.ui:175
 msgid "White on Black"
 msgstr "Weiß auf Schwarz"
 
-#: src/tilda.ui:175 src/wizard.c:193
+#: src/tilda.ui:178 src/wizard.c:193
 msgid "Zenburn"
 msgstr ""
 
-#: src/tilda.ui:178 src/wizard.c:194
+#: src/tilda.ui:181 src/wizard.c:194
 msgid "Solarized Light"
 msgstr ""
 
-#: src/tilda.ui:181 src/wizard.c:195
+#: src/tilda.ui:184 src/wizard.c:195
 msgid "Solarized Dark"
 msgstr ""
 
-#: src/tilda.ui:203
+#: src/tilda.ui:206
 msgid "On the Left"
 msgstr "Links"
 
-#: src/tilda.ui:206
+#: src/tilda.ui:209
 msgid "On the Right"
 msgstr "Rechts"
 
-#: src/tilda.ui:209
+#: src/tilda.ui:212
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: src/tilda.ui:220 src/tilda.ui:237
+#: src/tilda.ui:223 src/tilda.ui:240
 msgid "ASCII DEL"
 msgstr ""
 
-#: src/tilda.ui:223 src/tilda.ui:240
+#: src/tilda.ui:226 src/tilda.ui:243
 msgid "Escape sequence"
 msgstr "Escape-Sequenz"
 
-#: src/tilda.ui:226 src/tilda.ui:243
+#: src/tilda.ui:229 src/tilda.ui:246
 msgid "Control-H"
 msgstr "Strg-H"
 
-#: src/tilda.ui:261
+#: src/tilda.ui:264
 msgid "Tilda Config"
 msgstr "Tilda Konfiguration"
 
-#: src/tilda.ui:338
+#: src/tilda.ui:341
 msgid "Enable Double Buffering"
 msgstr "Double Buffering aktivieren"
 
-#: src/tilda.ui:354 src/tilda.c:326
+#: src/tilda.ui:357 src/tilda.c:326
 msgid "Start Tilda hidden"
 msgstr "Tilda versteckt starten"
 
-#: src/tilda.ui:370
+#: src/tilda.ui:373
 msgid "Always on top"
 msgstr "Im Vordergrund"
 
-#: src/tilda.ui:386
+#: src/tilda.ui:389
 msgid "Display on all workspaces"
 msgstr "Auf allen Arbeitsbereichen anzeigen"
 
-#: src/tilda.ui:402
+#: src/tilda.ui:405
 msgid "Do not show in taskbar"
 msgstr "Nicht in der Taskleiste anzeigen"
 
-#: src/tilda.ui:418
+#: src/tilda.ui:421
 msgid "Show Notebook Border"
 msgstr "Notitzbuchrand anzeigen"
 
-#: src/tilda.ui:440
+#: src/tilda.ui:443
 msgid "<b>Window Display</b>"
 msgstr "<b>Fenster-Anzeige</b>"
 
-#: src/tilda.ui:479
+#: src/tilda.ui:482
 msgid "Cursor Blinks"
 msgstr "blinkender Cursor"
 
-#: src/tilda.ui:495
+#: src/tilda.ui:498
 msgid "Audible Terminal Bell"
 msgstr "Akkustische Terminalglocke"
 
-#: src/tilda.ui:517
+#: src/tilda.ui:520
 msgid "<b>Terminal Display</b>"
 msgstr "<b>Terminal-Anzeige</b>"
 
-#: src/tilda.ui:573
+#: src/tilda.ui:576
 msgid "Enable Antialiasing"
 msgstr "Antialiasing aktivieren"
 
-#: src/tilda.ui:589
+#: src/tilda.ui:592
 msgid "Allow Bold Text"
 msgstr "Fetten Text erlauben"
 
-#: src/tilda.ui:608
+#: src/tilda.ui:611
 msgid "Position of Tabs:"
 msgstr "Position der Tabs:"
 
-#: src/tilda.ui:641
+#: src/tilda.ui:644
 msgid "Font:"
 msgstr "Schriftart:"
 
-#: src/tilda.ui:658
+#: src/tilda.ui:661
 msgid "<b>Font</b>"
 msgstr "<b>Schriftart</b>"
 
-#: src/tilda.ui:711
+#: src/tilda.ui:714
 msgid "Hide Tilda when mouse leaves it"
 msgstr "Ausblenden, wenn Maus Tilda verlässt"
 
-#: src/tilda.ui:731
+#: src/tilda.ui:734
 msgid "Auto Hide Delay:"
 msgstr "Ausblendeverzögerung"
 
-#: src/tilda.ui:742
+#: src/tilda.ui:745
 msgid "Hide when Tilda loses focus"
 msgstr "Ausblenden, wenn Tilda Fokus verliert"
 
-#: src/tilda.ui:764
+#: src/tilda.ui:767
 msgid "<b>Auto Hide</b>"
 msgstr "<b>Automatisches Ausblenden</b>"
 
-#: src/tilda.ui:806
+#: src/tilda.ui:809
 msgid "When last terminal is closed:"
 msgstr "Wenn letztes Terminal geschlossen wurde:"
 
-#: src/tilda.ui:842
+#: src/tilda.ui:845
 msgid "<b>Program Exit</b>"
 msgstr "<b>Beenden</b>"
 
-#: src/tilda.ui:864
+#: src/tilda.ui:867
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
@@ -222,59 +226,59 @@ msgstr ""
 "<small><i><b>Hinweis</b>: Manche Optionen erfordern einen Neustart von tilda."
 "</i></small>"
 
-#: src/tilda.ui:881
+#: src/tilda.ui:884
 msgid "General"
 msgstr "Allgemein"
 
-#: src/tilda.ui:930
+#: src/tilda.ui:933
 msgid "Word Characters:"
 msgstr "Wortzeichen"
 
-#: src/tilda.ui:946
+#: src/tilda.ui:949
 msgid "<b>Select by Word</b>"
 msgstr "<b>Wörter auswählen</b>"
 
-#: src/tilda.ui:997
+#: src/tilda.ui:1000
 msgid "Web Browser *:"
 msgstr "Webbrowser *:"
 
-#: src/tilda.ui:1013
+#: src/tilda.ui:1016
 msgid "<b>URL Handling</b>"
 msgstr "<b>URL-Handhabung</b>"
 
-#: src/tilda.ui:1048
+#: src/tilda.ui:1051
 msgid "Initial Title:"
 msgstr "Anfangsüberschrift:"
 
-#: src/tilda.ui:1060
+#: src/tilda.ui:1063
 msgid "Dynamically-set Title:"
 msgstr "Dynamische Überschrift:"
 
-#: src/tilda.ui:1110
+#: src/tilda.ui:1113
 msgid "Limit maximum length of tab title:"
 msgstr ""
 
-#: src/tilda.ui:1148
+#: src/tilda.ui:1151
 msgid "<b>Title</b>"
 msgstr "<b>Titel</b>"
 
-#: src/tilda.ui:1178
+#: src/tilda.ui:1181
 msgid "Run a custom command instead of the shell"
 msgstr "Führe benutzerdefinierten Befehl anstelle der Shell aus"
 
-#: src/tilda.ui:1195
+#: src/tilda.ui:1198
 msgid "Custom Command:"
 msgstr "Benutzerdefinierter Befehl:"
 
-#: src/tilda.ui:1209
+#: src/tilda.ui:1212
 msgid "When Command Exits:"
 msgstr "Wenn Befehl endet:"
 
-#: src/tilda.ui:1264
+#: src/tilda.ui:1267
 msgid "<b>Command</b>"
 msgstr "<b>Befehl</b>"
 
-#: src/tilda.ui:1289
+#: src/tilda.ui:1305
 msgid ""
 "* A valid command that can open a browser must be entered here. It is "
 "possible to use the name of a specific browser such as 'firefox' and 'google-"
@@ -286,107 +290,107 @@ msgstr ""
 "allgemeinen Befehle 'x-www-browser' und 'xdg-open' sind möglich. Der beste "
 "Befehl kann je nach System unterschiedlich sein."
 
-#: src/tilda.ui:1307
+#: src/tilda.ui:1326
 msgid "Title and Command"
 msgstr "Titel und Befehl"
 
-#: src/tilda.ui:1340 src/tilda.ui:1433
+#: src/tilda.ui:1359 src/tilda.ui:1452
 msgid "Percentage"
 msgstr "Prozentanteil"
 
-#: src/tilda.ui:1367 src/tilda.ui:1446
+#: src/tilda.ui:1386 src/tilda.ui:1465
 msgid "In Pixels"
 msgstr "In Pixel"
 
-#: src/tilda.ui:1399
+#: src/tilda.ui:1418
 msgid "<b>Height</b>"
 msgstr "<b>Höhe</b>"
 
-#: src/tilda.ui:1492
+#: src/tilda.ui:1511
 msgid "<b>Width</b>"
 msgstr "<b>Breite</b>"
 
-#: src/tilda.ui:1524
+#: src/tilda.ui:1543
 msgid "Centered Horizontally"
 msgstr "Horizontal zentriert"
 
-#: src/tilda.ui:1542
+#: src/tilda.ui:1561
 msgid "Centered Vertically"
 msgstr "Vertikal zentriert"
 
-#: src/tilda.ui:1564 src/tilda.c:333
+#: src/tilda.ui:1583 src/tilda.c:333
 msgid "X Position"
 msgstr "X Position"
 
-#: src/tilda.ui:1579 src/tilda.c:334
+#: src/tilda.ui:1598 src/tilda.c:334
 msgid "Y Position"
 msgstr "Y Position"
 
-#: src/tilda.ui:1631
+#: src/tilda.ui:1650
 msgid "<b>Position</b>"
 msgstr "<b>Position</b>"
 
-#: src/tilda.ui:1666
+#: src/tilda.ui:1685
 msgid "Enable Transparency"
 msgstr "Transparenz aktivieren"
 
-#: src/tilda.ui:1684
+#: src/tilda.ui:1703
 msgid "Level of Transparency"
 msgstr "Transparenzstufe"
 
-#: src/tilda.ui:1710
+#: src/tilda.ui:1729
 msgid "Animated Pulldown"
 msgstr "Pulldown animieren"
 
-#: src/tilda.ui:1727
+#: src/tilda.ui:1746
 msgid "Use Image for Background"
 msgstr "Hintergrundbild verwenden"
 
-#: src/tilda.ui:1747
+#: src/tilda.ui:1766
 msgid "Animation Delay (usec)"
 msgstr "Verzögerte Animation (µsec)"
 
-#: src/tilda.ui:1764
+#: src/tilda.ui:1783
 msgid "Animation Orientation"
 msgstr "Animationsorientierung"
 
-#: src/tilda.ui:1837
+#: src/tilda.ui:1856
 msgid "<b>Extras</b>"
 msgstr "<b>Extras</b>"
 
-#: src/tilda.ui:1872
+#: src/tilda.ui:1891
 msgid "Monitor:"
 msgstr ""
 
-#: src/tilda.ui:1935
+#: src/tilda.ui:1954
 msgid "<b>Select monitor</b>"
 msgstr "<b>Monitor auswählen</b>"
 
-#: src/tilda.ui:1955
+#: src/tilda.ui:1974
 msgid "Appearance"
 msgstr "Darstellung"
 
-#: src/tilda.ui:2001
+#: src/tilda.ui:2020
 msgid "Built-in Schemes"
 msgstr "Eingebaute Schemata"
 
-#: src/tilda.ui:2032
+#: src/tilda.ui:2051
 msgid "Text Color"
 msgstr "Textfarbe"
 
-#: src/tilda.ui:2046
+#: src/tilda.ui:2065
 msgid "Background Color"
 msgstr "Hintergrundfarbe"
 
-#: src/tilda.ui:2095
+#: src/tilda.ui:2114
 msgid "<b>Foreground and Background Colors</b>"
 msgstr "<b>Vordergrund- und Hintergrundfarbe</b>"
 
-#: src/tilda.ui:2126 src/tilda.ui:2733
+#: src/tilda.ui:2145 src/tilda.ui:2752
 msgid "    "
 msgstr "    "
 
-#: src/tilda.ui:2147
+#: src/tilda.ui:2166
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
@@ -394,64 +398,64 @@ msgstr ""
 "<small><i><b>Hinweis:</b> Textbasierte Anwendungen können diese Farben "
 "nutzen.</i></small>"
 
-#: src/tilda.ui:2434
+#: src/tilda.ui:2453
 msgid "Color palette:"
 msgstr "Farbpalette:"
 
-#: src/tilda.ui:2451
+#: src/tilda.ui:2470
 msgid "Built-in schemes:"
 msgstr "Eingebaute Schemata:"
 
-#: src/tilda.ui:2478
+#: src/tilda.ui:2497
 msgid "<b>Palette</b>"
 msgstr "<b>Palette</b>"
 
-#: src/tilda.ui:2500
+#: src/tilda.ui:2519
 msgid "Colors"
 msgstr "Farben"
 
-#: src/tilda.ui:2551
+#: src/tilda.ui:2570
 msgid "lines"
 msgstr "Zeilen"
 
-#: src/tilda.ui:2591
+#: src/tilda.ui:2610
 msgid "Scrollbar is:"
 msgstr "Scrollbalken ist:"
 
-#: src/tilda.ui:2601
+#: src/tilda.ui:2620
 #, fuzzy
 msgid "Limit scrollback to:"
 msgstr "Gespeicherte Zeilen:"
 
-#: src/tilda.ui:2605
+#: src/tilda.ui:2624
 msgid "Unselect for unlimited scrollback."
 msgstr ""
 
-#: src/tilda.ui:2618
+#: src/tilda.ui:2637
 msgid "Scroll on Output"
 msgstr "Ausgabe scrollen"
 
-#: src/tilda.ui:2635
+#: src/tilda.ui:2654
 msgid "Scroll on Keystroke"
 msgstr "Bei Tastendruck scrollen"
 
-#: src/tilda.ui:2652
+#: src/tilda.ui:2671
 msgid "Scroll Background"
 msgstr "Hintergrund scrollen"
 
-#: src/tilda.ui:2676
+#: src/tilda.ui:2695
 msgid "<b>Scrolling</b>"
 msgstr "<b>Scrollen</b>"
 
-#: src/tilda.ui:2698
+#: src/tilda.ui:2717
 msgid "Scrolling"
 msgstr "Scrollen"
 
-#: src/tilda.ui:2716
+#: src/tilda.ui:2735
 msgid "<b>Compatibility</b>"
 msgstr "<b>Kompatibilität</b>"
 
-#: src/tilda.ui:2752
+#: src/tilda.ui:2771
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
@@ -463,117 +467,117 @@ msgstr ""
 "Verfügung, damit problematische Anwendungen oder Betriebssysteme reibungslos "
 "funktionieren, die ein anderes Terminal-Verhalten erwarten.</i></small>"
 
-#: src/tilda.ui:2775
+#: src/tilda.ui:2794
 msgid "_Delete key generates:"
 msgstr "_Entfernen-Taste erzeugt:"
 
-#: src/tilda.ui:2791
+#: src/tilda.ui:2810
 msgid "_Backspace key generates:"
 msgstr "_Rücktaste erzeugt:"
 
-#: src/tilda.ui:2854
+#: src/tilda.ui:2873
 msgid "_Reset Compatibility Options to Defaults"
 msgstr "Kompatibilitätseinstellungen auf Vorgabewerte _zurücksetzen"
 
-#: src/tilda.ui:2891
+#: src/tilda.ui:2910
 msgid "Compatibility"
 msgstr "Kompatibilität"
 
-#: src/tilda.ui:2919 src/tilda.ui:2959 src/tilda.ui:2997 src/tilda.ui:3035
-#: src/tilda.ui:3074 src/tilda.ui:3114 src/tilda.ui:3152 src/tilda.ui:3190
-#: src/tilda.ui:3228 src/tilda.ui:3266 src/tilda.ui:3304 src/tilda.ui:3344
-#: src/tilda.ui:3384 src/tilda.ui:3422 src/tilda.ui:3458 src/tilda.ui:3498
-#: src/tilda.ui:3538 src/tilda.ui:3578 src/tilda.ui:3618 src/tilda.ui:3656
-#: src/tilda.ui:3696
+#: src/tilda.ui:2938 src/tilda.ui:2978 src/tilda.ui:3016 src/tilda.ui:3054
+#: src/tilda.ui:3093 src/tilda.ui:3133 src/tilda.ui:3171 src/tilda.ui:3209
+#: src/tilda.ui:3247 src/tilda.ui:3285 src/tilda.ui:3323 src/tilda.ui:3363
+#: src/tilda.ui:3403 src/tilda.ui:3441 src/tilda.ui:3477 src/tilda.ui:3517
+#: src/tilda.ui:3557 src/tilda.ui:3597 src/tilda.ui:3637 src/tilda.ui:3675
+#: src/tilda.ui:3715
 msgid " "
 msgstr ""
 
-#: src/tilda.ui:2932
+#: src/tilda.ui:2951
 msgid "<b>Paste</b>"
 msgstr "<b>Einfügen</b>"
 
-#: src/tilda.ui:2972
+#: src/tilda.ui:2991
 msgid "<b>Go To Next Tab</b>"
 msgstr "<b>Nächster Tab</b>"
 
-#: src/tilda.ui:3010
+#: src/tilda.ui:3029
 msgid "<b>Quit</b>"
 msgstr "<b>Beenden</b>"
 
-#: src/tilda.ui:3048
+#: src/tilda.ui:3067
 msgid "<b>Add Tab</b>"
 msgstr "<b>Tab hinzufügen</b>"
 
-#: src/tilda.ui:3087
+#: src/tilda.ui:3106
 msgid "<b>Go To Tab 10</b>"
 msgstr "<b>Gehe zu Tab 10</b>"
 
-#: src/tilda.ui:3127
+#: src/tilda.ui:3146
 msgid "<b>Go To Tab 5</b>"
 msgstr "<b>Gehe zu Tab 5</b>"
 
-#: src/tilda.ui:3165
+#: src/tilda.ui:3184
 msgid "<b>Go To Tab 4</b>"
 msgstr "<b>Gehe zu Tab 4</b>"
 
-#: src/tilda.ui:3203
+#: src/tilda.ui:3222
 msgid "<b>Go To Tab 3</b>"
 msgstr "<b>Gehe zu Tab 3</b>"
 
-#: src/tilda.ui:3241
+#: src/tilda.ui:3260
 msgid "<b>Go To Tab 2</b>"
 msgstr "<b>Gehe zu Tab 2</b>"
 
-#: src/tilda.ui:3279
+#: src/tilda.ui:3298
 msgid "<b>Go To Tab 1</b>"
 msgstr "<b>Gehe zu Tab 1</b>"
 
-#: src/tilda.ui:3317
+#: src/tilda.ui:3336
 msgid "<b>Go To Previous Tab</b>"
 msgstr "<b>Vorheriger Tab</b>"
 
-#: src/tilda.ui:3357
+#: src/tilda.ui:3376
 msgid "<b>Close Tab</b>"
 msgstr "<b>Tab schließen</b>"
 
-#: src/tilda.ui:3397
+#: src/tilda.ui:3416
 msgid "<b>Copy</b>"
 msgstr "<b>Kopieren</b>"
 
-#: src/tilda.ui:3435
+#: src/tilda.ui:3454
 msgid "<b>Pull Down Terminal</b>"
 msgstr "<b>Terminal Einblenden</b>"
 
-#: src/tilda.ui:3471
+#: src/tilda.ui:3490
 msgid "<b>Go To Tab 6</b>"
 msgstr "<b>Gehe zu Tab 6</b>"
 
-#: src/tilda.ui:3511
+#: src/tilda.ui:3530
 msgid "<b>Go To Tab 7</b>"
 msgstr "<b>Gehe zu Tab 7</b>"
 
-#: src/tilda.ui:3551
+#: src/tilda.ui:3570
 msgid "<b>Go To Tab 8</b>"
 msgstr "<b>Gehe zu Tab 8</b>"
 
-#: src/tilda.ui:3591
+#: src/tilda.ui:3610
 msgid "<b>Go To Tab 9</b>"
 msgstr "<b>Gehe zu Tab 9</b>"
 
-#: src/tilda.ui:3631
+#: src/tilda.ui:3650
 msgid "<b>Move Tab Left</b>"
 msgstr "<b>Bewege Tab nach links</b>"
 
-#: src/tilda.ui:3669
+#: src/tilda.ui:3688
 msgid "<b>Move Tab Right</b>"
 msgstr "<b>Bewege Tab nach rechts</b>"
 
-#: src/tilda.ui:3709
+#: src/tilda.ui:3728
 #, fuzzy
 msgid "<b>Toggle Fullscreen</b>"
 msgstr "Vollbild umschalten"
 
-#: src/tilda.ui:3731
+#: src/tilda.ui:3750
 msgid "Keybindings"
 msgstr "Tastenbelegungen"
 
@@ -693,7 +697,7 @@ msgstr ""
 msgid "Migrating old config path to XDG folders\n"
 msgstr "Verschiebe altes Konfigurationsverzeichnis in XDG-Verzeichnisse\n"
 
-#: src/tilda.c:713 src/wizard.c:372
+#: src/tilda.c:713 src/wizard.c:370
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -741,12 +745,12 @@ msgstr "Konnte Webbrowser nicht starten. Der Befehl lautete `%s'\n"
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "Die Konfigurationsdatei enthält eine falsche tab_pos\n"
 
-#: src/tilda_window.c:502
+#: src/tilda_window.c:509
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Kann Tildas Symbol nicht festlegen: %s\n"
 
-#: src/tilda_window.c:681
+#: src/tilda_window.c:688
 msgid "Out of memory, cannot create tab\n"
 msgstr "Kein Speicher vorhanden, Tab kann nicht erstellt werden\n"
 
@@ -766,33 +770,33 @@ msgstr ""
 msgid "Rxvt"
 msgstr ""
 
-#: src/wizard.c:288
+#: src/wizard.c:286
 #, c-format
 msgid "Tilda %d Config"
 msgstr "Tilda %d Konfiguration"
 
-#: src/wizard.c:376
+#: src/wizard.c:374
 msgid ""
 "The keybinding you chose for \"Add Tab\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Tab hinzufügen\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:378
+#: src/wizard.c:376
 msgid ""
 "The keybinding you chose for \"Close Tab\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Tab schließen\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:380
+#: src/wizard.c:378
 msgid ""
 "The keybinding you chose for \"Next Tab\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Nächster Tab\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/wizard.c:382
+#: src/wizard.c:380
 msgid ""
 "The keybinding you chose for \"Previous Tab\" is invalid. Please choose "
 "another."
@@ -800,7 +804,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Vorheriger Tab\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:384
+#: src/wizard.c:382
 msgid ""
 "The keybinding you chose for \"Move Tab to Left\" is invalid. Please choose "
 "another."
@@ -808,7 +812,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Bewege Tab nach links\" ist "
 "ungültig. Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:386
+#: src/wizard.c:384
 msgid ""
 "The keybinding you chose for \"Move Tab to Right\" is invalid. Please choose "
 "another."
@@ -816,28 +820,28 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Bewege Tab nach rechts\" ist "
 "ungültig. Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:388
+#: src/wizard.c:386
 msgid ""
 "The keybinding you chose for \"Copy\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Kopieren\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/wizard.c:390
+#: src/wizard.c:388
 msgid ""
 "The keybinding you chose for \"Paste\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Einfügen\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/wizard.c:392
+#: src/wizard.c:390
 msgid ""
 "The keybinding you chose for \"Quit\" is invalid. Please choose another."
 msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Beenden\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/wizard.c:394
+#: src/wizard.c:392
 msgid ""
 "The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose "
 "another."
@@ -845,7 +849,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 1\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:396
+#: src/wizard.c:394
 msgid ""
 "The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose "
 "another."
@@ -853,7 +857,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 2\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:398
+#: src/wizard.c:396
 msgid ""
 "The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose "
 "another."
@@ -861,7 +865,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 3\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:400
+#: src/wizard.c:398
 msgid ""
 "The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose "
 "another."
@@ -869,7 +873,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 4\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:402
+#: src/wizard.c:400
 msgid ""
 "The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose "
 "another."
@@ -877,7 +881,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 5\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:404
+#: src/wizard.c:402
 msgid ""
 "The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose "
 "another."
@@ -885,7 +889,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 6\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:406
+#: src/wizard.c:404
 msgid ""
 "The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose "
 "another."
@@ -893,7 +897,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 7\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:408
+#: src/wizard.c:406
 msgid ""
 "The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose "
 "another."
@@ -901,7 +905,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 8\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:410
+#: src/wizard.c:408
 msgid ""
 "The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose "
 "another."
@@ -909,7 +913,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 9\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:412
+#: src/wizard.c:410
 msgid ""
 "The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose "
 "another."
@@ -917,7 +921,7 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Gehe zu Tab 10\" ist ungültig. "
 "Bitte wählen Sie ein Anderes."
 
-#: src/wizard.c:414
+#: src/wizard.c:412
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose "
@@ -926,10 +930,10 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Einfügen\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/wizard.c:876
+#: src/wizard.c:875
 msgid "Invalid tab position setting, ignoring\n"
 msgstr "Ungültige Einstellung der Tab-Position. Ignoriere.\n"
 
-#: src/wizard.c:1843
+#: src/wizard.c:1851
 msgid "Enter keyboard shortcut"
 msgstr "Tastenkürzel eingeben"
