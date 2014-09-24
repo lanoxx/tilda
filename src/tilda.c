@@ -29,6 +29,8 @@
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <sys/file.h>
+#include <errno.h>
 #include <sys/dir.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -51,18 +53,24 @@
 
 #include <vte/vte.h>
 #include <glib/gstdio.h>
+#include <zlib.h>
 
 
-static gchar *create_lock_file (struct lock_info lock)
+/**
+* If lock->pid is 0 then the file is not opened exclusively. Instead flock() must be used to obtain a lock.
+* Otherwise an exclusive lock file is created for the process.
+*/
+static gchar *create_lock_file (struct lock_info *lock)
 {
     DEBUG_FUNCTION ("create_lock_file");
-    DEBUG_ASSERT (lock.instance >= 0);
-    DEBUG_ASSERT (lock.pid >= 1);
+    DEBUG_ASSERT (lock != NULL);
+    DEBUG_ASSERT (lock->instance >= 0);
+    DEBUG_ASSERT (lock->pid >= 0);
 
     gint ret;
     gchar *lock_file_full;
     gchar *lock_dir = g_build_filename (g_get_user_cache_dir (), "tilda", "locks", NULL);
-    gchar *lock_file = g_strdup_printf ("lock_%d_%d", lock.pid, lock.instance);
+    gchar *lock_file = g_strdup_printf ("lock_%d_%d", lock->pid, lock->instance);
 
     /* Make the ~/.cache/tilda/locks directory */
     ret = g_mkdir_with_parents (lock_dir,  S_IRUSR | S_IWUSR | S_IXUSR);
@@ -74,10 +82,16 @@ static gchar *create_lock_file (struct lock_info lock)
     lock_file_full = g_build_filename (lock_dir, lock_file, NULL);
 
     /* Create the lock file */
-    ret = g_creat (lock_file_full, S_IRUSR | S_IWUSR | S_IXUSR);
+    if(lock->pid == 0) {
+        ret = g_open(lock_file_full, O_CREAT, S_IRUSR | S_IWUSR);
+    } else {
+        ret = g_open(lock_file_full, O_WRONLY | O_CREAT | O_EXCL, 0);
+    }
 
     if (ret == -1)
         goto creat_fail;
+
+    lock->file_descriptor = ret;
 
     g_free (lock_file);
     g_free (lock_dir);
@@ -194,6 +208,29 @@ nomatch:
 }
 
 /**
+* Gets a list of the pids in
+*/
+GSList *getPids() {
+    GSList *pids = NULL;
+    FILE *ps_output;
+    const gchar ps_command[] = "ps -C tilda -o pid=";
+    gchar buf[16]; /* Really shouldn't need more than 6 */
+
+    if ((ps_output = popen (ps_command, "r")) == NULL) {
+        g_printerr (_("Unable to run command: `%s'\n"), ps_command);
+        return NULL;
+    }
+
+    /* The popen() succeeded, get all of the pids */
+    while (fgets (buf, sizeof(buf), ps_output) != NULL)
+        pids = g_slist_append (pids, GINT_TO_POINTER (atoi (buf)));
+
+    /* We've read all of the pids, exit */
+    pclose (ps_output);
+    return pids;
+}
+
+/**
  * Remove stale lock files from the ~/.tilda/locks/ directory.
  *
  * Success: returns 0
@@ -203,23 +240,10 @@ static gint remove_stale_lock_files ()
 {
     DEBUG_FUNCTION ("remove_stale_lock_files");
 
-    GSList *pids = NULL;
-    FILE *ps_output;
-    const gchar ps_command[] = "ps -C tilda -o pid=";
-    gchar buf[16]; /* Really shouldn't need more than 6 */
-
-    if ((ps_output = popen (ps_command, "r")) == NULL)
-    {
-        g_printerr (_("Unable to run command: `%s'\n"), ps_command);
+    GSList *pids = getPids();
+    if(pids == NULL) {
         return -1;
     }
-
-    /* The popen() succeeded, get all of the pids */
-    while (fgets (buf, sizeof(buf), ps_output) != NULL)
-        pids = g_slist_append (pids, GINT_TO_POINTER (atoi (buf)));
-
-    /* We've read all of the pids, exit */
-    pclose (ps_output);
 
     struct lock_info *lock;
     gchar *lock_dir = g_build_filename (g_get_user_cache_dir (), "tilda", "locks", NULL);
@@ -257,6 +281,7 @@ static gint remove_stale_lock_files ()
 
     g_dir_close (dir);
     g_free (lock_dir);
+    g_slist_free(pids);
 
     return 0;
 }
@@ -565,12 +590,46 @@ int main (int argc, char *argv[])
     }
 
     /* Remove stale lock files */
-    remove_stale_lock_files ();
+    gint result = remove_stale_lock_files ();
+    if(result < 0) {
+        return EXIT_FAILURE;
+    }
 
+    /* The global lock file is used to synchronize the start up of multiple simultaneously starting tilda processes.
+     * The processes will synchronize on a lock file named lock_0_0, such that the part of determining the instance
+     * number and creating the per process lock file (lock_<pid>_<instance>) is atomic. Without this it could
+     * happen, that a second tilda instance was trying to determine its instance number before the first instance
+     * had finished creating its lock file, this resulted in two processes with the same instance number and could lead
+     * to corruption of the config file.
+     * In order to test if this works the following shell command can be used: "tilda & tilda && fg", which causes
+     * two tilda processes to be started simultaneously. See:
+     *
+     *     http://stackoverflow.com/questions/3004811/how-do-you-run-multiple-programs-from-a-bash-script
+     */
+    struct lock_info global_lock;
+    global_lock.instance = 0;
+    global_lock.pid = 0;
+    gchar *global_lock_file = NULL;
+
+    global_lock_file = create_lock_file(&global_lock);
+    if(global_lock_file == NULL) {
+        perror("Error creating global lock file");
+        return EXIT_FAILURE;
+    }
+    flock(global_lock.file_descriptor, LOCK_EX);
+
+    /* Start of atomic section. */
     lock.pid = getpid ();
     lock.instance = get_instance_number ();
+    lock_file = create_lock_file (&lock);
     config_file = get_config_file_name (lock.instance);
-    lock_file = create_lock_file (lock);
+    /* End of atomic section */
+
+    flock(global_lock.file_descriptor, LOCK_UN);
+    g_remove (global_lock_file);
+    close(lock.file_descriptor);
+    g_free(global_lock_file);
+
 
 #if ENABLE_NLS
     /* Gettext Initialization */
@@ -669,6 +728,7 @@ initialization_failed:
     /* Ok, we're at the end of our run. Time to clean up ... */
     config_free (config_file);
     g_remove (lock_file);
+    close(lock.file_descriptor);
     g_free (lock_file);
     g_free (config_file);
 
