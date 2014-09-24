@@ -111,6 +111,12 @@ if test "x$enable_lto" = "xyes"; then
     LDFLAGS="$LDFLAGS $CFLAGS -fuse-linker-plugin"
 fi
 
+
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources, no)
+if test x$GLIB_COMPILE_RESOURCES = xno; then
+  AC_MSG_ERROR(Could not find a glib-compile-resources in your PATH)
+fi
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O

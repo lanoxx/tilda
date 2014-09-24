@@ -1,6 +1,6 @@
 # List of source files which contain translatable strings.
 
-tilda.glade
+src/tilda.ui
 src/callback_func.c
 src/configsys.c
 src/tilda.c

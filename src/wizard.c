@@ -198,7 +198,7 @@ static TerminalPaletteScheme palette_schemes[] = {
 /* For use in get_display_dimension() */
 enum dimensions { HEIGHT, WIDTH };
 
-/* This will hold the GtkBuilder representation of the .glade file.
+/* This will hold the GtkBuilder representation of the .ui file.
  * We keep this global so that we can look up any element from any routine.
  *
  * Note that for GtkBuilder to autoconnect signals, the functions that it hooks
@@ -231,7 +231,6 @@ gint wizard (tilda_window *ltw)
     DEBUG_ASSERT (ltw != NULL);
 
     gchar *window_title;
-    const gchar *glade_file = g_build_filename (PKGDATADIR, "tilda.glade", NULL);
     GtkWidget *wizard_window;
 
     /* Make sure that there isn't already a wizard showing */
@@ -247,14 +246,13 @@ gint wizard (tilda_window *ltw)
     gtk_builder_set_translation_domain (xml, PACKAGE);
 #endif
 
-    if (!gtk_builder_add_from_file (xml, glade_file, &error)) {
-        g_error ("Couldn't load builder file: %s", error->message);
-        g_error_free (error);
+    if(!gtk_builder_add_from_resource (xml, "/org/tilda/tilda.ui", &error)) {
+        g_prefix_error(&error, "Error:");
         return EXIT_FAILURE;
     }
 
     if (!xml) {
-        g_warning ("problem while loading the tilda.glade file");
+        g_warning ("problem while loading the tilda.ui file");
         return 2;
     }
 

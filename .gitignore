@@ -32,6 +32,8 @@ src/.deps/
 src/Makefile
 src/Makefile.in
 src/key_converter.c
+src/glade-resources.c
+src/glade-resources.h
 src/tilda
 stamp-h1
 tilda-config.h

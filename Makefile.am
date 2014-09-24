@@ -44,10 +44,7 @@ Applications_DATA = tilda.desktop
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
-# This will install tilda.glade to ${pkgdatadir}
-pkgdata_DATA = tilda.glade
-
-EXTRA_DIST = tilda.desktop.in tilda.png tilda.glade
+EXTRA_DIST = tilda.desktop.in tilda.png
 
 tilda.desktop: tilda.desktop.in
 	sed -e 's|\@BINDIR\@|$(bindir)|' \
