@@ -206,7 +206,7 @@ nomatch:
 /**
 * Gets a list of the pids in
 */
-GSList *getPids() {
+static GSList *getPids() {
     GSList *pids = NULL;
     FILE *ps_output;
     const gchar ps_command[] = "ps -C tilda -o pid=";
