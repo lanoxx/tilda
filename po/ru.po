@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-09-24 15:32+0200\n"
+"POT-Creation-Date: 2014-09-25 10:52+0200\n"
 "PO-Revision-Date: 2008-02-09 09:14+0000\n"
 "Last-Translator: Anton Shestakov <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -145,7 +145,7 @@ msgstr "Настройка Tilda"
 msgid "Enable Double Buffering"
 msgstr "Двойная буферизация"
 
-#: src/tilda.ui:357 src/tilda.c:326
+#: src/tilda.ui:357 src/tilda.c:322
 msgid "Start Tilda hidden"
 msgstr "Скрыть Tilda при запуске"
 
@@ -322,11 +322,11 @@ msgstr "Центрировать по горизонтали"
 msgid "Centered Vertically"
 msgstr "Центрировать по вертикали"
 
-#: src/tilda.ui:1583 src/tilda.c:333
+#: src/tilda.ui:1583 src/tilda.c:329
 msgid "X Position"
 msgstr "Позиция по горизонтали"
 
-#: src/tilda.ui:1598 src/tilda.c:334
+#: src/tilda.ui:1598 src/tilda.c:330
 msgid "Y Position"
 msgstr "Позиция по вертикали"
 
@@ -628,61 +628,61 @@ msgstr "Не удалось закрыть конфигурационный фа
 msgid "Unable to write the config file to %s\n"
 msgstr "Возникла ошибка при записи конфигурационного файла в %s\n"
 
-#: src/tilda.c:220
+#: src/tilda.c:216
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "Не удалось выполнить команду: «%s»\n"
 
-#: src/tilda.c:259 src/tilda.c:488
+#: src/tilda.c:255 src/tilda.c:484
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Невозможно открыть директорию lock: %s\n"
 
-#: src/tilda.c:323
+#: src/tilda.c:319
 msgid "Use Antialiased Fonts"
 msgstr "Использовать сглаживание шрифтов"
 
-#: src/tilda.c:324
+#: src/tilda.c:320
 msgid "Set the background color"
 msgstr "Установить цвет фона"
 
-#: src/tilda.c:325
+#: src/tilda.c:321
 msgid "Run a command at startup"
 msgstr "Запустить команду при запуске"
 
-#: src/tilda.c:327
+#: src/tilda.c:323
 msgid "Set the font to the following string"
 msgstr "Использовать указанный шрифт"
 
-#: src/tilda.c:328
+#: src/tilda.c:324
 msgid "Scrollback Lines"
 msgstr "Размер буфера прокрутки, строк"
 
-#: src/tilda.c:329
+#: src/tilda.c:325
 msgid "Use Scrollbar"
 msgstr "Использовать полосу прокрутки"
 
-#: src/tilda.c:330
+#: src/tilda.c:326
 msgid "Opaqueness: 0-100%"
 msgstr "Непрозрачность: 0-100%"
 
-#: src/tilda.c:331
+#: src/tilda.c:327
 msgid "Print the version, then exit"
 msgstr "Вывести версию и выйти"
 
-#: src/tilda.c:332
+#: src/tilda.c:328
 msgid "Set Initial Working Directory"
 msgstr "Установить рабочую директорию"
 
-#: src/tilda.c:335
+#: src/tilda.c:331
 msgid "Set Background Image"
 msgstr "Установить фоновое изображение"
 
-#: src/tilda.c:336
+#: src/tilda.c:332
 msgid "Show Configuration Wizard"
 msgstr "Запустить мастер конфигурации"
 
-#: src/tilda.c:352
+#: src/tilda.c:348
 #, c-format
 msgid ""
 "Error parsing command-line options. Try \"tilda --help\"\n"
@@ -695,59 +695,59 @@ msgstr ""
 "\n"
 "Сообщение об ошибке: %s\n"
 
-#: src/tilda.c:441
+#: src/tilda.c:437
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:556
+#: src/tilda.c:552
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:587
+#: src/tilda.c:583
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:713 src/wizard.c:370
+#: src/tilda.c:709 src/wizard.c:370
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr "Комбинация клавиш, которую вы выбрали, неверная. Выберите другую."
 
-#: src/tilda_terminal.c:395
+#: src/tilda_terminal.c:394
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Возникла проблема при обработке пользовательской команды: %s\n"
 
-#: src/tilda_terminal.c:396 src/tilda_terminal.c:425
+#: src/tilda_terminal.c:395 src/tilda_terminal.c:424
 msgid "Launching default shell instead\n"
 msgstr "Запуск оболочки по умолчанию вместо\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Не удалось запустить пользовательскую команду: %s\n"
 
-#: src/tilda_terminal.c:479
+#: src/tilda_terminal.c:478
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Не удалось запустить оболочку по умолчанию: %s\n"
 
-#: src/tilda_terminal.c:767
+#: src/tilda_terminal.c:766
 msgid "_New Tab"
 msgstr "_Новая вкладка"
 
-#: src/tilda_terminal.c:771
+#: src/tilda_terminal.c:770
 msgid "_Close Tab"
 msgstr "_Закрыть вкладку"
 
-#: src/tilda_terminal.c:783
+#: src/tilda_terminal.c:782
 msgid "Toggle fullscreen"
 msgstr ""
 
-#: src/tilda_terminal.c:879
+#: src/tilda_terminal.c:878
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Ошибка при запуске веб-браузера командой «%s»\n"

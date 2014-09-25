@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-09-24 15:32+0200\n"
+"POT-Creation-Date: 2014-09-25 10:52+0200\n"
 "PO-Revision-Date: 2008-03-06 00:10+0000\n"
 "Last-Translator: Maciej Habant <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -146,7 +146,7 @@ msgstr "Konfiguracja"
 msgid "Enable Double Buffering"
 msgstr "Włącz podwójne buforowanie"
 
-#: src/tilda.ui:357 src/tilda.c:326
+#: src/tilda.ui:357 src/tilda.c:322
 msgid "Start Tilda hidden"
 msgstr "Uruchamiaj Tildę ukrytą"
 
@@ -325,11 +325,11 @@ msgstr "Wyśrodkowanie poziome"
 msgid "Centered Vertically"
 msgstr "Wyśrodkowanie pionowe"
 
-#: src/tilda.ui:1583 src/tilda.c:333
+#: src/tilda.ui:1583 src/tilda.c:329
 msgid "X Position"
 msgstr "Pozycja X"
 
-#: src/tilda.ui:1598 src/tilda.c:334
+#: src/tilda.ui:1598 src/tilda.c:330
 msgid "Y Position"
 msgstr "Pozycja Y"
 
@@ -632,63 +632,63 @@ msgstr "Nie można zamknąć pliku konfiguracyjnego\n"
 msgid "Unable to write the config file to %s\n"
 msgstr "Nie można zapisać pliku konfiguracyjnego do %s\n"
 
-#: src/tilda.c:220
+#: src/tilda.c:216
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "Nie można wykonać polecenia: `%s'\n"
 
-#: src/tilda.c:259 src/tilda.c:488
+#: src/tilda.c:255 src/tilda.c:484
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
 
-#: src/tilda.c:323
+#: src/tilda.c:319
 msgid "Use Antialiased Fonts"
 msgstr "Włącz anti-aliasing czcionek"
 
-#: src/tilda.c:324
+#: src/tilda.c:320
 msgid "Set the background color"
 msgstr "Ustaw kolor tła"
 
-#: src/tilda.c:325
+#: src/tilda.c:321
 msgid "Run a command at startup"
 msgstr "Wykonaj polecenie przy starcie"
 
-#: src/tilda.c:327
+#: src/tilda.c:323
 msgid "Set the font to the following string"
 msgstr "Ustaw czcionkę do następującego ciągu"
 
-#: src/tilda.c:328
+#: src/tilda.c:324
 msgid "Scrollback Lines"
 msgstr "Ilość przewijanych wierszy"
 
-#: src/tilda.c:329
+#: src/tilda.c:325
 msgid "Use Scrollbar"
 msgstr "Włącz pasek przewijania"
 
-#: src/tilda.c:330
+#: src/tilda.c:326
 msgid "Opaqueness: 0-100%"
 msgstr "Nieprzeźroczystość: 0-100%"
 
-#: src/tilda.c:331
+#: src/tilda.c:327
 msgid "Print the version, then exit"
 msgstr "Wyświetl wersję i zakończ"
 
-#: src/tilda.c:332
+#: src/tilda.c:328
 #, fuzzy
 msgid "Set Initial Working Directory"
 msgstr "Ustaw katalog startowy"
 
-#: src/tilda.c:335
+#: src/tilda.c:331
 msgid "Set Background Image"
 msgstr "Ustaw obraz jako tło"
 
-#: src/tilda.c:336
+#: src/tilda.c:332
 #, fuzzy
 msgid "Show Configuration Wizard"
 msgstr "Pokaż kreatora ustawień"
 
-#: src/tilda.c:352
+#: src/tilda.c:348
 #, c-format
 msgid ""
 "Error parsing command-line options. Try \"tilda --help\"\n"
@@ -701,21 +701,21 @@ msgstr ""
 "\n"
 "Treść błędu: %s\n"
 
-#: src/tilda.c:441
+#: src/tilda.c:437
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:556
+#: src/tilda.c:552
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:587
+#: src/tilda.c:583
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:713 src/wizard.c:370
+#: src/tilda.c:709 src/wizard.c:370
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
@@ -723,38 +723,38 @@ msgid ""
 msgstr ""
 "Przypisanie klawiszy, które wybrałeś jest nieprawidłowe. Proszę wybrać inne."
 
-#: src/tilda_terminal.c:395
+#: src/tilda_terminal.c:394
 #, fuzzy, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problem przy parsowaniu własnej komendy: %s\n"
 
-#: src/tilda_terminal.c:396 src/tilda_terminal.c:425
+#: src/tilda_terminal.c:395 src/tilda_terminal.c:424
 msgid "Launching default shell instead\n"
 msgstr "Zamiast tego uruchamiem domyślną powłokę\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nie można uruchomić własnej komeny: %s\n"
 
-#: src/tilda_terminal.c:479
+#: src/tilda_terminal.c:478
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Nie można uruchomić domyślnej powłoki: %s\n"
 
-#: src/tilda_terminal.c:767
+#: src/tilda_terminal.c:766
 msgid "_New Tab"
 msgstr "_Nowa karta"
 
-#: src/tilda_terminal.c:771
+#: src/tilda_terminal.c:770
 msgid "_Close Tab"
 msgstr "_Zamknij kartę"
 
-#: src/tilda_terminal.c:783
+#: src/tilda_terminal.c:782
 msgid "Toggle fullscreen"
 msgstr ""
 
-#: src/tilda_terminal.c:879
+#: src/tilda_terminal.c:878
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Nie udało się uruchomić przeglądarki. Wywołano komendę `%s'\n"

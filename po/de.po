@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-09-24 15:32+0200\n"
+"POT-Creation-Date: 2014-09-25 10:52+0200\n"
 "PO-Revision-Date: 2013-07-13 11:12+0000\n"
 "Last-Translator: Christian Weber <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -138,7 +138,7 @@ msgstr "Tilda Konfiguration"
 msgid "Enable Double Buffering"
 msgstr "Double Buffering aktivieren"
 
-#: src/tilda.ui:357 src/tilda.c:326
+#: src/tilda.ui:357 src/tilda.c:322
 msgid "Start Tilda hidden"
 msgstr "Tilda versteckt starten"
 
@@ -318,11 +318,11 @@ msgstr "Horizontal zentriert"
 msgid "Centered Vertically"
 msgstr "Vertikal zentriert"
 
-#: src/tilda.ui:1583 src/tilda.c:333
+#: src/tilda.ui:1583 src/tilda.c:329
 msgid "X Position"
 msgstr "X Position"
 
-#: src/tilda.ui:1598 src/tilda.c:334
+#: src/tilda.ui:1598 src/tilda.c:330
 msgid "Y Position"
 msgstr "Y Position"
 
@@ -615,61 +615,61 @@ msgstr "Kann die Konfigurationsdatei nicht schließen\n"
 msgid "Unable to write the config file to %s\n"
 msgstr "Kann die Konfigurationsdatei nicht nach %s schreiben\n"
 
-#: src/tilda.c:220
+#: src/tilda.c:216
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "Kann Befehl nicht ausführen: `%s'\n"
 
-#: src/tilda.c:259 src/tilda.c:488
+#: src/tilda.c:255 src/tilda.c:484
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Kann Lock-Verzeichnis nicht öffnen: %s\n"
 
-#: src/tilda.c:323
+#: src/tilda.c:319
 msgid "Use Antialiased Fonts"
 msgstr "Zeichensatz mit Antialiasing verwenden"
 
-#: src/tilda.c:324
+#: src/tilda.c:320
 msgid "Set the background color"
 msgstr "Hintergrundfarbe auswählen"
 
-#: src/tilda.c:325
+#: src/tilda.c:321
 msgid "Run a command at startup"
 msgstr "Befehl beim Starten ausführen"
 
-#: src/tilda.c:327
+#: src/tilda.c:323
 msgid "Set the font to the following string"
 msgstr "Setze die Schriftart auf folgenden String"
 
-#: src/tilda.c:328
+#: src/tilda.c:324
 msgid "Scrollback Lines"
 msgstr "Zurückscrollbare Zeilen"
 
-#: src/tilda.c:329
+#: src/tilda.c:325
 msgid "Use Scrollbar"
 msgstr "Scrollbalken benutzen"
 
-#: src/tilda.c:330
+#: src/tilda.c:326
 msgid "Opaqueness: 0-100%"
 msgstr "Transparenz: 0-100%"
 
-#: src/tilda.c:331
+#: src/tilda.c:327
 msgid "Print the version, then exit"
 msgstr "Version ausgeben, danach beenden"
 
-#: src/tilda.c:332
+#: src/tilda.c:328
 msgid "Set Initial Working Directory"
 msgstr "Startverzeichnis setzen"
 
-#: src/tilda.c:335
+#: src/tilda.c:331
 msgid "Set Background Image"
 msgstr "Hintergrundbild festlegen"
 
-#: src/tilda.c:336
+#: src/tilda.c:332
 msgid "Show Configuration Wizard"
 msgstr "Konfigurationsassistenten starten"
 
-#: src/tilda.c:352
+#: src/tilda.c:348
 #, c-format
 msgid ""
 "Error parsing command-line options. Try \"tilda --help\"\n"
@@ -682,22 +682,22 @@ msgstr ""
 "\n"
 "Fehlermeldung: %s\n"
 
-#: src/tilda.c:441
+#: src/tilda.c:437
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr "Erstelle Verzeichnis: '%s'\n"
 
-#: src/tilda.c:556
+#: src/tilda.c:552
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 "style.css in Nutzer Config-Verzeichnis gefunden, nutze Nutzer css style.\n"
 
-#: src/tilda.c:587
+#: src/tilda.c:583
 msgid "Migrating old config path to XDG folders\n"
 msgstr "Verschiebe altes Konfigurationsverzeichnis in XDG-Verzeichnisse\n"
 
-#: src/tilda.c:713 src/wizard.c:370
+#: src/tilda.c:709 src/wizard.c:370
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -705,38 +705,38 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Terminal Einblenden\" ist "
 "ungültig. Bitte wählen Sie ein Anderes."
 
-#: src/tilda_terminal.c:395
+#: src/tilda_terminal.c:394
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problem beim Lesen eines benutzerdefinierten Befehls: %s\n"
 
-#: src/tilda_terminal.c:396 src/tilda_terminal.c:425
+#: src/tilda_terminal.c:395 src/tilda_terminal.c:424
 msgid "Launching default shell instead\n"
 msgstr "Öffne stattdessen die Standard-Shell\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Konnte benutzerdefinierten Befehl nicht ausführen: %s\n"
 
-#: src/tilda_terminal.c:479
+#: src/tilda_terminal.c:478
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Konnte die Standard-Shell nicht öffnen: %s\n"
 
-#: src/tilda_terminal.c:767
+#: src/tilda_terminal.c:766
 msgid "_New Tab"
 msgstr "_Neuer Tab"
 
-#: src/tilda_terminal.c:771
+#: src/tilda_terminal.c:770
 msgid "_Close Tab"
 msgstr "Tab s_chließen"
 
-#: src/tilda_terminal.c:783
+#: src/tilda_terminal.c:782
 msgid "Toggle fullscreen"
 msgstr "Vollbild umschalten"
 
-#: src/tilda_terminal.c:879
+#: src/tilda_terminal.c:878
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Konnte Webbrowser nicht starten. Der Befehl lautete `%s'\n"

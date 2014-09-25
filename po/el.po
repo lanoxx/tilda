@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-09-24 15:32+0200\n"
+"POT-Creation-Date: 2014-09-25 10:52+0200\n"
 "PO-Revision-Date: 2007-11-13 19:28+0000\n"
 "Last-Translator: Alexander Kikis <kikisalex@hotmail.com>\n"
 "Language-Team: Greek, Modern (1453-) <el@li.org>\n"
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Enable Double Buffering"
 msgstr ""
 
-#: src/tilda.ui:357 src/tilda.c:326
+#: src/tilda.ui:357 src/tilda.c:322
 msgid "Start Tilda hidden"
 msgstr ""
 
@@ -312,11 +312,11 @@ msgstr ""
 msgid "Centered Vertically"
 msgstr ""
 
-#: src/tilda.ui:1583 src/tilda.c:333
+#: src/tilda.ui:1583 src/tilda.c:329
 msgid "X Position"
 msgstr "Θέση X"
 
-#: src/tilda.ui:1598 src/tilda.c:334
+#: src/tilda.ui:1598 src/tilda.c:330
 msgid "Y Position"
 msgstr "Θέση Y"
 
@@ -600,68 +600,68 @@ msgstr ""
 msgid "Unable to write the config file to %s\n"
 msgstr ""
 
-#: src/tilda.c:220
+#: src/tilda.c:216
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr ""
 
-#: src/tilda.c:259 src/tilda.c:488
+#: src/tilda.c:255 src/tilda.c:484
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
 
-#: src/tilda.c:323
+#: src/tilda.c:319
 msgid "Use Antialiased Fonts"
 msgstr ""
 
-#: src/tilda.c:324
+#: src/tilda.c:320
 #, fuzzy
 msgid "Set the background color"
 msgstr "Θέσε το χρώμα στο υπόβαθρο"
 
-#: src/tilda.c:325
+#: src/tilda.c:321
 #, fuzzy
 msgid "Run a command at startup"
 msgstr "Τρέξε μια εντολή στο ξεκίνημα"
 
-#: src/tilda.c:327
+#: src/tilda.c:323
 #, fuzzy
 msgid "Set the font to the following string"
 msgstr "Θέστε την γραμματοσειρά στην ακόλουθη σειρά"
 
-#: src/tilda.c:328
+#: src/tilda.c:324
 msgid "Scrollback Lines"
 msgstr ""
 
-#: src/tilda.c:329
+#: src/tilda.c:325
 #, fuzzy
 msgid "Use Scrollbar"
 msgstr "Χρήση Μπάρας Κύλισις"
 
-#: src/tilda.c:330
+#: src/tilda.c:326
 #, fuzzy
 msgid "Opaqueness: 0-100%"
 msgstr "Αδιαφάνεια:  0-100%"
 
-#: src/tilda.c:331
+#: src/tilda.c:327
 #, fuzzy
 msgid "Print the version, then exit"
 msgstr "Τυπώστε την έκδοση, κατόπιν έξοδος"
 
-#: src/tilda.c:332
+#: src/tilda.c:328
 #, fuzzy
 msgid "Set Initial Working Directory"
 msgstr "Καθορισμένος αρχικούς καταλογους εργασίας"
 
-#: src/tilda.c:335
+#: src/tilda.c:331
 msgid "Set Background Image"
 msgstr ""
 
-#: src/tilda.c:336
+#: src/tilda.c:332
 msgid "Show Configuration Wizard"
 msgstr ""
 
-#: src/tilda.c:352
+#: src/tilda.c:348
 #, c-format
 msgid ""
 "Error parsing command-line options. Try \"tilda --help\"\n"
@@ -670,58 +670,58 @@ msgid ""
 "Error message: %s\n"
 msgstr ""
 
-#: src/tilda.c:441
+#: src/tilda.c:437
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:556
+#: src/tilda.c:552
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:587
+#: src/tilda.c:583
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:713 src/wizard.c:370
+#: src/tilda.c:709 src/wizard.c:370
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr ""
 
-#: src/tilda_terminal.c:395
+#: src/tilda_terminal.c:394
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:396 src/tilda_terminal.c:425
+#: src/tilda_terminal.c:395 src/tilda_terminal.c:424
 msgid "Launching default shell instead\n"
 msgstr ""
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:479
+#: src/tilda_terminal.c:478
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:767
+#: src/tilda_terminal.c:766
 msgid "_New Tab"
 msgstr ""
 
-#: src/tilda_terminal.c:771
+#: src/tilda_terminal.c:770
 msgid "_Close Tab"
 msgstr ""
 
-#: src/tilda_terminal.c:783
+#: src/tilda_terminal.c:782
 msgid "Toggle fullscreen"
 msgstr ""
 
-#: src/tilda_terminal.c:879
+#: src/tilda_terminal.c:878
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr ""
