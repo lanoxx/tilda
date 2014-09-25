@@ -1,3 +1,79 @@
+version 1.2~rc1 (2014-09-25):
+	* Fixed an issue with drop-to-default shell option
+	* Added light and dark solarized schemes
+	* Custom color selection improved
+	* New option to set the maximum tab title length
+	* The fullscreen hotkey is now configurable in the
+	  preferences.
+	* Its now possible to compile with clang
+	* Fixed some focus issues
+	* Its now possible to open the context menu with the context-menu
+	  button on the keyboard if such a key is present. This provides
+	  improved usability for people with disabilities.
+	* Tabs can now be switches using the mouse history buttons.
+	* Tilda now uses non-recursive automake, there have been
+	  many improvements to the build system and some code cleanups.
+	  Its now also possible to make out-of-tree builds.
+	  The debugging output has also been improved and now shows
+	  in which file a log message was printed.
+	* There is a new unlimited scrollback option.
+	* A positioning bug when unfullscreening was fixed.
+	* Some improvements for different window managers were made.
+	* Tilda can no be focuses with the hotkey instead of hiding it
+	  when it is currently not focused. This new behavior is configurable.
+	* A locking issue has been fixed if multiple tilda instances were started
+	  at the same time, which caused a race condition to appear and could
+	  delete the configuration file.
+	* The UI file from GtkBuilder is now being compiled into the tilda binary.
+	* There is a new option to hide the tab bar and the border when multiple
+	  tabs are open.
+	* When a new tab is opened the tab will now inherit its working directory
+	  from the old tab. This behavior is active by default and can only be
+	  disabled from an option in the config file.
+
+version 1.1.13 (2014-09-22):
+	* Fixed focus stealing issue
+	  on mouse enter. This caused
+	  the tilda window to become
+	  active when the mouse
+	  entered the window.
+	* Fixed two functions which prevented
+	  building on systems with
+	  '-Wreturn-type' enabled in the
+	  compiler.
+
+version 1.1.12 (2014-05-20):
+	* Fixed an issue where the
+	  keystroke for the fullscreen
+	  hotkey was carried into the
+	  terminal and causes a '~' key
+	  to be printed.
+
+version 1.1.11 (2013-12-13):
+	* Fixed an issue where the
+	  window grows bigger than
+	  max_width if there are too
+	  many tabs open. Fixed by
+	  making the tab bar scrollable.
+
+version 1.1.10 (2013-12-01):
+	* Fix custom color support and
+	  add a "Custom" entry in the
+	  drop down list.
+	* Fixed the patch in the .desktop
+	  file to point to the correct
+	  location of the pixmap file.
+
+version 1.1.9 (2013-11-12):
+	* Backport fix for the goto tab
+	  hotkey (previously ordering was
+	  backwards).
+
+version 1.1.8 (2013-09-23):
+	* Fixed an issue which caused
+	  tilda to show a grey window on
+	  certain window managers.
+
 version 1.1.7 (2013-04-09):
 	* Install files to pkgdatadir
 	  instead of datadir to fix a
