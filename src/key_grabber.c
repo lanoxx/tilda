@@ -191,7 +191,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
     gboolean needsFocus = !tw->focus_loss_on_keypress
             && !gtk_window_is_active(GTK_WINDOW(tw->window))
             && !force_hide
-            && tw->hide_non_focused;
+            && !tw->hide_non_focused;
 
     if (tw->current_state == DOWN && needsFocus) {
         /**

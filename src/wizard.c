@@ -871,7 +871,7 @@ static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w)
         return;
     }
 
-    if(0 == status) {
+    if(1 == status) {
         tw->hide_non_focused = TRUE;
     }
     else {
