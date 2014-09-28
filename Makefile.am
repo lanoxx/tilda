@@ -1,8 +1,6 @@
 ## Process this file with automake to produce a Makefile.in
 # vim: set noexpandtab ts=8 sts=8 sw=8:
 
-AUTOMAKE_OPTIONS = gnu
-
 SUBDIRS = po
 
 CLEANFILES = tilda.desktop

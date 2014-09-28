@@ -4,7 +4,7 @@
 
 AC_PREREQ([2.68])
 AC_INIT([Tilda],[1.2~rc1],[https://github.com/lanoxx/tilda/issues],[tilda],[https://github.com/lanoxx/tilda])
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # We are going to use silent builds which have a much
 # nicer output. More information can be foudn here:
