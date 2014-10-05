@@ -198,10 +198,7 @@ gint config_init (const gchar *config_file)
 			DEBUG_ERROR ("Problem parsing config");
 			g_printerr (_("Problem when opening config file\n"));
 			return 1;
-		} else if (ret == CFG_PARSE_ERROR) {
-			DEBUG_ERROR ("Problem parsing config");
-			g_printerr (_("Problem while parsing config file\n"));
-        } else if (ret != CFG_SUCCESS) {
+		} else if (ret != CFG_SUCCESS) {
             DEBUG_ERROR ("Problem parsing config.");
 			g_printerr (_("An unexpected error occured while "
                 "parsing the config file\n"));
