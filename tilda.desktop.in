@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Tilda
 Exec=@BINDIR@/tilda
-Icon=@PIXMAPSDIR@/tilda.png
+Icon=tilda
 Terminal=false
 Type=Application
 Categories=GNOME;GTK;System;Utility;TerminalEmulator;
