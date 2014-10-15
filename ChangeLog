@@ -1,3 +1,9 @@
+version 1.2 (2014-10-15):
+	* Fixed background option
+	* Updated README, HACKING and TODO files
+	* Fixed bug in focus/pull-up selection
+	* Made tilda icon themable
+
 version 1.2~rc1 (2014-09-25):
 	* Fixed an issue with drop-to-default shell option
 	* Added light and dark solarized schemes
