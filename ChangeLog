@@ -1,4 +1,8 @@
-version 1.2 (2014-10-15):
+version 1.2.1 (2014-10-16):
+	* Readded empty NEWS file to fix debian packaging
+	* Updated po/ folder
+
+version 1.2.0 (2014-10-15):
 	* Fixed background option
 	* Updated README, HACKING and TODO files
 	* Fixed bug in focus/pull-up selection
