@@ -1,3 +1,7 @@
+version 1.2.2 (2014-10-28):
+	* Fixed an error where Tilda failed to start when the lock
+	  file directory did not exist or could not be opened.
+
 version 1.2.1 (2014-10-16):
 	* Readded empty NEWS file to fix debian packaging
 	* Updated po/ folder
