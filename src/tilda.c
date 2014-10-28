@@ -594,10 +594,7 @@ int main (int argc, char *argv[])
     }
 
     /* Remove stale lock files */
-    gint result = remove_stale_lock_files ();
-    if(result < 0) {
-        return EXIT_FAILURE;
-    }
+    remove_stale_lock_files ();
 
     /* The global lock file is used to synchronize the start up of multiple simultaneously starting tilda processes.
      * The processes will synchronize on a lock file named lock_0_0, such that the part of determining the instance
