@@ -181,7 +181,7 @@ gint tilda_window_prev_tab (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-enum tab_direction { TAB_LEFT = 1, TAB_RIGHT = -1 };
+enum tab_direction { TAB_LEFT = -1, TAB_RIGHT = 1 };
 
 static gint move_tab (tilda_window *tw, int direction)
 {
@@ -215,13 +215,13 @@ static gint move_tab (tilda_window *tw, int direction)
 static gint move_tab_left (tilda_window *tw)
 {
     DEBUG_FUNCTION ("move_tab_left");
-    return move_tab(tw, LEFT);
+    return move_tab(tw, TAB_LEFT);
 }
 
 static gint move_tab_right (tilda_window *tw)
 {
     DEBUG_FUNCTION ("move_tab_right");
-    return move_tab(tw, RIGHT);
+    return move_tab(tw, TAB_RIGHT);
 }
 
 static gboolean focus_term (GtkWidget *widget, gpointer data)
