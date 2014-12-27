@@ -24,6 +24,7 @@
 #include "key_grabber.h"
 #include "configsys.h"
 #include "callback_func.h"
+#include "tilda_window.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -368,7 +369,8 @@ static void wizard_closed ()
     const gchar *gototab_9_key = GET_BUTTON_LABEL("button_keybinding_gototab9");
     const gchar *gototab_10_key = GET_BUTTON_LABEL("button_keybinding_gototab10");
     const gchar *fullscreen_key = GET_BUTTON_LABEL("button_keybinding_fullscreen");
-
+    const gchar *toggle_transparency_key = GET_BUTTON_LABEL("button_keybinding_toggle_transparency");
+    
     const GtkWidget *entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object(xml, "entry_custom_command"));
     const GtkWidget *wizard_window =
@@ -422,6 +424,8 @@ static void wizard_closed ()
         return;
     if (!validate_keybinding(fullscreen_key, wizard_window, _("The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose another.")))
         return;
+    if (!validate_keybinding(toggle_transparency_key, wizard_window, _("The keybinding you chose for \"Toggle Transparency\" is invalid. Please choose another.")))
+        return;
 
     /* Now that our shortcuts are validated, store them back into the config. */
     config_setstr ("key", key);
@@ -445,6 +449,7 @@ static void wizard_closed ()
     config_setstr ("gototab_9_key",  gototab_9_key);
     config_setstr ("gototab_10_key", gototab_10_key);
     config_setstr ("fullscreen_key", fullscreen_key);
+    config_setstr ("toggle_transparency_key", toggle_transparency_key);
 
     /* Now that they're in the config, reset the keybindings right now. */
     tilda_window_update_keyboard_accelerators("<tilda>/context/New Tab",           addtab_key);
@@ -467,6 +472,7 @@ static void wizard_closed ()
     tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 9",        gototab_9_key);
     tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 10",       gototab_10_key);
     tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", fullscreen_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Transparency", toggle_transparency_key);
 
     /* TODO: validate this?? */
     config_setstr ("command", command);
@@ -1332,41 +1338,20 @@ static void spin_y_position_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
+
 static void check_enable_transparency_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    
     const GtkWidget *label_level_of_transparency =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_level_of_transparency"));
     const GtkWidget *spin_level_of_transparency =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_level_of_transparency"));
 
-    const gdouble transparency_level = (gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_level_of_transparency)) / 100.0);
-    guint i;
-    tilda_term *tt;
-
-    config_setbool ("enable_transparency", status);
-
     gtk_widget_set_sensitive (GTK_WIDGET(label_level_of_transparency), status);
     gtk_widget_set_sensitive (GTK_WIDGET(spin_level_of_transparency), status);
 
-    if (status)
-    {
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), transparency_level);
-            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), !tw->have_argb_visual);
-            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), (1.0 - transparency_level) * 0xffff);
-        }
-    }
-    else
-    {
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), 0);
-            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), FALSE);
-            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
-        }
-    }
+    tilda_window_toggle_transparency(tw);
 }
 
 static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
@@ -1906,6 +1891,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     const GtkWidget *button_keybinding_gototab9 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab9"));
     const GtkWidget *button_keybinding_gototab10 =    GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab10"));
     const GtkWidget *button_keybinding_fullscreen =   GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_fullscreen"));
+    const GtkWidget *button_keybinding_toggle_transparency = GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_toggle_transparency"));
 
     /* Make the preferences window and buttons non-sensitive while we are grabbing keys. */
     gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), FALSE);
@@ -1931,7 +1917,8 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), FALSE);
-
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), FALSE);
+    
     /* Bring up the dialog that will accept the new keybinding */
     GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
                               GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1971,7 +1958,8 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), TRUE);
-
+    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), TRUE);
+    
     /* If the dialog was "programmatically destroyed" (we got a key), we don't want to destroy it again.
        Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
     if (response != -1) {
@@ -2197,6 +2185,7 @@ static void set_wizard_state_from_config () {
     BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab9", "gototab_9_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab10", "gototab_10_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_fullscreen", "fullscreen_key");
+    BUTTON_LABEL_FROM_CFG ("button_keybinding_toggle_transparency", "toggle_transparency_key");
 }
 
 #define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
@@ -2315,7 +2304,8 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_keybinding_gototab9","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_gototab10","clicked",button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_fullscreen", "clicked", button_keybinding_clicked_cb);
-
+    CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb);
+    
     /* Close Button */
     CONNECT_SIGNAL ("button_wizard_close","clicked",button_wizard_close_clicked_cb);
     CONNECT_SIGNAL ("wizard_window","delete_event",button_wizard_close_clicked_cb);
