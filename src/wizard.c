@@ -897,6 +897,25 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
     }
 }
 
+static void combo_cursor_shape_changed_cb(GtkWidget *w)
+{
+    guint i;
+    tilda_term *tt;
+    gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+
+    if (status < 0 || status > 2) {
+        DEBUG_ERROR ("Invalid Cursor Type");
+        g_printerr (_("Invalid Cursor Type, reseting to default\n"));
+        status = 0;
+    }
+    config_setint("cursor_shape", (VteTerminalCursorShape)status);
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_cursor_shape (VTE_TERMINAL(tt->vte_term), (VteTerminalCursorShape)status);
+    }
+}
+
 static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -1552,6 +1571,30 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
         }
     }
 }
+static void colorbutton_cursor_color_set_cb (GtkWidget *w)
+{
+    const GtkWidget *combo_colorschemes =
+        GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
+
+    guint i;
+    tilda_term *tt;
+    GdkRGBA gdk_cursor_color;
+
+    /* The user just changed colors manually, so set the scheme to "Custom" */
+    gtk_combo_box_set_active (GTK_COMBO_BOX(combo_colorschemes), 0);
+    config_setint ("scheme", 0);
+
+    /* Now get the color that was set, save it, then set it */
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(w), &gdk_cursor_color);
+    config_setint ("cursor_red", GUINT16_FROM_FLOAT(gdk_cursor_color.red));
+    config_setint ("cursor_green", GUINT16_FROM_FLOAT(gdk_cursor_color.green));
+    config_setint ("cursor_blue", GUINT16_FROM_FLOAT(gdk_cursor_color.blue));
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_color_cursor_rgba (VTE_TERMINAL(tt->vte_term), &gdk_cursor_color);
+    }
+}
 
 static void colorbutton_text_color_set_cb (GtkWidget *w)
 {
@@ -2053,7 +2096,7 @@ static void initialize_geometry_spinners() {
 /* Read all state from the config system, and put it into
  * its visual representation in the wizard. */
 static void set_wizard_state_from_config () {
-    GdkRGBA text_color, back_color;
+    GdkRGBA text_color, back_color, cursor_color;
     gint i;
 
     /* General Tab */
@@ -2067,6 +2110,7 @@ static void set_wizard_state_from_config () {
 
     CHECK_BUTTON ("check_terminal_bell", "bell");
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
+    COMBO_BOX ("vte_cursor_shape", "cursor_shape");
 
     CHECK_BUTTON ("check_enable_antialiasing", "antialias");
     CHECK_BUTTON ("check_allow_bold_text", "bold");
@@ -2137,6 +2181,11 @@ static void set_wizard_state_from_config () {
     back_color.blue =  GUINT16_TO_FLOAT(config_getint ("back_blue"));
     back_color.alpha = 1.0;
     COLOR_CHOOSER ("colorbutton_back", &back_color);
+    cursor_color.red = GUINT16_TO_FLOAT(config_getint ("cursor_red"));
+    cursor_color.green = GUINT16_TO_FLOAT(config_getint ("cursor_green"));
+    cursor_color.blue = GUINT16_TO_FLOAT(config_getint ("cursor_blue"));
+    cursor_color.alpha = 1.0;
+    COLOR_CHOOSER ("colorbutton_cursor", &cursor_color);
 
     COMBO_BOX ("combo_palette_scheme", "palette_scheme");
 
@@ -2208,6 +2257,7 @@ static void connect_wizard_signals ()
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb);
     CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb);
+    CONNECT_SIGNAL ("vte_cursor_shape","changed", combo_cursor_shape_changed_cb);
 
     CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb);
 
@@ -2261,6 +2311,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("combo_colorschemes","changed",combo_colorschemes_changed_cb);
     CONNECT_SIGNAL ("colorbutton_text","color-set",colorbutton_text_color_set_cb);
     CONNECT_SIGNAL ("colorbutton_back","color-set",colorbutton_back_color_set_cb);
+    CONNECT_SIGNAL ("colorbutton_cursor","color-set",colorbutton_cursor_color_set_cb);
     CONNECT_SIGNAL ("combo_palette_scheme","changed",combo_palette_scheme_changed_cb);
     for(i = 0; i < TERMINAL_PALETTE_SIZE; i++)
     {
