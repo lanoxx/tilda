@@ -149,6 +149,11 @@ void tilda_window_close_current_tab (tilda_window *tw);
 /* This should be called by the wizard for each key that has changed. */
 gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* value);
 
+/**
+ * Toggles transparency on all terms
+ */
+void tilda_window_toggle_transparency(tilda_window *tw); 
+
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
 /* Allow scales a bit smaller and a bit larger than the usual pango ranges */
