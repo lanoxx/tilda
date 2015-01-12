@@ -313,6 +313,9 @@ static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget
 
 static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
 {
+    //Skip validation and return True for blank string
+    if (strcmp(accel, "") == 0) return TRUE; 
+    
     guint accel_key;
     GdkModifierType accel_mods;
 

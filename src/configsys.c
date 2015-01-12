@@ -43,32 +43,34 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 11", CFGF_NONE),
     CFG_STR("key", NULL, CFGF_NONE),
-    CFG_STR("addtab_key", "<Shift><Control>t", CFGF_NONE),
-    CFG_STR("fullscreen_key", "F11", CFGF_NONE),
-    CFG_STR("closetab_key", "<Shift><Control>w", CFGF_NONE),
-    CFG_STR("nexttab_key", "<Control>Page_Down", CFGF_NONE),
-    CFG_STR("prevtab_key", "<Control>Page_Up", CFGF_NONE),
-    CFG_STR("movetableft_key", "<Shift><Control>Page_Up", CFGF_NONE),
-    CFG_STR("movetabright_key", "<Shift><Control>Page_Down", CFGF_NONE),
-    CFG_STR("gototab_1_key", "<Alt>1", CFGF_NONE),
-    CFG_STR("gototab_2_key", "<Alt>2", CFGF_NONE),
-    CFG_STR("gototab_3_key", "<Alt>3", CFGF_NONE),
-    CFG_STR("gototab_4_key", "<Alt>4", CFGF_NONE),
-    CFG_STR("gototab_5_key", "<Alt>5", CFGF_NONE),
-    CFG_STR("gototab_6_key", "<Alt>6", CFGF_NONE),
-    CFG_STR("gototab_7_key", "<Alt>7", CFGF_NONE),
-    CFG_STR("gototab_8_key", "<Alt>8", CFGF_NONE),
-    CFG_STR("gototab_9_key", "<Alt>9", CFGF_NONE),
-    CFG_STR("gototab_10_key", "<Alt>0", CFGF_NONE),
-    CFG_STR("copy_key", "<Shift><Control>c", CFGF_NONE),
-    CFG_STR("paste_key", "<Shift><Control>v", CFGF_NONE),
-    CFG_STR("quit_key", "<Shift><Control>q", CFGF_NONE),
     CFG_STR("title", "Tilda", CFGF_NONE),
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
     CFG_STR("web_browser", "x-www-browser", CFGF_NONE),
     CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
-
+    
+    /* optional keybinings */
+    CFG_STR("addtab_key", "", CFGF_NONE),
+    CFG_STR("fullscreen_key", "", CFGF_NONE),
+    CFG_STR("closetab_key", "", CFGF_NONE),
+    CFG_STR("nexttab_key", "", CFGF_NONE),
+    CFG_STR("prevtab_key", "", CFGF_NONE),
+    CFG_STR("movetableft_key", "", CFGF_NONE),
+    CFG_STR("movetabright_key", "", CFGF_NONE),
+    CFG_STR("gototab_1_key", "", CFGF_NONE),
+    CFG_STR("gototab_2_key", "", CFGF_NONE),
+    CFG_STR("gototab_3_key", "", CFGF_NONE),
+    CFG_STR("gototab_4_key", "", CFGF_NONE),
+    CFG_STR("gototab_5_key", "", CFGF_NONE),
+    CFG_STR("gototab_6_key", "", CFGF_NONE),
+    CFG_STR("gototab_7_key", "", CFGF_NONE),
+    CFG_STR("gototab_8_key", "", CFGF_NONE),
+    CFG_STR("gototab_9_key", "", CFGF_NONE),
+    CFG_STR("gototab_10_key", "", CFGF_NONE),
+    CFG_STR("copy_key", "", CFGF_NONE),
+    CFG_STR("paste_key", "", CFGF_NONE),
+    CFG_STR("quit_key", "", CFGF_NONE),
+    
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),
@@ -161,12 +163,12 @@ static cfg_opt_t config_opts[] = {
 /* Define these here, so that we can enable a non-threadsafe version
  * without changing the code below. */
 #ifndef NO_THREADSAFE
-	static GMutex mutex;
-	#define config_mutex_lock() g_mutex_lock (&mutex)
-	#define config_mutex_unlock() g_mutex_unlock (&mutex)
+    static GMutex mutex;
+    #define config_mutex_lock() g_mutex_lock (&mutex)
+    #define config_mutex_unlock() g_mutex_unlock (&mutex)
 #else
-	#define config_mutex_lock()
-	#define config_mutex_unlock()
+    #define config_mutex_lock()
+    #define config_mutex_unlock()
 #endif
 
 #define CONFIG1_OLDER -1
@@ -176,40 +178,61 @@ static cfg_opt_t config_opts[] = {
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2) G_GNUC_UNUSED;
 
 
-
 /**
- * Start up the configuration system, using the configuration file given
- * to get the current values. If the configuration file given does not exist,
- * go ahead and write out the default config to the file.
+ * Start up the configuration system, using the configuration file given to get the current values. 
  */
+ 
 gint config_init (const gchar *config_file)
 {
-	gint ret = 0;
+    gint ret = 0;
 
-	tc = cfg_init (config_opts, 0);
+    tc = cfg_init (config_opts, 0);
 
-	if (g_file_test (config_file,
+    if (g_file_test (config_file,
         G_FILE_TEST_IS_REGULAR))
     {
-		/* Read in the existing configuration options */
-		ret = cfg_parse (tc, config_file);
-
-		if (ret == CFG_PARSE_ERROR) {
-			DEBUG_ERROR ("Problem parsing config");
-			g_printerr (_("Problem when opening config file\n"));
-			return 1;
-		} else if (ret != CFG_SUCCESS) {
+        /* Read in the existing configuration options */
+        ret = cfg_parse (tc, config_file);
+            
+        if (ret == CFG_PARSE_ERROR) {
+            DEBUG_ERROR ("Problem parsing config");
+            g_printerr (_("Problem when opening config file\n"));
+            return 1;
+        } else if (ret != CFG_SUCCESS) {
             DEBUG_ERROR ("Problem parsing config.");
-			g_printerr (_("An unexpected error occured while "
+            g_printerr (_("An unexpected error occured while "
                 "parsing the config file\n"));
         }
-	}
+    }
+    /* If a config_file does not already exist, set default opts for optional keybindings */
+    else if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
+            cfg_setstr(tc, "addtab_key", "<Shift><Control>t");
+            cfg_setstr(tc, "fullscreen_key", "F11");
+            cfg_setstr(tc, "closetab_key", "<Shift><Control>w");
+            cfg_setstr(tc, "nexttab_key", "<Control>Page_Down");
+            cfg_setstr(tc, "prevtab_key", "<Control>Page_Up");
+            cfg_setstr(tc, "movetableft_key", "<Shift><Control>Page_Up");
+            cfg_setstr(tc, "movetabright_key", "<Shift><Control>Page_Down");
+            cfg_setstr(tc, "gototab_1_key", "<Alt>1");
+            cfg_setstr(tc, "gototab_2_key", "<Alt>2");
+            cfg_setstr(tc, "gototab_3_key", "<Alt>3");
+            cfg_setstr(tc, "gototab_4_key", "<Alt>4");
+            cfg_setstr(tc, "gototab_5_key", "<Alt>5");
+            cfg_setstr(tc, "gototab_6_key", "<Alt>6");
+            cfg_setstr(tc, "gototab_7_key", "<Alt>7");
+            cfg_setstr(tc, "gototab_8_key", "<Alt>8");
+            cfg_setstr(tc, "gototab_9_key", "<Alt>9");
+            cfg_setstr(tc, "gototab_10_key", "<Alt>0");
+            cfg_setstr(tc, "copy_key", "<Shift><Control>c");
+            cfg_setstr(tc, "paste_key", "<Shift><Control>v");
+            cfg_setstr(tc, "quit_key", "<Shift><Control>q");
+    }
 
     #ifndef NO_THREADSAFE
         g_mutex_init(&mutex);
     #endif
 
-	return 0;
+    return 0;
 }
 
 /* Note: set config_file to NULL to just free the
@@ -217,130 +240,130 @@ gint config_init (const gchar *config_file)
  * a file. */
 gint config_free (const gchar *config_file)
 {
-	gint ret = 0;
+    gint ret = 0;
 
-	if (config_file != NULL)
-		ret = config_write (config_file);
+    if (config_file != NULL)
+        ret = config_write (config_file);
 
-	cfg_free (tc);
+    cfg_free (tc);
 
-	return ret;
+    return ret;
 }
 
 gint config_setint (const gchar *key, const gint val)
 {
-	config_mutex_lock ();
-	cfg_setint (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setint (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setnint(const gchar *key, const gint val, const guint idx)
 {
-	config_mutex_lock ();
-	cfg_setnint (tc, key, val, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setnint (tc, key, val, idx);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setdouble (const gchar *key, const gdouble val) {
-	config_mutex_lock ();
-	cfg_setfloat (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setfloat (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setndouble (const gchar *key, const gdouble val, const guint idx) {
-	config_mutex_lock ();
-	cfg_setnfloat (tc, key, val, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setnfloat (tc, key, val, idx);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setstr (const gchar *key, const gchar *val)
 {
-	config_mutex_lock ();
-	cfg_setstr (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setstr (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setbool(const gchar *key, const gboolean val)
 {
-	config_mutex_lock ();
-	cfg_setbool (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setbool (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_getint (const gchar *key)
 {
-	gint temp;
+    gint temp;
 
-	config_mutex_lock ();
-	temp = cfg_getint (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getint (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 glong config_getnint(const gchar *key, const guint idx)
 {
-	glong temp;
+    glong temp;
 
-	config_mutex_lock ();
-	temp = cfg_getnint (tc, key, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getnint (tc, key, idx);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gdouble config_getdouble (const gchar* key) {
-	gdouble temp;
+    gdouble temp;
 
-	config_mutex_lock ();
-	temp = cfg_getfloat (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getfloat (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gdouble config_getndouble (const gchar* key, const guint idx) {
-	gdouble temp;
+    gdouble temp;
 
-	config_mutex_lock ();
-	temp = cfg_getnfloat (tc, key, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getnfloat (tc, key, idx);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gchar* config_getstr (const gchar *key)
 {
-	gchar *temp;
+    gchar *temp;
 
-	config_mutex_lock ();
-	temp = cfg_getstr (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getstr (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gboolean config_getbool(const gchar *key)
 {
-	gboolean temp;
+    gboolean temp;
 
-	config_mutex_lock ();
-	temp = cfg_getbool (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getbool (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 /* This will write out the current state of the config file to the disk.

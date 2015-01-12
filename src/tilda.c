@@ -650,9 +650,9 @@ int main (int argc, char *argv[])
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
+    
     /* Start up the configuration system */
     config_init (config_file);
-
     /* Parse the command line */
     need_wizard = parse_cli (argc, argv);
 
