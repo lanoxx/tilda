@@ -442,6 +442,8 @@ static gint cpaste (tilda_window *tw)
 /* Tie a single keyboard shortcut to a callback function */
 static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw)
 {
+    //Don't try to bind Blank Strings
+    if (strcmp(key, "NULL") ==0) return 0; 
     guint accel_key;
     GdkModifierType accel_mods;
     GClosure *temp;
