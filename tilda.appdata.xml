@@ -8,7 +8,7 @@
  <summary>A configurable drop-down terminal</summary>
  <description>
   <p>
-Tilda is a terminal emulator and can be compared with other popular terminal emulators such as gnome-terminal (Gnome), Konsole (KDE), xterm and many others. The specialities of Tilda are that it does not behave like a normal window but instead it can be pulled up and down from the top of the screen with a special hotkey.</p> <p>Additionally Tilda is highly configurable. It is possible to configure the hotkeys for keybindings, change the appearance and many options that affect the behavior of Tilda. The screen shots show some of the options that Tilda provides.
+Tilda is highly-configurable terminal emulator. The specialties of Tilda are that it does not behave like a normal window but instead it can be pulled up and down from the top of the screen with a special hotkey.</p> <p> Tilda provides support for tabbed terminals, transparency and appearance adjustments, configurable hotkeys for various functions, and other options that affect the behavior of Tilda. The screenshots show some of the options that Tilda provides.
 </p>
  </description>
  <screenshots>
