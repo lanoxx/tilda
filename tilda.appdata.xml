@@ -8,20 +8,20 @@
  <summary>A configurable drop-down terminal</summary>
  <description>
   <p>
-Tilda is highly-configurable terminal emulator. The specialties of Tilda are that it does not behave like a normal window but instead it can be pulled up and down from the top of the screen with a special hotkey.</p> <p> Tilda provides support for tabbed terminals, transparency and appearance adjustments, configurable hotkeys for various functions, and other options that affect the behavior of Tilda. The screenshots show some of the options that Tilda provides.
+Tilda is highly-configurable terminal emulator. The specialty of Tilda is that it does not behave like a normal window but instead it can be pulled up and down from the top of the screen with a hotkey.</p> <p> Tilda provides support for tabbed terminals, transparency,  appearance adjustments, configurable hotkeys for various functions, and other options that affect the behavior of Tilda. The screenshots show some of the options that Tilda provides.
 </p>
  </description>
  <screenshots>
   <screenshot>
-   <image type="default">https://github.com/lanoxx/tilda/raw/master/images/tilda_general.png</image>
+   <image type="default">https://raw.githubusercontent.com/pik/tilda/a2fdd288ae244ee28061c2c0369162c63fb35d94/images/tilda_general-16:9.png</image>
    <caption>General options</caption>
   </screenshot>
     <screenshot>
-   <image>https://github.com/lanoxx/tilda/raw/master/images/tilda_appearance.png</image>
+   <image>https://raw.githubusercontent.com/pik/tilda/a2fdd288ae244ee28061c2c0369162c63fb35d94/images/tilda_appearance-16:9.png</image>
    <caption>Appearance options</caption>
   </screenshot>
     <screenshot>
-   <image>https://github.com/lanoxx/tilda/raw/master/images/tilda_keybindings.png</image>
+   <image>https://raw.githubusercontent.com/pik/tilda/a2fdd288ae244ee28061c2c0369162c63fb35d94/images/tilda_keybindings-16:9.png</image>
    <caption>Keybinding options</caption>
   </screenshot>
  </screenshots>
