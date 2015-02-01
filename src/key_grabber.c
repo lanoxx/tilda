@@ -193,6 +193,11 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
             && !force_hide
             && !tw->hide_non_focused;
 
+    if (state == PULL_TOGGLE && tw->last_action == PULL_UP && g_get_monotonic_time() - tw->last_action_time < 150000) {
+        /* this is to prevent crazy toggling, with 50ms prevention time */
+        return;
+    }
+
     if (tw->current_state == DOWN && needsFocus) {
         /**
         * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
@@ -268,6 +273,8 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
         debug_printf ("pull(): MOVED UP\n");
         tw->current_state = UP;
     }
+    tw->last_action = state;
+    tw->last_action_time = g_get_monotonic_time();
 }
 
 static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user_data)
