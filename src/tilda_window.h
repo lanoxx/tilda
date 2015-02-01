@@ -24,6 +24,12 @@
 
 G_BEGIN_DECLS
 
+enum pull_action {
+    PULL_UP,
+    PULL_DOWN,
+    PULL_TOGGLE
+};
+
 typedef struct tilda_window_ tilda_window;
 typedef struct tilda_search_ tilda_search;
 
@@ -77,6 +83,9 @@ struct tilda_window_
     gdouble current_scale_factor;
 
     tilda_search *search;
+
+    enum pull_action last_action;
+    gint64 last_action_time;
 };
 
 struct tilda_search_
@@ -177,7 +186,7 @@ gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gch
 /**
  * Toggles transparency on all terms
  */
-void tilda_window_toggle_transparency(tilda_window *tw); 
+void tilda_window_toggle_transparency(tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
