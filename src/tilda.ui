@@ -2970,9 +2970,6 @@
                 <property name="n_rows">11</property>
                 <property name="n_columns">2</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkFrame" id="frame_keybinding_paste">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>

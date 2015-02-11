@@ -62,6 +62,9 @@ struct tilda_window_
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
     gboolean focus_loss_on_keypress;
+
+    gint unscaled_font_size;
+    gdouble current_scale_factor;
 };
 
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
@@ -152,6 +155,16 @@ void tilda_window_close_current_tab (tilda_window *tw);
 gint tilda_window_setup_keyboard_accelerators (tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
+
+/* Allow scales a bit smaller and a bit larger than the usual pango ranges */
+#define TERMINAL_SCALE_XXX_SMALL   (PANGO_SCALE_XX_SMALL/1.2)
+#define TERMINAL_SCALE_XXXX_SMALL  (TERMINAL_SCALE_XXX_SMALL/1.2)
+#define TERMINAL_SCALE_XXXXX_SMALL (TERMINAL_SCALE_XXXX_SMALL/1.2)
+#define TERMINAL_SCALE_XXX_LARGE   (PANGO_SCALE_XX_LARGE*1.2)
+#define TERMINAL_SCALE_XXXX_LARGE  (TERMINAL_SCALE_XXX_LARGE*1.2)
+#define TERMINAL_SCALE_XXXXX_LARGE (TERMINAL_SCALE_XXXX_LARGE*1.2)
+#define TERMINAL_SCALE_MINIMUM     (TERMINAL_SCALE_XXXXX_SMALL/1.2)
+#define TERMINAL_SCALE_MAXIMUM     (TERMINAL_SCALE_XXXXX_LARGE*1.2)
 
 G_END_DECLS
 

@@ -51,9 +51,6 @@ static void maximize_window_cb (GtkWidget *widget, gpointer data);
 static void restore_window_cb (GtkWidget *widget, gpointer data);
 static void refresh_window_cb (GtkWidget *widget, gpointer data);
 static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
-static void increase_font_size_cb (GtkWidget *widget, gpointer data);
-static void decrease_font_size_cb (GtkWidget *widget, gpointer data);
-
 
 gint tilda_term_free (struct tilda_term_ *term)
 {
@@ -107,6 +104,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     /* Set properties of the terminal */
     tilda_term_config_defaults (term);
 
+    /* Update the font scale because the newly created terminal uses the default font size */
+    tilda_term_adjust_font_scale(term, tw->current_scale_factor);
+
     /* Pack everything into the hbox */
     gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
     gtk_box_pack_end (GTK_BOX(term->hbox), term->vte_term, TRUE, TRUE, 0);
@@ -147,14 +147,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     g_signal_connect (G_OBJECT(term->vte_term), "move-window",
                       G_CALLBACK(move_window_cb), tw->window);
 
-    /* Connect to font tweakage. */
-    g_signal_connect (G_OBJECT(term->vte_term), "increase-font-size",
-                      G_CALLBACK(increase_font_size_cb), tw->window);
-    g_signal_connect (G_OBJECT(term->vte_term), "decrease-font-size",
-                      G_CALLBACK(decrease_font_size_cb), tw->window);
-
     /* Match URL's, etc */
-
     term->http_regexp=g_regex_new(HTTP_REGEXP, G_REGEX_CASELESS, G_REGEX_MATCH_NOTEMPTY, &error);
     ret = vte_terminal_match_add_gregex(VTE_TERMINAL(term->vte_term), term->http_regexp,0);
     vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
@@ -326,59 +319,18 @@ static void move_window_cb (G_GNUC_UNUSED GtkWidget *widgets, guint x, guint y, 
             gdk_window_move (gtk_widget_get_window (GTK_WIDGET (data)), x, y);
 }
 
-static void adjust_font_size (GtkWidget *widget, gpointer data, gint howmuch)
-{
-    DEBUG_FUNCTION ("adjust_font_size");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale) {
+    DEBUG_FUNCTION ("tilda_term_adjust_font_scale");
 
-    VteTerminal *terminal;
+    VteTerminal *terminal = term->vte_term;
+    /* We need the tilda_term object to access the unscaled
+     * font size and current scale factor */
     PangoFontDescription *desired;
-    gint newsize;
-    gint columns, rows, owidth, oheight;
 
-    /* Read the screen dimensions in cells. */
-    terminal = VTE_TERMINAL(widget);
-    columns = vte_terminal_get_column_count (terminal);
-    rows = vte_terminal_get_row_count (terminal);
-
-    /* Take into account padding and border overhead. */
-    gtk_window_get_size(GTK_WINDOW(data), &owidth, &oheight);
-    owidth -= vte_terminal_get_char_width (terminal) * columns;
-    oheight -= vte_terminal_get_char_height (terminal) * rows;
-
-    /* Calculate the new font size. */
     desired = pango_font_description_copy (vte_terminal_get_font(terminal));
-    newsize = pango_font_description_get_size (desired) / PANGO_SCALE;
-    newsize += howmuch;
-    pango_font_description_set_size (desired, CLAMP(newsize, 4, 144) * PANGO_SCALE);
-
-    /* Change the font, then resize the window so that we have the same
-     * number of rows and columns. */
+    pango_font_description_set_size (desired, term->tw->unscaled_font_size * scale);
     vte_terminal_set_font (terminal, desired);
-    /*gtk_window_resize (GTK_WINDOW(data),
-              columns * terminal->char_width + owidth,
-              rows * terminal->char_height + oheight);*/
-
     pango_font_description_free (desired);
-}
-
-static void increase_font_size_cb (GtkWidget *widget, gpointer data)
-{
-    DEBUG_FUNCTION ("increase_font_size");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
-
-    adjust_font_size (widget, data, 1);
-}
-
-static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
-{
-    DEBUG_FUNCTION ("decrease_font_size");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
-
-    adjust_font_size (widget, data, -1);
 }
 
 /* Returns the working directory of the terminal
@@ -387,7 +339,7 @@ static void decrease_font_size_cb (GtkWidget *widget, gpointer data)
  *
  * SUCCESS: return non-NULL char* that should be freed with g_free when done
  * FAILURE: return NULL
-*/
+ */
 char* tilda_term_get_cwd(struct tilda_term_* tt)
 {
     char *file;

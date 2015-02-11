@@ -916,12 +916,13 @@ static void button_font_font_set_cb (GtkWidget *w)
     tilda_term *tt;
 
     config_setstr ("font", font);
+    PangoFontDescription *description = pango_font_description_from_string (font);
+    tw->unscaled_font_size = pango_font_description_get_size(description);
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        PangoFontDescription *description =
-            pango_font_description_from_string (font);
         vte_terminal_set_font (VTE_TERMINAL(tt->vte_term), description);
+        tilda_term_adjust_font_scale(tt, tw->current_scale_factor);
     }
 }
 

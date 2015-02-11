@@ -75,6 +75,10 @@ gint tilda_term_free (struct tilda_term_ *term);
 void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos);
 char* tilda_term_get_cwd(tilda_term* tt);
 
+
+/* Adjust the font-size scale for the terminal */
+void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale);
+
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 
 #define TERMINAL_PALETTE_SIZE 16
