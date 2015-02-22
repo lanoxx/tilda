@@ -567,6 +567,8 @@ tilda_window *tilda_window_init (const gchar *config_file, const gint instance)
     tilda_window_set_icon (tw, g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL));
     tilda_window_setup_alpha_mode (tw);
 
+    gtk_widget_set_app_paintable(GTK_WIDGET(tw->window), TRUE);
+
     /* Add keyboard accelerators */
     tw->accel_group = NULL; /* We can redefine the accelerator group from the wizard; this shows that it's our first time defining it. */
     tilda_window_setup_keyboard_accelerators (tw);
