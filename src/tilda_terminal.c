@@ -674,8 +674,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     /** Word chars **/
     word_chars =  config_getstr ("word_chars");
-    if (NULL == word_chars || '\0' == word_chars)
+    if (NULL == word_chars || '\0' == *word_chars) {
         word_chars = DEFAULT_WORD_CHARS;
+    }
     vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
 
     /** Background **/
