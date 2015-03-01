@@ -24,6 +24,8 @@
 
 G_BEGIN_DECLS
 
+enum pull_state { PULL_UP, PULL_DOWN, PULL_TOGGLE };
+
 typedef struct tilda_window_ tilda_window;
 
 struct tilda_window_
@@ -62,6 +64,10 @@ struct tilda_window_
     /* This field MUST be set before calling pull()! */
     enum tilda_positions { UP, DOWN } current_state;
     gboolean focus_loss_on_keypress;
+
+    /* .. */
+    enum pull_state last_action;
+    gint64 last_action_time;
 };
 
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
