@@ -732,6 +732,18 @@ static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w)
         gtk_window_unstick (GTK_WINDOW (tw->window));
 }
 
+static void check_set_as_desktop_toggled_cb (GtkWidget *w)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("set_as_desktop", status);
+
+    if (status)
+        gtk_window_stick (GTK_WINDOW (tw->window));
+    else
+        gtk_window_unstick (GTK_WINDOW (tw->window));
+}
+
 static void check_do_not_show_in_taskbar_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -1984,6 +1996,7 @@ static void set_wizard_state_from_config () {
 
     /* General Tab */
     CHECK_BUTTON ("check_display_on_all_workspaces", "pinned");
+    CHECK_BUTTON ("check_set_as_desktop", "set_as_desktop");
     CHECK_BUTTON ("check_always_on_top", "above");
     CHECK_BUTTON ("check_do_not_show_in_taskbar", "notaskbar");
     CHECK_BUTTON ("check_start_tilda_hidden", "hidden");
@@ -2123,6 +2136,7 @@ static void connect_wizard_signals ()
 
     /* General Tab */
     CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb);
+    CONNECT_SIGNAL ("check_set_as_desktop","toggled",check_set_as_desktop_toggled_cb);
     CONNECT_SIGNAL ("check_do_not_show_in_taskbar","toggled",check_do_not_show_in_taskbar_toggled_cb);
     CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb);
     CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb);
