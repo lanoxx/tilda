@@ -650,43 +650,48 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 }
 
 static void
-menu_copy_cb (GtkWidget *widget, gpointer data)
+menu_copy_cb (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_copy_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
-    tilda_term *tt = TILDA_TERM(data);
+    tilda_term *tt = TILDA_TERM(user_data);
 
     vte_terminal_copy_clipboard (VTE_TERMINAL (tt->vte_term));
 }
 
 static void
-menu_paste_cb (GtkWidget *widget, gpointer data)
+menu_paste_cb (GSimpleAction *action,
+               GVariant      *parameter,
+               gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_paste_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
-    tilda_term *tt = TILDA_TERM(data);
+    tilda_term *tt = TILDA_TERM(user_data);
 
     vte_terminal_paste_clipboard (VTE_TERMINAL (tt->vte_term));
 }
 
 
 static void
-menu_preferences_cb (GtkWidget *widget, gpointer data)
+menu_preferences_cb (GSimpleAction *action,
+                     GVariant      *parameter,
+                     gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_config_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
     /* Show the config wizard */
-    wizard (TILDA_WINDOW(data));
+    wizard (TILDA_WINDOW(user_data));
 }
 
 static void
-menu_quit_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data)
+menu_quit_cb (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_quit_cb");
 
@@ -694,33 +699,36 @@ menu_quit_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 }
 
 static void
-menu_add_tab_cb (GtkWidget *widget, gpointer data)
+menu_add_tab_cb (GSimpleAction *action,
+                 GVariant      *parameter,
+                 gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_add_tab_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
-    tilda_window_add_tab (TILDA_WINDOW(data));
+    tilda_window_add_tab (TILDA_WINDOW(user_data));
 }
 
 static void
-menu_fullscreen_cb (GtkWidget *widget, gpointer data)
+menu_fullscreen_cb (GSimpleAction *action,
+                    GVariant      *parameter,
+                    gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_fullscreen_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
-    toggle_fullscreen_cb (TILDA_WINDOW(data));
+    toggle_fullscreen_cb (TILDA_WINDOW(user_data));
 }
 
 static void
-menu_close_tab_cb (GtkWidget *widget, gpointer data)
+menu_close_tab_cb (GSimpleAction *action,
+                   GVariant      *parameter,
+                   gpointer       user_data)
 {
     DEBUG_FUNCTION ("menu_close_tab_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (user_data != NULL);
 
-    tilda_window_close_current_tab (TILDA_WINDOW(data));
+    tilda_window_close_current_tab (TILDA_WINDOW(user_data));
 }
 
 static void on_popup_hide (GtkWidget *widget, gpointer data)
@@ -739,78 +747,86 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
-    GtkAction *action;
-    GtkActionGroup *action_group;
-    GtkUIManager *ui_manager;
-    GError *error = NULL;
-    GtkWidget *menu;
+    static const gchar menu_str[] = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            "<interface>\n"
+            "  <menu id=\"menu\">\n"
+            "    <section>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_New Tab</attribute>\n"
+            "        <attribute name=\"action\">window.new-tab</attribute>\n"
+            "      </item>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Close Tab</attribute>\n"
+            "        <attribute name=\"action\">window.close-tab</attribute>\n"
+            "      </item>\n"
+            "    </section>\n"
+            "    <section>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Copy</attribute>\n"
+            "        <attribute name=\"action\">window.copy</attribute>\n"
+            "      </item>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Paste</attribute>\n"
+            "        <attribute name=\"action\">window.paste</attribute>\n"
+            "      </item>\n"
+            "    </section> \n"
+            "    <section>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Toggle Fullscreen</attribute>\n"
+            "        <attribute name=\"action\">window.fullscreen</attribute>\n"
+            "      </item>\n"
+            "    </section> \n"
+            "    <section>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Preferences</attribute>\n"
+            "        <attribute name=\"action\">window.preferences</attribute>\n"
+            "      </item>\n"
+            "    </section> \n"
+            "    <section>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Quit</attribute>\n"
+            "        <attribute name=\"action\">window.quit</attribute>\n"
+            "      </item>\n"
+            "    </section> \n"
+            "  </menu>\n"
+            "</interface>";
 
-    /* Just use a static string here to initialize the GtkUIManager,
-     * rather than installing and reading from a file all the time. */
-    static const gchar menu_str[] =
-        "<ui>"
-            "<popup name=\"popup-menu\">"
-                "<menuitem action=\"new-tab\" />"
-                "<menuitem action=\"close-tab\" />"
-                "<separator />"
-                "<menuitem action=\"copy\" />"
-                "<menuitem action=\"paste\" />"
-                "<separator />"
-                "<menuitem action=\"fullscreen\" />"
-                "<separator />"
-                "<menuitem action=\"preferences\" />"
-                "<separator />"
-                "<menuitem action=\"quit\" />"
-            "</popup>"
-        "</ui>";
+    GtkBuilder *builder = gtk_builder_new_from_string(menu_str, strlen(menu_str));
 
     /* Create the action group */
-    action_group = gtk_action_group_new ("popup-menu-action-group");
+    GSimpleActionGroup *action_group = g_simple_action_group_new();
 
-    /* Add Actions and connect callbacks */
-    action = gtk_action_new ("new-tab", _("_New Tab"), NULL, GTK_STOCK_ADD);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("addtab_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_add_tab_cb), tw);
+    /* We need two different lists of entries because the
+     * because the actions have different scope, some concern the
+     * tilda_window and others concern the current terminal, so
+     * when we add them to the action_group we need to pass different
+     * user_data (tw or tt).
+     */
+    GActionEntry entries_for_tilda_window[] = {
+            { "new-tab", menu_add_tab_cb , NULL, NULL, NULL },
+            { "close-tab", menu_close_tab_cb , NULL, NULL, NULL },
+            { "fullscreen", menu_fullscreen_cb , NULL, NULL, NULL },
+            { "preferences", menu_preferences_cb , NULL, NULL, NULL },
+            { "quit", menu_quit_cb , NULL, NULL, NULL }
+    };
 
-    action = gtk_action_new ("close-tab", _("_Close Tab"), NULL, GTK_STOCK_CLOSE);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("closetab_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_close_tab_cb), tw);
+    GActionEntry entries_for_tilda_terminal[] = {
+        {"copy", menu_copy_cb, NULL, NULL, NULL},
+        {"paste", menu_paste_cb, NULL, NULL, NULL}
+    };
 
-    action = gtk_action_new ("copy", NULL, NULL, GTK_STOCK_COPY);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("copy_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_copy_cb), tt);
+    g_action_map_add_action_entries(G_ACTION_MAP(action_group),
+            entries_for_tilda_window, G_N_ELEMENTS(entries_for_tilda_window), tw);
+    g_action_map_add_action_entries(G_ACTION_MAP(action_group),
+            entries_for_tilda_terminal, G_N_ELEMENTS(entries_for_tilda_terminal), tt);
 
-    action = gtk_action_new ("paste", NULL, NULL, GTK_STOCK_PASTE);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("paste_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_paste_cb), tt);
+    gtk_widget_insert_action_group(tw->window, "window", G_ACTION_GROUP(action_group));
 
-    action = gtk_action_new ("fullscreen", _("Toggle fullscreen"), NULL, NULL);
-    gtk_action_group_add_action (action_group, action);
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_fullscreen_cb), tw);
+    GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "menu"));
+    GtkWidget *menu = gtk_menu_new_from_model(menu_model);
+    gtk_menu_set_accel_group(GTK_MENU(menu), tw->accel_group);
 
-    action = gtk_action_new ("preferences", NULL, NULL, GTK_STOCK_PREFERENCES);
-    gtk_action_group_add_action (action_group, action);
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_preferences_cb), tw);
-
-    action = gtk_action_new ("quit", NULL, NULL, GTK_STOCK_QUIT);
-    gtk_action_group_add_action_with_accel (action_group, action, config_getstr("quit_key"));
-    g_signal_connect (G_OBJECT(action), "activate", G_CALLBACK(menu_quit_cb), tw);
-
-    /* Create and add actions to the GtkUIManager */
-    ui_manager = gtk_ui_manager_new ();
-    gtk_ui_manager_insert_action_group (ui_manager, action_group, 0);
-    gtk_ui_manager_add_ui_from_string (ui_manager, menu_str, -1, &error);
-
-    /* Check for an error (REALLY REALLY unlikely, unless the developers screwed up */
-    if (error)
-    {
-        DEBUG_ERROR ("GtkUIManager problem\n");
-        g_printerr ("Error message: %s\n", error->message);
-        g_error_free (error);
-    }
-
-    /* Get the popup menu out of the GtkUIManager */
-    menu = gtk_ui_manager_get_widget (ui_manager, "/ui/popup-menu");
+    gtk_menu_attach_to_widget(menu, tw->window, NULL);
 
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
