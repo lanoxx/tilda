@@ -146,13 +146,8 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
  */
 void tilda_window_close_current_tab (tilda_window *tw);
 
-/**
- * This registers the keyboard shortcuts to the values which the user has
- * configured. It is automatically called when the window is initialized,
- * but it must be called by the wizard after the user has changed one
- * of the shortcuts, in order to registered the new shortcut.
- */
-gint tilda_window_setup_keyboard_accelerators (tilda_window *tw);
+/* This should be called by the wizard for each key that has changed. */
+gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* key, tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 

@@ -440,7 +440,26 @@ static void wizard_closed ()
     config_setstr ("fullscreen_key", fullscreen_key);
 
     /* Now that they're in the config, reset the keybindings right now. */
-    tilda_window_setup_keyboard_accelerators(tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/New Tab",           "addtab_key",       tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Close Tab",         "closetab_key",     tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Next Tab",          "nexttab_key",      tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Previous Tab",      "prevtab_key",      tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Left",     "movetableft_key",  tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Right",    "movetabright_key", tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Copy",              "copy_key",         tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Paste",             "paste_key",        tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Quit",              "quit_key",         tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 1",        "gototab_1_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 2",        "gototab_2_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 3",        "gototab_3_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 4",        "gototab_4_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 5",        "gototab_5_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 6",        "gototab_6_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 7",        "gototab_7_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 8",        "gototab_8_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 9",        "gototab_9_key",    tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 10",       "gototab_10_key",   tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", "fullscreen_key",   tw);
 
     /* TODO: validate this?? */
     config_setstr ("command", command);

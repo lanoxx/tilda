@@ -548,28 +548,26 @@ static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* 
     if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
     {
         temp = g_cclosure_new_swap (callback_func, tw, NULL);
-        if(path != NULL) {
-            gtk_accel_map_add_entry(path, accel_key, accel_mods);
-            gtk_accel_group_connect_by_path(tw->accel_group, path, temp);
-        } else {
-            gtk_accel_group_connect(tw->accel_group, accel_key, accel_mods, GTK_ACCEL_VISIBLE, temp);
-        }
+        gtk_accel_map_add_entry(path, accel_key, accel_mods);
+        gtk_accel_group_connect_by_path(tw->accel_group, path, temp);
     }
 
     return 0;
 }
 
-static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw) {
-    tilda_add_config_accelerator_by_path(key, NULL, callback_func, tw);
+gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* key, tilda_window *tw) {
+    guint accel_key;
+    GdkModifierType accel_mods;
+    gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
+
+    return gtk_accel_map_change_entry(path, accel_key, accel_mods, FALSE);
 }
 
-gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
+/* This function does the setup of the keyboard acceleratos. It should only be called once when the tilda window is
+ * initialized. Use tilda_window_update_keyboard_accelerators to update keybindings that have been changed by the user.
+ */
+static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
 {
-
-    /* If we already have an tw->accel_group (which would happen if we're redefining accelerators in the config window)
-       we want to remove it before creating a new one. */
-    if (tw->accel_group != NULL)
-        gtk_window_remove_accel_group (GTK_WINDOW (tw->window), tw->accel_group);
 
     /* Create Accel Group to add key codes for quit, next, prev and new tabs */
     tw->accel_group = gtk_accel_group_new ();
@@ -585,27 +583,27 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
 
-    tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(tilda_window_next_tab),          tw);
-    tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(tilda_window_prev_tab),          tw);
-    tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
-    tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
+    tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
+    tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
+    tilda_add_config_accelerator_by_path("movetableft_key",  "<tilda>/context/Move Tab Left",   G_CALLBACK(move_tab_left),                  tw);
+    tilda_add_config_accelerator_by_path("movetabright_key", "<tilda>/context/Move Tab Right",  G_CALLBACK(move_tab_right),                 tw);
 
-    tilda_add_config_accelerator("increase_font_size_key", G_CALLBACK(increase_font_size), tw); 
-    tilda_add_config_accelerator("decrease_font_size_key", G_CALLBACK(decrease_font_size), tw);
-    tilda_add_config_accelerator("normalize_font_size_key", G_CALLBACK(normalize_font_size), tw);
+    tilda_add_config_accelerator_by_path("increase_font_size_key",  "<tilda>/context/Increase Font Size",  G_CALLBACK(increase_font_size), tw);
+    tilda_add_config_accelerator_by_path("decrease_font_size_key",  "<tilda>/context/Decrease Font Size",  G_CALLBACK(decrease_font_size), tw);
+    tilda_add_config_accelerator_by_path("normalize_font_size_key", "<tilda>/context/Normalize Font Size", G_CALLBACK(normalize_font_size), tw);
 
     /* Set up keyboard shortcuts for Goto Tab # using key combinations defined in the config*/
     /* Know a better way? Then you do. */
-    tilda_add_config_accelerator("gototab_1_key",  G_CALLBACK(goto_tab_1),  tw);
-    tilda_add_config_accelerator("gototab_2_key",  G_CALLBACK(goto_tab_2),  tw);
-    tilda_add_config_accelerator("gototab_3_key",  G_CALLBACK(goto_tab_3),  tw);
-    tilda_add_config_accelerator("gototab_4_key",  G_CALLBACK(goto_tab_4),  tw);
-    tilda_add_config_accelerator("gototab_5_key",  G_CALLBACK(goto_tab_5),  tw);
-    tilda_add_config_accelerator("gototab_6_key",  G_CALLBACK(goto_tab_6),  tw);
-    tilda_add_config_accelerator("gototab_7_key",  G_CALLBACK(goto_tab_7),  tw);
-    tilda_add_config_accelerator("gototab_8_key",  G_CALLBACK(goto_tab_8),  tw);
-    tilda_add_config_accelerator("gototab_9_key",  G_CALLBACK(goto_tab_9),  tw);
-    tilda_add_config_accelerator("gototab_10_key", G_CALLBACK(goto_tab_10), tw);
+    tilda_add_config_accelerator_by_path("gototab_1_key",  "<tilda>/context/Goto Tab 1",  G_CALLBACK(goto_tab_1),  tw);
+    tilda_add_config_accelerator_by_path("gototab_2_key",  "<tilda>/context/Goto Tab 2",  G_CALLBACK(goto_tab_2),  tw);
+    tilda_add_config_accelerator_by_path("gototab_3_key",  "<tilda>/context/Goto Tab 3",  G_CALLBACK(goto_tab_3),  tw);
+    tilda_add_config_accelerator_by_path("gototab_4_key",  "<tilda>/context/Goto Tab 4",  G_CALLBACK(goto_tab_4),  tw);
+    tilda_add_config_accelerator_by_path("gototab_5_key",  "<tilda>/context/Goto Tab 5",  G_CALLBACK(goto_tab_5),  tw);
+    tilda_add_config_accelerator_by_path("gototab_6_key",  "<tilda>/context/Goto Tab 6",  G_CALLBACK(goto_tab_6),  tw);
+    tilda_add_config_accelerator_by_path("gototab_7_key",  "<tilda>/context/Goto Tab 7",  G_CALLBACK(goto_tab_7),  tw);
+    tilda_add_config_accelerator_by_path("gototab_8_key",  "<tilda>/context/Goto Tab 8",  G_CALLBACK(goto_tab_8),  tw);
+    tilda_add_config_accelerator_by_path("gototab_9_key",  "<tilda>/context/Goto Tab 9",  G_CALLBACK(goto_tab_9),  tw);
+    tilda_add_config_accelerator_by_path("gototab_10_key", "<tilda>/context/Goto Tab 10", G_CALLBACK(goto_tab_10), tw);
 
     return 0;
 }
