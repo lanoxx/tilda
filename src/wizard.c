@@ -445,7 +445,7 @@ static void wizard_closed ()
     /* TODO: validate this?? */
     config_setstr ("command", command);
 
-    /* Free the libglade data structure */
+    /* Free the GtkBuilder data structure */
     g_object_unref (G_OBJECT(xml));
     xml = NULL;
 
