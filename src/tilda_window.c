@@ -538,7 +538,7 @@ static gint cpaste (tilda_window *tw)
 }
 
 /* Tie a single keyboard shortcut to a callback function */
-static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw)
+static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* path, GCallback callback_func, tilda_window *tw)
 {
     guint accel_key;
     GdkModifierType accel_mods;
@@ -548,10 +548,19 @@ static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_fu
     if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
     {
         temp = g_cclosure_new_swap (callback_func, tw, NULL);
-        gtk_accel_group_connect (tw->accel_group, accel_key, accel_mods , GTK_ACCEL_VISIBLE, temp);
+        if(path != NULL) {
+            gtk_accel_map_add_entry(path, accel_key, accel_mods);
+            gtk_accel_group_connect_by_path(tw->accel_group, path, temp);
+        } else {
+            gtk_accel_group_connect(tw->accel_group, accel_key, accel_mods, GTK_ACCEL_VISIBLE, temp);
+        }
     }
 
     return 0;
+}
+
+static gint tilda_add_config_accelerator(const gchar* key, GCallback callback_func, tilda_window *tw) {
+    tilda_add_config_accelerator_by_path(key, NULL, callback_func, tw);
 }
 
 gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
@@ -569,16 +578,17 @@ gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     /* Set up keyboard shortcuts for Exit, Next Tab, Previous Tab,
        Move Tab, Add Tab, Close Tab, Copy, and Paste using key
        combinations defined in the config. */
-    tilda_add_config_accelerator("quit_key",         G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator_by_path("addtab_key",     "<tilda>/context/New Tab",           G_CALLBACK(tilda_window_add_tab),           tw);
+    tilda_add_config_accelerator_by_path("closetab_key",   "<tilda>/context/Close Tab",         G_CALLBACK(tilda_window_close_current_tab), tw);
+    tilda_add_config_accelerator_by_path("copy_key",       "<tilda>/context/Copy",              G_CALLBACK(ccopy),                          tw);
+    tilda_add_config_accelerator_by_path("paste_key",      "<tilda>/context/Paste",             G_CALLBACK(cpaste),                         tw);
+    tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
+    tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
+
     tilda_add_config_accelerator("nexttab_key",      G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator("prevtab_key",      G_CALLBACK(tilda_window_prev_tab),          tw);
     tilda_add_config_accelerator("movetableft_key",  G_CALLBACK(move_tab_left),                  tw);
     tilda_add_config_accelerator("movetabright_key", G_CALLBACK(move_tab_right),                 tw);
-    tilda_add_config_accelerator("addtab_key",       G_CALLBACK(tilda_window_add_tab),           tw);
-    tilda_add_config_accelerator("closetab_key",     G_CALLBACK(tilda_window_close_current_tab), tw);
-    tilda_add_config_accelerator("copy_key",         G_CALLBACK(ccopy),                          tw);
-    tilda_add_config_accelerator("paste_key",        G_CALLBACK(cpaste),                         tw);
-    tilda_add_config_accelerator("fullscreen_key",   G_CALLBACK(toggle_fullscreen_cb),           tw);
 
     tilda_add_config_accelerator("increase_font_size_key", G_CALLBACK(increase_font_size), tw); 
     tilda_add_config_accelerator("decrease_font_size_key", G_CALLBACK(decrease_font_size), tw);

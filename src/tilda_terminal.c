@@ -824,9 +824,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "menu"));
     GtkWidget *menu = gtk_menu_new_from_model(menu_model);
-    gtk_menu_set_accel_group(GTK_MENU(menu), tw->accel_group);
-
     gtk_menu_attach_to_widget(menu, tw->window, NULL);
+
+    gtk_menu_set_accel_group(GTK_MENU(menu), tw->accel_group);
+    gtk_menu_set_accel_path(GTK_MENU(menu), "<tilda>/context");
 
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
