@@ -288,6 +288,10 @@ gint wizard (tilda_window *ltw)
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
 
     gtk_widget_show_all (wizard_window);
+
+    /* This is needed to ensure that the wizard appears above of the terminal window */
+    gtk_window_present(GTK_WINDOW(wizard_window));
+
     g_free (window_title);
 
     /* Disable auto hide */
