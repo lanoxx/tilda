@@ -322,13 +322,13 @@ static void move_window_cb (G_GNUC_UNUSED GtkWidget *widgets, guint x, guint y, 
 void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale) {
     DEBUG_FUNCTION ("tilda_term_adjust_font_scale");
 
-    VteTerminal *terminal = term->vte_term;
+    VteTerminal *terminal = VTE_TERMINAL(term->vte_term);
     /* We need the tilda_term object to access the unscaled
      * font size and current scale factor */
     PangoFontDescription *desired;
 
     desired = pango_font_description_copy (vte_terminal_get_font(terminal));
-    pango_font_description_set_size (desired, term->tw->unscaled_font_size * scale);
+    pango_font_description_set_size (desired, (gint) (term->tw->unscaled_font_size * scale));
     vte_terminal_set_font (terminal, desired);
     pango_font_description_free (desired);
 }
@@ -801,18 +801,21 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
      * tilda_window and others concern the current terminal, so
      * when we add them to the action_group we need to pass different
      * user_data (tw or tt).
+     *
+     * Note: Using designated initializers here, allows us to skip the remaining fields which are NULL anyway and
+     * also gets rid of missing field initializer warnings.
      */
     GActionEntry entries_for_tilda_window[] = {
-            { "new-tab", menu_add_tab_cb , NULL, NULL, NULL },
-            { "close-tab", menu_close_tab_cb , NULL, NULL, NULL },
-            { "fullscreen", menu_fullscreen_cb , NULL, NULL, NULL },
-            { "preferences", menu_preferences_cb , NULL, NULL, NULL },
-            { "quit", menu_quit_cb , NULL, NULL, NULL }
+        { .name="new-tab", menu_add_tab_cb },
+        { .name="close-tab", menu_close_tab_cb },
+        { .name="fullscreen", menu_fullscreen_cb },
+        { .name="preferences", menu_preferences_cb },
+        { .name="quit", menu_quit_cb }
     };
 
     GActionEntry entries_for_tilda_terminal[] = {
-        {"copy", menu_copy_cb, NULL, NULL, NULL},
-        {"paste", menu_paste_cb, NULL, NULL, NULL}
+        { .name="copy", menu_copy_cb},
+        { .name="paste", menu_paste_cb}
     };
 
     g_action_map_add_action_entries(G_ACTION_MAP(action_group),
@@ -824,7 +827,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "menu"));
     GtkWidget *menu = gtk_menu_new_from_model(menu_model);
-    gtk_menu_attach_to_widget(menu, tw->window, NULL);
+    gtk_menu_attach_to_widget(GTK_MENU(menu), tw->window, NULL);
 
     gtk_menu_set_accel_group(GTK_MENU(menu), tw->accel_group);
     gtk_menu_set_accel_path(GTK_MENU(menu), "<tilda>/context");

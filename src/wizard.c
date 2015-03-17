@@ -440,26 +440,26 @@ static void wizard_closed ()
     config_setstr ("fullscreen_key", fullscreen_key);
 
     /* Now that they're in the config, reset the keybindings right now. */
-    tilda_window_update_keyboard_accelerators("<tilda>/context/New Tab",           "addtab_key",       tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Close Tab",         "closetab_key",     tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Next Tab",          "nexttab_key",      tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Previous Tab",      "prevtab_key",      tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Left",     "movetableft_key",  tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Right",    "movetabright_key", tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Copy",              "copy_key",         tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Paste",             "paste_key",        tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Quit",              "quit_key",         tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 1",        "gototab_1_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 2",        "gototab_2_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 3",        "gototab_3_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 4",        "gototab_4_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 5",        "gototab_5_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 6",        "gototab_6_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 7",        "gototab_7_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 8",        "gototab_8_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 9",        "gototab_9_key",    tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 10",       "gototab_10_key",   tw);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", "fullscreen_key",   tw);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/New Tab",           addtab_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Close Tab",         closetab_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Next Tab",          nexttab_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Previous Tab",      prevtab_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Left",     movetableft_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Right",    movetabright_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Copy",              copy_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Paste",             paste_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Quit",              quit_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 1",        gototab_1_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 2",        gototab_2_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 3",        gototab_3_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 4",        gototab_4_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 5",        gototab_5_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 6",        gototab_6_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 7",        gototab_7_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 8",        gototab_8_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 9",        gototab_9_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 10",       gototab_10_key);
+    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", fullscreen_key);
 
     /* TODO: validate this?? */
     config_setstr ("command", command);
@@ -1026,16 +1026,15 @@ static void validate_executable_command_cb (GtkWidget *w,
     char* command_filename = g_find_program_in_path(command);
     if(command_filename == NULL) {
         //wrong command
-        gtk_entry_set_icon_from_stock (GTK_ENTRY(w),
-            GTK_ENTRY_ICON_SECONDARY,
-            GTK_STOCK_DIALOG_ERROR);
+        gtk_entry_set_icon_from_icon_name (GTK_ENTRY(w),
+            GTK_ENTRY_ICON_SECONDARY, "dialog-error");
         gtk_entry_set_icon_tooltip_text(GTK_ENTRY(w),
             GTK_ENTRY_ICON_SECONDARY,
             "The command you have entered is not a valid command.\n"
             "Make sure that the specified executable is in your PATH environment variable."
         );
     } else {
-        gtk_entry_set_icon_from_stock (GTK_ENTRY(w),
+        gtk_entry_set_icon_from_icon_name (GTK_ENTRY(w),
             GTK_ENTRY_ICON_SECONDARY,
             NULL);
         free(command_filename);

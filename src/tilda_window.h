@@ -42,7 +42,7 @@ struct tilda_window_
     /* Temporarily disable auto hiding */
     gboolean disable_auto_hide;
     /* Auto hide tick-function handler */
-    gint auto_hide_tick_handler;
+    guint auto_hide_tick_handler;
     /* Auto hide current time */
     guint32 auto_hide_current_time;
     /* Auto hide max time */
@@ -147,7 +147,7 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
 void tilda_window_close_current_tab (tilda_window *tw);
 
 /* This should be called by the wizard for each key that has changed. */
-gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* key, tilda_window *tw);
+gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* value);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 

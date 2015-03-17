@@ -52,6 +52,7 @@ if test "x$enable_maintainer_flags" = "xyes"; then
             -Werror=format-nonliteral \
             -Werror=init-self \
             -Werror=vla \
+            -Wno-unused-parameter \
             -DDEBUG \
            "
 fi

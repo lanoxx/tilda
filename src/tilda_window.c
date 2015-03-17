@@ -193,10 +193,10 @@ static gboolean find_smaller_zoom_factor (double  current, double *found) {
 }
 
 /* Increase and Decrease and reset affects all tabs at once */
-gboolean normalize_font_size(tilda_window *tw)
+static gboolean normalize_font_size(tilda_window *tw)
 {
     tilda_term *tt;
-    int i;
+    guint i;
     tw->current_scale_factor = PANGO_SCALE_MEDIUM;
 
     for (i=0; i<g_list_length (tw->terms); i++) {
@@ -206,10 +206,10 @@ gboolean normalize_font_size(tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-gboolean increase_font_size (tilda_window *tw)
+static gboolean increase_font_size (tilda_window *tw)
 {
     tilda_term *tt;
-    int i;
+    guint i;
     if(!find_larger_zoom_factor (tw->current_scale_factor, &tw->current_scale_factor)) {
         return GDK_EVENT_STOP;
     }
@@ -221,10 +221,10 @@ gboolean increase_font_size (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-gboolean decrease_font_size (tilda_window *tw)
+static gboolean decrease_font_size (tilda_window *tw)
 {
     tilda_term *tt;
-    int i;
+    guint i;
     if(!find_smaller_zoom_factor (tw->current_scale_factor, &tw->current_scale_factor)) {
         return GDK_EVENT_STOP;
     }
@@ -555,10 +555,10 @@ static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* 
     return 0;
 }
 
-gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* key, tilda_window *tw) {
+gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* value) {
     guint accel_key;
     GdkModifierType accel_mods;
-    gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
+    gtk_accelerator_parse (value, &accel_key, &accel_mods);
 
     return gtk_accel_map_change_entry(path, accel_key, accel_mods, FALSE);
 }
