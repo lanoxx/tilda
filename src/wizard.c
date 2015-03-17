@@ -1004,8 +1004,9 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
     entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object (xml, "entry_custom_command"));
 
-    gtk_widget_set_sensitive (GTK_WIDGET(label_custom_command), status);
-    gtk_widget_set_sensitive (GTK_WIDGET(entry_custom_command), status);
+    gtk_widget_set_sensitive (label_custom_command, status);
+    gtk_widget_set_sensitive (entry_custom_command, status);
+    gtk_widget_grab_focus(entry_custom_command);
 }
 
 
@@ -1024,7 +1025,7 @@ static void validate_executable_command_cb (GtkWidget *w,
     const char* command = gtk_entry_get_text (GTK_ENTRY(w));
     /* Check that the command exists */
     char* command_filename = g_find_program_in_path(command);
-    if(command_filename == NULL) {
+    if(command_filename == NULL && gtk_widget_is_sensitive(w)) {
         //wrong command
         gtk_entry_set_icon_from_icon_name (GTK_ENTRY(w),
             GTK_ENTRY_ICON_SECONDARY, "dialog-error");
@@ -2174,6 +2175,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("spin_title_max_length","value-changed", spin_max_title_length_changed_cb);
 
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
+    CONNECT_SIGNAL ("entry_custom_command","focus-out-event", validate_executable_command_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
