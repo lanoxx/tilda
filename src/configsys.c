@@ -148,6 +148,7 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("pinned", TRUE, CFGF_NONE),
     CFG_BOOL("animation", FALSE, CFGF_NONE),
     CFG_BOOL("hidden", FALSE, CFGF_NONE),
+    CFG_BOOL("set_as_desktop", FALSE, CFGF_NONE),
     CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
     CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
     CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),

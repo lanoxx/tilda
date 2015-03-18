@@ -651,6 +651,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* Create the main window */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
+
     /* Generic timer resolution */
     tw->timer_resolution = config_getint("timer_resolution");
 
@@ -680,6 +681,8 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     if (config_getbool ("pinned"))
         gtk_window_stick (GTK_WINDOW(tw->window));
 
+    if(config_getbool ("set_as_desktop"))
+        gtk_window_set_type_hint(GTK_WINDOW(tw->window), GDK_WINDOW_TYPE_HINT_DESKTOP);
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), config_getbool ("notaskbar"));
     gtk_window_set_keep_above (GTK_WINDOW(tw->window), config_getbool ("above"));
     gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
