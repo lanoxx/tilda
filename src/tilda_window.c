@@ -136,6 +136,42 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
     return GDK_EVENT_STOP;
+} 
+
+gint toggle_transparency_cb (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("toggle_transparency"); 
+    DEBUG_ASSERT (tw != NULL);
+    tilda_window_toggle_transparency(tw);
+    return GDK_EVENT_STOP;
+}
+
+void tilda_window_toggle_transparency (tilda_window *tw) 
+{
+    tilda_term *tt;
+    int i;
+    gboolean status = !config_getbool ("enable_transparency");
+    config_setbool ("enable_transparency", status); 
+    gdouble transparency_level = 0.0;
+    transparency_level = ((gdouble) config_getint ("transparency"))/100;
+    if (status)
+    {
+        for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), transparency_level);
+            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), !tw->have_argb_visual);
+            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), (1.0 - transparency_level) * 0xffff);
+        }
+    }
+    else
+    {
+        for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), 0);
+            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), FALSE);
+            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
+        }
+    } 
 }
 
 /* Zoom helpers */
@@ -582,6 +618,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("paste_key",      "<tilda>/context/Paste",             G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw); 
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
