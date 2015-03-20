@@ -18,10 +18,10 @@
 #include "debug.h"
 #include "tilda.h"
 #include "callback_func.h"
-#include "configsys.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 #include "key_grabber.h"
+#include "configsys.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,9 +127,9 @@ gint toggle_fullscreen_cb (tilda_window *tw)
         gtk_window_unfullscreen (GTK_WINDOW (tw->window));
         // This appears to be necssary on (at least) xfwm4 if you tabbed out
         // while fullscreened.
-        gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        gtk_window_move(GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+        gtk_window_set_default_size (GTK_WINDOW(tw->window), tw->config->max_width, tw->config->max_height);
+        gtk_window_resize (GTK_WINDOW(tw->window), tw->config->max_width, tw->config->max_height);
+        gtk_window_move(GTK_WINDOW(tw->window), tw->config->x_pos, tw->config->y_pos);
     }
     tw->fullscreen = !tw->fullscreen;
 
@@ -537,14 +537,19 @@ static gint cpaste (tilda_window *tw)
     return TRUE;
 }
 
-/* Tie a single keyboard shortcut to a callback function */
+/* Tie a single keyboard shortcut to a callback function. The path is used to allow re-configuration of shortcuts
+ * during runtime.
+ */
 static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* path, GCallback callback_func, tilda_window *tw)
 {
     guint accel_key;
     GdkModifierType accel_mods;
     GClosure *temp;
 
-    gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
+    GHashTable *hash_table = tw->config->keys;
+    const gchar *value = g_hash_table_lookup(hash_table, key);
+    gtk_accelerator_parse (value, &accel_key, &accel_mods);
+
     if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
     {
         temp = g_cclosure_new_swap (callback_func, tw, NULL);
@@ -558,6 +563,7 @@ static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* 
 gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gchar* value) {
     guint accel_key;
     GdkModifierType accel_mods;
+
     gtk_accelerator_parse (value, &accel_key, &accel_mods);
 
     return gtk_accel_map_change_entry(path, accel_key, accel_mods, FALSE);
@@ -634,7 +640,7 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
-gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
+gboolean tilda_window_init (tilda_config* config, const gint instance, tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_init");
     DEBUG_ASSERT (instance >= 0);
@@ -646,28 +652,28 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     tw->instance = instance;
 
     /* Set the config file */
-    tw->config_file = g_strdup (config_file);
+    tw->config = config;
 
     /* Create the main window */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
     /* Generic timer resolution */
-    tw->timer_resolution = config_getint("timer_resolution");
+    tw->timer_resolution = (guint32) config->timer_resolution;
 
     /* Auto hide support */
     tw->auto_hide_tick_handler = 0;
-    tw->auto_hide_max_time = config_getint("auto_hide_time");
-    tw->auto_hide_on_mouse_leave = config_getbool("auto_hide_on_mouse_leave");
-    tw->auto_hide_on_focus_lost = config_getbool("auto_hide_on_focus_lost");
+    tw->auto_hide_max_time = config->auto_hide_time;
+    tw->auto_hide_on_mouse_leave = config->auto_hide_on_mouse_leave;
+    tw->auto_hide_on_focus_lost = config->auto_hide_on_focus_lost;
     tw->disable_auto_hide = FALSE;
     tw->focus_loss_on_keypress = FALSE;
 
-    PangoFontDescription *description = pango_font_description_from_string(config_getstr("font"));
+    PangoFontDescription *description = pango_font_description_from_string(config->font);
     gint size = pango_font_description_get_size(description);
     tw->unscaled_font_size = size;
     tw->current_scale_factor = PANGO_SCALE_MEDIUM;
 
-    if(1 == config_getint("non_focus_pull_up_behaviour")) {
+    if(1 == config->non_focus_pull_up_behaviour) {
         tw->hide_non_focused = TRUE;
     }
     else {
@@ -677,11 +683,11 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     tw->fullscreen = FALSE;
 
     /* Set up all window properties */
-    if (config_getbool ("pinned"))
+    if (config->pinned)
         gtk_window_stick (GTK_WINDOW(tw->window));
 
-    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), config_getbool ("notaskbar"));
-    gtk_window_set_keep_above (GTK_WINDOW(tw->window), config_getbool ("above"));
+    gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), config->notaskbar);
+    gtk_window_set_keep_above (GTK_WINDOW(tw->window), config->above);
     gtk_window_set_decorated (GTK_WINDOW(tw->window), FALSE);
     gtk_widget_set_size_request (GTK_WIDGET(tw->window), 0, 0);
     tilda_window_set_icon (tw, g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL));
@@ -710,9 +716,9 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
      */
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook),
-        config_getbool("notebook_border"));
+        config->notebook_border);
     gtk_notebook_set_scrollable (GTK_NOTEBOOK(tw->notebook), TRUE);
-    tilda_window_set_tab_position (tw, config_getint ("tab_pos"));
+    tilda_window_set_tab_position (tw, config->tab_pos);
 
     provider = gtk_css_provider_new ();
     style_context = gtk_widget_get_style_context(tw->notebook);
@@ -720,7 +726,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
         GTK_STYLE_PROVIDER(provider),
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    if(!config_getbool("notebook_border")) {
+    if(!config->notebook_border) {
         /**
          * Calling gtk_notebook_set_show_border is not enough. We need to
          * disable the border explicitly by using CSS.
@@ -765,8 +771,8 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 
     /* Position the window */
     tw->current_state = UP;
-    gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    gtk_window_set_default_size (GTK_WINDOW(tw->window), config->max_width, config->max_height);
+    gtk_window_resize (GTK_WINDOW(tw->window), config->max_width, config->max_height);
 
     /* Create GDK resources now, to prevent crashes later on */
     gtk_widget_realize (tw->window);
@@ -789,8 +795,6 @@ gint tilda_window_free (tilda_window *tw)
 
         num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
     }
-
-    g_free (tw->config_file);
 
     return 0;
 }
@@ -823,7 +827,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     /* We should show the tabs if there are more than one tab in the notebook,
      * and tab position is not set to hidden */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 &&
-            config_getint("tab_pos") != NB_HIDDEN)
+            tw->config->tab_pos != NB_HIDDEN)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
@@ -881,7 +885,7 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
 
             /* Check the user's preference for what to do when the last
              * terminal is closed. Take the appropriate action */
-            switch (config_getint ("on_last_terminal_exit"))
+            switch (tw->config->on_last_terminal_exit)
             {
                 case RESTART_TERMINAL:
                     tilda_window_add_tab (tw);

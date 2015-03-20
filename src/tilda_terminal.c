@@ -113,7 +113,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     gtk_widget_show (term->scrollbar);
 
     /* Set the scrollbar position */
-    tilda_term_set_scrollbar_position (term, config_getint ("scrollbar_pos"));
+    tilda_term_set_scrollbar_position (term, tw->config->scrollbar_pos);
 
     /** Signal Connection **/
     g_signal_connect (G_OBJECT(term->vte_term), "child-exited",
@@ -202,14 +202,15 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
+    tilda_window *tw = tt->tw;
     gchar *title = get_window_title (widget);
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
 
-    guint length = config_getint ("title_max_length");
+    guint length = tw->config->title_max_length;
 
-    if(config_getbool("title_max_length_flag") && strlen(title) > length) {
+    if(tw->config->title_max_length_flag && strlen(title) > length) {
         gchar *titleOffset = title + strlen(title) - length;
         gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
         gtk_label_set_text (GTK_LABEL(label), shortTitle);
@@ -380,17 +381,18 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
     gint argc;
     gchar **argv;
     GError *error = NULL;
+    tilda_window *tw = tt->tw;
 
     gchar *default_command;
 
-    if (working_dir == NULL || config_getbool ("inherit_working_dir") == FALSE)
+    if (working_dir == NULL || tw->config->inherit_working_dir == FALSE)
     {
-        working_dir = config_getstr ("working_dir");
+        working_dir = tw->config->working_dir;
     }
 
-    if (config_getbool ("run_command") && !ignore_custom_command)
+    if (tw->config->run_command && !ignore_custom_command)
     {
-        ret = g_shell_parse_argv (config_getstr ("command"), &argc, &argv, &error);
+        ret = g_shell_parse_argv (tw->config->command, &argc, &argv, &error);
 
         /* Check for error */
         if (ret == FALSE)
@@ -424,7 +426,7 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
         /* Check for error */
         if (ret == -1)
         {
-            g_printerr (_("Unable to launch custom command: %s\n"), config_getstr ("command"));
+            g_printerr (_("Unable to launch custom command: %s\n"), tw->config->command);
             g_printerr (_("Launching default shell instead\n"));
 
             goto launch_default_shell;
@@ -509,6 +511,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
+    tilda_window *tw = tt->tw;
     gint index = gtk_notebook_page_num (GTK_NOTEBOOK(tt->tw->notebook), tt->hbox);
 
     /* Make sure we got a valid index */
@@ -524,7 +527,7 @@ static void child_exited_cb (GtkWidget *widget, gpointer data)
 
     /* Check the user's preference for what to do when the child terminal
      * is closed. Take the appropriate action */
-    switch (config_getint ("command_exit"))
+    switch (tw->config->command_exit)
     {
         case EXIT_TERMINAL:
             tilda_window_close_tab (tt->tw, index, FALSE);
@@ -557,55 +560,56 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     GdkRGBA fg, bg;
     gchar* word_chars;
     gint i;
+    tilda_window *tw = tt->tw;
 
     /** Colors & Palette **/
-    bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
-    bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
-    bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
+    bg.red   =    GUINT16_TO_FLOAT(tw->config->back_red);
+    bg.green =    GUINT16_TO_FLOAT(tw->config->back_green);
+    bg.blue  =    GUINT16_TO_FLOAT(tw->config->back_blue);
     bg.alpha =    1.0;
 
-    fg.red   =    GUINT16_TO_FLOAT(config_getint ("text_red"));
-    fg.green =    GUINT16_TO_FLOAT(config_getint ("text_green"));
-    fg.blue  =    GUINT16_TO_FLOAT(config_getint ("text_blue"));
+    fg.red   =    GUINT16_TO_FLOAT(tw->config->text_red);
+    fg.green =    GUINT16_TO_FLOAT(tw->config->text_green);
+    fg.blue  =    GUINT16_TO_FLOAT(tw->config->text_blue);
     fg.alpha =    1.0;
 
     for(i = 0;i < TERMINAL_PALETTE_SIZE; i++) {
-        current_palette[i].red   = GUINT16_TO_FLOAT(config_getnint ("palette", i*3));
-        current_palette[i].green = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+1));
-        current_palette[i].blue  = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+2));
+        current_palette[i].red   = GUINT16_TO_FLOAT(tw->config->palette[i*3]);
+        current_palette[i].green = GUINT16_TO_FLOAT(tw->config->palette[i*3+1]);
+        current_palette[i].blue  = GUINT16_TO_FLOAT(tw->config->palette[i*3+2]);
         current_palette[i].alpha = 1.0;
     }
 
     vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
 
     /** Bells **/
-    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
+    vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), tw->config->bell);
+    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), tw->config->bell);
 
     /** Cursor **/
     vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
-            (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
+            (tw->config->blinks)?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
 
     /** Scrolling **/
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
-    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_output"));
-    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_key"));
+    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), tw->config->scroll_background);
+    vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), tw->config->scroll_on_output);
+    vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), tw->config->scroll_on_key);
 
     /** Mouse **/
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), FALSE); /* TODO: make this configurable */
 
     /** Text Properties **/
-    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
-    gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
+    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), tw->config->bold);
+    gtk_widget_set_double_buffered (tt->vte_term, tw->config->double_buffer);
     PangoFontDescription *description =
-        pango_font_description_from_string (config_getstr ("font"));
+        pango_font_description_from_string (tw->config->font);
     vte_terminal_set_font (VTE_TERMINAL (tt->vte_term), description);
 
     /** Scrollback **/
-    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getint ("lines"));
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), tw->config->lines);
 
     /** Keys **/
-    switch (config_getint ("backspace_key"))
+    switch (tw->config->backspace_key)
     {
         case ASCII_DELETE:
             vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -622,7 +626,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
             break;
     }
 
-    switch (config_getint ("delete_key"))
+    switch (tw->config->delete_key)
     {
         case ASCII_DELETE:
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
@@ -640,21 +644,21 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     }
 
     /** Word chars **/
-    word_chars =  config_getstr ("word_chars");
+    word_chars =  tw->config->word_chars;
     if (NULL == word_chars || '\0' == *word_chars) {
         word_chars = DEFAULT_WORD_CHARS;
     }
     vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
 
     /** Background **/
-    if (config_getbool ("use_image"))
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), config_getstr ("image"));
+    if (tw->config->use_image)
+        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), tw->config->image);
     else
         vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
 
-    transparency_level = ((gdouble) config_getint ("transparency"))/100;
+    transparency_level = ((gdouble) tw->config->transparency)/100;
 
-    if (config_getbool ("enable_transparency") && transparency_level > 0)
+    if (tw->config->enable_transparency && transparency_level > 0)
     {
         vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
         vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
@@ -863,6 +867,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
 
     VteTerminal *terminal;
     tilda_term *tt;
+    tilda_window *tw;
     gchar *match;
     gint tag;
     gint ypad;
@@ -871,6 +876,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     gboolean ret = FALSE;
 
     tt = TILDA_TERM(data);
+    tw = tt->tw;
 
     switch (event->button)
     {
@@ -905,7 +911,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
 #if DEBUG
                 g_print ("Got a Left Click -- Matched: `%s' (%d)\n", match, tag);
 #endif
-                web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
+                web_browser_cmd = g_strescape (tw->config->web_browser, NULL);
                 cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
 #if DEBUG
                 g_print ("Launching command: `%s'\n", cmd);

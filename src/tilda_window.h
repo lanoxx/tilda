@@ -18,6 +18,7 @@
 
 #include "tilda_window.h"
 #include "tilda_terminal.h"
+#include "tilda_config.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -34,7 +35,7 @@ struct tilda_window_
     GtkAccelGroup * accel_group;
 
     gchar *lock_file;
-    gchar *config_file;
+    tilda_config* config;
     gboolean config_writing_disabled;
     gint instance;
     gboolean have_argb_visual;
@@ -119,7 +120,7 @@ gint tilda_window_prev_tab (tilda_window *tw);
  *
  * Notes: The configuration system must be up and running before calling this function.
  */
-gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw);
+gboolean tilda_window_init (tilda_config* config, const gint instance, tilda_window *tw);
 
 /**
  * Releases resources that are being used by the tilda window, such as the tabs

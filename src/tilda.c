@@ -22,6 +22,7 @@
 #include "callback_func.h"
 #include "configsys.h"
 #include "tilda_window.h"
+#include "tilda_config.h"
 #include "key_grabber.h" /* for pull */
 #include "wizard.h"
 #include "xerror.h"
@@ -290,49 +291,34 @@ static gint remove_stale_lock_files ()
  * @param argv argv from main
  * @return TRUE if we should show the configuration wizard, FALSE otherwise
  */
-static gboolean parse_cli (int argc, char *argv[])
+static gboolean parse_cli (tilda_config* config, int argc, char *argv[])
 {
     DEBUG_FUNCTION ("parse_cli");
     DEBUG_ASSERT (argc != 0);
     DEBUG_ASSERT (argv != NULL);
 
     /* Set default values */
-    gchar *background_color = config_getstr ("background_color");
-    gchar *command = config_getstr ("command");
-    gchar *font = config_getstr ("font");
-    gchar *image = config_getstr ("image");
-    gchar *working_dir = config_getstr ("working_dir");
-
-    gint lines = config_getint ("lines");
-    gint transparency = config_getint ("transparency");
-    gint x_pos = config_getint ("x_pos");
-    gint y_pos = config_getint ("y_pos");
-
-    gboolean antialias = config_getbool ("antialias");
-    gboolean scrollbar = config_getbool ("scrollbar");
     gboolean show_config = FALSE;
     gboolean version = FALSE;
-    gboolean hidden = config_getbool ("hidden");
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
-        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         N_("Use Antialiased Fonts"), NULL },
-        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  N_("Set the background color"), NULL },
-        { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           N_("Run a command at startup"), NULL },
-        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            N_("Start Tilda hidden"), NULL },
-        { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              N_("Set the font to the following string"), NULL },
-        { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             N_("Scrollback Lines"), NULL },
-        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         N_("Use Scrollbar"), NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      N_("Opaqueness: 0-100%"), NULL },
-        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           N_("Print the version, then exit"), NULL },
-        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       N_("Set Initial Working Directory"), NULL },
-        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             N_("X Position"), NULL },
-        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             N_("Y Position"), NULL },
-        { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             N_("Set Background Image"), NULL },
-        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       N_("Show Configuration Wizard"), NULL },
+        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &config->antialias,         N_("Use Antialiased Fonts"), NULL },
+        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &config->background_color,  N_("Set the background color"), NULL },
+        { "command",            'c', 0, G_OPTION_ARG_STRING,    &config->command,           N_("Run a command at startup"), NULL },
+        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &config->hidden,            N_("Start Tilda hidden"), NULL },
+        { "font",               'f', 0, G_OPTION_ARG_STRING,    &config->font,              N_("Set the font to the following string"), NULL },
+        { "lines",              'l', 0, G_OPTION_ARG_INT,       &config->lines,             N_("Scrollback Lines"), NULL },
+        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &config->scrollbar,         N_("Use Scrollbar"), NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &config->transparency,      N_("Opaqueness: 0-100%"), NULL },
+        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &config->working_dir,       N_("Set Initial Working Directory"), NULL },
+        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &config->x_pos,             N_("X Position"), NULL },
+        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &config->y_pos,             N_("Y Position"), NULL },
+        { "image",              'B', 0, G_OPTION_ARG_STRING,    &config->image,             N_("Set Background Image"), NULL },
+        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,                   N_("Print the version, then exit"), NULL },
+        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,               N_("Show Configuration Wizard"), NULL },
         { NULL }
     };
-
 
     /* Set up the command-line parser */
     GError *error = NULL;
@@ -370,58 +356,7 @@ static gboolean parse_cli (int argc, char *argv[])
         exit (EXIT_SUCCESS);
     }
 
-    /* Now set the options in the config, if they changed */
-    if (background_color != config_getstr ("background_color")) {
-        config_setstr ("background_color", background_color);
-
-        GdkColor col;
-        if (gdk_color_parse(background_color, &col)) {
-            config_setint("back_red", col.red);
-            config_setint("back_green", col.green);
-            config_setint("back_blue", col.blue);
-        }
-
-        g_free(background_color);
-    }
-    if (command != config_getstr ("command"))
-    {
-        config_setbool ("run_command", TRUE);
-        config_setstr ("command", command);
-        g_free(command);
-    }
-    if (font != config_getstr ("font")) {
-        config_setstr ("font", font);
-        g_free(font);
-    }
-    if (image != config_getstr ("image")) {
-        config_setstr ("image", image);
-        g_free(image);
-    }
-    if (working_dir != config_getstr ("working_dir")) {
-        config_setstr ("working_dir", working_dir);
-        g_free(working_dir);
-    }
-
-    if (lines != config_getint ("lines"))
-        config_setint ("lines", lines);
-    if (transparency != config_getint ("transparency"))
-    {
-        config_setbool ("enable_transparency", transparency);
-        config_setint ("transparency", transparency);
-    }
-    if (x_pos != config_getint ("x_pos"))
-        config_setint ("x_pos", x_pos);
-    if (y_pos != config_getint ("y_pos"))
-        config_setint ("y_pos", y_pos);
-
-    if (antialias != config_getbool ("antialias"))
-        config_setbool ("antialias", antialias);
-    if (hidden != config_getbool ("hidden"))
-        config_setbool ("hidden", hidden);
-    if (scrollbar != config_getbool ("scrollbar"))
-        config_setbool ("scrollbar", scrollbar);
-
-    /* TRUE if we should show the config wizard, FALSE otherwize */
+    /* TRUE if we should show the config wizard, FALSE other wise */
     return show_config;
 }
 
@@ -651,10 +586,11 @@ int main (int argc, char *argv[])
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
     /* Start up the configuration system */
-    config_init (config_file);
+    tilda_config* config = tilda_config_load(config_file);
+    g_free(config_file);
 
     /* Parse the command line */
-    need_wizard = parse_cli (argc, argv);
+    need_wizard = parse_cli (config, argc, argv);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
@@ -665,7 +601,7 @@ int main (int argc, char *argv[])
     load_custom_css_file ();
 
     /* create new tilda_window */
-    gboolean success = tilda_window_init (config_file, lock.instance, &tw);
+    gboolean success = tilda_window_init (config, lock.instance, &tw);
 
     if(!success) {
         goto initialization_failed;
@@ -688,12 +624,13 @@ int main (int argc, char *argv[])
     sigaction (SIGTERM, &sa, NULL);
     sigaction (SIGKILL, &sa, NULL);
 
+    /*TODO: How are we initializing the tilda_config if the config file does not exit??? */
     /* If the config file doesn't exist open up the wizard */
-    if (access (tw.config_file, R_OK) == -1)
+    if (access (config->config_file, R_OK) == -1)
     {
         /* We probably need a default key, too ... */
         gchar *default_key = g_strdup_printf ("F%d", tw.instance+1);
-        config_setstr ("key", default_key);
+        config->key = default_key;
         g_free (default_key);
 
         need_wizard = TRUE;
@@ -706,7 +643,7 @@ int main (int argc, char *argv[])
         g_print ("Starting the wizard to configure tilda options.");
         wizard (&tw);
     } else {
-        gint ret = tilda_keygrabber_bind (config_getstr ("key"), &tw);
+        gint ret = tilda_keygrabber_bind (config->key, &tw);
 
         if (!ret)
         {
@@ -716,10 +653,10 @@ int main (int argc, char *argv[])
         }
     }
 
-    pull (&tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN, FALSE);
+    pull (&tw, config->hidden ? PULL_UP : PULL_DOWN, FALSE);
 
     g_print ("Tilda has started. Press %s to pull down the window.\n",
-        config_getstr ("key"));
+        config->key);
     /* Whew! We're finally all set up and ready to run GTK ... */
     gtk_main();
 
@@ -727,11 +664,10 @@ initialization_failed:
     tilda_window_free(&tw);
 
     /* Ok, we're at the end of our run. Time to clean up ... */
-    config_free (config_file);
+    tilda_config_close(config);
     g_remove (lock_file);
     close(lock.file_descriptor);
     g_free (lock_file);
-    g_free (config_file);
 
     return 0;
 }

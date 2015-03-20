@@ -473,7 +473,7 @@ static void wizard_closed ()
 
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
-    config_write (tw->config_file);
+    tilda_config_save(tw->config);
 
     /* Enables auto hide */
     tw->disable_auto_hide = FALSE;
