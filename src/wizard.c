@@ -1024,20 +1024,29 @@ static void validate_executable_command_cb (GtkWidget *w,
     g_return_if_fail(w != NULL && GTK_IS_ENTRY(w));
     const char* command = gtk_entry_get_text (GTK_ENTRY(w));
     /* Check that the command exists */
-    char* command_filename = g_find_program_in_path(command);
-    if(command_filename == NULL && gtk_widget_is_sensitive(w)) {
+    int argc = 0;
+    gchar** argv = NULL;
+    GError *error = NULL;
+    gboolean success = g_shell_parse_argv(command, &argc, &argv, &error);
+    char *command_filename = NULL;
+    if(success && argc > 0) {
+        command_filename = g_find_program_in_path(argv[0]);
+    }
+    g_strfreev(argv);
+
+    if (command_filename == NULL && gtk_widget_is_sensitive(w)) {
         //wrong command
-        gtk_entry_set_icon_from_icon_name (GTK_ENTRY(w),
-            GTK_ENTRY_ICON_SECONDARY, "dialog-error");
+        gtk_entry_set_icon_from_icon_name(GTK_ENTRY(w),
+                GTK_ENTRY_ICON_SECONDARY, "dialog-error");
         gtk_entry_set_icon_tooltip_text(GTK_ENTRY(w),
-            GTK_ENTRY_ICON_SECONDARY,
-            "The command you have entered is not a valid command.\n"
-            "Make sure that the specified executable is in your PATH environment variable."
+                GTK_ENTRY_ICON_SECONDARY,
+                "The command you have entered is not a valid command.\n"
+                        "Make sure that the specified executable is in your PATH environment variable."
         );
     } else {
-        gtk_entry_set_icon_from_icon_name (GTK_ENTRY(w),
-            GTK_ENTRY_ICON_SECONDARY,
-            NULL);
+        gtk_entry_set_icon_from_icon_name(GTK_ENTRY(w),
+                GTK_ENTRY_ICON_SECONDARY,
+                NULL);
         free(command_filename);
     }
 }
