@@ -1980,7 +1980,7 @@ static void initialize_geometry_spinners() {
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int monitor = config_getint("show_on_monitor_number");
 	GdkRectangle rectangle;
-	gdk_screen_get_monitor_geometry(screen, monitor, &rectangle);
+	gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
 	int monitor_height = rectangle.height;
 	int monitor_width = rectangle.width;
 
