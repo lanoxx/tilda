@@ -996,6 +996,7 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     GtkWidget *label_custom_command;
     GtkWidget *entry_custom_command;
+    GtkWidget *check_command_login_shell;
 
     config_setbool ("run_command", status);
 
@@ -1003,9 +1004,19 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "label_custom_command"));
     entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object (xml, "entry_custom_command"));
+    check_command_login_shell =
+        GTK_WIDGET (gtk_builder_get_object (xml, "check_command_login_shell"));
 
     gtk_widget_set_sensitive (label_custom_command, status);
     gtk_widget_set_sensitive (entry_custom_command, status);
+    gtk_widget_set_sensitive (check_command_login_shell, !status);
+
+    if(!status) {
+        gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry_custom_command),
+                GTK_ENTRY_ICON_SECONDARY,
+                NULL);
+    }
+
     gtk_widget_grab_focus(entry_custom_command);
 }
 
@@ -1055,6 +1066,12 @@ static void combo_command_exit_changed_cb (GtkWidget *w) {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("command_exit", status);
+}
+
+static void check_command_login_shell_cb (GtkWidget *w) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("command_login_shell", active);
 }
 
 static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w)
@@ -2049,6 +2066,7 @@ static void set_wizard_state_from_config () {
 
     CHECK_BUTTON ("check_run_custom_command", "run_command");
     TEXT_ENTRY ("entry_custom_command", "command");
+    CHECK_BUTTON ("check_command_login_shell", "command_login_shell");
     COMBO_BOX ("combo_command_exit", "command_exit");
     COMBO_BOX ("combo_on_last_terminal_exit", "on_last_terminal_exit");
     SET_SENSITIVE_BY_CONFIG_BOOL ("entry_custom_command","run_command");
@@ -2186,6 +2204,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
     CONNECT_SIGNAL ("entry_custom_command","focus-out-event", validate_executable_command_cb);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
+    CONNECT_SIGNAL ("check_command_login_shell", "toggled", check_command_login_shell_cb);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
     CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb);

@@ -459,22 +459,37 @@ launch_default_shell:
     /* We need to create a NULL terminated list of arguments.
      * The first item is the command to execute in the shell, in this
      * case there are no further arguments being passed. */
-    argv = malloc(2 * sizeof(void *));
-    argv[0] = default_command;
-    argv[1] = NULL;
+    GSpawnFlags flags = 0;
+    gchar* argv1 = NULL;
+    if(config_getbool("command_login_shell")) {
+        argv1 = g_strdup_printf("-%s", default_command);
+        argv = malloc(3 * sizeof(void *));
+        argv[0] = default_command;
+        argv[1] = argv1;
+        argv[2] = NULL;
+        /* This is needed so that argv[1] becomes the argv[0] of the new process. Otherwise
+         * glib just duplicates argv[0] when it executes the command and it is not possible
+         * to modify the argv[0] that the new command sees.
+         */
+        flags |= G_SPAWN_FILE_AND_ARGV_ZERO;
+    } else {
+        argv = malloc(1 * sizeof(void *));
+        argv[0] = default_command;
+        argv[1] = NULL;
+    }
 
     ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
         VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
         working_dir, /* const char *working_directory */
         argv, /* char **argv */
         NULL, /* char **envv */
-        0,    /* GSpawnFlags spawn_flags */
+        flags,    /* GSpawnFlags spawn_flags */
         NULL, /* GSpawnChildSetupFunc child_setup */
         NULL, /* gpointer child_setup_data */
         &tt->pid, /* GPid *child_pid */
         NULL  /* GError **error */
         );
-
+    g_free(argv1);
     g_free (argv);
 
     if (ret == -1)
