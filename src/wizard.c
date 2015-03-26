@@ -283,6 +283,13 @@ gint wizard (tilda_window *ltw)
     /* Adding widget title for CSS selection */
     gtk_widget_set_name (GTK_WIDGET(wizard_window), "Wizard");
 
+    /* Set the icon for the wizard winodw to our tilda icon. */
+    gchar* filename = g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL);
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+    g_free(filename);
+    gtk_window_set_icon(GTK_WINDOW(wizard_window), pixbuf);
+
+
     window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
     gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
