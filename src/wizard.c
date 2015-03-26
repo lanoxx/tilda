@@ -1125,23 +1125,35 @@ static void entry_word_chars_changed (GtkWidget *w)
 static int find_centering_coordinate (enum dimensions dimension)
 {
     DEBUG_FUNCTION ("find_centering_coordinate");
+    DEBUG_ASSERT (tw);
 
-    gdouble screen_dimension = 0;
+    gdouble monitor_dimension = 0;
     gdouble tilda_dimension = 0;
     gdouble min, max;
+    int offset = 0;
+
+    GdkScreen *screen = gtk_widget_get_screen(tw->window);
+    int monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(tw->window));
+    GdkRectangle rectangle;
+
+    gdk_screen_get_monitor_geometry(screen, monitor, &rectangle);
+
     if (dimension == HEIGHT) {
         SPIN_BUTTON_GET_RANGE ("spin_y_position", &min, &max);
-        screen_dimension = max;
+        monitor_dimension = rectangle.height;
         tilda_dimension = config_getint("max_height");
+        offset = rectangle.y;
     } else if (dimension == WIDTH) {
         SPIN_BUTTON_GET_RANGE ("spin_x_position", &min, &max);
-        screen_dimension = max;
+        monitor_dimension = rectangle.width;
         tilda_dimension = config_getint("max_width");
+        offset = rectangle.x;
     }
-    const float screen_center = screen_dimension / 2.0;
+
+    const float monitor_center = monitor_dimension / 2.0;
     const float tilda_center  = tilda_dimension  / 2.0;
 
-    return screen_center - tilda_center;
+    return offset + monitor_center - tilda_center;
 }
 
 /*
