@@ -221,7 +221,7 @@ static void init_palette_scheme_menu (void);
 static void update_palette_color_button(gint idx);
 static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
 static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
-static int find_centering_coordinate (enum dimensions dimension);
+static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
 static void initialize_geometry_spinners(void);
 
 /* Show the wizard. This will show the wizard, then exit immediately. */
@@ -1116,26 +1116,32 @@ static void entry_word_chars_changed (GtkWidget *w)
  * Centering based on y coordinate is similar, just use the screen height and
  * tilda window height.
  */
-static int find_centering_coordinate (enum dimensions dimension)
+static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension)
 {
     DEBUG_FUNCTION ("find_centering_coordinate");
 
-    gdouble screen_dimension = 0;
+    gdouble monitor_dimension = 0;
     gdouble tilda_dimension = 0;
-    gdouble min, max;
+    gint monitor = config_getint("show_on_monitor_number");
+    GdkRectangle rectangle;
+    gdk_screen_get_monitor_geometry(gtk_widget_get_screen(tw->window), monitor, &rectangle);
     if (dimension == HEIGHT) {
-        SPIN_BUTTON_GET_RANGE ("spin_y_position", &min, &max);
-        screen_dimension = max;
+        monitor_dimension = rectangle.height;
         tilda_dimension = config_getint("max_height");
     } else if (dimension == WIDTH) {
-        SPIN_BUTTON_GET_RANGE ("spin_x_position", &min, &max);
-        screen_dimension = max;
+        monitor_dimension = rectangle.width;
         tilda_dimension = config_getint("max_width");
     }
-    const float screen_center = screen_dimension / 2.0;
-    const float tilda_center  = tilda_dimension  / 2.0;
+    const gdouble screen_center = monitor_dimension / 2.0;
+    const gdouble tilda_center  = tilda_dimension  / 2.0;
+    gint center = (int) (screen_center - tilda_center);
 
-    return screen_center - tilda_center;
+    if(dimension == HEIGHT) {
+        center += rectangle.y;
+    } else if (dimension == WIDTH) {
+        center += rectangle.x;
+    }
+    return center;
 }
 
 /*
@@ -1161,7 +1167,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
+        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -1183,7 +1189,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
-        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
+        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -1205,7 +1211,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (WIDTH));
+        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -1228,7 +1234,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
-        config_setint ("x_pos", find_centering_coordinate (WIDTH));
+        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -1248,7 +1254,7 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     config_setbool ("centered_horizontally", active);
 
     if (active)
-        config_setint ("x_pos", find_centering_coordinate (WIDTH));
+        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
     else
         config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_x_position)));
 
@@ -1286,7 +1292,7 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     config_setbool ("centered_vertically", active);
 
     if (active)
-        config_setint ("y_pos", find_centering_coordinate (HEIGHT));
+        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
     else
         config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_y_position)));
 
