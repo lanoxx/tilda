@@ -2001,24 +2001,40 @@ static void initialize_geometry_spinners() {
 	int monitor_height = rectangle.height;
 	int monitor_width = rectangle.width;
 
+    /* Update range and value of height spinners */
+    gint height = config_getint("max_height");
 	SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
 	SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (monitor_height, config_getint ("max_height")));
     SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, monitor_height);
-	SPIN_BUTTON("spin_height_pixels", "max_height");
+	SPIN_BUTTON_SET_VALUE("spin_height_pixels", height);
 
+    /* Update range and value of width spinners */
+    gint width = config_getint("max_width");
 	SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
 	SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (monitor_width, config_getint ("max_width")));
     SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, monitor_width);
-	SPIN_BUTTON("spin_width_pixels", "max_width");
+	SPIN_BUTTON_SET_VALUE("spin_width_pixels", width);
 
 	CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");
 	CHECK_BUTTON("check_centered_vertically", "centered_vertically");
 
+    gint xpos = config_getint("x_pos");
+    if(xpos < rectangle.x) {
+        xpos = rectangle.x;
+        config_setint("x_pos", xpos);
+    }
 	SPIN_BUTTON_SET_RANGE("spin_x_position", 0, gdk_screen_width());
-	SPIN_BUTTON_SET_RANGE("spin_y_position", 0, gdk_screen_height());
+    SPIN_BUTTON_SET_VALUE("spin_x_position", xpos); /* TODO: Consider x in rectange.x for monitor displacement */
 
-	SPIN_BUTTON("spin_x_position", "x_pos");
-	SPIN_BUTTON("spin_y_position", "y_pos");
+    gint ypos = config_getint("y_pos");
+    if(ypos < rectangle.y) {
+        ypos = rectangle.y;
+        config_setint("y_pos", ypos);
+    }
+    SPIN_BUTTON_SET_RANGE("spin_y_position", 0, gdk_screen_height());
+    SPIN_BUTTON_SET_VALUE("spin_y_position", ypos);
+
+    gtk_window_move(GTK_WINDOW(tw->window), xpos, ypos);
 
 	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
 	SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
