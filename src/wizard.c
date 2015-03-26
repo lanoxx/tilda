@@ -1081,6 +1081,12 @@ static void check_command_login_shell_cb (GtkWidget *w) {
     config_setbool("command_login_shell", active);
 }
 
+static void check_start_fullscreen_cb(GtkWidget *w) {
+    const gboolean start_fullscreen = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("start_fullscreen", start_fullscreen);
+}
+
 static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -2030,6 +2036,7 @@ static void initialize_geometry_spinners() {
 
 	CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");
 	CHECK_BUTTON("check_centered_vertically", "centered_vertically");
+        CHECK_BUTTON("check_start_fullscreen", "start_fullscreen");
 
     gint xpos = config_getint("x_pos");
     if(xpos < rectangle.x) {
@@ -2212,6 +2219,8 @@ static void connect_wizard_signals ()
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb);
     CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb);
+
+    CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb);
 
     CONNECT_SIGNAL ("check_enable_antialiasing","toggled",check_enable_antialiasing_toggled_cb);
     CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb);

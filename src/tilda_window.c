@@ -115,23 +115,32 @@ gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_position
 }
 
 
+void tilda_window_set_fullscreen(tilda_window *tw)
+{
+  DEBUG_FUNCTION ("tilda_window_set_fullscreen");
+  DEBUG_ASSERT (tw != NULL);
+
+  if (tw->fullscreen == TRUE) {
+    gtk_window_fullscreen (GTK_WINDOW (tw->window));
+  }
+  else {
+    gtk_window_unfullscreen (GTK_WINDOW (tw->window));
+    // This appears to be necssary on (at least) xfwm4 if you tabbed out
+    // while fullscreened.
+    gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    gtk_window_move(GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+  }
+}
+
 gint toggle_fullscreen_cb (tilda_window *tw)
 {
     DEBUG_FUNCTION ("toggle_fullscreen_cb");
     DEBUG_ASSERT (tw != NULL);
 
-    if (tw->fullscreen != TRUE) {
-        gtk_window_fullscreen (GTK_WINDOW (tw->window));
-    }
-    else {
-        gtk_window_unfullscreen (GTK_WINDOW (tw->window));
-        // This appears to be necssary on (at least) xfwm4 if you tabbed out
-        // while fullscreened.
-        gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        gtk_window_move(GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-    }
     tw->fullscreen = !tw->fullscreen;
+
+    tilda_window_set_fullscreen(tw);
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
@@ -674,7 +683,8 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
         tw->hide_non_focused = FALSE;
     }
 
-    tw->fullscreen = FALSE;
+    tw->fullscreen = config_getbool("start_fullscreen");
+    tilda_window_set_fullscreen(tw);
 
     /* Set up all window properties */
     if (config_getbool ("pinned"))
