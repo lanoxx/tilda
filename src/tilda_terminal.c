@@ -812,7 +812,8 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
             "  </menu>\n"
             "</interface>";
 
-    GtkBuilder *builder = gtk_builder_new_from_string(menu_str, strlen(menu_str));
+    GtkBuilder *builder = gtk_builder_new();
+    gtk_builder_add_from_string(builder, menu_str, strlen(menu_str), NULL);
 
     /* Create the action group */
     GSimpleActionGroup *action_group = g_simple_action_group_new();
