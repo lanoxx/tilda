@@ -224,6 +224,26 @@ static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_
 static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
 static void initialize_geometry_spinners(void);
 
+
+gint find_monitor_number(tilda_window *tw)
+{
+    DEBUG_FUNCTION ("find_monitor_number");
+
+    GdkScreen *screen = gtk_widget_get_screen (tw->window);
+    gint n_monitors = gdk_screen_get_n_monitors (screen);
+
+    for(int i = 0; i < n_monitors; ++i)
+    {
+        if(0 == g_strcmp0 (config_getstr ("show_on_monitor"),
+						   gdk_screen_get_monitor_plug_name (screen, i)))
+        {
+            return i;
+        }
+    }
+
+	return gdk_screen_get_primary_monitor (screen);
+}
+
 /* Show the wizard. This will show the wizard, then exit immediately. */
 gint wizard (tilda_window *ltw)
 {
@@ -639,12 +659,12 @@ static int percentage_dimension (int max_size, int current_size) {
  * Get the number of screens and load the monitor geometry for each screen,
  * then set the position of the window according to the x and y offset
  * of that monitor. This function does not actually move or resize the window
- * but only sets changes the value of the spin buttons. The moving and resizing
+ * but only changes the value of the spin buttons. The moving and resizing
  * is then done by the callback functions of the respective widgets.
  */
 static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
 	// Get the monitor number on which the window is currently shown
-	int last_monitor = config_getint("show_on_monitor_number");
+	int last_monitor = find_monitor_number(tw);
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int num_monitors = gdk_screen_get_n_monitors(screen);
 	GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
@@ -653,12 +673,27 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
 		GdkRectangle* current_rectangle = rect+i;
 		gdk_screen_get_monitor_geometry(screen, i, current_rectangle);
 	}
-	int monitor;
+
+	GtkTreeIter active_iter;
+
 	GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
-	monitor = gtk_combo_box_get_active(combo_choose_monitor);
+
+	if(!gtk_combo_box_get_active_iter(combo_choose_monitor, &active_iter))
+	{
+		return FALSE;
+	}
+
+	gchar* new_monitor_name = NULL;
+	gint new_monitor_number;
+
+    gtk_tree_model_get(gtk_combo_box_get_model(combo_choose_monitor), &active_iter,
+                       0, &new_monitor_name,
+                       1, &new_monitor_number,
+                       -1);
+
 	//Save the new monitor value
-	config_setint("show_on_monitor_number", monitor);
-	GdkRectangle* current_rectangle = rect + monitor;
+	config_setstr("show_on_monitor", new_monitor_name);
+	GdkRectangle* current_rectangle = rect + new_monitor_number;
 	GdkRectangle* last_rectangle = rect + last_monitor;
 	/* The dimensions of the monitor might have changed,
 	 * so we need to update the spinner widgets for height,
@@ -1129,7 +1164,7 @@ static int find_centering_coordinate (tilda_window *tw, enum dimensions dimensio
 
     gdouble monitor_dimension = 0;
     gdouble tilda_dimension = 0;
-    gint monitor = config_getint("show_on_monitor_number");
+    gint monitor = find_monitor_number(tw);
     GdkRectangle rectangle;
     gdk_screen_get_monitor_geometry(gtk_widget_get_screen(tw->window), monitor, &rectangle);
     if (dimension == HEIGHT) {
@@ -1171,12 +1206,12 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 
     config_setint ("max_height", h_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
         config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1193,12 +1228,12 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
 
     config_setint ("max_height", h_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
         config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1215,12 +1250,12 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
 
     config_setint ("max_width", w_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
         config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1238,12 +1273,12 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
     config_setint ("max_width", w_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage),
         &spin_width_percentage_value_changed_cb, w_pct);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
         config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1268,7 +1303,7 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(label_x_position), !active);
     gtk_widget_set_sensitive (GTK_WIDGET(spin_x_position), !active);
 
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1281,7 +1316,8 @@ static void spin_x_position_value_changed_cb (GtkWidget *w)
     const gint y_pos = config_getint ("y_pos");
 
     config_setint ("x_pos", x_pos);
-    gtk_window_move (GTK_WINDOW(tw->window), x_pos, y_pos);
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1306,7 +1342,7 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(label_y_position), !active);
     gtk_widget_set_sensitive (GTK_WIDGET(spin_y_position), !active);
 
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1319,7 +1355,8 @@ static void spin_y_position_value_changed_cb (GtkWidget *w)
     const gint y_pos = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
 
     config_setint ("y_pos", y_pos);
-    gtk_window_move (GTK_WINDOW(tw->window), x_pos, y_pos);
+
+    tilda_window_reposition(tw);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1419,8 +1456,7 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
      * than show and place the window. */
     if (!status)
     {
-        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+      tilda_window_reposition(tw);
     }
 
     /* Avoids a nasty looking glitch if you switch on animation while the window is
@@ -1512,7 +1548,7 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0;
             break;
         /* Zenburn */
-        case 4: 
+        case 4:
 			gdk_text.red = 0.86;
 			gdk_text.green = gdk_text.blue = 0.64;
 			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25;
@@ -1981,22 +2017,33 @@ static void initialize_combo_choose_monitor() {
 	 */
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int num_monitors = gdk_screen_get_n_monitors(screen);
+    int monitor_number = find_monitor_number(tw);
+
 	GtkComboBox* combo_choose_monitor =
 			GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
 	GtkListStore* monitor_model =
 			GTK_LIST_STORE(gtk_combo_box_get_model(combo_choose_monitor));
 	GtkTreeIter iter;
 	gint i;
+
+    gtk_list_store_clear(monitor_model);
+
 	/* The loop starts at 1 because 0 is already in the list store by default. This is set in
 	 * the list store definition in the GtkBuilder file. */
-	for (i = 1; i < num_monitors; i++) {
+	for (i = 0; i < num_monitors; i++) {
 		gtk_list_store_append(monitor_model, &iter);
-		gtk_list_store_set(monitor_model, &iter, 0, i, -1);
+		gtk_list_store_set(monitor_model, &iter,
+                           0, gdk_screen_get_monitor_plug_name(screen, i),
+                           1, i,
+                           -1);
+
+        if(i == monitor_number)
+        {
+          gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
+        }
+
 	}
-	//select the monitor according to the config file
-	if (num_monitors > config_getint("show_on_monitor_number")) {
-		COMBO_BOX ("combo_choose_monitor", "show_on_monitor_number");
-	}
+
 }
 
 /**
@@ -2008,7 +2055,7 @@ static void initialize_combo_choose_monitor() {
  */
 static void initialize_geometry_spinners() {
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-	int monitor = config_getint("show_on_monitor_number");
+	int monitor = find_monitor_number(tw);
 	GdkRectangle rectangle;
 	gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
 	int monitor_height = rectangle.height;
@@ -2047,7 +2094,7 @@ static void initialize_geometry_spinners() {
     SPIN_BUTTON_SET_RANGE("spin_y_position", 0, gdk_screen_height());
     SPIN_BUTTON_SET_VALUE("spin_y_position", ypos);
 
-    gtk_window_move(GTK_WINDOW(tw->window), xpos, ypos);
+    tilda_window_reposition(tw);
 
 	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
 	SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
@@ -2336,4 +2383,3 @@ static void update_palette_color_button(gint idx)
 
     gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (color_button), &current_palette[idx]);
 }
-

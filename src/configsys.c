@@ -71,6 +71,8 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("increase_font_size_key", "<Control>equal", CFGF_NONE),
     CFG_STR("decrease_font_size_key", "<Control>minus", CFGF_NONE),
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
+    CFG_STR("show_on_monitor", "", CFGF_NONE),
+
 
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),
@@ -95,8 +97,6 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("palette_scheme", 0, CFGF_NONE),
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
 
-    /* The default monitor number is 0 */
-    CFG_INT("show_on_monitor_number", 0, CFGF_NONE),
     /* The length of a tab title */
     CFG_INT("title_max_length", 25, CFGF_NONE),
 
@@ -159,6 +159,7 @@ static cfg_opt_t config_opts[] = {
     /* Whether to set a new tab's working dir to the current tab's */
     CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
+    CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
     CFG_END()
 };
 

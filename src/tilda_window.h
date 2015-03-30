@@ -139,6 +139,8 @@ gint toggle_fullscreen_cb (tilda_window *tw);
  */
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos);
 
+void tilda_window_reposition(tilda_window *tw);
+
 /**
  * tilda_window_close_tab ()
  *

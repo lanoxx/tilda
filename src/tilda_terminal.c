@@ -21,6 +21,7 @@
 #include "tilda_terminal.h"
 #include "callback_func.h"
 #include "configsys.h"
+#include "key_grabber.h"
 #include "wizard.h" /* wizard */
 
 #include <stdio.h>
@@ -698,6 +699,11 @@ menu_preferences_cb (GSimpleAction *action,
 {
     DEBUG_FUNCTION ("menu_config_cb");
     DEBUG_ASSERT (user_data != NULL);
+
+    tilda_window *tw = TILDA_WINDOW(user_data);
+
+    /* Pull up the window first */
+    pull(tw, PULL_UP, TRUE);
 
     /* Show the config wizard */
     wizard (TILDA_WINDOW(user_data));
