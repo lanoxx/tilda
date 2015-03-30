@@ -1167,7 +1167,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
 
     const gint h_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint h_pix = percentage2pixels (get_max_height(), h_pct);
+    const gint h_pix = (int) percentage2pixels (get_max_height(), h_pct);
 
     config_setint ("max_height", h_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix);
@@ -1211,7 +1211,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
 
     const gint w_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint w_pix = percentage2pixels (get_max_width(), w_pct);
+    const gint w_pix = (int) percentage2pixels (get_max_width(), w_pct);
 
     config_setint ("max_width", w_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix);
