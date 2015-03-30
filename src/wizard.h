@@ -26,6 +26,8 @@ G_BEGIN_DECLS
 gint wizard (tilda_window *tw);
 void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* message);
 
+gint find_monitor_number(tilda_window *tw);
+
 G_END_DECLS
 
 #endif

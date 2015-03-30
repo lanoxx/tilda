@@ -22,6 +22,7 @@
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 #include "key_grabber.h"
+#include "wizard.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -90,6 +91,24 @@ void tilda_window_close_current_tab (tilda_window *tw)
 
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
     tilda_window_close_tab (tw, pos, FALSE);
+}
+
+void tilda_window_reposition(tilda_window *tw)
+{
+	int monitor_number = find_monitor_number(tw);
+	GdkRectangle monitor_rectangle;
+	GdkScreen *screen = gtk_widget_get_screen(tw->window);
+
+	gdk_screen_get_monitor_geometry(screen, monitor_number, &monitor_rectangle);
+
+	gtk_window_resize (GTK_WINDOW(tw->window),
+					   MIN(config_getint("max_width"), monitor_rectangle.width),
+					   MIN(config_getint("max_height"), monitor_rectangle.height));
+
+	gtk_window_move (GTK_WINDOW(tw->window),
+					 monitor_rectangle.x + config_getint ("x_pos"),
+					 monitor_rectangle.y + config_getint ("y_pos"));
+
 }
 
 
@@ -643,6 +662,11 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
+static void screen_changed_cb(GdkScreen *screen, tilda_window *tw)
+{
+	tilda_window_reposition(tw);
+}
+
 gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_init");
@@ -765,6 +789,10 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     g_signal_connect (G_OBJECT(tw->window), "focus-out-event", G_CALLBACK (focus_out_event_cb), tw);
     g_signal_connect (G_OBJECT(tw->window), "enter-notify-event", G_CALLBACK (mouse_enter), tw);
     g_signal_connect (G_OBJECT(tw->window), "leave-notify-event", G_CALLBACK (mouse_leave), tw);
+
+    GdkScreen *screen = gtk_widget_get_screen(tw->window);
+
+    g_signal_connect (G_OBJECT(screen), "monitors-changed", G_CALLBACK(screen_changed_cb), tw);
 
     /* Add the notebook to the window */
     gtk_container_add (GTK_CONTAINER(tw->window), tw->notebook);
