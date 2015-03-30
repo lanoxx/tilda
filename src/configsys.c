@@ -159,6 +159,7 @@ static cfg_opt_t config_opts[] = {
     /* Whether to set a new tab's working dir to the current tab's */
     CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
+    CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
     CFG_END()
 };
 

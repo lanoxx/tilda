@@ -232,15 +232,16 @@ static gint find_monitor_number(tilda_window *tw)
     GdkScreen *screen = gtk_widget_get_screen (tw->window);
     gint n_monitors = gdk_screen_get_n_monitors (screen);
 
-    gchar *show_on_monitor = config_getstr("show_on_monitor");
-    for(int i = 0; i < n_monitors; ++i) {
-        gchar *monitor_name = gdk_screen_get_monitor_plug_name (screen, i);
-        if(0 == g_strcmp0 (show_on_monitor, monitor_name)) {
+    for(int i = 0; i < n_monitors; ++i)
+    {
+        if(0 == g_strcmp0 (config_getstr ("show_on_monitor"),
+						   gdk_screen_get_monitor_plug_name (screen, i)))
+        {
             return i;
         }
     }
 
-    return gdk_screen_get_primary_monitor (screen);
+	return gdk_screen_get_primary_monitor (screen);
 }
 
 /* Show the wizard. This will show the wizard, then exit immediately. */
@@ -2026,17 +2027,22 @@ static void initialize_combo_choose_monitor() {
 
     gtk_list_store_clear(monitor_model);
 
-    for (i = 0; i < num_monitors; i++) {
-        gtk_list_store_append(monitor_model, &iter);
-        gtk_list_store_set(monitor_model, &iter,
+	/* The loop starts at 1 because 0 is already in the list store by default. This is set in
+	 * the list store definition in the GtkBuilder file. */
+	for (i = 0; i < num_monitors; i++) {
+		gtk_list_store_append(monitor_model, &iter);
+		gtk_list_store_set(monitor_model, &iter,
                            0, gdk_screen_get_monitor_plug_name(screen, i),
                            1, i,
                            -1);
 
-        if(i == monitor_number) {
+        if(i == monitor_number)
+        {
           gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
         }
-    }
+
+	}
+
 }
 
 /**
