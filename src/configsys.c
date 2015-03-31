@@ -201,12 +201,10 @@ gint config_init (const gchar *config_file)
 
 		if (ret == CFG_PARSE_ERROR) {
 			DEBUG_ERROR ("Problem parsing config");
-			g_printerr (_("Problem when opening config file\n"));
-			return 1;
+            return ret;
 		} else if (ret != CFG_SUCCESS) {
             DEBUG_ERROR ("Problem parsing config.");
-			g_printerr (_("An unexpected error occured while "
-                "parsing the config file\n"));
+            return ret;
         }
 	}
 
@@ -214,7 +212,7 @@ gint config_init (const gchar *config_file)
         g_mutex_init(&mutex);
     #endif
 
-	return 0;
+	return ret;
 }
 
 /* Note: set config_file to NULL to just free the

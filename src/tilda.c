@@ -15,6 +15,27 @@
 #define _POSIX_SOURCE /* feature test macro for signal functions */
 #define _XOPEN_SOURCE /* feature test macro for popen */
 
+/*
+ * This message is shown in a modal dialog when tilda starts and there is a problem parsing the configuration file.
+ * Such problems can occur for example if the config file contains a key-value pair that is unknown to tilda. This
+ * can be the case if the user manually modified the configuration file or if a newer version of tilda was run and
+ * which saved some settings that are not known by older versions of tilda.
+ */
+#define TILDA_CONFIG_PARSE_ERROR \
+    "<b>A problem occurred while parsing the config file.</b>\n\n" \
+    "This can happen if the tilda config contains a setting that is unknown to tilda. " \
+    "Tilda will now start with the default configuration."
+
+/*
+ * This message is shown in a modal dialog when tilda starts and there is a any other problem with the configuration
+ * file except a parse error.
+ */
+#define TILDA_CONFIG_OTHER_ERROR \
+    "<b>An unexpected error occured while parsing the config file.</b>\n\n" \
+    "The default configuration will be used instead. This error can occur if the configuration file is corrupted" \
+    "or otherwise unreadable. Tilda will now start with a default configuration."
+
+
 #include <tilda-config.h>
 
 #include "debug.h"
@@ -651,7 +672,7 @@ int main (int argc, char *argv[])
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
     /* Start up the configuration system */
-    config_init (config_file);
+    gint config_init_result = config_init (config_file);
 
     /* Parse the command line */
     need_wizard = parse_cli (argc, argv);
@@ -659,8 +680,27 @@ int main (int argc, char *argv[])
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
 
-    /* Initialize GTK and libglade */
+    /* Initialize GTK. Any code that interacts with GTK (e.g. creating a widget) should come after this call. */
     gtk_init (&argc, &argv);
+
+    /* This section shows a modal dialog to notify the user that something has gone wrong when loading the config.
+     * Earlier version only used to print a message to stderr, but since tilda is usually not started from a
+     * console this message would have been lost and a message dialog is much more user friedly.
+     */
+    GtkWidget *dialog = NULL;
+    if(config_init_result == 1) {
+        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+                                        TILDA_CONFIG_PARSE_ERROR);
+    } else if (config_init_result != 0) {
+        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+                                        TILDA_CONFIG_OTHER_ERROR);
+    }
+
+    if(dialog) {
+        g_message("Running Dialog");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
 
     load_custom_css_file ();
 
