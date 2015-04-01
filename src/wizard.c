@@ -897,31 +897,22 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
     }
 }
 
-static void vte_cursor_type_cb (GtkWidget *w)
+static void vte_cursor_shape_cb (GtkWidget *w)
 {
-    VteTerminalCursorShape cursor_shape;
-    gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-
-    switch (status) {
-        case 1:
-            cursor_shape = VTE_CURSOR_SHAPE_IBEAM;
-            break;
-        case 2:
-            cursor_shape = VTE_CURSOR_SHAPE_UNDERLINE;
-            break;
-        default: 
-            cursor_shape = VTE_CURSOR_SHAPE_BLOCK;
-            status=0;
-            break;
-    }
-    
     gint i;
     tilda_term *tt;
-    config_setint("cursor_type", status);
+    gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+    
+    if (status < 0 || status > 2) {
+        DEBUG_ERROR ("Invalid Cursor Type");
+        g_printerr (_("Invalid Cursor Type, reseting to default\n"));
+        status = 0;
+    }
+    config_setint("cursor_shape", (VteTerminalCursorShape)status);
     
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_cursor_shape (VTE_TERMINAL(tt->vte_term), cursor_shape);
+        vte_terminal_set_cursor_shape (VTE_TERMINAL(tt->vte_term), (VteTerminalCursorShape)status);
     }
 }
 
@@ -2119,7 +2110,7 @@ static void set_wizard_state_from_config () {
 
     CHECK_BUTTON ("check_terminal_bell", "bell");
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
-    COMBO_BOX ("vte_cursor_type", "cursor_type");
+    COMBO_BOX ("vte_cursor_shape", "cursor_shape");
 
     CHECK_BUTTON ("check_enable_antialiasing", "antialias");
     CHECK_BUTTON ("check_allow_bold_text", "bold");
@@ -2266,7 +2257,7 @@ static void connect_wizard_signals ()
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb);
     CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb);
-    CONNECT_SIGNAL ("vte_cursor_type","changed", vte_cursor_type_cb);
+    CONNECT_SIGNAL ("vte_cursor_shape","changed", vte_cursor_shape_cb);
  
     CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb);
 

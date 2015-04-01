@@ -109,10 +109,10 @@
         <col id="0" translatable="yes">Block Cursor</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Underline Cursor</col>
+        <col id="0" translatable="yes">IBeam Cursor</col>
       </row>
       <row>
-        <col id="0" translatable="yes">IBeam Cursor</col>
+        <col id="0" translatable="yes">Underline Cursor</col>
       </row>
     </data>
   </object>
@@ -594,7 +594,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkComboBox" id="vte_cursor_type">
+                              <object class="GtkComboBox" id="vte_cursor_shape">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="model">model11</property>

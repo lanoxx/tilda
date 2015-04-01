@@ -557,7 +557,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     GdkRGBA fg, bg, cc;
     gchar* word_chars;
     gint i;
-
+    gint cursor_shape; 
+    
     /** Colors & Palette **/
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
@@ -592,20 +593,11 @@ static gint tilda_term_config_defaults (tilda_term *tt)
             (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
     vte_terminal_set_color_cursor_rgba (VTE_TERMINAL(tt->vte_term), &cc);
     
-    switch(config_getint("cursor_type")) {
-        case 0: 
-            vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), VTE_CURSOR_SHAPE_BLOCK);
-        case 1: 
-            vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), VTE_CURSOR_SHAPE_IBEAM);
-            break;  
-        case 2: 
-            vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), VTE_CURSOR_SHAPE_UNDERLINE);
-            break;
-        default: 
-            config_setint("cursor_type", 0);
-            vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), VTE_CURSOR_SHAPE_BLOCK);
-            break;
+    if ((cursor_shape = config_getint("cursor_shape")) < 0 || cursor_shape > 2) {
+        config_setint("cursor_shape", 0);
+        cursor_shape = 0;
     }
+    vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), (VteTerminalCursorShape)cursor_shape);
     
     /** Scrolling **/
     vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
