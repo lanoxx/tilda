@@ -72,7 +72,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("increase_font_size_key", "<Control>equal", CFGF_NONE),
     CFG_STR("decrease_font_size_key", "<Control>minus", CFGF_NONE),
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
-
+    
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),
@@ -95,6 +95,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("on_last_terminal_exit", 0, CFGF_NONE),
     CFG_INT("palette_scheme", 0, CFGF_NONE),
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
+    CFG_INT("cursor_shape", 0, CFGF_NONE),
 
     /* The default monitor number is 0 */
     CFG_INT("show_on_monitor_number", 0, CFGF_NONE),
@@ -129,6 +130,10 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("text_red", 0xffff, CFGF_NONE),
     CFG_INT("text_green", 0xffff, CFGF_NONE),
     CFG_INT("text_blue", 0xffff, CFGF_NONE),
+    CFG_INT("cursor_red", 0xffff, CFGF_NONE),
+    CFG_INT("cursor_green", 0xffff, CFGF_NONE),
+    CFG_INT("cursor_blue", 0xffff, CFGF_NONE),
+ 
 
     /* booleans */
     CFG_BOOL("scroll_history_infinite", FALSE, CFGF_NONE),
