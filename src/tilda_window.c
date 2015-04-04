@@ -696,7 +696,10 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 
     /* Create the main window */
     tw->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
+    
+    /* The gdk_x11_get_server_time call will hang if GDK_PROPERTY_CHANGE_MASK is not set */
+    gdk_window_set_events(gdk_screen_get_root_window (gtk_widget_get_screen (tw->window)), GDK_PROPERTY_CHANGE_MASK);
+    
     /* Generic timer resolution */
     tw->timer_resolution = config_getint("timer_resolution");
 
