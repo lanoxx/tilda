@@ -73,8 +73,6 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("decrease_font_size_key", "<Control>minus", CFGF_NONE),
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
     
-
-    
     /* ints */
     CFG_INT("lines", 100, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),

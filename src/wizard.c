@@ -899,7 +899,7 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
 
 static void vte_cursor_shape_cb (GtkWidget *w)
 {
-    gint i;
+    guint i;
     tilda_term *tt;
     gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     
@@ -1576,7 +1576,7 @@ static void colorbutton_cursor_color_set_cb (GtkWidget *w)
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
 
-    gint i;
+    guint i;
     tilda_term *tt;
     GdkRGBA gdk_cursor_color;
     
