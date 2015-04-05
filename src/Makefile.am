@@ -40,13 +40,15 @@ src_tilda_CFLAGS = $(AM_CFLAGS) \
 		$(GTK_CFLAGS) \
 		$(LIBGLADE_CFLAGS) \
 		$(VTE_CFLAGS) \
-		$(LIBCONFUSE_CFLAGS)
+		$(LIBCONFUSE_CFLAGS) \
+		$(X11_CFLAGS)
 
 src_tilda_LDFLAGS = $(AM_LDFLAGS) \
 		$(GTK_LDFLAGS) \
 		$(LIBGLADE_LDFLAGS) \
 		$(VTE_LDFLAGS) \
 		$(LIBCONFUSE_LDFLAGS) \
+		$(X11_LDFLAGS) \
 		-Wl,--as-needed
 
 src_tilda_LDADD = $(AM_LDADD) \
@@ -54,6 +56,7 @@ src_tilda_LDADD = $(AM_LDADD) \
 		$(LIBGLADE_LIBS) \
 		$(VTE_LIBS) \
 		$(LIBCONFUSE_LIBS) \
+		$(X11_LIBS) \
 		$(LTLIBINTL) \
 		$(LEXLIB)
 
