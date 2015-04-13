@@ -207,6 +207,8 @@ enum dimensions { HEIGHT, WIDTH };
  * keep things "in the code" so that they can be grepped for easily. */
 static GtkBuilder *xml = NULL;
 
+static GtkListStore *keybindings_model = NULL;
+
 /* Prototypes for use in the wizard() */
 static void set_wizard_state_from_config (tilda_window *tw);
 static void connect_wizard_signals (tilda_window *tw);
@@ -239,6 +241,211 @@ static gint find_monitor_number(tilda_window *tw)
     return gdk_screen_get_primary_monitor (screen);
 }
 
+static gpointer wizard_dlg_key_grab (GtkWidget *dialog,
+									 GdkEventKey *event,
+									 GtkTreeView *tree_view_keybindings);
+
+static gboolean keybindings_button_press_event_cb(GtkWidget *widget,
+												  GdkEventButton *event,
+												  GtkTreeView *tree_view_keybindings);
+//static gboolean validate_keybindings();
+
+enum
+{
+	KB_TREE_ACTION,
+	KB_TREE_SHORTCUT,
+	KB_TREE_CONFIG_NAME,
+	KB_NUM_COLUMNS
+};
+
+static void apply_keybindings()
+{
+	GtkTreeIter iter;
+
+	gboolean valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(keybindings_model), &iter);
+
+	while(valid)
+	{
+		gchar *action, *config_name, *shortcut, *path;
+
+		gtk_tree_model_get(GTK_TREE_MODEL(keybindings_model), &iter,
+						   KB_TREE_ACTION, &action,
+						   KB_TREE_CONFIG_NAME, &config_name,
+						   KB_TREE_SHORTCUT, &shortcut,
+						   -1);
+
+		path = g_strdup_printf("<tilda>/context/%s", action);
+
+		tilda_window_update_keyboard_accelerators(path, config_getstr(config_name));
+
+		g_free(path);
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(keybindings_model), &iter);
+	}
+}
+
+
+static gboolean validate_keybindings(const tilda_window *tw)
+{
+	GtkTreeIter iter;
+
+	gboolean valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(keybindings_model), &iter);
+
+	while(valid)
+	{
+		gchar *action, *config_name, *shortcut;
+
+		gtk_tree_model_get(GTK_TREE_MODEL(keybindings_model), &iter,
+						   KB_TREE_ACTION, &action,
+						   KB_TREE_CONFIG_NAME, &config_name,
+						   KB_TREE_SHORTCUT, &shortcut,
+						   -1);
+
+		if(0 == g_strcmp0("key", config_name))
+		{
+			if (!validate_pulldown_keybinding(shortcut, tw,
+											  _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
+				return FALSE;
+		}
+		else
+		{
+			gchar *message = g_strdup_printf(_("The keybinding you chose for \"%s\" is invalid. Please choose another."), action);
+
+			if (!validate_keybinding(shortcut, tw, message))
+			{
+				g_free(message);
+				return FALSE;
+			}
+
+		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(keybindings_model), &iter);
+	}
+
+
+	return TRUE;
+}
+
+static gboolean save_keybindings(const tilda_window *tw)
+{
+	if(!validate_keybindings(tw))
+	{
+		return FALSE;
+	}
+
+	GtkTreeIter iter;
+
+	gboolean valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(keybindings_model), &iter);
+
+	while(valid)
+	{
+		gchar* config_name, *shortcut;
+
+		gtk_tree_model_get(GTK_TREE_MODEL(keybindings_model), &iter,
+						   KB_TREE_CONFIG_NAME, &config_name,
+						   KB_TREE_SHORTCUT, &shortcut,
+						   -1);
+
+		config_setstr(config_name, shortcut);
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(keybindings_model), &iter);
+	}
+
+
+	return TRUE;
+}
+
+static void keybindings_model_init()
+{
+	GtkWidget *tree_view_keybindings =
+        GTK_WIDGET (gtk_builder_get_object(xml, "tree_view_keybindings"));
+
+	keybindings_model = gtk_list_store_new (KB_NUM_COLUMNS,
+											G_TYPE_STRING,
+											G_TYPE_STRING,
+											G_TYPE_STRING);
+
+	gtk_tree_view_set_model (GTK_TREE_VIEW(tree_view_keybindings),
+							 GTK_TREE_MODEL(keybindings_model));
+
+
+	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+	GtkTreeViewColumn *column;
+	GtkTreeIter iter;
+
+	column = gtk_tree_view_column_new_with_attributes (_("Action"), renderer,
+													   "text", KB_TREE_ACTION, NULL);
+
+	gtk_tree_view_append_column (GTK_TREE_VIEW(tree_view_keybindings), column);
+
+	column = gtk_tree_view_column_new_with_attributes (_("Shortcut"), renderer,
+													   "text", KB_TREE_SHORTCUT, NULL);
+
+	gtk_tree_view_append_column (GTK_TREE_VIEW(tree_view_keybindings), column);
+
+
+	typedef struct keybinding
+	{
+		gchar* action;
+		gchar* config_name;
+	} keybinding;
+
+	keybinding bindings[] =
+	{
+		{"Pull Down Terminal", "key"},
+		{"Quit", "quit_key"},
+		{"Add Tab", "addtab_key"},
+		{"Close Tab", "closetab_key"},
+		{"Copy", "copy_key"},
+		{"Paste", "paste_key"},
+		{"Go To Next Tab", "nexttab_key"},
+		{"Go To Previous Tab", "prevtab_key"},
+		{"Move Tab Left", "movetableft_key"},
+		{"Move Tab Right", "movetabright_key"},
+		{"Toggle Fullscreen", "fullscreen_key"},
+		{NULL, NULL}
+	};
+
+	for(keybinding *current_binding = bindings;; ++current_binding)
+	{
+		if(current_binding->action == NULL)
+		{
+			break;
+		}
+
+		gtk_list_store_append (keybindings_model, &iter);
+
+		gtk_list_store_set (keybindings_model, &iter,
+							KB_TREE_ACTION, current_binding->action,
+							KB_TREE_SHORTCUT, config_getstr(current_binding->config_name),
+							KB_TREE_CONFIG_NAME, current_binding->config_name,
+							-1);
+
+	}
+
+	for(int i = 1; i <= 10; ++i)
+	{
+		gchar *config_name = g_strdup_printf("gototab_%i_key", i);
+		gchar *action_name = g_strdup_printf("Go To Tab %i", i);
+
+		gtk_list_store_append (keybindings_model, &iter);
+
+		gtk_list_store_set (keybindings_model, &iter,
+							KB_TREE_ACTION, action_name,
+							KB_TREE_SHORTCUT, config_getstr(config_name),
+							KB_TREE_CONFIG_NAME, config_name,
+							-1);
+
+		g_free(action_name);
+		g_free(config_name);
+
+	}
+
+	g_signal_connect(tree_view_keybindings, "button-press-event",
+					 G_CALLBACK(keybindings_button_press_event_cb), tree_view_keybindings);
+
+}
+
 /* Show the wizard. This will show the wizard, then exit immediately. */
 gint wizard (tilda_window *tw)
 {
@@ -246,7 +453,6 @@ gint wizard (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
 
     gchar *window_title;
-
     /* Make sure that there isn't already a wizard showing */
     if (tw->wizard_window) {
         gtk_window_present (GTK_WINDOW (tw->wizard_window));
@@ -302,10 +508,13 @@ gint wizard (tilda_window *tw)
     g_free(filename);
     gtk_window_set_icon(GTK_WINDOW(tw->wizard_window), pixbuf);
 
-
     window_title = g_strdup_printf (_("Tilda %d Config"), tw->instance);
     gtk_window_set_title (GTK_WINDOW(tw->wizard_window), window_title);
     gtk_window_set_type_hint (GTK_WINDOW(tw->wizard_window), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+// <
+	keybindings_model_init();
+// <
 
     gtk_widget_show_all (tw->wizard_window);
 
@@ -364,136 +573,17 @@ static void wizard_close_dialog (tilda_window *tw)
 {
     DEBUG_FUNCTION ("wizard_close_dialog");
 
-    const gchar *key = GET_BUTTON_LABEL("button_keybinding_pulldown");
-    const gchar *addtab_key = GET_BUTTON_LABEL("button_keybinding_addtab");
-    const gchar *closetab_key = GET_BUTTON_LABEL("button_keybinding_closetab");
-    const gchar *nexttab_key = GET_BUTTON_LABEL("button_keybinding_nexttab");
-    const gchar *prevtab_key = GET_BUTTON_LABEL("button_keybinding_prevtab");
-    const gchar *movetableft_key = GET_BUTTON_LABEL("button_keybinding_movetableft");
-    const gchar *movetabright_key = GET_BUTTON_LABEL("button_keybinding_movetabright");
-    const gchar *copy_key = GET_BUTTON_LABEL("button_keybinding_copy");
-    const gchar *paste_key = GET_BUTTON_LABEL("button_keybinding_paste");
-    const gchar *quit_key = GET_BUTTON_LABEL("button_keybinding_quit");
-    const gchar *gototab_1_key = GET_BUTTON_LABEL("button_keybinding_gototab1");
-    const gchar *gototab_2_key = GET_BUTTON_LABEL("button_keybinding_gototab2");
-    const gchar *gototab_3_key = GET_BUTTON_LABEL("button_keybinding_gototab3");
-    const gchar *gototab_4_key = GET_BUTTON_LABEL("button_keybinding_gototab4");
-    const gchar *gototab_5_key = GET_BUTTON_LABEL("button_keybinding_gototab5");
-    const gchar *gototab_6_key = GET_BUTTON_LABEL("button_keybinding_gototab6");
-    const gchar *gototab_7_key = GET_BUTTON_LABEL("button_keybinding_gototab7");
-    const gchar *gototab_8_key = GET_BUTTON_LABEL("button_keybinding_gototab8");
-    const gchar *gototab_9_key = GET_BUTTON_LABEL("button_keybinding_gototab9");
-    const gchar *gototab_10_key = GET_BUTTON_LABEL("button_keybinding_gototab10");
-    const gchar *fullscreen_key = GET_BUTTON_LABEL("button_keybinding_fullscreen");
-    const gchar *toggle_transparency_key = GET_BUTTON_LABEL("button_keybinding_toggle_transparency");
-    const gchar *toggle_searchbar_key = GET_BUTTON_LABEL("button_keybinding_toggle_searchbar");
-
     const GtkWidget *entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object(xml, "entry_custom_command"));
     const GtkWidget *wizard_window = tw->wizard_window;
     const gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
 
-    /* Validate our new shortcuts */
+	if(!save_keybindings(tw))
+	{
+		return;
+	}
 
-     /* The pulldown key is validated differently (should it be?), so it gets its own function. */
-    if (!validate_pulldown_keybinding(key, tw, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
-        return;
-
-     /* Check the rest of them */
-    if (!validate_keybinding(addtab_key, tw, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(closetab_key, tw, _("The keybinding you chose for \"Close Tab\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(nexttab_key, tw, _("The keybinding you chose for \"Next Tab\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(prevtab_key, tw, _("The keybinding you chose for \"Previous Tab\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(movetableft_key, tw, _("The keybinding you chose for \"Move Tab to Left\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(movetabright_key, tw, _("The keybinding you chose for \"Move Tab to Right\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(copy_key, tw, _("The keybinding you chose for \"Copy\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(paste_key, tw, _("The keybinding you chose for \"Paste\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(quit_key, tw, _("The keybinding you chose for \"Quit\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_1_key, tw, _("The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_2_key, tw, _("The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_3_key, tw, _("The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_4_key, tw, _("The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_5_key, tw, _("The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_6_key, tw, _("The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_7_key, tw, _("The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_8_key, tw, _("The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_9_key, tw, _("The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(gototab_10_key, tw, _("The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(fullscreen_key, tw, _("The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(toggle_transparency_key, tw, _("The keybinding you chose for \"Toggle Transparency\" is invalid. Please choose another.")))
-        return;
-    if (!validate_keybinding(toggle_searchbar_key, tw, _("The keybinding you chose for \"Toggle Search Bar\" is invalid. Please choose another.")))
-        return;
-
-    /* Now that our shortcuts are validated, store them back into the config. */
-    config_setstr ("key", key);
-    config_setstr ("addtab_key", addtab_key);
-    config_setstr ("closetab_key", closetab_key);
-    config_setstr ("nexttab_key", nexttab_key);
-    config_setstr ("prevtab_key", prevtab_key);
-    config_setstr ("movetableft_key", movetableft_key);
-    config_setstr ("movetabright_key", movetabright_key);
-    config_setstr ("copy_key", copy_key);
-    config_setstr ("paste_key", paste_key);
-    config_setstr ("quit_key", quit_key);
-    config_setstr ("gototab_1_key",  gototab_1_key);
-    config_setstr ("gototab_2_key",  gototab_2_key);
-    config_setstr ("gototab_3_key",  gototab_3_key);
-    config_setstr ("gototab_4_key",  gototab_4_key);
-    config_setstr ("gototab_5_key",  gototab_5_key);
-    config_setstr ("gototab_6_key",  gototab_6_key);
-    config_setstr ("gototab_7_key",  gototab_7_key);
-    config_setstr ("gototab_8_key",  gototab_8_key);
-    config_setstr ("gototab_9_key",  gototab_9_key);
-    config_setstr ("gototab_10_key", gototab_10_key);
-    config_setstr ("fullscreen_key", fullscreen_key);
-    config_setstr ("toggle_transparency_key", toggle_transparency_key);
-    config_setstr ("toggle_searchbar_key", toggle_searchbar_key);
-
-    /* Now that they're in the config, reset the keybindings right now. */
-    tilda_window_update_keyboard_accelerators("<tilda>/context/New Tab",           addtab_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Close Tab",         closetab_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Next Tab",          nexttab_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Previous Tab",      prevtab_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Left",     movetableft_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Move Tab Right",    movetabright_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Copy",              copy_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Paste",             paste_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Quit",              quit_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 1",        gototab_1_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 2",        gototab_2_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 3",        gototab_3_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 4",        gototab_4_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 5",        gototab_5_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 6",        gototab_6_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 7",        gototab_7_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 8",        gototab_8_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 9",        gototab_9_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Goto Tab 10",       gototab_10_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", fullscreen_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Transparency", toggle_transparency_key);
-    tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Searchbar", toggle_searchbar_key);
-
+	apply_keybindings();
 
     /* TODO: validate this?? */
     config_setstr ("command", command);
@@ -610,16 +700,30 @@ static int get_max_width() {
  * Note that this is called for the key_press_event for the key-grab dialog, not for the wizard.
  */
 
-static gpointer wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkWidget* w, const GtkWidget* wizard_window)
+static gpointer wizard_dlg_key_grab (GtkWidget *dialog,
+									 GdkEventKey *event,
+									 GtkTreeView *tree_view_keybindings)
 {
     DEBUG_FUNCTION ("wizard_dlg_key_grab");
-    DEBUG_ASSERT (wizard_window != NULL);
+    DEBUG_ASSERT (tree_view_keybindings != NULL);
     DEBUG_ASSERT (event != NULL);
 
     gchar *key;
 
     if (gtk_accelerator_valid (event->keyval, event->state))
     {
+		GtkTreeIter iter;
+		GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(tree_view_keybindings));
+		keybindings_model =
+			GTK_LIST_STORE(gtk_tree_view_get_model (tree_view_keybindings));
+
+		GtkTreeModel *model = GTK_TREE_MODEL(keybindings_model);
+
+		if(!gtk_tree_selection_get_selected(selection, &model, &iter))
+		{
+			return FALSE;
+		}
+
         /* This lets us ignore all ignorable modifier keys, including
          * NumLock and many others. :)
          *
@@ -630,23 +734,61 @@ static gpointer wizard_dlg_key_grab (GtkWidget *dialog, GdkEventKey *event, GtkW
         /* Generate the correct name for this key */
         key = gtk_accelerator_name (event->keyval, event->state);
 
+		gtk_list_store_set (GTK_LIST_STORE(keybindings_model), &iter,
+						    KB_TREE_SHORTCUT, key, -1);
+
+		gtk_dialog_response (GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
         #ifdef DEBUG
             g_printerr ("KEY GRABBED: %s\n", key);
         #endif
-
-        /* Disconnect the key grabber */
-        g_signal_handlers_disconnect_by_func (G_OBJECT(dialog), G_CALLBACK (wizard_dlg_key_grab), w);
-
-        /* Destroy the dialog */
-        gtk_widget_destroy (dialog);
-
-        /* Copy the pressed key to the text entry */
-        gtk_button_set_label (GTK_BUTTON(w), key);
 
         /* Free the string */
         g_free (key);
     }
     return GDK_EVENT_PROPAGATE;
+}
+
+
+static gboolean keybindings_button_press_event_cb(GtkWidget *widget,
+												  GdkEventButton *event,
+												  GtkTreeView *tree_view_keybindings)
+{
+    const GtkWidget *wizard_window =
+        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
+
+	if(event->button == 1 && event->type == GDK_2BUTTON_PRESS)
+	{
+		GtkTreeIter iter;
+		GtkTreeSelection *selection = gtk_tree_view_get_selection (tree_view_keybindings);
+		GtkTreeModel *model = GTK_TREE_MODEL(keybindings_model);
+
+		if(!gtk_tree_selection_get_selected(selection, &model, &iter))
+		{
+			return FALSE;
+		}
+
+
+		/* Bring up the dialog that will accept the new keybinding */
+		GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
+													GTK_DIALOG_DESTROY_WITH_PARENT,
+													GTK_MESSAGE_QUESTION,
+													GTK_BUTTONS_CANCEL,
+													_("Enter keyboard shortcut"));
+
+		/* Connect the key grabber to the dialog */
+		g_signal_connect (G_OBJECT(dialog), "key_press_event",
+						  G_CALLBACK(wizard_dlg_key_grab), tree_view_keybindings);
+
+		gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+
+		gtk_widget_destroy(dialog);
+
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 static int percentage_dimension (int max_size, int current_size) {
@@ -2031,115 +2173,6 @@ static void button_reset_compatibility_options_clicked_cb (tilda_window *tw)
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_delete_binding), 1);
 }
 
-static void button_keybinding_clicked_cb (GtkWidget *w, tilda_window *tw)
-{
-    const GtkWidget *wizard_notebook =
-        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_notebook"));
-    const GtkWidget *wizard_window =
-        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
-
-    /* Get all my keybinding buttons. */
-    const GtkWidget *button_keybinding_pulldown =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_pulldown"));
-    const GtkWidget *button_keybinding_addtab =       GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_addtab"));
-    const GtkWidget *button_keybinding_closetab =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_closetab"));
-    const GtkWidget *button_keybinding_nexttab =      GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_nexttab"));
-    const GtkWidget *button_keybinding_prevtab =      GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_prevtab"));
-    const GtkWidget *button_keybinding_movetableft =  GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_movetableft"));
-    const GtkWidget *button_keybinding_movetabright = GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_movetabright"));
-    const GtkWidget *button_keybinding_copy =         GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_copy"));
-    const GtkWidget *button_keybinding_paste =        GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_paste"));
-    const GtkWidget *button_keybinding_quit =         GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_quit"));
-    const GtkWidget *button_keybinding_gototab1 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab1"));
-    const GtkWidget *button_keybinding_gototab2 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab2"));
-    const GtkWidget *button_keybinding_gototab3 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab3"));
-    const GtkWidget *button_keybinding_gototab4 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab4"));
-    const GtkWidget *button_keybinding_gototab5 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab5"));
-    const GtkWidget *button_keybinding_gototab6 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab6"));
-    const GtkWidget *button_keybinding_gototab7 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab7"));
-    const GtkWidget *button_keybinding_gototab8 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab8"));
-    const GtkWidget *button_keybinding_gototab9 =     GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab9"));
-    const GtkWidget *button_keybinding_gototab10 =    GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_gototab10"));
-    const GtkWidget *button_keybinding_fullscreen =   GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_fullscreen"));
-    const GtkWidget *button_keybinding_toggle_transparency = GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_toggle_transparency"));
-    const GtkWidget *button_keybinding_toggle_searchbar = GTK_WIDGET (gtk_builder_get_object (xml, "button_keybinding_toggle_searchbar"));
-
-    /* Make the preferences window and buttons non-sensitive while we are grabbing keys. */
-    gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), FALSE);
-
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetableft), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetabright), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_copy), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_paste), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_quit), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab1), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab2), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab3), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab4), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab5), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab6), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab7), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab8), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), FALSE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_searchbar), FALSE);
-
-    /* Bring up the dialog that will accept the new keybinding */
-    GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
-                              GTK_DIALOG_DESTROY_WITH_PARENT,
-                              GTK_MESSAGE_QUESTION,
-                              GTK_BUTTONS_CANCEL,
-                              _("Enter keyboard shortcut"));
-
-    /* Connect the key grabber to the dialog */
-    g_signal_connect (G_OBJECT(dialog), "key_press_event", G_CALLBACK(wizard_dlg_key_grab), w);
-
-    gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
-    gint response = gtk_dialog_run (GTK_DIALOG (dialog));
-
-    /* Re-enable widgets. Doing it here instead of wizard_dlg_key_grab because it is possible to close
-       the dialog without grabbing a key, by clicking. */
-    gtk_widget_set_sensitive (GTK_WIDGET(wizard_notebook), TRUE);
-
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_pulldown), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_addtab), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_closetab), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_nexttab), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_prevtab), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetableft), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_movetabright), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_copy), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_paste), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_quit), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab1), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab2), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab3), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab4), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab5), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab6), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab7), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab8), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab9), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_gototab10), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), TRUE);
-    gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_searchbar), TRUE);
-
-    /* If the dialog was "programmatically destroyed" (we got a key), we don't want to destroy it again.
-       Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
-    if (response != -1) {
-        g_signal_handlers_disconnect_by_func (G_OBJECT(dialog), G_CALLBACK(wizard_dlg_key_grab), w);
-        gtk_widget_destroy (dialog);
-    }
-}
-
 static void initialize_combo_choose_monitor(tilda_window *tw) {
 	/**
 	 * First we need to initialize the "combo_choose_monitor" widget,
@@ -2147,7 +2180,7 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
 	 */
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int num_monitors = gdk_screen_get_n_monitors(screen);
-    int monitor_number = find_monitor_number(tw);
+        int monitor_number = find_monitor_number(tw);
 
 	GtkComboBox* combo_choose_monitor =
 			GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
@@ -2359,30 +2392,6 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(xml, ("spin_level_of_transparency"))), (100 - 100*GUINT16_TO_FLOAT(config_getint("back_alpha"))));
 #endif
 
-    /* Keybinding Tab */
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_pulldown", "key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_addtab", "addtab_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_closetab", "closetab_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_nexttab", "nexttab_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_prevtab", "prevtab_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_movetableft", "movetableft_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_movetabright", "movetabright_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_copy", "copy_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_paste", "paste_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_quit", "quit_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab1", "gototab_1_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab2", "gototab_2_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab3", "gototab_3_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab4", "gototab_4_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab5", "gototab_5_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab6", "gototab_6_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab7", "gototab_7_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab8", "gototab_8_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab9", "gototab_9_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab10", "gototab_10_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_fullscreen", "fullscreen_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_toggle_transparency", "toggle_transparency_key");
-    BUTTON_LABEL_FROM_CFG ("button_keybinding_toggle_searchbar", "toggle_searchbar_key");
 }
 
 static void initialize_scrollback_settings(void) {
@@ -2513,31 +2522,6 @@ static void connect_wizard_signals (tilda_window *tw)
     CONNECT_SIGNAL ("combo_backspace_binding","changed",combo_backspace_binding_changed_cb, tw);
     CONNECT_SIGNAL ("combo_delete_binding","changed",combo_delete_binding_changed_cb, tw);
     CONNECT_SIGNAL ("button_reset_compatibility_options","clicked",button_reset_compatibility_options_clicked_cb, tw);
-
-    /* Keybinding Tab */
-    CONNECT_SIGNAL ("button_keybinding_pulldown","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_quit","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_addtab","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_closetab","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_nexttab","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_prevtab","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_movetableft","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_movetabright","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_copy","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_paste","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab1","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab2","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab3","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab4","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab5","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab6","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab7","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab8","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab9","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_gototab10","clicked",button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_fullscreen", "clicked", button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb, tw);
-    CONNECT_SIGNAL ("button_keybinding_toggle_searchbar", "clicked", button_keybinding_clicked_cb, tw);
 
     /* Close Button */
     CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb, tw);
