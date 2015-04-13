@@ -657,7 +657,7 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
 	int i;
 	for(i=0; i<num_monitors; i++) {
 		GdkRectangle* current_rectangle = rect+i;
-		gdk_screen_get_monitor_geometry(screen, i, current_rectangle);
+		gdk_screen_get_monitor_workarea(screen, i, current_rectangle);
 	}
 	int monitor;
 	GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
