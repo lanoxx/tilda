@@ -47,6 +47,7 @@
 #include "wizard.h"
 #include "xerror.h"
 #include "tomboykeybinder.h"
+#include "tilda-keybinding.h"
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -828,7 +829,10 @@ int main (int argc, char *argv[])
         if (!ret)
         {
             /* The key was unbindable, so we need to show the wizard */
-            show_invalid_keybinding_dialog (NULL, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another."));
+            const char *message = _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.");
+
+            tilda_keybinding_show_invalid_keybinding_dialog (NULL,
+                                                             message);
             wizard (&tw);
         }
     }
