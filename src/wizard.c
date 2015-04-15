@@ -1103,6 +1103,8 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w);
 static void spin_width_percentage_value_changed_cb (GtkWidget *w);
 static void spin_width_pixels_value_changed_cb (GtkWidget *w);
 
+static void initializeScrollbackSettings ();
+
 static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 {
     const GtkWidget *spin_height_pixels =
@@ -1699,7 +1701,7 @@ static void check_infinite_scrollback_toggled_cb(GtkWidget *w)
     // if status is false then scrollback is infinite, otherwise the spinner is active
     const gboolean hasScrollbackLimit = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
-    config_setbool ("scroll_history_infinite", hasScrollbackLimit);
+    config_setbool ("scroll_history_infinite", !hasScrollbackLimit);
 
     GtkWidget *spinner = (GtkWidget *) gtk_builder_get_object(xml, "spin_scrollback_amount");
     gint scrollback_lines = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinner));
@@ -2080,14 +2082,7 @@ static void set_wizard_state_from_config () {
     }
 
     /* Scrolling Tab */
-    COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
-    SPIN_BUTTON ("spin_scrollback_amount", "lines");
-    CHECK_BUTTON ("check_infinite_scrollback", "scroll_history_infinite");
-    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_scrollback_amount", "scroll_history_infinite");
-    SET_SENSITIVE_BY_CONFIG_BOOL ("label_scrollback_lines", "scroll_history_infinite");
-    CHECK_BUTTON ("check_scroll_on_output", "scroll_on_output");
-    CHECK_BUTTON ("check_scroll_on_keystroke", "scroll_on_key");
-    CHECK_BUTTON ("check_scroll_background", "scroll_background");
+    initializeScrollbackSettings ();
 
     /* Compatibility Tab */
     COMBO_BOX ("combo_backspace_binding", "backspace_key");
@@ -2115,6 +2110,25 @@ static void set_wizard_state_from_config () {
     BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab9", "gototab_9_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_gototab10", "gototab_10_key");
     BUTTON_LABEL_FROM_CFG ("button_keybinding_fullscreen", "fullscreen_key");
+}
+
+static void initializeScrollbackSettings () {
+    COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
+    SPIN_BUTTON ("spin_scrollback_amount", "lines");
+
+    /* For historical reasons the config value is named "scrollback_history_infinite", but we have changed the
+     * UI semantics such that the checkbox is activated to limit the scrollback and deactivated to use an infinite
+     * buffer. Therefore we need to negate the value from the config here. */
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (gtk_builder_get_object (xml, "check_infinite_scrollback")),
+                                  !config_getbool ("scroll_history_infinite"));
+    gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (xml, ("label_scrollback_lines"))),
+                              !config_getbool ("scroll_history_infinite"));
+    gtk_widget_set_sensitive (GTK_WIDGET (gtk_builder_get_object (xml, ("spin_scrollback_amount"))),
+                              !config_getbool ("scroll_history_infinite"));
+
+    CHECK_BUTTON ("check_scroll_on_output", "scroll_on_output");
+    CHECK_BUTTON ("check_scroll_on_keystroke", "scroll_on_key");
+    CHECK_BUTTON ("check_scroll_background", "scroll_background");
 }
 
 #define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
