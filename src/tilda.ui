@@ -280,14 +280,11 @@
   </object>
   <object class="GtkListStore" id="monitor_list_store">
     <columns>
-      <!-- column-name monitor -->
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name number -->
       <column type="gint"/>
     </columns>
-    <data>
-      <row>
-        <col id="0">0</col>
-      </row>
-    </data>
   </object>
   <object class="GtkDialog" id="wizard_window">
     <property name="can_focus">False</property>
