@@ -616,7 +616,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_font (VTE_TERMINAL (tt->vte_term), description);
 
     /** Scrollback **/
-    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getint ("lines"));
+    vte_terminal_set_scrollback_lines (VTE_TERMINAL(tt->vte_term), config_getbool("limit_scrollback") ? config_getint ("lines") : -1);
 
     /** Keys **/
     switch (config_getint ("backspace_key"))
