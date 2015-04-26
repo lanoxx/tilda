@@ -382,7 +382,7 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
     GError *error = NULL;
 
     gchar *default_command;
-
+    /* Missing glade option for inherit_working_dir? */
     if (working_dir == NULL || config_getbool ("inherit_working_dir") == FALSE)
     {
         working_dir = config_getstr ("working_dir");
@@ -422,7 +422,7 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
         g_free (envv);
 
         /* Check for error */
-        if (ret == -1)
+        if (ret == FALSE)
         {
             g_printerr (_("Unable to launch custom command: %s\n"), config_getstr ("command"));
             g_printerr (_("Launching default shell instead\n"));
