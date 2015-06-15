@@ -778,6 +778,28 @@ static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w)
         gtk_window_unstick (GTK_WINDOW (tw->window));
 }
 
+static void check_set_as_desktop_toggled_cb (GtkWidget *widget)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget));
+    GtkWidget *check_display_on_all_workspaces = GTK_WIDGET (gtk_builder_get_object (xml, "check_display_on_all_workspaces"));
+    config_setbool ("set_as_desktop", status);
+
+    g_signal_handlers_block_by_func (check_display_on_all_workspaces, check_display_on_all_workspaces_toggled_cb, NULL);
+    gboolean status_display_on_all_workspaces = config_getbool ("pinned");
+    if (status) {
+
+        gtk_widget_set_sensitive (check_display_on_all_workspaces, FALSE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_display_on_all_workspaces), TRUE);
+        gtk_window_stick (GTK_WINDOW (tw->window));
+    } else {
+        gtk_widget_set_sensitive (check_display_on_all_workspaces, TRUE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_display_on_all_workspaces), status_display_on_all_workspaces);
+        gtk_window_unstick (GTK_WINDOW (tw->window));
+    }
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), status);
+    g_signal_handlers_unblock_by_func (check_display_on_all_workspaces, check_display_on_all_workspaces_toggled_cb, NULL);
+}
+
 static void check_do_not_show_in_taskbar_toggled_cb (GtkWidget *w)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -1203,6 +1225,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w);
 static void spin_width_pixels_value_changed_cb (GtkWidget *w);
 
 static void initializeScrollbackSettings ();
+static void initialize_set_as_desktop_checkbox ();
 
 static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 {
@@ -2114,6 +2137,7 @@ static void set_wizard_state_from_config () {
 
     /* General Tab */
     CHECK_BUTTON ("check_display_on_all_workspaces", "pinned");
+    initialize_set_as_desktop_checkbox ();
     CHECK_BUTTON ("check_always_on_top", "above");
     CHECK_BUTTON ("check_do_not_show_in_taskbar", "notaskbar");
     CHECK_BUTTON ("check_start_tilda_hidden", "hidden");
@@ -2262,6 +2286,24 @@ static void initializeScrollbackSettings () {
     CHECK_BUTTON ("check_scroll_background", "scroll_background");
 }
 
+static void initialize_set_as_desktop_checkbox () {
+    CHECK_BUTTON ("check_set_as_desktop", "set_as_desktop");
+
+    GtkWidget *check_set_as_desktop =            GTK_WIDGET(gtk_builder_get_object (xml, "check_set_as_desktop"));
+    GtkWidget *check_display_on_all_workspaces = GTK_WIDGET(gtk_builder_get_object (xml, "check_display_on_all_workspaces"));
+
+    gboolean status = config_getbool("set_as_desktop");
+    gboolean status_display_on_all_workspaces = config_getbool ("pinned");
+    if (status) {
+        gtk_widget_set_sensitive (check_display_on_all_workspaces, FALSE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_display_on_all_workspaces), TRUE);
+    } else {
+        gtk_widget_set_sensitive (check_display_on_all_workspaces, TRUE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_display_on_all_workspaces), status_display_on_all_workspaces);
+    }
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_set_as_desktop), status);
+}
+
 #define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
     gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), G_CALLBACK((SIGNAL_HANDLER)), NULL)
 
@@ -2273,6 +2315,7 @@ static void connect_wizard_signals ()
 
     /* General Tab */
     CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb);
+    CONNECT_SIGNAL ("check_set_as_desktop","toggled",check_set_as_desktop_toggled_cb);
     CONNECT_SIGNAL ("check_do_not_show_in_taskbar","toggled",check_do_not_show_in_taskbar_toggled_cb);
     CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb);
     CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb);
