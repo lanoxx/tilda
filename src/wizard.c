@@ -699,6 +699,7 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
 	SPIN_BUTTON_SET_VALUE("spin_y_position", current_rectangle->y);
 
     gtk_widget_show(tw->window);
+    free(rect);
 	return TRUE; //callback was handled
 }
 
