@@ -9,16 +9,18 @@
 
 On Ubuntu based system install dependencies with:
 
-    sudo apt-get install git automake libgtk-3-dev libvte-2.90-dev libconfuse-dev
+    sudo apt-get install git dh-autoreconf autotools-dev debhelper dh-autoreconf libconfuse-dev libgtk-3-dev libvte-2.90-dev pkg-config
 
 You possibly need other packages such as `gettext`, `automake`, `autoconf`, `autopoint`, and X11 development libraries.
 
 On Fedora:
 
+    # This may be outdated (see Ubuntu example above, for a more thorough list)
     sudo yum install git automake libconfuse-devel vte3-devel gtk3-devel glib-devel gettext-devel
 
-The dependencies section is complete, depending on your system you my need ot install additional packages. Please
-carefully read the output of the `autogen.sh` (see below) for more information of what you need to install.
+The dependencies section above is complete but the sample command may not be complete, depending on your system you may need to
+install additional packages. Please carefully read the output of the `autogen.sh` (see below) for more information of what
+you need to install.
 
 ## Compiling
 
@@ -28,7 +30,8 @@ the dependencies above then it should be possible to compile with:
     ./autogen.sh --prefix=/usr
     make --silent
 
-I recommend to run make with the `--silent` (or `-s`) option.
+You do not need the `--silent` option, but I prefer to use it to reduce the output a bit. If you experience any problem during build,
+then drop the `--silent` option.
 
 ## Installing
 
