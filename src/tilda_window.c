@@ -873,9 +873,6 @@ gint tilda_window_add_tab (tilda_window *tw)
             config_getint("tab_pos") != NB_HIDDEN)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
 
-    /* Add to GList list of tilda_term structures in tilda_window structure */
-    tw->terms = g_list_append (tw->terms, tt);
-
     /* The new terminal should grab the focus automatically */
     gtk_widget_grab_focus (tt->vte_term);
 

@@ -62,7 +62,23 @@ gint tilda_term_free (struct tilda_term_ *term)
     return 0;
 }
 
-
+static void tilda_terminal_switch_page_cb (GtkNotebook *notebook,
+                                           GtkWidget   *page,
+                                           guint        page_num,
+                                           tilda_window *tw)
+{
+    g_return_if_fail (page_num >= 0);
+    guint counter = 0;
+    tilda_term *term = NULL;
+    for(GList *item=tw->terms; item != NULL; item=item->next) {
+        if(counter == page_num) {
+            term = (tilda_term*) item->data;
+        }
+        counter++;
+    }
+    const char* current_title = vte_terminal_get_window_title (VTE_TERMINAL (term->vte_term));
+    gtk_window_set_title (GTK_WINDOW (tw->window), current_title);
+}
 
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 {
@@ -77,6 +93,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     char *current_tt_dir = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
+
+    /* Add to GList list of tilda_term structures in tilda_window structure */
+    tw->terms = g_list_append (tw->terms, term);
 
     /* Check for a failed allocation */
     if (!term)
@@ -146,6 +165,8 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(refresh_window_cb), tw->window);
     g_signal_connect (G_OBJECT(term->vte_term), "move-window",
                       G_CALLBACK(move_window_cb), tw->window);
+    g_signal_connect (G_OBJECT (tw->notebook), "switch-page",
+                      G_CALLBACK (tilda_terminal_switch_page_cb), tw);
 
     /* Match URL's, etc */
     term->http_regexp=g_regex_new(HTTP_REGEXP, G_REGEX_CASELESS, G_REGEX_MATCH_NOTEMPTY, &error);
@@ -206,16 +227,27 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
+    /* We need to check if the widget that received the title change is the currently
+     * active tab. If not we should not update the window title. */
+    gint page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tt->tw->notebook));
+    GtkWidget *active_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tt->tw->notebook), page);
+    gboolean active = widget == active_page;
 
-    guint length = config_getint ("title_max_length");
+    guint length = (guint) config_getint ("title_max_length");
 
     if(config_getbool("title_max_length_flag") && strlen(title) > length) {
         gchar *titleOffset = title + strlen(title) - length;
         gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
         gtk_label_set_text (GTK_LABEL(label), shortTitle);
+        if (active) {
+            gtk_window_set_title (GTK_WINDOW (tt->tw->window), shortTitle);
+        }
         g_free(shortTitle);
     } else {
         gtk_label_set_text (GTK_LABEL(label), title);
+        if (active) {
+            gtk_window_set_title (GTK_WINDOW (tt->tw->window), title);
+        }
     }
 
     g_free (title);
