@@ -73,6 +73,7 @@ Replace '#' with the number of the current minor release.
    for a better solution.
  5. Change debian/changelog and update the Debian specific changelog.
  6. Create a tarball using git-archive:
+
         git archive --prefix=tilda-1.1.#/ -o ../tilda_1.1.#.orig.tar.gz HEAD
 
 # Building a package
