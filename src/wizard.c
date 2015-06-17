@@ -520,8 +520,6 @@ void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* mess
  */
 
 /** Setters */
-#define WIDGET_SET_INSENSITIVE(GLADE_NAME) gtk_widget_set_sensitive ( \
-    GTK_WIDGET (gtk_builder_get_object (xml, (GLADE_NAME)), FALSE))
 #define CHECK_BUTTON(GLADE_NAME,CFG_BOOL) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( \
     gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
 #define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX( \
