@@ -6,6 +6,7 @@
  * Gtk+3 >= 3.0 - http://developer.gnome.org/gtk3/3.0/
  * VTE >= 2.90 - http://developer.gnome.org/vte/0.30/
  * libConfuse - http://www.nongnu.org/confuse/
+ * libx11-dev - http://www.x.org/wiki/
 
 On Ubuntu based system install dependencies with:
 
@@ -24,11 +25,16 @@ you need to install.
 
 ## Compiling
 
-Generally if you have installed the development packages (*-dev or *-devel) of
-the dependencies above then it should be possible to compile with:
+Generally if you have installed the development packages (e.g. *-dev or *-devel) of
+the dependencies above and the autotools suite then it should be possible to compile with:
 
     ./autogen.sh --prefix=/usr
     make --silent
+
+If you get the following error message, then you are missing the autopoint binary which is part of the autotools suite. On Ubuntu the
+`dh-autoreconf` package installs it along with automake, autoconf and autoreconf.
+
+    Can't exec "autopoint": No such file or directory at /usr/share/autoconf/Autom4te/FileUtils.pm line 345.
 
 You do not need the `--silent` option, but I prefer to use it to reduce the output a bit. If you experience any problem during build,
 then drop the `--silent` option.
