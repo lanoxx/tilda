@@ -70,7 +70,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
 
     /* ints */
-    CFG_INT("lines", 100, CFGF_NONE),
+    CFG_INT("lines", 5000, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),
     CFG_INT("max_height", 150, CFGF_NONE),
     CFG_INT("min_width", 1, CFGF_NONE),
