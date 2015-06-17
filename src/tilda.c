@@ -359,7 +359,6 @@ static gboolean parse_cli (int argc, char *argv[])
     GError *error = NULL;
     GOptionContext *context = g_option_context_new (NULL);
     g_option_context_add_main_entries (context, cl_opts, NULL);
-    g_option_context_add_group (context, gtk_get_option_group (TRUE));
     g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free (context);
 
@@ -389,6 +388,25 @@ static gboolean parse_cli (int argc, char *argv[])
         g_print ("under certain conditions. See the file COPYING for details.\n");
 
         exit (EXIT_SUCCESS);
+    }
+
+    /* This block is only used to initialize the Glib and GTK internal options. That way the users can pass additional command line options,
+     * that are used by Glib and GTK. We do this separate from the above options, because we pass TRUE to the gtk_get_option group function
+     * which causes GTK to initialize the default display. This way it is possible to invoke `tilda --version` without getting an
+     * error if there is no display available.
+     */
+    error = NULL;
+    context = g_option_context_new (NULL);
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_parse (context, &argc, &argv, &error);
+    g_option_context_free (context);
+
+    if (error)
+    {
+        g_printerr (_("Error parsing Glib and GTK specific command-line options. Try \"tilda --help-all\"\nto see all possible options.\n\nError message: %s\n"),
+                    error->message);
+
+        exit (EXIT_FAILURE);
     }
 
     /* Now set the options in the config, if they changed */
