@@ -291,7 +291,8 @@ gint config_write (const gchar *config_file)
     gint ret = 0;
     FILE *fp;
 
-    fp = fopen(config_file, "w");
+    char *temp_config_file = g_strdup_printf ("%s.tmp", config_file);
+    fp = fopen(temp_config_file, "w");
 
     if (fp != NULL)
     {
@@ -317,6 +318,10 @@ gint config_write (const gchar *config_file)
 
             g_printerr (_("Unable to close the config file\n"));
             ret = 3;
+        }
+        if (rename(temp_config_file, config_file)) {
+            TILDA_PERROR ();
+            DEBUG_ERROR ("Unable to rename temporary config file to final config file.");
         }
     }
     else
