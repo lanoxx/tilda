@@ -1787,12 +1787,12 @@ static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
     }
 }
 
-static void check_infinite_scrollback_toggled_cb(GtkWidget *w)
+static void check_limit_scrollback_toggled_cb(GtkWidget *w)
 {
     // if status is false then scrollback is infinite, otherwise the spinner is active
     const gboolean hasScrollbackLimit = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
-    config_setbool ("scroll_history_infinite", hasScrollbackLimit);
+    config_setbool ("limit_scrollback", hasScrollbackLimit);
 
     GtkWidget *spinner = (GtkWidget *) gtk_builder_get_object(xml, "spin_scrollback_amount");
     gint scrollback_lines = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinner));
@@ -2202,9 +2202,10 @@ static void set_wizard_state_from_config () {
     /* Scrolling Tab */
     COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
     SPIN_BUTTON ("spin_scrollback_amount", "lines");
-    CHECK_BUTTON ("check_infinite_scrollback", "scroll_history_infinite");
-    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_scrollback_amount", "scroll_history_infinite");
-    SET_SENSITIVE_BY_CONFIG_BOOL ("label_scrollback_lines", "scroll_history_infinite");
+    CHECK_BUTTON ("check_limit_scrollback", "limit_scrollback");
+    
+    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_scrollback_amount", "limit_scrollback");
+    SET_SENSITIVE_BY_CONFIG_BOOL ("label_scrollback_lines", "limit_scrollback");
     CHECK_BUTTON ("check_scroll_on_output", "scroll_on_output");
     CHECK_BUTTON ("check_scroll_on_keystroke", "scroll_on_key");
     CHECK_BUTTON ("check_scroll_background", "scroll_background");
@@ -2324,7 +2325,7 @@ static void connect_wizard_signals ()
     /* Scrolling Tab */
     CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb);
     CONNECT_SIGNAL ("spin_scrollback_amount","value-changed",spin_scrollback_amount_value_changed_cb);
-    CONNECT_SIGNAL ("check_infinite_scrollback", "toggled", check_infinite_scrollback_toggled_cb);
+    CONNECT_SIGNAL ("check_limit_scrollback", "toggled", check_limit_scrollback_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_on_output","toggled",check_scroll_on_output_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_on_keystroke","toggled",check_scroll_on_keystroke_toggled_cb);
     CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb);

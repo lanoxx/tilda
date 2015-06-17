@@ -2759,7 +2759,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="check_infinite_scrollback">
+                          <object class="GtkCheckButton" id="check_limit_scrollback">
                             <property name="label" translatable="yes">Limit scrollback to:</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
