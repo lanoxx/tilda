@@ -934,11 +934,8 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             break;
         case 1: /* Left Click */
             terminal  = VTE_TERMINAL(tt->vte_term);
-            GtkBorder border;
-            gtk_widget_style_get (GTK_WIDGET (terminal),
-                "inner-border", &border, NULL);
 
-            ypad = border.bottom;
+            ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
             match = vte_terminal_match_check (terminal,
                     (event->x - ypad) /
                     vte_terminal_get_char_width (terminal),
