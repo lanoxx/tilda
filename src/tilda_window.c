@@ -416,7 +416,7 @@ static void start_auto_hide_tick(tilda_window *tw)
     const guint32 MAX_SLEEP_TIME = 1000;
 
     if ((tw->auto_hide_tick_handler == 0) && (tw->disable_auto_hide == FALSE)) {
-        /* If there is not timer registered yet, then the auto_hide_tick_handler
+        /* If there is no timer registered yet, then the auto_hide_tick_handler
          * has a value of zero. Next we need to make sure that the auto hide
          * max time is greater then zero, or else we can pull up immediately,
          * without the trouble of registering a timer.
