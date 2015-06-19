@@ -552,14 +552,15 @@ static gint ccopy (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->notebook != NULL);
 
-    GtkWidget *current_page;
-    GList *list;
-
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-    list = gtk_container_get_children (GTK_CONTAINER(current_page));
-    vte_terminal_copy_clipboard (VTE_TERMINAL(list->data));
-
+    int counter = 0;
+    for (GList *item=tw->terms; item != NULL; item=item->next) {
+        if (counter == pos) {
+            tilda_term *term = item->data;
+            vte_terminal_copy_clipboard (VTE_TERMINAL(term->vte_term));
+        }
+        counter++;
+    }
     /* Stop the event's propagation */
     return TRUE;
 }
@@ -570,13 +571,15 @@ static gint cpaste (tilda_window *tw)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->notebook != NULL);
 
-    GtkWidget *current_page;
-    GList *list;
-
     gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), pos);
-    list = gtk_container_get_children (GTK_CONTAINER (current_page));
-    vte_terminal_paste_clipboard (VTE_TERMINAL(list->data));
+    int counter = 0;
+    for (GList *item=tw->terms; item != NULL; item=item->next) {
+        if (counter == pos) {
+            tilda_term *term = item->data;
+            vte_terminal_paste_clipboard (VTE_TERMINAL(term->vte_term));
+        }
+        counter++;
+    }
 
     /* Stop the event's propagation */
     return TRUE;
