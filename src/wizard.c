@@ -2056,6 +2056,7 @@ static void initialize_combo_choose_monitor() {
  * is currently selected to show the window and then load its geometry information.
  */
 static void initialize_geometry_spinners() {
+    DEBUG_FUNCTION ("initialize_geometry_spinners");
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int monitor = config_getint("show_on_monitor_number");
 	GdkRectangle rectangle;
