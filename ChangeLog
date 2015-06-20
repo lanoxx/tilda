@@ -1,3 +1,15 @@
+version 1.2.3 (2015-06-20):
+	* Fix a transparency issue on GNOME Shell
+	* Fixed some memory and pointer issues
+	* Fix move-tab key-binding behavior
+	* The wizard window will now in front of the terminal and now behind it
+	* An invalid custom command no longer makes tilda hang
+	* Fix an issue with the scrollback limit, infinit scrollback now works correctly
+	* Increase the default scrollback length to 5000 lines
+	* Fix an issue with copy and paste when the scrollbar was configured to appear on the left
+	* Fixed an issue with config file being trunkated when tilda was closed or the process killed
+	  forcibly and tilda did not have enough time to write the whole config file to disk.
+
 version 1.2.2 (2014-10-28):
 	* Fixed an error where Tilda failed to start when the lock
 	  file directory did not exist or could not be opened.
