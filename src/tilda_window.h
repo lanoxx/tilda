@@ -32,6 +32,7 @@ struct tilda_window_
     GtkWidget *notebook;
     GList *terms;
     GtkAccelGroup * accel_group;
+    GtkWidget *wizard_window; /* GtkDialog that contains the wizard */
 
     gchar *lock_file;
     gchar *config_file;

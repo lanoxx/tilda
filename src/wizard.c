@@ -231,13 +231,16 @@ gint wizard (tilda_window *ltw)
     DEBUG_FUNCTION ("wizard");
     DEBUG_ASSERT (ltw != NULL);
 
+    /* See the notes above, where the tw variable is declared.
+     * I know how ugly this is ... */
+    tw = ltw;
+
     gchar *window_title;
-    GtkWidget *wizard_window; /* GtkDialog */
 
     /* Make sure that there isn't already a wizard showing */
-    if (xml) {
-        DEBUG_ERROR ("wizard started while one already active");
-        return 1;
+    if (tw->wizard_window) {
+        gtk_window_present (GTK_WINDOW (tw->wizard_window));
+        return 0;
     }
 
     GError* error = NULL;
@@ -257,16 +260,12 @@ gint wizard (tilda_window *ltw)
         return 2;
     }
 
-    wizard_window = GTK_WIDGET (
+    tw->wizard_window = GTK_WIDGET (
         gtk_builder_get_object (xml, "wizard_window")
     );
 
-    /* See the notes above, where the tw variable is declared.
-     * I know how ugly this is ... */
-    tw = ltw;
-
     /* GtkDialog windows need to have a transient parent or a warning will be logged. */
-    gtk_window_set_transient_for (GTK_WINDOW(wizard_window), GTK_WINDOW(tw->window));
+    gtk_window_set_transient_for (GTK_WINDOW(tw->wizard_window), GTK_WINDOW(tw->window));
 
     init_palette_scheme_menu ();
 
@@ -285,23 +284,23 @@ gint wizard (tilda_window *ltw)
     tilda_keygrabber_unbind (config_getstr ("key"));
 
     /* Adding widget title for CSS selection */
-    gtk_widget_set_name (GTK_WIDGET(wizard_window), "Wizard");
+    gtk_widget_set_name (GTK_WIDGET(tw->wizard_window), "Wizard");
 
     /* Set the icon for the wizard winodw to our tilda icon. */
     gchar* filename = g_build_filename (DATADIR, "pixmaps", "tilda.png", NULL);
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
     g_free(filename);
-    gtk_window_set_icon(GTK_WINDOW(wizard_window), pixbuf);
+    gtk_window_set_icon(GTK_WINDOW(tw->wizard_window), pixbuf);
 
 
     window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
-    gtk_window_set_title (GTK_WINDOW(wizard_window), window_title);
-    gtk_window_set_keep_above (GTK_WINDOW(wizard_window), TRUE);
+    gtk_window_set_title (GTK_WINDOW(tw->wizard_window), window_title);
+    gtk_window_set_keep_above (GTK_WINDOW(tw->wizard_window), TRUE);
 
-    gtk_widget_show_all (wizard_window);
+    gtk_widget_show_all (tw->wizard_window);
 
     /* This is needed to ensure that the wizard appears above of the terminal window */
-    gtk_window_present(GTK_WINDOW(wizard_window));
+    gtk_window_present(GTK_WINDOW(tw->wizard_window));
 
     g_free (window_title);
 
@@ -347,9 +346,9 @@ static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_
 /* Gets called just after the wizard is closed. This should clean up after
  * the wizard, and do anything that couldn't be done immediately during the
  * wizard's lifetime. */
-static void wizard_closed ()
+static void wizard_close_dialog ()
 {
-    DEBUG_FUNCTION ("wizard_closed");
+    DEBUG_FUNCTION ("wizard_close_dialog");
 
     const gchar *key = GET_BUTTON_LABEL("button_keybinding_pulldown");
     const gchar *addtab_key = GET_BUTTON_LABEL("button_keybinding_addtab");
@@ -376,8 +375,7 @@ static void wizard_closed ()
     
     const GtkWidget *entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object(xml, "entry_custom_command"));
-    const GtkWidget *wizard_window =
-        GTK_WIDGET (gtk_builder_get_object (xml, "wizard_window"));
+    const GtkWidget *wizard_window = tw->wizard_window;
     const gchar *command = gtk_entry_get_text (GTK_ENTRY(entry_custom_command));
 
     /* Validate our new shortcuts */
@@ -486,6 +484,7 @@ static void wizard_closed ()
 
     /* Remove the wizard */
     gtk_widget_destroy (GTK_WIDGET(wizard_window));
+    tw->wizard_window = NULL;
 
     /* Write the config, because it probably changed. This saves us in case
      * of an XKill (or crash) later ... */
@@ -752,10 +751,19 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
 /*                       ALL Callbacks are below                              */
 /******************************************************************************/
 
-static void button_wizard_close_clicked_cb ()
+static void wizard_button_close_clicked_cb (GtkButton *button,
+                                            gpointer data)
 {
     /* Call the clean-up function */
-    wizard_closed ();
+    wizard_close_dialog ();
+}
+
+static void wizard_window_delete_event_cb (GtkWidget *widget,
+                                           GdkEvent  *event,
+                                           gpointer data)
+{
+    /* Call the clean-up function */
+    wizard_close_dialog ();
 }
 
 static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w)
@@ -2374,8 +2382,8 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb);
     
     /* Close Button */
-    CONNECT_SIGNAL ("button_wizard_close","clicked",button_wizard_close_clicked_cb);
-    CONNECT_SIGNAL ("wizard_window","delete_event",button_wizard_close_clicked_cb);
+    CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb);
+    CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb);
 }
 
 /* Initialize the palette scheme menu.
