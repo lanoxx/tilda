@@ -1172,7 +1172,7 @@ static int find_centering_coordinate (tilda_window *tw, enum dimensions dimensio
     gdouble tilda_dimension = 0;
     gint monitor = config_getint("show_on_monitor_number");
     GdkRectangle rectangle;
-    gdk_screen_get_monitor_geometry(gtk_widget_get_screen(tw->window), monitor, &rectangle);
+    gdk_screen_get_monitor_workarea (gtk_widget_get_screen(tw->window), monitor, &rectangle);
     if (dimension == HEIGHT) {
         monitor_dimension = rectangle.height;
         tilda_dimension = config_getint("max_height");
