@@ -232,7 +232,7 @@ gint wizard (tilda_window *ltw)
     DEBUG_ASSERT (ltw != NULL);
 
     gchar *window_title;
-    GtkWidget *wizard_window;
+    GtkWidget *wizard_window; /* GtkDialog */
 
     /* Make sure that there isn't already a wizard showing */
     if (xml) {
@@ -264,6 +264,9 @@ gint wizard (tilda_window *ltw)
     /* See the notes above, where the tw variable is declared.
      * I know how ugly this is ... */
     tw = ltw;
+
+    /* GtkDialog windows need to have a transient parent or a warning will be logged. */
+    gtk_window_set_transient_for (GTK_WINDOW(wizard_window), GTK_WINDOW(tw->window));
 
     init_palette_scheme_menu ();
 
