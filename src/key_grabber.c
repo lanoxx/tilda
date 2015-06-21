@@ -137,7 +137,7 @@ void tilda_window_set_active (tilda_window *tw)
     {
         guint32 timestamp = gtk_get_current_event_time ();
         if (timestamp == 0) {
-            timestamp = gdk_x11_get_server_time(gtk_widget_get_root_window (tw->window));
+            timestamp = gdk_x11_get_server_time(gdk_screen_get_root_window (screen));
         }
         event.xclient.type = ClientMessage;
         event.xclient.serial = 0;
