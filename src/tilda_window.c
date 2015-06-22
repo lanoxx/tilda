@@ -825,6 +825,9 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     gtk_widget_realize (tw->window);
     generate_animation_positions (tw);
 
+    /* Initialize wizard window reference to NULL */
+    tw->wizard_window = NULL;
+
     return TRUE;
 }
 
