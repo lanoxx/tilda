@@ -237,10 +237,6 @@ gint wizard (tilda_window *ltw)
 
     gchar *window_title;
 
-    if (tw->wizard_window == 0xFFFFFFFF) {
-        tw->wizard_window = NULL;
-    }
-
     /* Make sure that there isn't already a wizard showing */
     if (tw->wizard_window) {
         gtk_window_present (GTK_WINDOW (tw->wizard_window));
