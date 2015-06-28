@@ -46,6 +46,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("addtab_key", "<Shift><Control>t", CFGF_NONE),
     CFG_STR("fullscreen_key", "F11", CFGF_NONE),
     CFG_STR("toggle_transparency_key", "F12", CFGF_NONE),
+    CFG_STR("toggle_searchbar_key", "<Shift><Control>f", CFGF_NONE),
     CFG_STR("closetab_key", "<Shift><Control>w", CFGF_NONE),
     CFG_STR("nexttab_key", "<Control>Page_Down", CFGF_NONE),
     CFG_STR("prevtab_key", "<Control>Page_Up", CFGF_NONE),

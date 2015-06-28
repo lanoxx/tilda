@@ -183,6 +183,14 @@ void tilda_window_toggle_transparency (tilda_window *tw)
     } 
 }
 
+gint toggle_searchbar_cb (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("toggle_searbar"); 
+    DEBUG_ASSERT (tw != NULL);
+    gtk_widget_set_visible(tw->search_box, !gtk_widget_get_visible(tw->search_box));
+    return GDK_EVENT_STOP;
+}
+
 /* Zoom helpers */
 static const double zoom_factors[] = {
         TERMINAL_SCALE_MINIMUM,
@@ -634,6 +642,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw); 
+    tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(toggle_searchbar_cb),      tw); 
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
@@ -672,13 +681,49 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
 }
 
 static void tilda_window_search_cb (GtkButton *button, tilda_window *tw) {
+    GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
+    gboolean terminal_search_backwards = FALSE;
+    const char *text, *pattern;
+    pattern = text = gtk_entry_buffer_get_text (GTK_ENTRY_BUFFER (gtk_entry_get_buffer (GTK_ENTRY (tw->search_entry))));
+
+    GList *children = gtk_container_get_children(GTK_CONTAINER(tw->search_box));
+    if (strcmp(gtk_button_get_label(GTK_BUTTON(button)), "_Prev") == 0) {
+        terminal_search_backwards = TRUE;
+    }
+    do {
+        GtkWidget *btn = children->data;
+        if (!GTK_IS_TOGGLE_BUTTON(btn))
+            continue;
+        const gchar *optname = gtk_button_get_label(GTK_BUTTON(btn));
+        if (strcmp(optname, "Regex") == 0) {
+            if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (btn))) {
+                compile_flags |= G_REGEX_MULTILINE;
+            }
+            else {
+                pattern = g_regex_escape_string (text, -1);
+            }
+        }
+        else if (strcmp(optname, "Match Case") == 0) {
+            if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (btn))) {
+                compile_flags |= G_REGEX_CASELESS;
+            }
+        }
+    } while ((children = g_list_next(children)) != NULL);
+
     tilda_term* term = tilda_window_get_current_terminal (tw);
     GtkWidget *vteTerminal = term->vte_term;
-    const char* search_text = gtk_entry_buffer_get_text (GTK_ENTRY_BUFFER (gtk_entry_get_buffer (GTK_ENTRY (tw->search_entry))));
+
     GError *error = NULL;
-    GRegex *regex = g_regex_new (search_text, G_REGEX_CASELESS, G_REGEX_MATCH_NEWLINE_ANY, &error);
+    GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
     vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex);
-    vte_terminal_search_find_next (VTE_TERMINAL (vteTerminal));
+    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), TRUE);
+
+    if (terminal_search_backwards) {
+        vte_terminal_search_find_previous (VTE_TERMINAL (vteTerminal));
+    }
+    else {
+        vte_terminal_search_find_next (VTE_TERMINAL (vteTerminal));
+    }
 }
 
 static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
@@ -705,6 +750,25 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
 {
     gtk_main_quit ();
     return FALSE;
+}
+
+static void tilda_search_box_init(tilda_window *tw, GtkWidget *search_box)
+{
+    GtkWidget *find_button, *prev_button, *check_button_match_case, *check_button_regex;
+    find_button = gtk_button_new_with_mnemonic ("_Next");
+    prev_button = gtk_button_new_with_mnemonic ("_Prev");
+    check_button_match_case = gtk_check_button_new_with_label ("Match Case");
+    check_button_regex = gtk_check_button_new_with_label ("Regex");
+    tw->search_entry = gtk_entry_new ();
+
+    gtk_box_pack_start (GTK_BOX (search_box), check_button_match_case, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (search_box), check_button_regex, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (search_box), tw->search_entry, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (search_box), prev_button, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (search_box), find_button, FALSE, FALSE, 0);
+
+    g_signal_connect (G_OBJECT (prev_button), "clicked", G_CALLBACK (tilda_window_search_cb), tw);
+    g_signal_connect (G_OBJECT (find_button), "clicked", G_CALLBACK (tilda_window_search_cb), tw);
 }
 
 /* Detect changes in GtkNotebook tab order and update the tw->terms list to reflect such changes. */
@@ -865,23 +929,18 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
      *  * The search widgets are a label, a text entry, and a "find" button.
      */
     GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-    GtkWidget *search_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-
-    GtkWidget *label = gtk_label_new ("Search: ");
-    tw->search_entry = gtk_entry_new ();
-    GtkWidget *find_button = gtk_button_new_with_mnemonic ("_Find");
-    gtk_box_pack_start (GTK_BOX (search_box), label, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (search_box), tw->search_entry, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (search_box), find_button, TRUE, TRUE, 0);
-
+    tw->search_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    tilda_search_box_init(tw, tw->search_box);
+    
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (main_box), search_box, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->search_box, FALSE, TRUE, 0);
 
-    g_signal_connect (G_OBJECT (find_button), "clicked", G_CALLBACK (tilda_window_search_cb), tw);
 
     /* Show the widgets */
+    //gtk_widget_show (main_box);
     gtk_widget_show_all (main_box);
+    gtk_widget_set_visible(tw->search_box, FALSE);
     /* the tw->window widget will be shown later, by pull() */
 
     /* Position the window */

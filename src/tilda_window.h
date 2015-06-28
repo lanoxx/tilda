@@ -36,6 +36,7 @@ struct tilda_window_
     GtkWidget *window;
     GtkWidget *notebook;
     GtkWidget *search_entry;
+    GtkWidget *search_box;
 
     GList *terms;
     GtkAccelGroup * accel_group;
