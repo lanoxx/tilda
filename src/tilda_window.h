@@ -82,6 +82,8 @@ struct tilda_search_
     GtkWidget *check_match_case;
     GtkWidget *check_regex;
     GtkWidget *label_search_end;
+    /* Stores the result of the last search, if FALSE the last search did not find a match. */
+    gboolean is_search_result;
 };
 
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
