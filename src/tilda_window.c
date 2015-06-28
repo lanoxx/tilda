@@ -41,6 +41,8 @@ typedef enum _TerminalSearchFlags {
     TERMINAL_SEARCH_FLAG_WRAP_AROUND	= 1 << 1
 } TerminalSearchFlags;
 
+static tilda_term* tilda_window_get_current_terminal (tilda_window *tw);
+
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
 {
@@ -194,7 +196,13 @@ gint toggle_searchbar_cb (tilda_window *tw)
     DEBUG_FUNCTION ("toggle_searbar"); 
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->search != NULL);
-    gtk_widget_set_visible(tw->search->search_box, !gtk_widget_get_visible(tw->search->search_box));
+    gboolean visible = !gtk_widget_get_visible(tw->search->search_box);
+    if (visible) {
+        gtk_widget_grab_focus (tw->search->entry_search);
+    } else {
+        gtk_widget_grab_focus (tilda_window_get_current_terminal (tw)->vte_term);
+    }
+    gtk_widget_set_visible(tw->search->search_box, visible);
 }
 
 /* Zoom helpers */
