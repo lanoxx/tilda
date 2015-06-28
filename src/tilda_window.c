@@ -691,9 +691,14 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
 
 static void tilda_window_search (GtkButton *button, tilda_window *tw, gboolean terminal_search_backwards) {
     GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
+    gboolean wrap_on_search = FALSE;
     tilda_search *search = tw->search;
     gboolean is_regex = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (search->check_regex));
     const gchar *text = gtk_entry_buffer_get_text (GTK_ENTRY_BUFFER (gtk_entry_get_buffer (GTK_ENTRY (search->entry_search))));
+
+    if (!search->is_search_result) {
+        wrap_on_search = TRUE;
+    }
 
     gchar *pattern;
     if (is_regex) {
@@ -713,14 +718,18 @@ static void tilda_window_search (GtkButton *button, tilda_window *tw, gboolean t
     GError *error = NULL;
     GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
     vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex);
-    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), TRUE);
+    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), wrap_on_search);
 
+    gboolean search_result;
     if (terminal_search_backwards) {
-        vte_terminal_search_find_previous (VTE_TERMINAL (vteTerminal));
+        search_result = vte_terminal_search_find_previous (VTE_TERMINAL (vteTerminal));
     }
     else {
-        vte_terminal_search_find_next (VTE_TERMINAL (vteTerminal));
+        search_result = vte_terminal_search_find_next (VTE_TERMINAL (vteTerminal));
     }
+
+    gtk_widget_set_visible (search->label_search_end, !search_result);
+    search->is_search_result = search_result;
 
     /* If the text was not a regex, then we escaped the text with g_regex_escape_string and so we need to free it. */
     if (!is_regex) {

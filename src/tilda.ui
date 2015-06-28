@@ -4027,7 +4027,7 @@
         <property name="margin_right">5</property>
         <property name="margin_top">5</property>
         <property name="margin_bottom">5</property>
-        <property name="label" translatable="yes">search hit BOTTOM, continuing at TOP</property>
+        <property name="label" translatable="yes">Search term not found, search again to continue the search at the beginning.</property>
         <attributes>
           <attribute name="foreground" value="#efef29292929"/>
         </attributes>
