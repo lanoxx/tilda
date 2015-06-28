@@ -25,16 +25,16 @@
 G_BEGIN_DECLS
 
 typedef struct tilda_window_ tilda_window;
+typedef struct tilda_search_ tilda_search;
 
 struct tilda_window_
 {
     GtkWidget *window;
     GtkWidget *notebook;
-    GtkWidget *search_entry;
-    GtkWidget *search_box;
 
     GList *terms;
     GtkAccelGroup * accel_group;
+    GtkBuilder *gtk_builder;
     GtkWidget *wizard_window; /* GtkDialog that contains the wizard */
 
     gchar *lock_file;
@@ -69,6 +69,19 @@ struct tilda_window_
 
     gint unscaled_font_size;
     gdouble current_scale_factor;
+
+    tilda_search *search;
+};
+
+struct tilda_search_
+{
+    GtkWidget *search_box;
+    GtkWidget *entry_search;
+    GtkWidget *button_next;
+    GtkWidget *button_prev;
+    GtkWidget *check_match_case;
+    GtkWidget *check_regex;
+    GtkWidget *label_search_end;
 };
 
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
