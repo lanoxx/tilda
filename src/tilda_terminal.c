@@ -782,6 +782,17 @@ menu_fullscreen_cb (GSimpleAction *action,
 }
 
 static void
+menu_searchbar_cb(GSimpleAction *action, 
+                    GVariant      *parameter,
+                    gpointer       user_data)
+{
+    DEBUG_FUNCTION ("menu_fullscreen_cb");
+    DEBUG_ASSERT (user_data != NULL);
+
+    toggle_searchbar_cb (TILDA_WINDOW(user_data));
+}
+
+static void
 menu_close_tab_cb (GSimpleAction *action,
                    GVariant      *parameter,
                    gpointer       user_data)
@@ -836,6 +847,10 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
             "        <attribute name=\"label\" translatable=\"yes\">_Toggle Fullscreen</attribute>\n"
             "        <attribute name=\"action\">window.fullscreen</attribute>\n"
             "      </item>\n"
+            "      <item>\n"
+            "        <attribute name=\"label\" translatable=\"yes\">_Toggle Searchbar</attribute>\n"
+            "        <attribute name=\"action\">window.searchbar</attribute>\n"
+            "      </item>\n"
             "    </section> \n"
             "    <section>\n"
             "      <item>\n"
@@ -871,6 +886,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
         { .name="new-tab", menu_add_tab_cb },
         { .name="close-tab", menu_close_tab_cb },
         { .name="fullscreen", menu_fullscreen_cb },
+        { .name="searchbar", menu_searchbar_cb },
         { .name="preferences", menu_preferences_cb },
         { .name="quit", menu_quit_cb }
     };
