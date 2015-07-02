@@ -697,7 +697,7 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
     return current_terminal;
 }
 
-static void tilda_window_search (GtkButton *button, tilda_window *tw, TerminalSearchFlags flags) {
+static void tilda_window_search (G_GNUC_UNUSED gpointer widget, tilda_window *tw, TerminalSearchFlags flags) {
     GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
     TerminalSearchFlags vte_flags = TERMINAL_SEARCH_FLAG_NONE;
     tilda_search *search = tw->search;
@@ -784,6 +784,15 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
+gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *tw) {
+    GdkEventKey *event_key = (GdkEventKey*)event;
+    if (event_key->keyval == 0xff0d) {
+        tilda_window_search(widget, tw, TERMINAL_SEARCH_FLAG_NONE);
+        return TRUE;
+    }
+    return FALSE;
+}
+                       
 static tilda_search *tilda_search_box_init(tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_search_box_init");
@@ -802,7 +811,7 @@ static tilda_search *tilda_search_box_init(tilda_window *tw)
 
     g_signal_connect (G_OBJECT (search->button_next), "clicked", G_CALLBACK (tilda_window_search_forward_cb), tw);
     g_signal_connect (G_OBJECT (search->button_prev), "clicked", G_CALLBACK (tilda_window_search_backward_cb), tw);
-
+    g_signal_connect (G_OBJECT(search->entry_search), "key-press-event", G_CALLBACK(search_box_key_cb), tw); 
     return search;
 }
 
@@ -955,7 +964,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
 
 
     /* Show the widgets */
