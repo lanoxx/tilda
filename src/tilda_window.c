@@ -689,7 +689,7 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
     return NULL;
 }
 
-static void tilda_window_search (GtkButton *button, tilda_window *tw, gboolean terminal_search_backwards) {
+static void tilda_window_search (G_GNUC_UNUSED GtkButton *button, tilda_window *tw, gboolean terminal_search_backwards) {
     GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
     gboolean wrap_on_search = FALSE;
     tilda_search *search = tw->search;
@@ -773,6 +773,16 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
+gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *tw) {
+    GdkEventKey *event_key = (GdkEventKey*)event;
+    if (event_key->keyval == GDK_KEY_Return) {
+        tilda_window_search(GTK_BUTTON (widget), tw, FALSE);
+        return GDK_EVENT_STOP;
+    }
+
+    return GDK_EVENT_PROPAGATE;
+}
+
 static tilda_search *tilda_search_box_init(tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_search_box_init");
@@ -791,7 +801,7 @@ static tilda_search *tilda_search_box_init(tilda_window *tw)
 
     g_signal_connect (G_OBJECT (search->button_next), "clicked", G_CALLBACK (tilda_window_search_forward_cb), tw);
     g_signal_connect (G_OBJECT (search->button_prev), "clicked", G_CALLBACK (tilda_window_search_backward_cb), tw);
-
+    g_signal_connect (G_OBJECT(search->entry_search), "key-press-event", G_CALLBACK(search_box_key_cb), tw);
     return search;
 }
 
