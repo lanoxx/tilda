@@ -955,7 +955,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
 
 
     /* Show the widgets */
