@@ -792,6 +792,14 @@ gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *t
     }
     return FALSE;
 }
+
+gboolean entry_search_text_changed_callback (G_GNUC_UNUSED GtkEditable *editable,
+                                             tilda_window *tw) {
+    gtk_widget_hide (tw->search->label_search_end);
+    tw->search->is_search_result = TRUE;
+
+    return GDK_EVENT_STOP;
+}
                        
 static tilda_search *tilda_search_box_init(tilda_window *tw)
 {
@@ -808,10 +816,13 @@ static tilda_search *tilda_search_box_init(tilda_window *tw)
     search->check_match_case = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "check_match_case"));
     search->check_regex = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "check_regex"));
     search->label_search_end = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "search_label"));
+    /* Initialize to true to prevent search from wrapping around on first search. */
+    search->is_search_result = TRUE;
 
     g_signal_connect (G_OBJECT (search->button_next), "clicked", G_CALLBACK (tilda_window_search_forward_cb), tw);
     g_signal_connect (G_OBJECT (search->button_prev), "clicked", G_CALLBACK (tilda_window_search_backward_cb), tw);
-    g_signal_connect (G_OBJECT(search->entry_search), "key-press-event", G_CALLBACK(search_box_key_cb), tw); 
+    g_signal_connect (G_OBJECT(search->entry_search), "key-press-event", G_CALLBACK(search_box_key_cb), tw);
+    g_signal_connect (G_OBJECT (search->entry_search), "changed", G_CALLBACK (entry_search_text_changed_callback), tw);
     return search;
 }
 
