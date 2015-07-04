@@ -7,6 +7,12 @@ of the screen with a special hotkey. Additionally Tilda is highly configurable. 
 hotkeys for keybindings, change the appearance and many options that affect the behavior of Tilda. The screen shots
 below show some of the options that Tilda provides.
 
+## Tilda Terminal
+![Tilda window with search bar](images/tilda_terminal_with_search_bar.png)
+
+Starting with version 1.3 Tilda will also come with a search bar. Currently we support searching forwards and backwards
+as well as options to search case sensitive and to use regular expressions. The search bar can be activated from
+the context menu or with a configurable hotkey that defaults to `<Ctrl><Shift>F`
 ## General options
 ![General](images/tilda_general.png)
 ## Appearance options
