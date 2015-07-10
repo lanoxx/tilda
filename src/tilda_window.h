@@ -35,7 +35,9 @@ typedef struct tilda_search_ tilda_search;
 
 enum tilda_animation_state {
     STATE_UP,
-    STATE_DOWN
+    STATE_DOWN,
+    STATE_GOING_UP,
+    STATE_GOING_DOWN
 };
 
 struct tilda_window_
