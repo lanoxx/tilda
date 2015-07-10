@@ -47,26 +47,29 @@
 
 
 /* Define local variables here */
-static gint posIV[4][16]; /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
+static gint posIV[4][32]; /* 0 - ypos, 1 - height, 2 - xpos, 3 - width */
+
+float animation_ease_function(gint i, gint n) {
+    const float t = (float)i/n;
+    const float ts = t*t;
+    const float tc = ts*t;
+    return tc*ts + -5*ts*ts + 10*tc + -10*ts + 5*t;
+}
 
 void generate_animation_positions (struct tilda_window_ *tw)
 {
     DEBUG_FUNCTION ("generate_animation_positions");
     DEBUG_ASSERT (tw != NULL);
 
-    /*
-     * The slide positions are derived from FVWM sources, file fvwm/move_resize.c,
-     * to there added by Greg J. Badros, gjb@cs.washington.edu
-     */
-    const float posCFV[] = {.01, .01,.02,.03,.08,.18,.3,.45,.65,.80,.88,.93,.95,.97,.99,1.0};
-
     gint i;
     gint last_pos_x = config_getint ("x_pos");
     gint last_pos_y = config_getint ("y_pos");
     gint last_width = config_getint ("max_width");
     gint last_height = config_getint ("max_height");
+    gint screen_width = gdk_screen_width();
+    gint screen_height = gdk_screen_height();
 
-    for (i=0; i<16; i++)
+    for (i=0; i<32; i++)
     {
         switch (config_getint ("animation_orientation"))
         {
@@ -74,7 +77,7 @@ void generate_animation_positions (struct tilda_window_ *tw)
             /*posIV[3][i] = (gint)(posCFV[i]*last_width); */
             /*posIV[2][i] = (gint)(last_pos_x+last_width-posIV[3][i]); */
             posIV[3][i] = last_width;
-            posIV[2][i] = (gint)(last_pos_x+last_width-posCFV[i]*last_width);
+            posIV[2][i] = (gint)(screen_width + (last_pos_x - screen_width) * animation_ease_function(i, 32));
             posIV[1][i] = last_height;
             posIV[0][i] = last_pos_y;
             break;
@@ -82,22 +85,22 @@ void generate_animation_positions (struct tilda_window_ *tw)
             /*posIV[3][i] = (gint)(posCFV[i]*last_width); */
             /*posIV[2][i] = last_pos_x; */
             posIV[3][i] = last_width;
-            posIV[2][i] = (gint)(last_pos_x-last_width+posCFV[i]*last_width);
+            posIV[2][i] = (gint)(-last_width + (last_pos_x - -last_width) * animation_ease_function(i, 32));
             posIV[1][i] = last_height;
             posIV[0][i] = last_pos_y;
             break;
         case 1: /* bottom->top BOTTOM */
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
-            posIV[1][i] = (gint)(posCFV[i]*last_height);
-            posIV[0][i] = (gint)(last_pos_y+last_height-posIV[1][i]);
+            posIV[1][i] = last_height;
+            posIV[0][i] = (gint)(screen_height + (last_pos_y - screen_height) * animation_ease_function(i, 32));
             break;
         case 0: /* top->bottom TOP */
         default:
             posIV[3][i] = last_width;
             posIV[2][i] = last_pos_x;
-            posIV[1][i] = (gint)(posCFV[i]*last_height);
-            posIV[0][i] = last_pos_y;
+            posIV[1][i] = last_height;
+            posIV[0][i] = (gint)(-last_height + (last_pos_y - -last_height) * animation_ease_function(i, 32));
             break;
         }
     }
@@ -233,7 +236,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
 
         if (config_getbool ("animation"))
         {
-            for (i=0; i<16; i++)
+            for (i=0; i<32; i++)
             {
                 gtk_window_move (GTK_WINDOW(tw->window), posIV[2][i], posIV[0][i]);
                 gtk_window_resize (GTK_WINDOW(tw->window), posIV[3][i], posIV[1][i]);
@@ -250,7 +253,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
     {
         if (config_getbool ("animation"))
         {
-            for (i=15; i>=0; i--)
+            for (i=32-1; i>=0; i--)
             {
                 gtk_window_move (GTK_WINDOW(tw->window), posIV[2][i], posIV[0][i]);
                 gtk_window_resize (GTK_WINDOW(tw->window), posIV[3][i], posIV[1][i]);
@@ -272,9 +275,9 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
 
 static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user_data)
 {
-	DEBUG_FUNCTION("onKeybindingPull");
-	tilda_window *tw = TILDA_WINDOW(user_data);
-	pull (tw, PULL_TOGGLE, FALSE);
+    DEBUG_FUNCTION("onKeybindingPull");
+    tilda_window *tw = TILDA_WINDOW(user_data);
+    pull (tw, PULL_TOGGLE, FALSE);
 }
 
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)
