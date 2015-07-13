@@ -61,7 +61,7 @@ struct tilda_window_
 	gboolean fullscreen;
 
     /* This field MUST be set before calling pull()! */
-    enum tilda_positions { UP, DOWN } current_state;
+    enum tilda_positions { UP, DOWN, GOING_UP, GOING_DOWN } current_state;
     gboolean focus_loss_on_keypress;
 
     gint unscaled_font_size;
