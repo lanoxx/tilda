@@ -35,12 +35,6 @@
 #include <X11/Xlib.h>
 #include <gdk/gdkx.h>
 
-typedef enum _TerminalSearchFlags {
-    TERMINAL_SEARCH_FLAG_NONE =           0,
-    TERMINAL_SEARCH_FLAG_BACKWARDS	=     1 << 0,
-    TERMINAL_SEARCH_FLAG_WRAP_AROUND	= 1 << 1
-} TerminalSearchFlags;
-
 static tilda_term* tilda_window_get_current_terminal (tilda_window *tw);
 
 static void
@@ -697,18 +691,15 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
     return current_terminal;
 }
 
-static void tilda_window_search (G_GNUC_UNUSED gpointer widget, tilda_window *tw, TerminalSearchFlags flags) {
+static void tilda_window_search (G_GNUC_UNUSED gpointer widget, tilda_window *tw, gboolean terminal_seach_backwards) {
     GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
-    TerminalSearchFlags vte_flags = TERMINAL_SEARCH_FLAG_NONE;
+    gboolean wrap_on_search = FALSE;
     tilda_search *search = tw->search;
     gboolean is_regex = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (search->check_regex));
     const gchar *text = gtk_entry_buffer_get_text (GTK_ENTRY_BUFFER (gtk_entry_get_buffer (GTK_ENTRY (search->entry_search))));
 
-    /* Combine the flags passed in the function with our locally set flags */
-    vte_flags |= flags;
-
     if (!search->is_search_result) {
-        vte_flags |= TERMINAL_SEARCH_FLAG_WRAP_AROUND;
+        wrap_on_search = TRUE;
     }
 
     gchar *pattern;
@@ -729,10 +720,10 @@ static void tilda_window_search (G_GNUC_UNUSED gpointer widget, tilda_window *tw
     GError *error = NULL;
     GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
     vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex);
-    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), vte_flags & TERMINAL_SEARCH_FLAG_WRAP_AROUND);
+    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), wrap_on_search);
 
     gboolean search_result;
-    if (vte_flags & TERMINAL_SEARCH_FLAG_BACKWARDS) {
+    if (terminal_seach_backwards) {
         search_result = vte_terminal_search_find_previous (VTE_TERMINAL (vteTerminal));
     }
     else {
@@ -751,11 +742,11 @@ static void tilda_window_search (G_GNUC_UNUSED gpointer widget, tilda_window *tw
 
 static void tilda_window_search_forward_cb (GtkButton *button, tilda_window *tw) {
     /* The default is to search forward */
-    tilda_window_search (button, tw, TERMINAL_SEARCH_FLAG_NONE);
+    tilda_window_search (button, tw, FALSE);
 }
 
 static void tilda_window_search_backward_cb (GtkButton *button, tilda_window *tw) {
-    tilda_window_search (button, tw, TERMINAL_SEARCH_FLAG_BACKWARDS);
+    tilda_window_search (button, tw, TRUE);
 }
 
 static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
@@ -787,7 +778,7 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
 gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *tw) {
     GdkEventKey *event_key = (GdkEventKey*)event;
     if (event_key->keyval == 0xff0d) {
-        tilda_window_search(widget, tw, TERMINAL_SEARCH_FLAG_NONE);
+        tilda_window_search(widget, tw, FALSE);
         return TRUE;
     }
     return FALSE;
