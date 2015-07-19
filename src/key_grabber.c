@@ -252,7 +252,8 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
 
 static void pull_up (struct tilda_window_ *tw) {
     tw->current_state = STATE_GOING_UP;
-    if (config_getbool ("animation")) {
+
+    if (config_getbool ("animation") && !tw->fullscreen) {
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
         for (guint i=0; i<32; i++) {
             gtk_window_move (GTK_WINDOW(tw->window),
@@ -261,11 +262,6 @@ static void pull_up (struct tilda_window_ *tw) {
 
             process_all_pending_gtk_events ();
             g_usleep (slide_sleep_usec);
-
-            if (tw->current_state != STATE_GOING_DOWN)
-            {
-                break;
-            }
         }
     }
 
@@ -279,6 +275,8 @@ static void pull_up (struct tilda_window_ *tw) {
 }
 
 static void pull_down (struct tilda_window_ *tw) {
+    tw->current_state = STATE_GOING_DOWN;
+
     /* Keep things here just like they are. If you use gtk_window_present() here, you
      * will introduce some weird graphical glitches. Also, calling gtk_window_move()
      * before showing the window avoids yet more glitches. You should probably not use
@@ -289,7 +287,6 @@ static void pull_down (struct tilda_window_ *tw) {
      * no idea why, they should do the same thing. */
     gdk_x11_window_set_user_time (gtk_widget_get_window (tw->window),
                                   tomboy_keybinder_get_current_event_time());
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     gtk_widget_show (GTK_WIDGET(tw->window));
 #if GTK_MINOR_VERSION == 16
         /* Temporary fix for GTK breaking restore on Fullscreen, only needed for
@@ -311,8 +308,7 @@ static void pull_down (struct tilda_window_ *tw) {
     if (config_getbool ("pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-    tw->current_state = STATE_GOING_DOWN;
-    if (config_getbool ("animation")) {
+    if (config_getbool ("animation") && !tw->fullscreen) {
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
         for (guint i=0; i<32; i++) {
             gtk_window_move (GTK_WINDOW(tw->window),
@@ -321,12 +317,9 @@ static void pull_down (struct tilda_window_ *tw) {
 
             process_all_pending_gtk_events ();
             g_usleep (slide_sleep_usec);
-
-            if (tw->current_state != STATE_GOING_DOWN)
-            {
-                break;
-            }
         }
+    } else {
+        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
     debug_printf ("pull_down(): MOVED DOWN\n");
