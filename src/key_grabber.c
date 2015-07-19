@@ -31,6 +31,7 @@
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
+#include <X11/Xatom.h>
 #include <gtk/gtk.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -73,6 +74,10 @@ static float animation_ease_function_up(gint i, gint n) {
     const float tc = ts*t;
     return 1 - (0*tc*ts + 0*ts*ts + 0*tc + 1*ts + 0*t);
 }
+
+static void pull_down (struct tilda_window_ *tw);
+
+static void pull_up (struct tilda_window_ *tw);
 
 void generate_animation_positions (struct tilda_window_ *tw)
 {
@@ -212,7 +217,6 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (action == PULL_UP || action == PULL_DOWN || action == PULL_TOGGLE);
 
-    gint i;
     gboolean needsFocus = !tw->focus_loss_on_keypress
             && !gtk_window_is_active(GTK_WINDOW(tw->window))
             && !force_hide
@@ -220,7 +224,7 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
 
     if (action == PULL_TOGGLE && tw->last_action == PULL_UP
         && g_get_monotonic_time() - tw->last_action_time < 150 * G_TIME_SPAN_MILLISECOND) {
-        /* this is to prevent crazy toggling, with 50ms prevention time */
+        /* this is to prevent crazy toggling, with 150ms prevention time */
         return;
     }
 
@@ -233,95 +237,100 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
         gdk_x11_window_set_user_time(gtk_widget_get_window(tw->window),
                 tomboy_keybinder_get_current_event_time());
         tilda_window_set_active(tw);
-    } else
-    if (tw->current_state == STATE_UP && action != PULL_UP) {
-        /* Keep things here just like they are. If you use gtk_window_present() here, you
-         * will introduce some weird graphical glitches. Also, calling gtk_window_move()
-         * before showing the window avoids yet more glitches. You should probably not use
-         * gtk_window_show_all() here, as it takes a long time to execute.
-         *
-         * Overriding the user time here seems to work a lot better than calling
-         * gtk_window_present_with_time() here, or at the end of the function. I have
-         * no idea why, they should do the same thing. */
-        gdk_x11_window_set_user_time (gtk_widget_get_window (tw->window),
-                                      tomboy_keybinder_get_current_event_time());
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
-        gtk_widget_show (GTK_WIDGET(tw->window));
+        return;
+    }
+
+    if ((tw->current_state == STATE_UP) && action != PULL_UP) {
+        pull_down (tw);
+    } else if ((tw->current_state == STATE_DOWN) && action != PULL_DOWN) {
+        pull_up (tw);
+    }
+
+    tw->last_action = action;
+    tw->last_action_time = g_get_monotonic_time();
+}
+
+static void pull_up (struct tilda_window_ *tw) {
+    tw->current_state = STATE_GOING_UP;
+    if (config_getbool ("animation")) {
+        gint slide_sleep_usec = config_getint ("slide_sleep_usec");
+        for (guint i=0; i<32; i++) {
+            gtk_window_move (GTK_WINDOW(tw->window),
+                             animation_coordinates[ANIMATION_UP][ANIMATION_X][i],
+                             animation_coordinates[ANIMATION_UP][ANIMATION_Y][i]);
+
+            process_all_pending_gtk_events ();
+            g_usleep (slide_sleep_usec);
+
+            if (tw->current_state != STATE_GOING_DOWN)
+            {
+                break;
+            }
+        }
+    }
+
+    /* All we have to do at this point is hide the window.
+     * Case 1 - Animation on:  The window has moved outside the screen, just hide it
+     * Case 2 - Animation off: Just hide the window */
+    gtk_widget_hide (GTK_WIDGET(tw->window));
+
+    debug_printf ("pull_up(): MOVED UP\n");
+    tw->current_state = STATE_UP;
+}
+
+static void pull_down (struct tilda_window_ *tw) {
+    /* Keep things here just like they are. If you use gtk_window_present() here, you
+     * will introduce some weird graphical glitches. Also, calling gtk_window_move()
+     * before showing the window avoids yet more glitches. You should probably not use
+     * gtk_window_show_all() here, as it takes a long time to execute.
+     *
+     * Overriding the user time here seems to work a lot better than calling
+     * gtk_window_present_with_time() here, or at the end of the function. I have
+     * no idea why, they should do the same thing. */
+    gdk_x11_window_set_user_time (gtk_widget_get_window (tw->window),
+                                  tomboy_keybinder_get_current_event_time());
+    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    gtk_widget_show (GTK_WIDGET(tw->window));
 #if GTK_MINOR_VERSION == 16
         /* Temporary fix for GTK breaking restore on Fullscreen, only needed for
          * GTK+ version 3.16, since it was fixed early in 3.17 and above. */
         tilda_window_set_fullscreen(tw);
 #endif
 
-        /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
-         * focus stealing prevention to make the old _NET_WM_USER_TIME hack
-         * not work anymore. This is working for now... */
-        tilda_window_set_active (tw);
+    /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
+     * focus stealing prevention to make the old _NET_WM_USER_TIME hack
+     * not work anymore. This is working for now... */
+    tilda_window_set_active (tw);
 
-        /* The window should maintain its properties when it is merely hidden, but it does
-         * not. If you delete the following call, the window will not remain visible
-         * on all workspaces after pull()ing it up and down a number of times.
-         *
-         * Note that the "Always on top" property doesn't seem to go away, only this
-         * property (Show on all desktops) does... */
-        if (config_getbool ("pinned"))
+    /* The window should maintain its properties when it is merely hidden, but it does
+     * not. If you delete the following call, the window will not remain visible
+     * on all workspaces after pull()ing it up and down a number of times.
+     *
+     * Note that the "Always on top" property doesn't seem to go away, only this
+     * property (Show on all desktops) does... */
+    if (config_getbool ("pinned"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
-        tw->current_state = STATE_GOING_DOWN;
-        if (config_getbool ("animation"))
-        {
-            gint slide_sleep_usec = config_getint ("slide_sleep_usec");
-            for (i=0; i<32; i++)
+    tw->current_state = STATE_GOING_DOWN;
+    if (config_getbool ("animation")) {
+        gint slide_sleep_usec = config_getint ("slide_sleep_usec");
+        for (guint i=0; i<32; i++) {
+            gtk_window_move (GTK_WINDOW(tw->window),
+                             animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i],
+                             animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i]);
+
+            process_all_pending_gtk_events ();
+            g_usleep (slide_sleep_usec);
+
+            if (tw->current_state != STATE_GOING_DOWN)
             {
-                gtk_window_move (GTK_WINDOW(tw->window),
-                                 animation_coordinates[ANIMATION_UP][ANIMATION_X][i],
-                                 animation_coordinates[ANIMATION_UP][ANIMATION_Y][i]);
-
-                process_all_pending_gtk_events ();
-                g_usleep (slide_sleep_usec);
-
-                if (tw->current_state != STATE_GOING_DOWN)
-                {
-                    break;
-                }
+                break;
             }
         }
-
-        debug_printf ("pull(): MOVED DOWN\n");
-        tw->current_state = STATE_DOWN;
     }
-    else if (tw->current_state == STATE_DOWN && action != PULL_DOWN)
-    {
-        tw->current_state = STATE_GOING_UP;
-        if (config_getbool ("animation"))
-        {
-            gint slide_sleep_usec = config_getint ("slide_sleep_usec");
-            for (i=0; i<32; i+=2)
-            {
-                gtk_window_move (GTK_WINDOW(tw->window),
-                                 animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i],
-                                 animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i]);
 
-                process_all_pending_gtk_events ();
-                g_usleep (slide_sleep_usec);
-
-                if (tw->current_state != STATE_GOING_UP)
-                {
-                    break;
-                }
-            }
-        }
-
-        /* All we have to do at this point is hide the window.
-         * Case 1 - Animation on:  The window has shrunk, just hide it
-         * Case 2 - Animation off: Just hide the window */
-        gtk_widget_hide (GTK_WIDGET(tw->window));
-
-        debug_printf ("pull(): MOVED UP\n");
-        tw->current_state = STATE_UP;
-    }
-    tw->last_action = action;
-    tw->last_action_time = g_get_monotonic_time();
+    debug_printf ("pull_down(): MOVED DOWN\n");
+    tw->current_state = STATE_DOWN;
 }
 
 static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user_data)
