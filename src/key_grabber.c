@@ -321,11 +321,6 @@ static void pull_down (struct tilda_window_ *tw) {
         tilda_window_set_fullscreen(tw);
 #endif
 
-    /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
-     * focus stealing prevention to make the old _NET_WM_USER_TIME hack
-     * not work anymore. This is working for now... */
-    tilda_window_set_active (tw);
-
     /* The window should maintain its properties when it is merely hidden, but it does
      * not. If you delete the following call, the window will not remain visible
      * on all workspaces after pull()ing it up and down a number of times.
@@ -375,6 +370,11 @@ static void pull_down (struct tilda_window_ *tw) {
     } else {
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
+
+    /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
+     * focus stealing prevention to make the old _NET_WM_USER_TIME hack
+     * not work anymore. This is working for now... */
+    tilda_window_set_active (tw);
 
     debug_printf ("pull_down(): MOVED DOWN\n");
     tw->current_state = STATE_DOWN;
