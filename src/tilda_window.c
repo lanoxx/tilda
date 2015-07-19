@@ -396,7 +396,7 @@ static gboolean auto_hide_tick(gpointer data)
 
     tilda_window *tw = TILDA_WINDOW(data);
     tw->auto_hide_current_time += tw->timer_resolution;
-    if ((tw->auto_hide_current_time >= tw->auto_hide_max_time) || tw->current_state == UP)
+    if ((tw->auto_hide_current_time >= tw->auto_hide_max_time) || tw->current_state == STATE_UP)
     {
         pull(tw, PULL_UP, TRUE);
         tw->auto_hide_tick_handler = 0;
@@ -822,7 +822,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* the tw->window widget will be shown later, by pull() */
 
     /* Position the window */
-    tw->current_state = UP;
+    tw->current_state = STATE_UP;
     gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 

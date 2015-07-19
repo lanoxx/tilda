@@ -1471,7 +1471,7 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
     /* Avoids a nasty looking glitch if you switch on animation while the window is
      * hidden. It will briefly show at full size, then shrink to the first animation
      * position. From there it works fine. */
-    if (status && tw->current_state == UP)
+    if (status && tw->current_state == STATE_UP)
     {
         /* I don't know why, but width=0, height=0 doesn't work. Width=1, height=1 works
          * exactly as expected, so I'm leaving it that way. */

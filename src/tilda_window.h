@@ -26,6 +26,11 @@ G_BEGIN_DECLS
 
 typedef struct tilda_window_ tilda_window;
 
+enum tilda_animation_state {
+    STATE_UP,
+    STATE_DOWN
+};
+
 struct tilda_window_
 {
     GtkWidget *window;
@@ -61,7 +66,8 @@ struct tilda_window_
 	gboolean fullscreen;
 
     /* This field MUST be set before calling pull()! */
-    enum tilda_positions { UP, DOWN } current_state;
+    enum tilda_animation_state current_state;
+
     gboolean focus_loss_on_keypress;
 
     gint unscaled_font_size;

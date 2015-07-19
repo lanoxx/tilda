@@ -193,7 +193,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
             && !force_hide
             && !tw->hide_non_focused;
 
-    if (tw->current_state == DOWN && needsFocus) {
+    if (tw->current_state == STATE_DOWN && needsFocus) {
         /**
         * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
         * This conditional branch will only focus tilda but it does not actually pull the window up.
@@ -203,7 +203,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
                 tomboy_keybinder_get_current_event_time());
         tilda_window_set_active(tw);
     } else
-    if (tw->current_state == UP && state != PULL_UP) {
+    if (tw->current_state == STATE_UP && state != PULL_UP) {
         /* Keep things here just like they are. If you use gtk_window_present() here, you
          * will introduce some weird graphical glitches. Also, calling gtk_window_move()
          * before showing the window avoids yet more glitches. You should probably not use
@@ -244,9 +244,9 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
         }
 
         debug_printf ("pull(): MOVED DOWN\n");
-        tw->current_state = DOWN;
+        tw->current_state = STATE_DOWN;
     }
-    else if (state != PULL_DOWN)
+    else if (tw->current_state == STATE_DOWN && state != PULL_DOWN)
     {
         if (config_getbool ("animation"))
         {
@@ -266,7 +266,7 @@ void pull (struct tilda_window_ *tw, enum pull_state state, gboolean force_hide)
         gtk_widget_hide (GTK_WIDGET(tw->window));
 
         debug_printf ("pull(): MOVED UP\n");
-        tw->current_state = UP;
+        tw->current_state = STATE_UP;
     }
 }
 
