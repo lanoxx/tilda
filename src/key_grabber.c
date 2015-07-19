@@ -254,6 +254,19 @@ static void pull_up (struct tilda_window_ *tw) {
     tw->current_state = STATE_GOING_UP;
 
     if (config_getbool ("animation") && !tw->fullscreen) {
+        GdkWindow *x11window;
+        GdkDisplay *display;
+        Atom atom;
+        if (!config_getbool ("set_as_desktop")) {
+            x11window = gtk_widget_get_window (tw->window);
+            display = gdk_window_get_display (x11window);
+            atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DOCK");
+            XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
+                             gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
+                             XA_ATOM, 32, PropModeReplace,
+                             (guchar *) &atom, 1);
+            process_all_pending_gtk_events ();
+        }
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
         for (guint i=0; i<32; i++) {
             gtk_window_move (GTK_WINDOW(tw->window),
@@ -262,6 +275,20 @@ static void pull_up (struct tilda_window_ *tw) {
 
             process_all_pending_gtk_events ();
             g_usleep (slide_sleep_usec);
+        }
+
+        if (!config_getbool ("set_as_desktop")) {
+            x11window = gtk_widget_get_window (tw->window);
+            display = gdk_window_get_display (x11window);
+            if (config_getbool ("set_as_desktop")) {
+                atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DESKTOP");
+            } else {
+                atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_NORMAL");
+            }
+            XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
+                             gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
+                             XA_ATOM, 32, PropModeReplace,
+                             (guchar *) &atom, 1);
         }
     }
 
@@ -309,6 +336,19 @@ static void pull_down (struct tilda_window_ *tw) {
             gtk_window_stick (GTK_WINDOW (tw->window));
 
     if (config_getbool ("animation") && !tw->fullscreen) {
+        GdkWindow *x11window;
+        GdkDisplay *display;
+        Atom atom;
+        if (!config_getbool ("set_as_desktop")) {
+            x11window = gtk_widget_get_window (tw->window);
+            display = gdk_window_get_display (x11window);
+            atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DOCK");
+            XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
+                             gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
+                             XA_ATOM, 32, PropModeReplace,
+                             (guchar *) &atom, 1);
+            process_all_pending_gtk_events ();
+        }
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
         for (guint i=0; i<32; i++) {
             gtk_window_move (GTK_WINDOW(tw->window),
@@ -317,6 +357,20 @@ static void pull_down (struct tilda_window_ *tw) {
 
             process_all_pending_gtk_events ();
             g_usleep (slide_sleep_usec);
+        }
+
+        if (!config_getbool ("set_as_desktop")) {
+            x11window = gtk_widget_get_window (tw->window);
+            display = gdk_window_get_display (x11window);
+            if (config_getbool ("set_as_desktop")) {
+                atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DESKTOP");
+            } else {
+                atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_NORMAL");
+            }
+            XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
+                             gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
+                             XA_ATOM, 32, PropModeReplace,
+                             (guchar *) &atom, 1);
         }
     } else {
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
