@@ -67,7 +67,7 @@ static void tilda_terminal_switch_page_cb (GtkNotebook *notebook,
                                            guint        page_num,
                                            tilda_window *tw)
 {
-    g_return_if_fail (page_num >= 0);
+    DEBUG_FUNCTION ("tilda_terminal_switch_page_cb");
     guint counter = 0;
     tilda_term *term = NULL;
     for(GList *item=tw->terms; item != NULL; item=item->next) {
