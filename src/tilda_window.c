@@ -780,6 +780,15 @@ gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *t
         return GDK_EVENT_STOP;
     }
 
+    /* If the search entry has focus the user can hide the search bar by pressing escape. */
+    if (event_key->keyval == GDK_KEY_Escape) {
+        if (gtk_widget_has_focus (tw->search->entry_search)) {
+            gtk_widget_grab_focus (tilda_window_get_current_terminal (tw)->vte_term);
+            gtk_widget_set_visible (tw->search->search_box, FALSE);
+            return GDK_EVENT_STOP;
+        }
+    }
+
     return GDK_EVENT_PROPAGATE;
 }
 
