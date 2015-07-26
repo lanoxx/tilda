@@ -1062,7 +1062,8 @@
                 <property name="row_spacing">4</property>
                 <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkFrame" id="frame_word_chars">
+                <!--@VTE_WORD_CHARS
+                <object class="GtkFrame" id="frame_word_chars">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -1134,6 +1135,7 @@
                     <property name="height">1</property>
                   </packing>
                 </child>
+                @VTE_WORD_CHARS--> 
                 <child>
                   <object class="GtkFrame" id="frame_url">
                     <property name="visible">True</property>
@@ -2073,6 +2075,7 @@
                                 <property name="height">1</property>
                               </packing>
                             </child>
+                            <!--@VTE2.90
                             <child>
                               <object class="GtkFileChooserButton" id="button_background_image">
                                 <property name="visible">True</property>
@@ -2101,6 +2104,7 @@
                                 <property name="height">1</property>
                               </packing>
                             </child>
+                            @VTE2.90-->
                             <child>
                               <object class="GtkCheckButton" id="check_animated_pulldown">
                                 <property name="label" translatable="yes">Animated Pulldown</property>
@@ -2852,6 +2856,7 @@
                             <property name="height">1</property>
                           </packing>
                         </child>
+                        <!--@VTE2.90
                         <child>
                           <object class="GtkCheckButton" id="check_scroll_background">
                             <property name="label" translatable="yes">Scroll Background</property>
@@ -2868,6 +2873,7 @@
                             <property name="height">1</property>
                           </packing>
                         </child>
+                        @VTE2.90-->
                         <child>
                           <object class="GtkGrid" id="grid5">
                             <property name="visible">True</property>

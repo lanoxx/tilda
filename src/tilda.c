@@ -321,11 +321,16 @@ static gboolean parse_cli (int argc, char *argv[])
     gchar *background_color = config_getstr ("background_color");
     gchar *command = config_getstr ("command");
     gchar *font = config_getstr ("font");
-    gchar *image = config_getstr ("image");
     gchar *working_dir = config_getstr ("working_dir");
-
-    gint lines = config_getint ("lines");
+    
+#ifdef VTE_290    
+    gchar *image = config_getstr ("image");
     gint transparency = config_getint ("transparency");
+#else
+    gint back_alpha = config_getint ("back_alpha");
+#endif
+   
+    gint lines = config_getint ("lines");
     gint x_pos = config_getint ("x_pos");
     gint y_pos = config_getint ("y_pos");
 
@@ -344,12 +349,16 @@ static gboolean parse_cli (int argc, char *argv[])
         { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              N_("Set the font to the following string"), NULL },
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             N_("Scrollback Lines"), NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         N_("Use Scrollbar"), NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      N_("Opaqueness: 0-100%"), NULL },
         { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           N_("Print the version, then exit"), NULL },
         { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       N_("Set Initial Working Directory"), NULL },
         { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             N_("X Position"), NULL },
         { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             N_("Y Position"), NULL },
+#ifdef VTE_290
         { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             N_("Set Background Image"), NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      N_("Opaqueness: 0-100%"), NULL },
+#else 
+        { "background-alpha",       't', 0, G_OPTION_ARG_INT,       &back_alpha,      N_("Opaqueness: 0-100%"), NULL },
+#endif
         { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       N_("Show Configuration Wizard"), NULL },
         { NULL }
     };
@@ -432,10 +441,23 @@ static gboolean parse_cli (int argc, char *argv[])
         config_setstr ("font", font);
         g_free(font);
     }
+#ifdef VTE_290
     if (image != config_getstr ("image")) {
         config_setstr ("image", image);
         g_free(image);
     }
+    if (transparency != config_getint ("transparency"))
+    {
+        config_setbool ("enable_transparency", transparency);
+        config_setint ("transparency", transparency);
+    }
+#else 
+    if (back_alpha != config_getint ("back_alpha"))
+    {
+        config_setbool ("enable_transparency", ~back_alpha & 0xffff);
+        config_setint ("back_alpha", back_alpha);
+    }
+#endif
     if (working_dir != config_getstr ("working_dir")) {
         config_setstr ("working_dir", working_dir);
         g_free(working_dir);
@@ -443,11 +465,7 @@ static gboolean parse_cli (int argc, char *argv[])
 
     if (lines != config_getint ("lines"))
         config_setint ("lines", lines);
-    if (transparency != config_getint ("transparency"))
-    {
-        config_setbool ("enable_transparency", transparency);
-        config_setint ("transparency", transparency);
-    }
+
     if (x_pos != config_getint ("x_pos"))
         config_setint ("x_pos", x_pos);
     if (y_pos != config_getint ("y_pos"))

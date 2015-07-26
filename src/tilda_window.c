@@ -163,8 +163,10 @@ void tilda_window_toggle_transparency (tilda_window *tw)
     guint i;
     gboolean status = !config_getbool ("enable_transparency");
     config_setbool ("enable_transparency", status); 
+#ifdef VTE_290
     gdouble transparency_level = 0.0;
     transparency_level = ((gdouble) config_getint ("transparency"))/100;
+
     if (status)
     {
         for (i=0; i<g_list_length (tw->terms); i++) {
@@ -183,6 +185,18 @@ void tilda_window_toggle_transparency (tilda_window *tw)
             vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
         }
     } 
+#else
+    GdkRGBA bg;
+    bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
+    bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
+    bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
+    bg.alpha =    (status ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
+    
+    for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
+        }    
+#endif
 }
 
 gint toggle_searchbar_cb (tilda_window *tw)

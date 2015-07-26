@@ -1,9 +1,27 @@
 # vim: set noexpandtab ts=8 sts=8 sw=8:
 
 bin_PROGRAMS += src/tilda
+	
+# Build VTE version compatible tilda.ui
+BUILT_SOURCES = cleanui src/tilda.ui
+
+#Rebuild ui for each make run
+.PHONY: cleanui
+cleanui: 
+	rm -f src/tilda.ui
+	
+#Rule to compile tilda.ui 
+src/tilda.ui:
+if VTE_290
+	sed -r "s#<!--@VTE2.90|@VTE2.90-->##" src/tilda.ui.pre > src/tilda.ui
+else
+	cat src/tilda.ui.pre > src/tilda.ui
+endif
+
+
 
 # Rules to compile resources
-src/glade-resources.h: src/glade-resources.gresource.xml
+src/glade-resources.h: src/glade-resources.gresource.xml src/tilda.ui
 	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
 src/glade-resources.c: src/glade-resources.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
@@ -63,4 +81,4 @@ src_tilda_LDADD = $(AM_LDADD) \
 EXTRA_DIST += src/glade-resources.gresource.xml \
 		src/tilda.ui
 
-CLEANFILES += src/glade-resources.h src/glade-resources.c
+CLEANFILES += src/glade-resources.h src/glade-resources.c src/tilda.ui

@@ -39,7 +39,6 @@ static cfg_opt_t config_opts[] = {
 
     /* strings */
     CFG_STR("tilda_config_version", PACKAGE_VERSION, CFGF_NONE),
-    CFG_STR("image", NULL, CFGF_NONE),
     CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 11", CFGF_NONE),
     CFG_STR("key", NULL, CFGF_NONE),
@@ -69,7 +68,6 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("background_color", "white", CFGF_NONE),
     CFG_STR("working_dir", NULL, CFGF_NONE),
     CFG_STR("web_browser", "x-www-browser", CFGF_NONE),
-    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
     CFG_STR("increase_font_size_key", "<Control>equal", CFGF_NONE),
     CFG_STR("decrease_font_size_key", "<Control>minus", CFGF_NONE),
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
@@ -80,7 +78,6 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("max_height", 150, CFGF_NONE),
     CFG_INT("min_width", 1, CFGF_NONE),
     CFG_INT("min_height", 1, CFGF_NONE),
-    CFG_INT("transparency", 0, CFGF_NONE),
     CFG_INT("x_pos", 0, CFGF_NONE),
     CFG_INT("y_pos", 0, CFGF_NONE),
     CFG_INT("tab_pos", 0, CFGF_NONE),
@@ -137,12 +134,10 @@ static cfg_opt_t config_opts[] = {
 
     /* booleans */
     CFG_BOOL("scroll_history_infinite", FALSE, CFGF_NONE),
-    CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
     CFG_BOOL("scroll_on_output", FALSE, CFGF_NONE),
     CFG_BOOL("notebook_border", FALSE, CFGF_NONE),
     CFG_BOOL("antialias", TRUE, CFGF_NONE),
     CFG_BOOL("scrollbar", FALSE, CFGF_NONE),
-    CFG_BOOL("use_image", FALSE, CFGF_NONE),
     CFG_BOOL("grab_focus", TRUE, CFGF_NONE),
     CFG_BOOL("above", TRUE, CFGF_NONE),
     CFG_BOOL("notaskbar", TRUE, CFGF_NONE),
@@ -167,6 +162,16 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
     CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
+
+    /* Config settings for VTE-2.90 features */
+    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
+    CFG_STR("image", NULL, CFGF_NONE),
+    CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
+    CFG_BOOL("use_image", FALSE, CFGF_NONE),
+    CFG_INT("transparency", 0, CFGF_NONE),
+#if VTE_VERSION_MINOR >= 9 && VTE_VERSION_MICRO >= 1  /* VTE-2.91 */
+    CFG_INT("back_alpha", 0xffff, CFGF_NONE), 
+#endif
     CFG_END()
 };
 
@@ -214,7 +219,13 @@ gint config_init (const gchar *config_file)
             return ret;
         }
 	}
-
+#ifndef VTE_290
+    /* Deprecate old config settings 
+     * This is a lame work around until we get a permenant solution to 
+     * libconfuse lacking for this functionality 
+     */
+    
+#endif
     #ifndef NO_THREADSAFE
         g_mutex_init(&mutex);
     #endif
