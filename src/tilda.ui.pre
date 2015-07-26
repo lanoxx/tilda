@@ -1061,9 +1061,9 @@
                 <property name="margin_bottom">4</property>
                 <property name="row_spacing">4</property>
                 <property name="column_homogeneous">True</property>
+                <!--@VTE2.90
                 <child>
-                <!--@VTE_WORD_CHARS
-                <object class="GtkFrame" id="frame_word_chars">
+                    <object class="GtkFrame" id="frame_word_chars">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -1135,7 +1135,7 @@
                     <property name="height">1</property>
                   </packing>
                 </child>
-                @VTE_WORD_CHARS--> 
+                @VTE2.90--> 
                 <child>
                   <object class="GtkFrame" id="frame_url">
                     <property name="visible">True</property>

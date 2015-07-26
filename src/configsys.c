@@ -28,6 +28,7 @@
 #include <unistd.h> /* fsync */
 
 #include "configsys.h"
+#include <vte/vte.h>
 
 static cfg_t *tc;
 
@@ -164,13 +165,14 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
 
     /* Config settings for VTE-2.90 features */
-    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
-    CFG_STR("image", NULL, CFGF_NONE),
-    CFG_BOOL("scroll_background", TRUE, CFGF_NONE),
-    CFG_BOOL("use_image", FALSE, CFGF_NONE),
+    CFG_STR("word_chars", NULL, CFGF_NODEFAULT),
+    CFG_STR("image", NULL, CFGF_NODEFAULT),
+    //Even when CFGF_NODEFAULT flag is passed libconfuse won't let us pass a NULL value to a bool
+    CFG_BOOL("scroll_background", FALSE, CFGF_NODEFAULT),
+    CFG_BOOL("use_image", FALSE, CFGF_NODEFAULT),
     CFG_INT("transparency", 0, CFGF_NONE),
-#if VTE_VERSION_MINOR >= 9 && VTE_VERSION_MICRO >= 1  /* VTE-2.91 */
-    CFG_INT("back_alpha", 0xffff, CFGF_NONE), 
+#if VTE_MINOR_VERSION >= 40 /* VTE-2.91 */
+    CFG_INT("back_alpha", 0xffff, CFGF_NONE),
 #endif
     CFG_END()
 };
@@ -191,47 +193,6 @@ static cfg_opt_t config_opts[] = {
 #define CONFIG1_NEWER  1
 
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2) G_GNUC_UNUSED;
-
-
-
-/**
- * Start up the configuration system, using the configuration file given
- * to get the current values. If the configuration file given does not exist,
- * go ahead and write out the default config to the file.
- */
-gint config_init (const gchar *config_file)
-{
-	gint ret = 0;
-
-	tc = cfg_init (config_opts, 0);
-
-	if (g_file_test (config_file,
-        G_FILE_TEST_IS_REGULAR))
-    {
-		/* Read in the existing configuration options */
-		ret = cfg_parse (tc, config_file);
-
-		if (ret == CFG_PARSE_ERROR) {
-			DEBUG_ERROR ("Problem parsing config");
-            return ret;
-		} else if (ret != CFG_SUCCESS) {
-            DEBUG_ERROR ("Problem parsing config.");
-            return ret;
-        }
-	}
-#ifndef VTE_290
-    /* Deprecate old config settings 
-     * This is a lame work around until we get a permenant solution to 
-     * libconfuse lacking for this functionality 
-     */
-    
-#endif
-    #ifndef NO_THREADSAFE
-        g_mutex_init(&mutex);
-    #endif
-
-	return ret;
-}
 
 /* Note: set config_file to NULL to just free the
  * data structures, and not write out the state to
@@ -418,6 +379,65 @@ gint config_write (const gchar *config_file)
     }
 
     return ret;
+}
+
+/**
+ * Start up the configuration system, using the configuration file given
+ * to get the current values. If the configuration file given does not exist,
+ * go ahead and write out the default config to the file.
+ */
+gint config_init (const gchar *config_file)
+{
+	gint ret = 0;
+
+    // Can we use a more descriptive name than tc?
+	tc = cfg_init (config_opts, 0);
+
+	if (g_file_test (config_file,
+        G_FILE_TEST_IS_REGULAR))
+    {
+		/* Read in the existing configuration options */
+		ret = cfg_parse (tc, config_file);
+
+		if (ret == CFG_PARSE_ERROR) {
+			DEBUG_ERROR ("Problem parsing config");
+            return ret;
+		} else if (ret != CFG_SUCCESS) {
+            DEBUG_ERROR ("Problem parsing config.");
+            return ret;
+        }
+	}
+#if VTE_MINOR_VERSION >= 40
+    /* Deprecate old config settings
+     * This is a lame work around until we get a permenant solution to
+     * libconfuse lacking for this functionality
+     */
+    const gchar *deprecated_config_options[] = {"word_chars", "image", "scroll_background", "use_image"};
+    int i;
+    cfg_opt_t *opt;
+    for (i =0; i < G_N_ELEMENTS(deprecated_config_options); i++) {
+        opt = cfg_getopt(tc, deprecated_config_options[i]);
+        if (opt->nvalues != 0) {
+            g_warning("Warning: %s is no longer a valid config option for the current version of Tilda. %i \n", deprecated_config_options[i], opt->nvalues);
+            cfg_free_value(opt);
+        }
+    }
+#else
+    if (cfg_getopt(tc, "use_image")->nvalues < 1) {
+        cfg_setbool(tc, "use_image", FALSE);
+    }
+    if (cfg_getopt(tc, "word_chars")->nvalues < 1) {
+        cfg_setstr(tc, "word_chars", DEFAULT_WORD_CHARS);
+    }
+    if (cfg_getopt(tc, "scroll_background")->nvalues < 1) {
+        cfg_setbool(tc, "scroll_background", TRUE);
+    }
+#endif
+    #ifndef NO_THREADSAFE
+        g_mutex_init(&mutex);
+    #endif
+
+	return ret;
 }
 
 /*

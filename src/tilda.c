@@ -322,14 +322,14 @@ static gboolean parse_cli (int argc, char *argv[])
     gchar *command = config_getstr ("command");
     gchar *font = config_getstr ("font");
     gchar *working_dir = config_getstr ("working_dir");
-    
-#ifdef VTE_290    
+
+#ifdef VTE_290
     gchar *image = config_getstr ("image");
     gint transparency = config_getint ("transparency");
 #else
     gint back_alpha = config_getint ("back_alpha");
 #endif
-   
+
     gint lines = config_getint ("lines");
     gint x_pos = config_getint ("x_pos");
     gint y_pos = config_getint ("y_pos");
@@ -356,7 +356,7 @@ static gboolean parse_cli (int argc, char *argv[])
 #ifdef VTE_290
         { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             N_("Set Background Image"), NULL },
         { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      N_("Opaqueness: 0-100%"), NULL },
-#else 
+#else
         { "background-alpha",       't', 0, G_OPTION_ARG_INT,       &back_alpha,      N_("Opaqueness: 0-100%"), NULL },
 #endif
         { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       N_("Show Configuration Wizard"), NULL },
@@ -451,7 +451,7 @@ static gboolean parse_cli (int argc, char *argv[])
         config_setbool ("enable_transparency", transparency);
         config_setint ("transparency", transparency);
     }
-#else 
+#else
     if (back_alpha != config_getint ("back_alpha"))
     {
         config_setbool ("enable_transparency", ~back_alpha & 0xffff);
@@ -634,7 +634,10 @@ int main (int argc, char *argv[])
     DEBUG_FUNCTION ("main");
 
     tilda_window tw;
+    /* NULL set the tw pointers so we can get a clean exit on initialization failure */
+    memset(&tw, 0, sizeof(tilda_window));
 
+    fprintf(stderr, "VTE_VERSION %i.%i.%i\n", VTE_MAJOR_VERSION, VTE_MINOR_VERSION, VTE_MICRO_VERSION);
     struct sigaction sa;
     struct lock_info lock;
     gboolean need_wizard = FALSE;
@@ -744,6 +747,7 @@ int main (int argc, char *argv[])
     gboolean success = tilda_window_init (config_file, lock.instance, &tw);
 
     if(!success) {
+        fprintf(stderr, "tilda.c: initialization failed\n");
         goto initialization_failed;
     }
 
@@ -808,7 +812,6 @@ initialization_failed:
     close(lock.file_descriptor);
     g_free (lock_file);
     g_free (config_file);
-
     return 0;
 }
 

@@ -126,7 +126,6 @@ else
     AC_DEFINE([VTE_290], [1], [VTE Version])
 fi
 
-AC_DEFINE_UNQUOTED([VTE_VERSION], ["$vte_package"], [The version of VTE to compile with])
 AM_CONDITIONAL([VTE_290], [test "x$enable_vte_291" = "xno"])
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources, no)
