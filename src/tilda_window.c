@@ -147,24 +147,26 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
     return GDK_EVENT_STOP;
-} 
+}
 
 gint toggle_transparency_cb (tilda_window *tw)
 {
-    DEBUG_FUNCTION ("toggle_transparency"); 
+    DEBUG_FUNCTION ("toggle_transparency");
     DEBUG_ASSERT (tw != NULL);
     tilda_window_toggle_transparency(tw);
     return GDK_EVENT_STOP;
 }
 
-void tilda_window_toggle_transparency (tilda_window *tw) 
+void tilda_window_toggle_transparency (tilda_window *tw)
 {
     tilda_term *tt;
     guint i;
     gboolean status = !config_getbool ("enable_transparency");
-    config_setbool ("enable_transparency", status); 
+    config_setbool ("enable_transparency", status);
+#ifdef VTE_290
     gdouble transparency_level = 0.0;
     transparency_level = ((gdouble) config_getint ("transparency"))/100;
+
     if (status)
     {
         for (i=0; i<g_list_length (tw->terms); i++) {
@@ -182,12 +184,24 @@ void tilda_window_toggle_transparency (tilda_window *tw)
             vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), FALSE);
             vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
         }
-    } 
+    }
+#else
+    GdkRGBA bg;
+    bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
+    bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
+    bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
+    bg.alpha =    (status ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+            tt = g_list_nth_data (tw->terms, i);
+            vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
+        }
+#endif
 }
 
 gint toggle_searchbar_cb (tilda_window *tw)
 {
-    DEBUG_FUNCTION ("toggle_searbar"); 
+    DEBUG_FUNCTION ("toggle_searbar");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tw->search != NULL);
     gboolean visible = !gtk_widget_get_visible(tw->search->search_box);
@@ -650,8 +664,8 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("paste_key",      "<tilda>/context/Paste",             G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
-    tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw); 
-    tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(toggle_searchbar_cb),      tw); 
+    tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
+    tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(toggle_searchbar_cb),      tw);
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
@@ -717,7 +731,11 @@ static void tilda_window_search (G_GNUC_UNUSED GtkButton *button, tilda_window *
 
     GError *error = NULL;
     GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
+#ifdef VTE_290
     vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex);
+#else
+    vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex, 0);
+#endif
     vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), wrap_on_search);
 
     gboolean search_result;
@@ -872,10 +890,10 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 #endif
 
     if(!gtk_builder_add_from_resource (gtk_builder, "/org/tilda/tilda.ui", &error)) {
-        g_prefix_error(&error, "Error:");
+        fprintf (stderr, "Error: %s\n", error->message);
+        g_error_free(error);
         return FALSE;
     }
-
     tw->gtk_builder = gtk_builder;
 
     /* The gdk_x11_get_server_time call will hang if GDK_PROPERTY_CHANGE_MASK is not set */
@@ -997,7 +1015,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
      */
     GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     tw->search = tilda_search_box_init(tw);
-    
+
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
@@ -1025,22 +1043,26 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 
 gint tilda_window_free (tilda_window *tw)
 {
-    gint num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
 
     /* Close each tab which still exists.
      * This will free their data structures automatically. */
-    while (num_pages > 0)
-    {
-        /* Close the 0th tab, which should always exist while we have
-         * some pages left in the notebook. */
-        tilda_window_close_tab (tw, 0, TRUE);
+    if (tw->notebook != NULL) {
+        gint num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
+        while (num_pages > 0)
+        {
+            /* Close the 0th tab, which should always exist while we have
+             * some pages left in the notebook. */
+            tilda_window_close_tab (tw, 0, TRUE);
 
-        num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
+            num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK(tw->notebook));
+        }
     }
 
     g_free (tw->config_file);
     g_free (tw->search);
-    g_object_unref (G_OBJECT(tw->gtk_builder));
+    if (tw->gtk_builder != NULL) {
+        g_object_unref (G_OBJECT(tw->gtk_builder));
+    }
 
     return 0;
 }

@@ -44,3 +44,13 @@ struct lock_info
 G_END_DECLS
 
 #endif
+
+/* Future compatibility with VTE-2.90 */
+#ifndef VTE_290 
+#define vte_terminal_set_colors_rgba vte_terminal_set_colors
+#define vte_terminal_set_color_background_rgba vte_terminal_set_color_background
+#define vte_terminal_set_color_foreground_rgba vte_terminal_set_color_foreground
+#define vte_terminal_set_color_cursor_rgba vte_terminal_set_color_cursor
+#define VteTerminalCursorShape VteCursorShape
+#endif
+
