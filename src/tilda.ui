@@ -1062,7 +1062,7 @@
                 <property name="row_spacing">4</property>
                 <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkFrame" id="frame_word_chars">
+                    <object class="GtkFrame" id="frame_word_chars">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -3948,7 +3948,6 @@
                     <property name="left_attach">1</property>
                     <property name="top_attach">10</property>
                   </packing>
-                <!-- -->
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame_keybinding_toggle_searchbar">
@@ -3985,7 +3984,6 @@
                     <property name="top_attach">11</property>
                   </packing>
                 </child>
-                <!-- -->
               </object>
               <packing>
                 <property name="position">6</property>
