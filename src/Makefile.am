@@ -4,9 +4,9 @@ bin_PROGRAMS += src/tilda
 
 # Rules to compile resources
 src/glade-resources.h: src/glade-resources.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
 src/glade-resources.c: src/glade-resources.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --generate $< --target=$@ --sourcedir=$(srcdir)/src
 
 # Dependencies rule, and do not forget to do a make after
 # editing the UI with glade!
