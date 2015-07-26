@@ -967,6 +967,23 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* Create the linked list of terminals */
     tw->terms = NULL;
 
+    /* Setup the tilda window. The tilda window consists of a toplevel window that contains the following widgets:
+     *   * The main_box holds a GtkNotebook with all the terminal tabs
+     *   * The search_box holds the search widgets and a label to indicate when the search has reached the bottom
+     */
+    GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    tw->search = tilda_search_box_init(tw);
+
+    gtk_container_add (GTK_CONTAINER(tw->window), main_box);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
+
+
+    /* Show the widgets */
+    gtk_widget_show_all (main_box);
+    gtk_widget_set_visible(tw->search->search_box, FALSE);
+    /* the tw->window widget will be shown later, by pull() */
+
     /* Add the initial terminal */
     if (!tilda_window_add_tab (tw))
     {
@@ -990,23 +1007,6 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* We need this signal to detect changes in the order of tabs so that we can keep the order
      * of tilda_terms in the tw->terms structure in sync with the order of tabs. */
     g_signal_connect (G_OBJECT(tw->notebook), "page-reordered", G_CALLBACK (page_reordered_cb), tw);
-
-    /* Setup the tilda window. The tilda window consists of a toplevel window that contains the following widgets:
-     *   * The main_box holds a GtkNotebook with all the terminal tabs
-     *   * The search_box holds the search widgets and a label to indicate when the search has reached the bottom
-     */
-    GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-    tw->search = tilda_search_box_init(tw);
-    
-    gtk_container_add (GTK_CONTAINER(tw->window), main_box);
-    gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
-
-
-    /* Show the widgets */
-    gtk_widget_show_all (main_box);
-    gtk_widget_set_visible(tw->search->search_box, FALSE);
-    /* the tw->window widget will be shown later, by pull() */
 
     /* Position the window */
     tw->current_state = STATE_UP;
