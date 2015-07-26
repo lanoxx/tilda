@@ -117,6 +117,8 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     term->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL,
         gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (VTE_TERMINAL(term->vte_term))));
 
+    gtk_widget_set_no_show_all (term->scrollbar, TRUE);
+
     /* Initialize to false, we have not yet dropped to the default shell */
     term->dropped_to_default_shell = FALSE;
 
