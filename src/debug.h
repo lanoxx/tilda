@@ -67,6 +67,12 @@
 
     #define DEBUG_FUNCTION(NAME) g_printerr("%s: FUNCTION ENTERED: %s\n", basename(__FILE__), (NAME))
 
+    #define DEBUG_FUNCTION_MESSAGE(NAME,FORMAT,args...) { \
+        gchar *message = g_strdup_printf ((FORMAT), ##args); \
+        g_printerr("%s: FUNCTION ENTERED: %s: %s", basename(__FILE__), (NAME), message); \
+        g_free (message); \
+   }
+
 #else
 
     #define DEBUG_FUNCTION(NAME) {}
