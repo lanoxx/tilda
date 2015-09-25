@@ -38,7 +38,14 @@ GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
 static gint tilda_term_config_defaults (tilda_term *tt);
-static void child_exited_cb (GtkWidget *widget, gpointer data);
+
+#ifdef VTE_290
+    static void child_exited_cb (GtkWidget *widget, gpointer data);
+#else
+    static void eof_cb (GtkWidget *widget, gpointer data);
+    /* VTE 2.91 introduced a new status argument to the "child-exited" signal */
+    static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
+#endif
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
@@ -143,11 +150,14 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(child_exited_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "window-title-changed",
                       G_CALLBACK(window_title_changed_cb), term);
+#ifdef VTE_290
     g_signal_connect (G_OBJECT(term->vte_term), "eof",
                       G_CALLBACK(child_exited_cb), term);
-#ifdef VTE_290
     g_signal_connect (G_OBJECT(term->vte_term), "status-line-changed",
                       G_CALLBACK(status_line_changed_cb), term);
+#else
+    g_signal_connect (G_OBJECT(term->vte_term), "eof",
+                      G_CALLBACK(eof_cb), term);
 #endif
     g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
                       G_CALLBACK(button_press_cb), term);
@@ -572,8 +582,21 @@ launch_default_shell:
     return 0;
 }
 
+#ifdef VTE_291
+static void eof_cb (GtkWidget *widget, gpointer data) {
+    DEBUG_FUNCTION ("eof_cb");
+    DEBUG_ASSERT (widget != NULL);
+    DEBUG_ASSERT (data != NULL);
 
+    child_exited_cb (widget, 0, data);
+}
+#endif
+
+#ifdef VTE_290
 static void child_exited_cb (GtkWidget *widget, gpointer data)
+#else
+static void child_exited_cb (GtkWidget *widget, gint status, gpointer data)
+#endif
 {
     DEBUG_FUNCTION ("child_exited_cb");
     DEBUG_ASSERT (widget != NULL);
