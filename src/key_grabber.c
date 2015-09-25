@@ -216,6 +216,10 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
                                       tomboy_keybinder_get_current_event_time());
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
         gtk_widget_show (GTK_WIDGET(tw->window));
+#if GTK_MINOR_VERSION >= 16
+        /* Temporary fix for GTK breaking restore on Fullscreen */
+        tilda_window_set_fullscreen(tw);
+#endif
 
         /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
          * focus stealing prevention to make the old _NET_WM_USER_TIME hack
