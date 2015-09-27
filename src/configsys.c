@@ -74,6 +74,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
     CFG_STR("show_on_monitor", "", CFGF_NONE),
     CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
+    CFG_STR("cycle_monitor_key", "<Primary>Right", CFGF_NONE),
 
     /* ints */
     CFG_INT("lines", 5000, CFGF_NONE),
