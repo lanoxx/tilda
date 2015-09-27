@@ -77,6 +77,8 @@
 
     #define DEBUG_FUNCTION(NAME) {}
 
+    #define DEBUG_FUNCTION_MESSAGE(NAME,FORMAT,args...) {}
+
 #endif
 
 /* A macro that calls perror() with a consistent header string */
