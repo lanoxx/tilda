@@ -333,12 +333,23 @@ gint cycle_monitor_cb (tilda_window *tw)
     GdkRectangle *original_workarea = rect + original_monitor;
     GdkRectangle *new_workarea = rect + new_monitor;
 
-    // Keep the same relative position on
-    // the new monitor
+    // Try to keep the same relative position
+    // on the new monitor if possible, but
+    // sometimes the saved (x, y) absolutes
+    // are in disagreement with the selected
+    // monitor; in that case set x or y to 0
     int original_absolute_x = config_getint("x_pos");
     int original_absolute_y = config_getint("y_pos");
-    int new_absolute_x = new_workarea->x + (original_absolute_x - original_workarea->x);
-    int new_absolute_y = new_workarea->y + (original_absolute_y - original_workarea->y);
+    int relative_x = original_absolute_x - original_workarea->x;
+    int relative_y = original_absolute_y - original_workarea->y;
+    if (relative_x < 0 || relative_x > new_workarea->width) {
+        relative_x = 0;
+    }
+    if (relative_y < 0 || relative_y > new_workarea->height) {
+        relative_y = 0;
+    }
+    int new_absolute_x = new_workarea->x + relative_x;
+    int new_absolute_y = new_workarea->y + relative_y;
 
     config_setint("show_on_monitor_number", new_monitor);
     config_setint("x_pos", new_absolute_x);
