@@ -703,7 +703,7 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
     return NULL;
 }
 
-static void tilda_window_search (G_GNUC_UNUSED GtkButton *button, tilda_window *tw, gboolean terminal_search_backwards) {
+static void tilda_window_search (G_GNUC_UNUSED GtkWidget *widget, tilda_window *tw, gboolean terminal_search_backwards) {
     GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
     gboolean wrap_on_search = FALSE;
     tilda_search *search = tw->search;
@@ -794,7 +794,7 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
 gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *tw) {
     GdkEventKey *event_key = (GdkEventKey*)event;
     if (event_key->keyval == GDK_KEY_Return) {
-        tilda_window_search(GTK_BUTTON (widget), tw, FALSE);
+        tilda_window_search(widget, tw, FALSE);
         return GDK_EVENT_STOP;
     }
 
