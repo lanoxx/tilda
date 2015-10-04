@@ -655,12 +655,12 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
-#ifdef VTE_290 
+#ifdef VTE_290
     bg.alpha =    1.0;
     gdouble transparency_level = 0.0;
 #else
     bg.alpha =    (config_getbool("enable_transparency") ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
-#endif 
+#endif
 
     fg.red   =    GUINT16_TO_FLOAT(config_getint ("text_red"));
     fg.green =    GUINT16_TO_FLOAT(config_getint ("text_green"));
@@ -849,7 +849,7 @@ menu_fullscreen_cb (GSimpleAction *action,
 }
 
 static void
-menu_searchbar_cb(GSimpleAction *action, 
+menu_searchbar_cb(GSimpleAction *action,
                     GVariant      *parameter,
                     gpointer       user_data)
 {
@@ -1017,11 +1017,8 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             break;
         case 1: /* Left Click */
             terminal  = VTE_TERMINAL(tt->vte_term);
-            GtkBorder border;
-            gtk_widget_style_get (GTK_WIDGET (terminal),
-                "inner-border", &border, NULL);
+            ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
 
-            ypad = border.bottom;
             match = vte_terminal_match_check (terminal,
                     (event->x - ypad) /
                     vte_terminal_get_char_width (terminal),
