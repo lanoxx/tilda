@@ -2158,14 +2158,21 @@ static void initialize_combo_choose_monitor() {
 
     for (i = 0; i < num_monitors; i++) {
         gtk_list_store_append(monitor_model, &iter);
+        gchar *monitor_plug_name = gdk_screen_get_monitor_plug_name(screen, i);
+        gchar *display_name = g_strdup_printf("%d    <i>(%s)</i>", i, monitor_plug_name);
+
         gtk_list_store_set(monitor_model, &iter,
-                           0, gdk_screen_get_monitor_plug_name(screen, i),
+                           0, monitor_plug_name,
                            1, i,
+                           2, display_name,
                            -1);
 
         if(i == monitor_number) {
           gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
         }
+
+        g_free (monitor_plug_name);
+        g_free (display_name);
     }
 }
 
