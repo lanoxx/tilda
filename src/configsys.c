@@ -98,6 +98,10 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
     CFG_INT("cursor_shape", 0, CFGF_NONE),
 
+    /* Deprecated tilda options */
+    CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
+    /* End deprecated tilda options */
+
     /* The length of a tab title */
     CFG_INT("title_max_length", 25, CFGF_NONE),
 
@@ -195,6 +199,8 @@ static cfg_opt_t config_opts[] = {
 #define CONFIG1_NEWER  1
 
 static gboolean compare_config_versions (const gchar *config1, const gchar *config2) G_GNUC_UNUSED;
+
+void remove_deprecated_config_options(const gchar *const *deprecated_config_options, guint size);
 
 /* Note: set config_file to NULL to just free the
  * data structures, and not write out the state to
@@ -409,20 +415,21 @@ gint config_init (const gchar *config_file)
             return ret;
         }
 	}
+
+    /* Deprecate old config settings
+     * This is a lame work around until we get a permenant solution to
+     * libconfuse lacking for this functionality
+     */
+    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number"};
+    remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
+
 #if VTE_MINOR_VERSION >= 40
     /* Deprecate old config settings
      * This is a lame work around until we get a permenant solution to
      * libconfuse lacking for this functionality
      */
-    const gchar *deprecated_config_options[] = {"word_chars", "image", "scroll_background", "use_image"};
-    cfg_opt_t *opt;
-    for (guint i =0; i < G_N_ELEMENTS(deprecated_config_options); i++) {
-        opt = cfg_getopt(tc, deprecated_config_options[i]);
-        if (opt->nvalues != 0) {
-            g_warning("Warning: %s is no longer a valid config option for the current version of Tilda.\n", deprecated_config_options[i]);
-            cfg_free_value(opt);
-        }
-    }
+    const gchar *deprecated_vte_config_options[] = {"word_chars", "image", "scroll_background", "use_image"};
+    remove_deprecated_config_options (deprecated_vte_config_options, G_N_ELEMENTS(deprecated_vte_config_options));
 #else
     if (cfg_getopt(tc, "use_image")->nvalues < 1) {
         cfg_setbool(tc, "use_image", FALSE);
@@ -439,6 +446,17 @@ gint config_init (const gchar *config_file)
     #endif
 
 	return ret;
+}
+
+void remove_deprecated_config_options(const gchar *const *deprecated_config_options, guint size) {
+    cfg_opt_t *opt;
+    for (guint i =0; i < size; i++) {
+        opt = cfg_getopt(tc, deprecated_config_options[i]);
+        if (opt->nvalues != 0) {
+            g_warning("Warning: %s is no longer a valid config option for the current version of Tilda.\n", deprecated_config_options[i]);
+            cfg_free_value(opt);
+        }
+    }
 }
 
 /*
