@@ -381,7 +381,7 @@ static void wizard_close_dialog ()
     const gchar *fullscreen_key = GET_BUTTON_LABEL("button_keybinding_fullscreen");
     const gchar *toggle_transparency_key = GET_BUTTON_LABEL("button_keybinding_toggle_transparency");
     const gchar *toggle_searchbar_key = GET_BUTTON_LABEL("button_keybinding_toggle_searchbar");
-    
+
     const GtkWidget *entry_custom_command =
         GTK_WIDGET (gtk_builder_get_object(xml, "entry_custom_command"));
     const GtkWidget *wizard_window = tw->wizard_window;
@@ -487,7 +487,7 @@ static void wizard_close_dialog ()
     tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Fullscreen", fullscreen_key);
     tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Transparency", toggle_transparency_key);
     tilda_window_update_keyboard_accelerators("<tilda>/context/Toggle Searchbar", toggle_searchbar_key);
- 
+
 
     /* TODO: validate this?? */
     config_setstr ("command", command);
@@ -659,7 +659,7 @@ static int percentage_dimension (int max_size, int current_size) {
  * Get the number of screens and load the monitor geometry for each screen,
  * then set the position of the window according to the x and y offset
  * of that monitor. This function does not actually move or resize the window
- * but only sets changes the value of the spin buttons. The moving and resizing
+ * but only changes the value of the spin buttons. The moving and resizing
  * is then done by the callback functions of the respective widgets.
  */
 static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
@@ -1465,18 +1465,18 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
     const gdouble transparency_level = (status / 100.0);
     guint i;
     tilda_term *tt;
-    GdkRGBA bg; 
-    
+    GdkRGBA bg;
+
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
     bg.alpha =    1.0 - (status / 100.0);
-    
+
     config_setint ("back_alpha", (100 - status) * 0x290 - 65);
     for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
             vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
-        }    
+        }
 }
 #endif
 static void spin_animation_delay_value_changed_cb (GtkWidget *w)
@@ -1613,7 +1613,7 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
             gdk_back.red = gdk_back.green = gdk_back.blue = 0.0;
             break;
         /* Zenburn */
-        case 4: 
+        case 4:
 			gdk_text.red = 0.86;
 			gdk_text.green = gdk_text.blue = 0.64;
 			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25;
@@ -1768,7 +1768,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w) {
                                           current_palette,
                                           TERMINAL_PALETTE_SIZE);
         }
-        
+
         for (j=0; j<TERMINAL_PALETTE_SIZE; j++) {
             update_palette_color_button(j);
 
@@ -2054,7 +2054,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), FALSE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_searchbar), FALSE);
-    
+
     /* Bring up the dialog that will accept the new keybinding */
     GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW(wizard_window),
                               GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -2096,7 +2096,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_fullscreen), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_transparency), TRUE);
     gtk_widget_set_sensitive (GTK_WIDGET(button_keybinding_toggle_searchbar), TRUE);
-    
+
     /* If the dialog was "programmatically destroyed" (we got a key), we don't want to destroy it again.
        Otherwise, we do want to destroy it, otherwise it would stick around even after hitting Cancel. */
     if (response != -1) {
@@ -2291,7 +2291,7 @@ static void set_wizard_state_from_config () {
     /* Compatibility Tab */
     COMBO_BOX ("combo_backspace_binding", "backspace_key");
     COMBO_BOX ("combo_delete_binding", "delete_key");
-    
+
     /* VTE-2.90 Compatibility */
 #ifdef VTE_290
     SPIN_BUTTON ("spin_level_of_transparency", "transparency");
@@ -2299,7 +2299,7 @@ static void set_wizard_state_from_config () {
     CHECK_BUTTON ("check_use_image_for_background", "use_image");
     SET_SENSITIVE_BY_CONFIG_BOOL ("button_background_image","use_image");
     TEXT_ENTRY ("entry_word_chars", "word_chars");
-        
+
     char* filename = config_getstr ("image");
     if(filename != NULL) {
         FILE_BUTTON ("button_background_image", filename);
@@ -2487,7 +2487,7 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_keybinding_fullscreen", "clicked", button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb);
     CONNECT_SIGNAL ("button_keybinding_toggle_searchbar", "clicked", button_keybinding_clicked_cb);
-    
+
     /* Close Button */
     CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb);
     CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb);
@@ -2525,4 +2525,3 @@ static void update_palette_color_button(gint idx)
 
     gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (color_button), &current_palette[idx]);
 }
-
