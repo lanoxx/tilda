@@ -1046,12 +1046,10 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
                     TILDA_PERROR ();
                 }
 
+                g_free (web_browser_cmd);
                 g_free (cmd);
-            }
-
-            /* Always free match if it is non NULL */
-            if (match)
                 g_free (match);
+            }
 
             break;
         default:
