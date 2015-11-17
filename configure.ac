@@ -114,9 +114,9 @@ fi
 
 AC_ARG_ENABLE([vte-2.91],
 		[AS_HELP_STRING([--enable-vte-2.91],
-						[compile with libvte2.91 [default=no]])],
+						[compile with libvte2.91 [default=yes]])],
 		[enable_vte_291=$enableval],
-		[enable_vte_291=no])
+		[enable_vte_291=yes])
         
 if test "x$enable_vte_291" = "xyes"; then
     vte_package="vte-2.91"
