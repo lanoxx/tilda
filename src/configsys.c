@@ -73,7 +73,7 @@ static cfg_opt_t config_opts[] = {
     CFG_STR("decrease_font_size_key", "<Control>minus", CFGF_NONE),
     CFG_STR("normalize_font_size_key", "<Control>0", CFGF_NONE),
     CFG_STR("show_on_monitor", "", CFGF_NONE),
-
+    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
 
     /* ints */
     CFG_INT("lines", 5000, CFGF_NONE),
@@ -176,9 +176,6 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("transparency", 0, CFGF_NONE),
 #if VTE_MINOR_VERSION >= 40 /* VTE-2.91 */
     CFG_INT("back_alpha", 0xffff, CFGF_NONE),
-    CFG_STR("word_chars", NULL, CFGF_NODEFAULT),
-#else
-    CFG_STR("word_chars", DEFAULT_WORD_CHARS, CFGF_NONE),
 #endif
     CFG_END()
 };
@@ -425,17 +422,14 @@ gint config_init (const gchar *config_file)
 
 #if VTE_MINOR_VERSION >= 40
     /* Deprecate old config settings
-     * This is a lame work around until we get a permenant solution to
+     * This is a lame work around until we get a permanent solution to
      * libconfuse lacking for this functionality
      */
-    const gchar *deprecated_vte_config_options[] = {"word_chars", "image", "scroll_background", "use_image"};
+    const gchar *deprecated_vte_config_options[] = {"image", "scroll_background", "use_image"};
     remove_deprecated_config_options (deprecated_vte_config_options, G_N_ELEMENTS(deprecated_vte_config_options));
 #else
     if (cfg_getopt(tc, "use_image")->nvalues < 1) {
         cfg_setbool(tc, "use_image", FALSE);
-    }
-    if (cfg_getopt(tc, "word_chars")->nvalues < 1) {
-        cfg_setstr(tc, "word_chars", DEFAULT_WORD_CHARS);
     }
     if (cfg_getopt(tc, "scroll_background")->nvalues < 1) {
         cfg_setbool(tc, "scroll_background", TRUE);

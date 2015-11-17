@@ -1206,7 +1206,7 @@ static void entry_web_browser_changed (GtkWidget *w) {
     config_setstr ("web_browser", web_browser);
 }
 
-#ifdef VTE_290
+#if (VTE_290 || VTE_MINOR_VERSION >= 40)
 static void entry_word_chars_changed (GtkWidget *w)
 {
     guint i;
@@ -1221,21 +1221,32 @@ static void entry_word_chars_changed (GtkWidget *w)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
+    #if VTE_MINOR_VERSION >= 40
+            vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
+    #else
+            vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
+    #endif
     }
 }
+#endif
 
-#else
+#ifdef VTE_291
 static void wizard_hide_deprecated_options(void) {
-    GtkWidget *frame_word_chars =
-      GTK_WIDGET(gtk_builder_get_object (xml, ("frame_word_chars")));
+    /**
+     * Word chars are only unavailable in VTE 38.x
+     */
+    #if VTE_MINOR_VERSION < 40
+        GtkWidget *frame_word_chars =
+          GTK_WIDGET(gtk_builder_get_object (xml, ("frame_word_chars")));
+        gtk_widget_hide (frame_word_chars);
+    #endif
+
     GtkWidget *check_use_image_for_background =
       GTK_WIDGET (gtk_builder_get_object (xml, ("check_use_image_for_background")));
     GtkWidget *button_background_image =
         GTK_WIDGET (gtk_builder_get_object (xml, ("button_background_image")));
     GtkWidget *check_scroll_background =
       GTK_WIDGET (gtk_builder_get_object (xml, ("check_scroll_background")));
-    gtk_widget_hide (frame_word_chars);
     gtk_widget_hide (check_use_image_for_background);
     gtk_widget_hide (button_background_image);
     gtk_widget_hide (check_scroll_background);
@@ -2338,13 +2349,16 @@ static void set_wizard_state_from_config () {
     COMBO_BOX ("combo_backspace_binding", "backspace_key");
     COMBO_BOX ("combo_delete_binding", "delete_key");
 
+    #if (VTE_290 || VTE_MINOR_VERSION >= 40)
+        TEXT_ENTRY ("entry_word_chars", "word_chars");
+    #endif
+
     /* VTE-2.90 Compatibility */
 #ifdef VTE_290
     SPIN_BUTTON ("spin_level_of_transparency", "transparency");
     CHECK_BUTTON ("check_scroll_background", "scroll_background");
     CHECK_BUTTON ("check_use_image_for_background", "use_image");
     SET_SENSITIVE_BY_CONFIG_BOOL ("button_background_image","use_image");
-    TEXT_ENTRY ("entry_word_chars", "word_chars");
 
     char* filename = config_getstr ("image");
     if(filename != NULL) {
@@ -2538,9 +2552,12 @@ static void connect_wizard_signals ()
     CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb);
     CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb);
 
+#if (VTE_290 || VTE_MINOR_VERSION >= 40)
+    CONNECT_SIGNAL ("entry_word_chars", "changed", entry_word_chars_changed);
+#endif
+
     /* VTE-2.90 SIGNALS */
 #ifdef VTE_290
-    CONNECT_SIGNAL ("entry_word_chars","changed",entry_word_chars_changed);
     CONNECT_SIGNAL ("check_use_image_for_background","toggled",check_use_image_for_background_toggled_cb);
     CONNECT_SIGNAL ("button_background_image","selection-changed",button_background_image_selection_changed_cb);
     CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb);

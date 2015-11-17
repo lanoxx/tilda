@@ -752,12 +752,20 @@ static gint tilda_term_config_defaults (tilda_term *tt)
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_AUTO);
             break;
     }
-#ifdef VTE_290 /* VTE 2.90 only */
+
     /** Word chars **/
     word_chars =  config_getstr ("word_chars");
     if (NULL == word_chars || '\0' == *word_chars) {
         word_chars = DEFAULT_WORD_CHARS;
     }
+
+    /**
+     * The word_chars feature was removed from VTE in 38.x and reintroduced with a different API function in VTE
+     * 40.x, so we need the following compile guards to ensure we only include the word_chars feature in the
+     * supported versions.
+     **/
+
+#ifdef VTE_290 /* VTE 2.90 only */
     vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
 
     /** Background **/
@@ -773,6 +781,10 @@ static gint tilda_term_config_defaults (tilda_term *tt)
         vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
         vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), !tt->tw->have_argb_visual);
     }
+#else
+    #if VTE_MINOR_VERSION >= 40
+        vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
+    #endif
 #endif
     return 0;
 }
