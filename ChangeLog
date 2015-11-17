@@ -1,3 +1,52 @@
+version 1.3.0 (2015-11-17):
+	* Fixed an issue with transparency in GNOME Shell (Ingmar Olsson)
+	* Fixed wrong move-tab behaviour (Andrew Lin)
+	* Allow changing the font size (Alexander Maznev, Sebastian Geiger)
+	* Fixed an issue that caused the preferences window
+	  to be shown below the tilda window (Sebastian Geiger)
+	* Migrated context menu to GAction API, as a result it will
+	  now show the relevant hotkey bound for each menu item (Sebastian Geiger)
+	* Custom commands are now validated in the wizard (Sebastian Geiger)
+	* The maximum window size for each monitor is based on the workarea size,
+	  instead of the monitor size (Sebastian Geiger)
+	* Fixed an issue in command validation
+	* Added a new option "Use login shell" to start the shell as
+	  a login shell (Sebastian Geiger).
+	* The UI file was updated to migrate many deprecated widgets to their new replacements (Sebastian Geiger)
+	* The source now contains some documentation for the multi-monitor feature (Sebastian Geiger)
+	* Make sure tilda never starts outside the visible monitor area, this could happen on
+	  when monitors had different sizes or rotations (Sebastian Geiger)
+	* Fixed wrong centering on multi-monitor setups (Thanks to Sivno Toranga-San)
+	* Tilda Wizard now uses the correct icon (Sebastian Geiger)
+	* The fullscreen setting is now persistent (Sivno Toranga-San)
+	* Added an AppData file for Tilda (Alexander Maznev)
+	* Tilda will now show an error message when it starts if there was a problem reading the config file (Sebastian Geiger)
+	* There is now a keybinding to toggle the transparency (Alexander Maznev)
+	* There is now an option for cursor shape and color (Alexander Maznev)
+	* The window title is now set to the current tab title, this is useful when tilda is configured
+	  to show up in the task list (Sebastian Geiger)
+	* Fixed a bug with the scrollback limit, infinite scrollback should now correctly work (Alexander Maznev)
+	* The default scrollback length is now 5000 lines (Sebastian Geiger)
+	* Fixed an issue that prevented the configuration file to be written back to disk correctly.
+	  As a result the file could sometimes be empty (Sebastian Geiger)
+	* Fixed an issue with the copy and paste hotkeys when the scrollbar was configured
+	  to be on the left (Sebastian Geiger)
+	* Avoid an error when the wizard was opened multiple times, now
+	  the already open window is focused (Sebastian Geiger)
+	* Tilda can now be configured as a desktop window (EWMH Hint) (Paul G)
+	* There is now a search widget that can be shown with CTRL+SHIFT+F and
+	  hidden with Esc (Alexander Maznev and Sebastian Geiger)
+	* Support for the new VTE 2.91 API version was added and is enabled by default,
+	  it is still possible to use the old 2.90 API by specifying '--disable-vte-2.91'
+	  at configure time (Alexander Maznev)
+	* Fixed an issue with the autohide option by preventing repetitive pulls within 150ms (Furkan Mustafa)
+	* The hide animation has been reworked and no longer resizes the tilda window when
+	  hiding it. Additionally some issues with different window managers were fixed. (Lean Rada and Sebastian Geiger)
+	* The monitor chooser in the wizard now uses the monitor names instead of the monitor number (Sivno Toranga-San)
+	* The prevtab and nexttab keybindings have been swapped in the wizard to make them more intuitive (Sebastian Geiger)
+	* There have also been several other fixes, code cleanups and changes to the build system, which should
+	  improve the overall stability and usability of tilda (Sebastian Geiger and others)
+
 version 1.2.4 (2015-06-28):
 	* Fix a bug introduced in the last version that broke the copy/paste hotkeys when the
 	  tabs were reordered.
