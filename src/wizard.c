@@ -207,23 +207,15 @@ enum dimensions { HEIGHT, WIDTH };
  * keep things "in the code" so that they can be grepped for easily. */
 static GtkBuilder *xml = NULL;
 
-/* This is terrible. We're keeping a local copy of a variable that
- * should probably be project global, because we use it everywhere.
- *
- * I did this to avoid passing and typecasting it in every single
- * callback function. I will make the variable project-global later,
- * but that is another day. */
-static tilda_window *tw = NULL;
-
 /* Prototypes for use in the wizard() */
-static void set_wizard_state_from_config (void);
-static void connect_wizard_signals (void);
+static void set_wizard_state_from_config (tilda_window *tw);
+static void connect_wizard_signals (tilda_window *tw);
 static void init_palette_scheme_menu (void);
 static void update_palette_color_button(gint idx);
-static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
-static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message);
+static gboolean validate_pulldown_keybinding(const gchar* accel, tilda_window* tw, const gchar* message);
+static gboolean validate_keybinding(const gchar* accel, const tilda_window* tw, const gchar* message);
 static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
-static void initialize_geometry_spinners(void);
+static void initialize_geometry_spinners(tilda_window *tw);
 
 #ifndef VTE_290
 static void wizard_hide_deprecated_options(void);
@@ -248,14 +240,10 @@ static gint find_monitor_number(tilda_window *tw)
 }
 
 /* Show the wizard. This will show the wizard, then exit immediately. */
-gint wizard (tilda_window *ltw)
+gint wizard (tilda_window *tw)
 {
     DEBUG_FUNCTION ("wizard");
-    DEBUG_ASSERT (ltw != NULL);
-
-    /* See the notes above, where the tw variable is declared.
-     * I know how ugly this is ... */
-    tw = ltw;
+    DEBUG_ASSERT (tw != NULL);
 
     gchar *window_title;
 
@@ -292,13 +280,13 @@ gint wizard (tilda_window *ltw)
     init_palette_scheme_menu ();
 
     /* Copy the current program state into the wizard */
-    set_wizard_state_from_config ();
+    set_wizard_state_from_config (tw);
 
     /* Connect all signal handlers. We do this after copying the state into
      * the wizard so that all of the handlers don't get called as we copy in
      * the values. This function manually connects the required signals for
      * all the widgets */
-    connect_wizard_signals ();
+    connect_wizard_signals (tw);
 
     /* Unbind the current keybinding. I'm aware that this opens up an opportunity to
      * let "someone else" grab the key, but it also saves us some trouble, and makes
@@ -315,7 +303,7 @@ gint wizard (tilda_window *ltw)
     gtk_window_set_icon(GTK_WINDOW(tw->wizard_window), pixbuf);
 
 
-    window_title = g_strdup_printf (_("Tilda %d Config"), ltw->instance);
+    window_title = g_strdup_printf (_("Tilda %d Config"), tw->instance);
     gtk_window_set_title (GTK_WINDOW(tw->wizard_window), window_title);
     gtk_window_set_keep_above (GTK_WINDOW(tw->wizard_window), TRUE);
 
@@ -336,7 +324,7 @@ gint wizard (tilda_window *ltw)
     return 0;
 }
 
-static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+static gboolean validate_pulldown_keybinding(const gchar* accel, tilda_window* tw, const gchar* message)
 {
     /* Try to grab the key. This is a good way to validate it :) */
     gboolean key_is_valid = tilda_keygrabber_bind (accel, tw);
@@ -346,12 +334,12 @@ static gboolean validate_pulldown_keybinding(const gchar* accel, const GtkWidget
     else
     {
         /* Show the "invalid keybinding" dialog */
-        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window), message);
+        show_invalid_keybinding_dialog (GTK_WINDOW(tw->wizard_window), message);
         return FALSE;
     }
 }
 
-static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_window, const gchar* message)
+static gboolean validate_keybinding(const gchar* accel, const tilda_window *tw, const gchar* message)
 {
     guint accel_key;
     GdkModifierType accel_mods;
@@ -361,7 +349,7 @@ static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_
     if (! ((accel_key == 0) && (accel_mods == 0)) ) {
         return TRUE;
     } else {
-        show_invalid_keybinding_dialog (GTK_WINDOW(wizard_window), message);
+        show_invalid_keybinding_dialog (GTK_WINDOW(tw->wizard_window), message);
         return FALSE;
     }
 }
@@ -372,7 +360,7 @@ static gboolean validate_keybinding(const gchar* accel, const GtkWidget* wizard_
 /* Gets called just after the wizard is closed. This should clean up after
  * the wizard, and do anything that couldn't be done immediately during the
  * wizard's lifetime. */
-static void wizard_close_dialog ()
+static void wizard_close_dialog (tilda_window *tw)
 {
     DEBUG_FUNCTION ("wizard_close_dialog");
 
@@ -408,53 +396,53 @@ static void wizard_close_dialog ()
     /* Validate our new shortcuts */
 
      /* The pulldown key is validated differently (should it be?), so it gets its own function. */
-    if (!validate_pulldown_keybinding(key, wizard_window, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
+    if (!validate_pulldown_keybinding(key, tw, _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.")))
         return;
 
      /* Check the rest of them */
-    if (!validate_keybinding(addtab_key, wizard_window, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
+    if (!validate_keybinding(addtab_key, tw, _("The keybinding you chose for \"Add Tab\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(closetab_key, wizard_window, _("The keybinding you chose for \"Close Tab\" is invalid. Please choose another.")))
+    if (!validate_keybinding(closetab_key, tw, _("The keybinding you chose for \"Close Tab\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(nexttab_key, wizard_window, _("The keybinding you chose for \"Next Tab\" is invalid. Please choose another.")))
+    if (!validate_keybinding(nexttab_key, tw, _("The keybinding you chose for \"Next Tab\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(prevtab_key, wizard_window, _("The keybinding you chose for \"Previous Tab\" is invalid. Please choose another.")))
+    if (!validate_keybinding(prevtab_key, tw, _("The keybinding you chose for \"Previous Tab\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(movetableft_key, wizard_window, _("The keybinding you chose for \"Move Tab to Left\" is invalid. Please choose another.")))
+    if (!validate_keybinding(movetableft_key, tw, _("The keybinding you chose for \"Move Tab to Left\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(movetabright_key, wizard_window, _("The keybinding you chose for \"Move Tab to Right\" is invalid. Please choose another.")))
+    if (!validate_keybinding(movetabright_key, tw, _("The keybinding you chose for \"Move Tab to Right\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(copy_key, wizard_window, _("The keybinding you chose for \"Copy\" is invalid. Please choose another.")))
+    if (!validate_keybinding(copy_key, tw, _("The keybinding you chose for \"Copy\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(paste_key, wizard_window, _("The keybinding you chose for \"Paste\" is invalid. Please choose another.")))
+    if (!validate_keybinding(paste_key, tw, _("The keybinding you chose for \"Paste\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(quit_key, wizard_window, _("The keybinding you chose for \"Quit\" is invalid. Please choose another.")))
+    if (!validate_keybinding(quit_key, tw, _("The keybinding you chose for \"Quit\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_1_key, wizard_window, _("The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_1_key, tw, _("The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_2_key, wizard_window, _("The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_2_key, tw, _("The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_3_key, wizard_window, _("The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_3_key, tw, _("The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_4_key, wizard_window, _("The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_4_key, tw, _("The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_5_key, wizard_window, _("The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_5_key, tw, _("The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_6_key, wizard_window, _("The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_6_key, tw, _("The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_7_key, wizard_window, _("The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_7_key, tw, _("The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_8_key, wizard_window, _("The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_8_key, tw, _("The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_9_key, wizard_window, _("The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_9_key, tw, _("The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(gototab_10_key, wizard_window, _("The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose another.")))
+    if (!validate_keybinding(gototab_10_key, tw, _("The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(fullscreen_key, wizard_window, _("The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose another.")))
+    if (!validate_keybinding(fullscreen_key, tw, _("The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(toggle_transparency_key, wizard_window, _("The keybinding you chose for \"Toggle Transparency\" is invalid. Please choose another.")))
+    if (!validate_keybinding(toggle_transparency_key, tw, _("The keybinding you chose for \"Toggle Transparency\" is invalid. Please choose another.")))
         return;
-    if (!validate_keybinding(toggle_searchbar_key, wizard_window, _("The keybinding you chose for \"Toggle Search Bar\" is invalid. Please choose another.")))
+    if (!validate_keybinding(toggle_searchbar_key, tw, _("The keybinding you chose for \"Toggle Search Bar\" is invalid. Please choose another.")))
         return;
 
     /* Now that our shortcuts are validated, store them back into the config. */
@@ -680,7 +668,7 @@ static int percentage_dimension (int max_size, int current_size) {
  * but only changes the value of the spin buttons. The moving and resizing
  * is then done by the callback functions of the respective widgets.
  */
-static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
+static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *tw) {
 	// Get the monitor number on which the window is currently shown
 	int last_monitor = find_monitor_number(tw);
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
@@ -750,7 +738,7 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget) {
 	return TRUE; //callback was handled
 }
 
-static void window_title_change_all ()
+static void window_title_change_all (tilda_window *tw)
 {
     DEBUG_FUNCTION ("window_title_change_all");
 
@@ -786,12 +774,13 @@ static void window_title_change_all ()
 }
 
 static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
-                                                    void (*callback)(GtkWidget *w),
-                                                    gint new_val)
+                                                    void (*callback)(GtkWidget *w, tilda_window *tw),
+                                                    gint new_val,
+                                                    tilda_window *tw)
 {
-    g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), NULL);
+    g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), tw);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(spin), new_val);
-    g_signal_handlers_unblock_by_func (spin, G_CALLBACK(*callback), NULL);
+    g_signal_handlers_unblock_by_func (spin, G_CALLBACK(*callback), tw);
 }
 
 /******************************************************************************/
@@ -799,21 +788,21 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
 /******************************************************************************/
 
 static void wizard_button_close_clicked_cb (GtkButton *button,
-                                            gpointer data)
+                                            tilda_window *tw)
 {
     /* Call the clean-up function */
-    wizard_close_dialog ();
+    wizard_close_dialog (tw);
 }
 
 static void wizard_window_delete_event_cb (GtkWidget *widget,
                                            GdkEvent  *event,
-                                           gpointer data)
+                                           tilda_window *tw)
 {
     /* Call the clean-up function */
-    wizard_close_dialog ();
+    wizard_close_dialog (tw);
 }
 
-static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w)
+static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -825,7 +814,7 @@ static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w)
         gtk_window_unstick (GTK_WINDOW (tw->window));
 }
 
-static void check_set_as_desktop_toggled_cb (GtkWidget *widget)
+static void check_set_as_desktop_toggled_cb (GtkWidget *widget, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widget));
     GtkWidget *check_display_on_all_workspaces = GTK_WIDGET (gtk_builder_get_object (xml, "check_display_on_all_workspaces"));
@@ -847,7 +836,7 @@ static void check_set_as_desktop_toggled_cb (GtkWidget *widget)
     g_signal_handlers_unblock_by_func (check_display_on_all_workspaces, check_display_on_all_workspaces_toggled_cb, NULL);
 }
 
-static void check_do_not_show_in_taskbar_toggled_cb (GtkWidget *w)
+static void check_do_not_show_in_taskbar_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -855,7 +844,7 @@ static void check_do_not_show_in_taskbar_toggled_cb (GtkWidget *w)
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW(tw->window), status);
 }
 
-static void check_show_notebook_border_toggled_cb (GtkWidget *w)
+static void check_show_notebook_border_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -863,7 +852,7 @@ static void check_show_notebook_border_toggled_cb (GtkWidget *w)
     gtk_notebook_set_show_border (GTK_NOTEBOOK (tw->notebook), status);
 }
 
-static void check_always_on_top_toggled_cb (GtkWidget *w)
+static void check_always_on_top_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -872,14 +861,14 @@ static void check_always_on_top_toggled_cb (GtkWidget *w)
 }
 
 
-static void check_start_tilda_hidden_toggled_cb (GtkWidget *w)
+static void check_start_tilda_hidden_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
     config_setbool ("hidden", status);
 }
 
-static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
+static void check_enable_double_buffering_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -893,7 +882,7 @@ static void check_enable_double_buffering_toggled_cb (GtkWidget *w)
     }
 }
 
-static void check_terminal_bell_toggled_cb (GtkWidget *w)
+static void check_terminal_bell_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -910,7 +899,7 @@ static void check_terminal_bell_toggled_cb (GtkWidget *w)
     }
 }
 
-static void check_cursor_blinks_toggled_cb (GtkWidget *w)
+static void check_cursor_blinks_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -925,7 +914,7 @@ static void check_cursor_blinks_toggled_cb (GtkWidget *w)
     }
 }
 
-static void check_enable_antialiasing_toggled_cb (GtkWidget *w)
+static void check_enable_antialiasing_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -941,14 +930,14 @@ static void check_enable_antialiasing_toggled_cb (GtkWidget *w)
     }
 }
 
-static void spin_auto_hide_time_value_changed_cb (GtkWidget *w)
+static void spin_auto_hide_time_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint auto_hide_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
     config_setint ("auto_hide_time", auto_hide_time);
     tw->auto_hide_max_time = auto_hide_time;
 }
 
-static void check_auto_hide_on_focus_lost_toggled_cb (GtkWidget *w)
+static void check_auto_hide_on_focus_lost_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -956,7 +945,7 @@ static void check_auto_hide_on_focus_lost_toggled_cb (GtkWidget *w)
     tw->auto_hide_on_focus_lost = status;
 }
 
-static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w)
+static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
@@ -964,7 +953,7 @@ static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w)
     tw->auto_hide_on_mouse_leave = status;
 }
 
-static void check_allow_bold_text_toggled_cb (GtkWidget *w)
+static void check_allow_bold_text_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -978,7 +967,7 @@ static void check_allow_bold_text_toggled_cb (GtkWidget *w)
     }
 }
 
-static void combo_cursor_shape_changed_cb(GtkWidget *w)
+static void combo_cursor_shape_changed_cb(GtkWidget *w, tilda_window *tw)
 {
     guint i;
     tilda_term *tt;
@@ -997,7 +986,7 @@ static void combo_cursor_shape_changed_cb(GtkWidget *w)
     }
 }
 
-static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w)
+static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
@@ -1017,7 +1006,7 @@ static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w)
     config_setint ("non_focus_pull_up_behaviour", status);
 }
 
-static void combo_tab_pos_changed_cb (GtkWidget *w)
+static void combo_tab_pos_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     const GtkPositionType positions[] = {
@@ -1045,7 +1034,7 @@ static void combo_tab_pos_changed_cb (GtkWidget *w)
     }
 }
 
-static void button_font_font_set_cb (GtkWidget *w)
+static void button_font_font_set_cb (GtkWidget *w, tilda_window *tw)
 {
     const gchar *font = gtk_font_button_get_font_name (GTK_FONT_BUTTON (w));
     guint i;
@@ -1062,23 +1051,23 @@ static void button_font_font_set_cb (GtkWidget *w)
     }
 }
 
-static void entry_title_changed_cb (GtkWidget *w)
+static void entry_title_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gchar *title = gtk_entry_get_text (GTK_ENTRY(w));
 
     config_setstr ("title", title);
-    window_title_change_all ();
+    window_title_change_all (tw);
 }
 
-static void combo_dynamically_set_title_changed_cb (GtkWidget *w)
+static void combo_dynamically_set_title_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("d_set_title", status);
-    window_title_change_all ();
+    window_title_change_all (tw);
 }
 
-static void check_max_title_length_cb (GtkWidget *w)
+static void check_max_title_length_cb (GtkWidget *w, tilda_window *tw)
 {
     DEBUG_FUNCTION ("check_max_title_length_cb");
 
@@ -1094,17 +1083,17 @@ static void check_max_title_length_cb (GtkWidget *w)
     }
 }
 
-static void spin_max_title_length_changed_cb (GtkWidget *w)
+static void spin_max_title_length_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     DEBUG_FUNCTION ("spin_max_title_length_changed_cb");
 
     int length = gtk_spin_button_get_value (GTK_SPIN_BUTTON (w));
 
     config_setint ("title_max_length", length);
-    window_title_change_all ();
+    window_title_change_all (tw);
 }
 
-static void check_run_custom_command_toggled_cb (GtkWidget *w)
+static void check_run_custom_command_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     GtkWidget *label_custom_command;
@@ -1143,7 +1132,7 @@ static void check_run_custom_command_toggled_cb (GtkWidget *w)
  */
 static void validate_executable_command_cb (GtkWidget *w,
                                             G_GNUC_UNUSED GdkEvent *event,
-                                            G_GNUC_UNUSED gpointer userdata)
+                                            G_GNUC_UNUSED tilda_window *tw)
 {
     g_return_if_fail(w != NULL && GTK_IS_ENTRY(w));
     const char* command = gtk_entry_get_text (GTK_ENTRY(w));
@@ -1175,39 +1164,39 @@ static void validate_executable_command_cb (GtkWidget *w,
     }
 }
 
-static void combo_command_exit_changed_cb (GtkWidget *w) {
+static void combo_command_exit_changed_cb (GtkWidget *w, tilda_window *tw) {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("command_exit", status);
 }
 
-static void check_command_login_shell_cb (GtkWidget *w) {
+static void check_command_login_shell_cb (GtkWidget *w, tilda_window *tw) {
     const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 
     config_setbool("command_login_shell", active);
 }
 
-static void check_start_fullscreen_cb(GtkWidget *w) {
+static void check_start_fullscreen_cb(GtkWidget *w, tilda_window *tw) {
     const gboolean start_fullscreen = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 
     config_setbool("start_fullscreen", start_fullscreen);
 }
 
-static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w)
+static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
     config_setint ("on_last_terminal_exit", status);
 }
 
-static void entry_web_browser_changed (GtkWidget *w) {
+static void entry_web_browser_changed (GtkWidget *w, tilda_window *tw) {
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
 
     config_setstr ("web_browser", web_browser);
 }
 
 #if (VTE_290 || VTE_MINOR_VERSION >= 40)
-static void entry_word_chars_changed (GtkWidget *w)
+static void entry_word_chars_changed (GtkWidget *w, tilda_window *tw)
 {
     guint i;
     tilda_term *tt;
@@ -1296,16 +1285,16 @@ static int find_centering_coordinate (tilda_window *tw, enum dimensions dimensio
  * Prototypes for the next 4 functions.
  */
 //Both height functions depend on each other
-static void spin_height_percentage_value_changed_cb (GtkWidget *w);
-static void spin_height_pixels_value_changed_cb (GtkWidget *w);
+static void spin_height_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw);
+static void spin_height_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw);
 //Both width functions depend on each other
-static void spin_width_percentage_value_changed_cb (GtkWidget *w);
-static void spin_width_pixels_value_changed_cb (GtkWidget *w);
+static void spin_width_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw);
+static void spin_width_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw);
 
 static void initializeScrollbackSettings ();
 static void initialize_set_as_desktop_checkbox ();
 
-static void spin_height_percentage_value_changed_cb (GtkWidget *w)
+static void spin_height_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *spin_height_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
@@ -1314,7 +1303,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
     const gint h_pix = (int) percentage2pixels (get_max_height(), h_pct);
 
     config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix, tw);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
@@ -1328,7 +1317,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w)
 }
 
 
-static void spin_height_pixels_value_changed_cb (GtkWidget *w)
+static void spin_height_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *spin_height_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_percentage"));
@@ -1336,7 +1325,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
     const gint h_pct = pixels2percentage (get_max_height(), h_pix);
 
     config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct, tw);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_vertically")) {
@@ -1349,7 +1338,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void spin_width_percentage_value_changed_cb (GtkWidget *w)
+static void spin_width_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *spin_width_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
@@ -1358,7 +1347,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
     const gint w_pix = (int) percentage2pixels (get_max_width(), w_pct);
 
     config_setint ("max_width", w_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix);
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix, tw);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
@@ -1371,7 +1360,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void spin_width_pixels_value_changed_cb (GtkWidget *w)
+static void spin_width_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *spin_width_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_percentage"));
@@ -1381,7 +1370,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
 
     config_setint ("max_width", w_pix);
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage),
-        &spin_width_percentage_value_changed_cb, w_pct);
+        &spin_width_percentage_value_changed_cb, w_pct, tw);
     gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
 
     if (config_getbool ("centered_horizontally")) {
@@ -1394,7 +1383,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void check_centered_horizontally_toggled_cb (GtkWidget *w)
+static void check_centered_horizontally_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_x_position =
@@ -1419,7 +1408,7 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void spin_x_position_value_changed_cb (GtkWidget *w)
+static void spin_x_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint x_pos = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint y_pos = config_getint ("y_pos");
@@ -1432,7 +1421,7 @@ static void spin_x_position_value_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void check_centered_vertically_toggled_cb (GtkWidget *w)
+static void check_centered_vertically_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_y_position =
@@ -1457,7 +1446,7 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void spin_y_position_value_changed_cb (GtkWidget *w)
+static void spin_y_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint x_pos = config_getint ("x_pos");
     const gint y_pos = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
@@ -1471,7 +1460,7 @@ static void spin_y_position_value_changed_cb (GtkWidget *w)
 }
 
 
-static void check_enable_transparency_toggled_cb (GtkWidget *w)
+static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     
@@ -1486,7 +1475,7 @@ static void check_enable_transparency_toggled_cb (GtkWidget *w)
     tilda_window_toggle_transparency(tw);
 }
 #ifdef VTE_290
-static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
+static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gdouble transparency_level = (status / 100.0);
@@ -1503,7 +1492,7 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
     }
 }
 #else
-static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
+static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gdouble transparency_level = (status / 100.0);
@@ -1523,14 +1512,14 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w)
         }
 }
 #endif
-static void spin_animation_delay_value_changed_cb (GtkWidget *w)
+static void spin_animation_delay_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
 
     config_setint ("slide_sleep_usec", status);
 }
 
-static void combo_animation_orientation_changed_cb (GtkWidget *w)
+static void combo_animation_orientation_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
@@ -1538,7 +1527,7 @@ static void combo_animation_orientation_changed_cb (GtkWidget *w)
     generate_animation_positions (tw);
 }
 
-static void check_animated_pulldown_toggled_cb (GtkWidget *w)
+static void check_animated_pulldown_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_animation_delay =
@@ -1578,7 +1567,7 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w)
 }
 
 #ifdef VTE_290
-static void check_use_image_for_background_toggled_cb (GtkWidget *w)
+static void check_use_image_for_background_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *button_background_image =
@@ -1603,7 +1592,7 @@ static void check_use_image_for_background_toggled_cb (GtkWidget *w)
     }
 }
 
-static void button_background_image_selection_changed_cb (GtkWidget *w)
+static void button_background_image_selection_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gchar *image = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(w));
     guint i;
@@ -1621,7 +1610,7 @@ static void button_background_image_selection_changed_cb (GtkWidget *w)
 }
 #endif
 
-static void combo_colorschemes_changed_cb (GtkWidget *w)
+static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint scheme = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     const GtkWidget *colorbutton_text =
@@ -1706,7 +1695,7 @@ static void combo_colorschemes_changed_cb (GtkWidget *w)
         }
     }
 }
-static void colorbutton_cursor_color_set_cb (GtkWidget *w)
+static void colorbutton_cursor_color_set_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
@@ -1731,7 +1720,7 @@ static void colorbutton_cursor_color_set_cb (GtkWidget *w)
     }
 }
 
-static void colorbutton_text_color_set_cb (GtkWidget *w)
+static void colorbutton_text_color_set_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
@@ -1756,7 +1745,7 @@ static void colorbutton_text_color_set_cb (GtkWidget *w)
     }
 }
 
-static void colorbutton_back_color_set_cb (GtkWidget *w)
+static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *combo_colorschemes =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_colorschemes"));
@@ -1784,7 +1773,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w)
 /**
  * This function is called if a different color scheme is selected from the combo box.
  */
-static void combo_palette_scheme_changed_cb (GtkWidget *w) {
+static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
 	DEBUG_FUNCTION("combo_palette_scheme_changed_cb");
     guint i, j;
     tilda_term *tt;
@@ -1831,7 +1820,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w) {
  *  This function is called, if the user has changed a single color. The function
  *  handles this color change, and sets the color schema to "Custom".
  */
-static void colorbutton_palette_n_set_cb (GtkWidget *w)
+static void colorbutton_palette_n_set_cb (GtkWidget *w, tilda_window *tw)
 {
 	DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
     const GtkWidget *combo_palette_scheme =
@@ -1891,7 +1880,7 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w)
     }
 }
 
-static void combo_scrollbar_position_changed_cb (GtkWidget *w)
+static void combo_scrollbar_position_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     guint i;
@@ -1906,7 +1895,7 @@ static void combo_scrollbar_position_changed_cb (GtkWidget *w)
     }
 }
 
-static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
+static void spin_scrollback_amount_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
 
@@ -1921,7 +1910,7 @@ static void spin_scrollback_amount_value_changed_cb (GtkWidget *w)
     }
 }
 
-static void check_infinite_scrollback_toggled_cb(GtkWidget *w)
+static void check_infinite_scrollback_toggled_cb(GtkWidget *w, tilda_window *tw)
 {
     // if status is false then scrollback is infinite, otherwise the spinner is active
     const gboolean hasScrollbackLimit = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -1948,7 +1937,7 @@ static void check_infinite_scrollback_toggled_cb(GtkWidget *w)
     }
 }
 
-static void check_scroll_on_output_toggled_cb (GtkWidget *w)
+static void check_scroll_on_output_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -1962,7 +1951,7 @@ static void check_scroll_on_output_toggled_cb (GtkWidget *w)
     }
 }
 
-static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w)
+static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -1976,7 +1965,7 @@ static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w)
     }
 }
 #ifdef VTE_290
-static void check_scroll_background_toggled_cb (GtkWidget *w)
+static void check_scroll_background_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     guint i;
@@ -1990,7 +1979,7 @@ static void check_scroll_background_toggled_cb (GtkWidget *w)
     }
 }
 #endif
-static void combo_backspace_binding_changed_cb (GtkWidget *w)
+static void combo_backspace_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     const gint keys[] = { VTE_ERASE_ASCII_DELETE,
@@ -2008,7 +1997,7 @@ static void combo_backspace_binding_changed_cb (GtkWidget *w)
     }
 }
 
-static void combo_delete_binding_changed_cb (GtkWidget *w)
+static void combo_delete_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
     const gint keys[] = { VTE_ERASE_ASCII_DELETE,
@@ -2026,7 +2015,7 @@ static void combo_delete_binding_changed_cb (GtkWidget *w)
     }
 }
 
-static void button_reset_compatibility_options_clicked_cb ()
+static void button_reset_compatibility_options_clicked_cb (tilda_window *tw)
 {
     const GtkWidget *combo_backspace_binding =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_backspace_binding"));
@@ -2040,7 +2029,7 @@ static void button_reset_compatibility_options_clicked_cb ()
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_delete_binding), 1);
 }
 
-static void button_keybinding_clicked_cb (GtkWidget *w)
+static void button_keybinding_clicked_cb (GtkWidget *w, tilda_window *tw)
 {
     const GtkWidget *wizard_notebook =
         GTK_WIDGET (gtk_builder_get_object (xml, "wizard_notebook"));
@@ -2149,7 +2138,7 @@ static void button_keybinding_clicked_cb (GtkWidget *w)
     }
 }
 
-static void initialize_combo_choose_monitor() {
+static void initialize_combo_choose_monitor(tilda_window *tw) {
 	/**
 	 * First we need to initialize the "combo_choose_monitor" widget,
 	 * with the numbers of each monitor attached to the system.
@@ -2194,7 +2183,7 @@ static void initialize_combo_choose_monitor() {
  * Because we might have multiple monitors we first need to get the monitor that
  * is currently selected to show the window and then load its geometry information.
  */
-static void initialize_geometry_spinners() {
+static void initialize_geometry_spinners(tilda_window *tw) {
     DEBUG_FUNCTION ("initialize_geometry_spinners");
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int monitor = find_monitor_number(tw);
@@ -2247,7 +2236,7 @@ static void initialize_geometry_spinners() {
 
 /* Read all state from the config system, and put it into
  * its visual representation in the wizard. */
-static void set_wizard_state_from_config () {
+static void set_wizard_state_from_config (tilda_window *tw) {
     GdkRGBA text_color, back_color, cursor_color;
     gint i;
 
@@ -2297,10 +2286,10 @@ static void set_wizard_state_from_config () {
 
     /* Appearance Tab */
     /* Initialize the monitor chooser combo box with the numbers of the monitor */
-	initialize_combo_choose_monitor();
+	initialize_combo_choose_monitor(tw);
 
 
-	initialize_geometry_spinners();
+	initialize_geometry_spinners(tw);
     CHECK_BUTTON ("check_enable_transparency", "enable_transparency");
     CHECK_BUTTON ("check_animated_pulldown", "animation");
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
@@ -2430,137 +2419,137 @@ static void initialize_set_as_desktop_checkbox () {
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_set_as_desktop), status);
 }
 
-#define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER) g_signal_connect ( \
-    gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), G_CALLBACK((SIGNAL_HANDLER)), NULL)
+#define CONNECT_SIGNAL(GLADE_WIDGET,SIGNAL_NAME,SIGNAL_HANDLER,DATA) g_signal_connect ( \
+    gtk_builder_get_object (xml, (GLADE_WIDGET)), (SIGNAL_NAME), G_CALLBACK((SIGNAL_HANDLER)), DATA)
 
 /* Connect all signals in the wizard. This should be done after setting all
  * values, that way all of the signal handlers don't get called */
-static void connect_wizard_signals ()
+static void connect_wizard_signals (tilda_window *tw)
 {
     gint i;
 
     /* General Tab */
-    CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb);
-    CONNECT_SIGNAL ("check_set_as_desktop","toggled",check_set_as_desktop_toggled_cb);
-    CONNECT_SIGNAL ("check_do_not_show_in_taskbar","toggled",check_do_not_show_in_taskbar_toggled_cb);
-    CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb);
-    CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb);
-    CONNECT_SIGNAL ("check_start_tilda_hidden","toggled",check_start_tilda_hidden_toggled_cb);
-    CONNECT_SIGNAL ("check_enable_double_buffering","toggled",check_enable_double_buffering_toggled_cb);
-    CONNECT_SIGNAL ("combo_non_focus_pull_up_behaviour","changed",combo_non_focus_pull_up_behaviour_cb);
+    CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_set_as_desktop","toggled",check_set_as_desktop_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_do_not_show_in_taskbar","toggled",check_do_not_show_in_taskbar_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_start_tilda_hidden","toggled",check_start_tilda_hidden_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_enable_double_buffering","toggled",check_enable_double_buffering_toggled_cb, tw);
+    CONNECT_SIGNAL ("combo_non_focus_pull_up_behaviour","changed",combo_non_focus_pull_up_behaviour_cb, tw);
 
-    CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb);
-    CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb);
-    CONNECT_SIGNAL ("vte_cursor_shape","changed", combo_cursor_shape_changed_cb);
+    CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_cursor_blinks","toggled",check_cursor_blinks_toggled_cb, tw);
+    CONNECT_SIGNAL ("vte_cursor_shape","changed", combo_cursor_shape_changed_cb, tw);
 
-    CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb);
+    CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb, tw);
 
-    CONNECT_SIGNAL ("check_enable_antialiasing","toggled",check_enable_antialiasing_toggled_cb);
-    CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb);
-    CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb);
-    CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb);
+    CONNECT_SIGNAL ("check_enable_antialiasing","toggled",check_enable_antialiasing_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb, tw);
+    CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
+    CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb, tw);
 
-    CONNECT_SIGNAL ("spin_auto_hide_time","value-changed",spin_auto_hide_time_value_changed_cb);
-    CONNECT_SIGNAL ("check_auto_hide_on_focus_lost","toggled",check_auto_hide_on_focus_lost_toggled_cb);
-    CONNECT_SIGNAL ("check_auto_hide_on_mouse_leave","toggled",check_auto_hide_on_mouse_leave_toggled_cb);
+    CONNECT_SIGNAL ("spin_auto_hide_time","value-changed",spin_auto_hide_time_value_changed_cb, tw);
+    CONNECT_SIGNAL ("check_auto_hide_on_focus_lost","toggled",check_auto_hide_on_focus_lost_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_auto_hide_on_mouse_leave","toggled",check_auto_hide_on_mouse_leave_toggled_cb, tw);
 
-    CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb);
+    CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb, tw);
 
     /* Title and Command Tab */
-    CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb);
-    CONNECT_SIGNAL ("combo_dynamically_set_title","changed",combo_dynamically_set_title_changed_cb);
-    CONNECT_SIGNAL ("check_title_max_length","toggled",check_max_title_length_cb);
-    CONNECT_SIGNAL ("spin_title_max_length","value-changed", spin_max_title_length_changed_cb);
+    CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb, tw);
+    CONNECT_SIGNAL ("combo_dynamically_set_title","changed",combo_dynamically_set_title_changed_cb, tw);
+    CONNECT_SIGNAL ("check_title_max_length","toggled",check_max_title_length_cb, tw);
+    CONNECT_SIGNAL ("spin_title_max_length","value-changed", spin_max_title_length_changed_cb, tw);
 
-    CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb);
-    CONNECT_SIGNAL ("entry_custom_command","focus-out-event", validate_executable_command_cb);
-    CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb);
-    CONNECT_SIGNAL ("check_command_login_shell", "toggled", check_command_login_shell_cb);
+    CONNECT_SIGNAL ("check_run_custom_command","toggled",check_run_custom_command_toggled_cb, tw);
+    CONNECT_SIGNAL ("entry_custom_command","focus-out-event", validate_executable_command_cb, tw);
+    CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb, tw);
+    CONNECT_SIGNAL ("check_command_login_shell", "toggled", check_command_login_shell_cb, tw);
 
-    CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed);
-    CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb);
+    CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed, tw);
+    CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb, tw);
 
     /* Appearance Tab */
-    CONNECT_SIGNAL ("combo_choose_monitor", "changed", combo_monitor_selection_changed_cb);
-    CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb);
-    CONNECT_SIGNAL ("spin_height_pixels","value-changed",spin_height_pixels_value_changed_cb);
-    CONNECT_SIGNAL ("spin_width_percentage","value-changed",spin_width_percentage_value_changed_cb);
-    CONNECT_SIGNAL ("spin_width_pixels","value-changed",spin_width_pixels_value_changed_cb);
+    CONNECT_SIGNAL ("combo_choose_monitor", "changed", combo_monitor_selection_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_height_pixels","value-changed",spin_height_pixels_value_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_width_percentage","value-changed",spin_width_percentage_value_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_width_pixels","value-changed",spin_width_pixels_value_changed_cb, tw);
 
-    CONNECT_SIGNAL ("check_centered_horizontally","toggled",check_centered_horizontally_toggled_cb);
-    CONNECT_SIGNAL ("check_centered_vertically","toggled",check_centered_vertically_toggled_cb);
-    CONNECT_SIGNAL ("spin_x_position","value-changed",spin_x_position_value_changed_cb);
-    CONNECT_SIGNAL ("spin_y_position","value-changed",spin_y_position_value_changed_cb);
+    CONNECT_SIGNAL ("check_centered_horizontally","toggled",check_centered_horizontally_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_centered_vertically","toggled",check_centered_vertically_toggled_cb, tw);
+    CONNECT_SIGNAL ("spin_x_position","value-changed",spin_x_position_value_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_y_position","value-changed",spin_y_position_value_changed_cb, tw);
 
-    CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb);
-    CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb);
-    CONNECT_SIGNAL ("spin_level_of_transparency","value-changed",spin_level_of_transparency_value_changed_cb);
-    CONNECT_SIGNAL ("spin_animation_delay","value-changed",spin_animation_delay_value_changed_cb);
-    CONNECT_SIGNAL ("combo_animation_orientation","changed",combo_animation_orientation_changed_cb);
+    CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);
+    CONNECT_SIGNAL ("spin_level_of_transparency","value-changed",spin_level_of_transparency_value_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_animation_delay","value-changed",spin_animation_delay_value_changed_cb, tw);
+    CONNECT_SIGNAL ("combo_animation_orientation","changed",combo_animation_orientation_changed_cb, tw);
 
     /* Colors Tab */
-    CONNECT_SIGNAL ("combo_colorschemes","changed",combo_colorschemes_changed_cb);
-    CONNECT_SIGNAL ("colorbutton_text","color-set",colorbutton_text_color_set_cb);
-    CONNECT_SIGNAL ("colorbutton_back","color-set",colorbutton_back_color_set_cb);
-    CONNECT_SIGNAL ("colorbutton_cursor","color-set",colorbutton_cursor_color_set_cb);
-    CONNECT_SIGNAL ("combo_palette_scheme","changed",combo_palette_scheme_changed_cb);
+    CONNECT_SIGNAL ("combo_colorschemes","changed",combo_colorschemes_changed_cb, tw);
+    CONNECT_SIGNAL ("colorbutton_text","color-set",colorbutton_text_color_set_cb, tw);
+    CONNECT_SIGNAL ("colorbutton_back","color-set",colorbutton_back_color_set_cb, tw);
+    CONNECT_SIGNAL ("colorbutton_cursor","color-set",colorbutton_cursor_color_set_cb, tw);
+    CONNECT_SIGNAL ("combo_palette_scheme","changed",combo_palette_scheme_changed_cb, tw);
     for(i = 0; i < TERMINAL_PALETTE_SIZE; i++)
     {
         char *s = g_strdup_printf ("colorbutton_palette_%d", i);
-        CONNECT_SIGNAL (s,"color-set",colorbutton_palette_n_set_cb);
+        CONNECT_SIGNAL (s,"color-set",colorbutton_palette_n_set_cb, tw);
         g_free (s);
     }
 
     /* Scrolling Tab */
-    CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb);
-    CONNECT_SIGNAL ("spin_scrollback_amount","value-changed",spin_scrollback_amount_value_changed_cb);
-    CONNECT_SIGNAL ("check_infinite_scrollback", "toggled", check_infinite_scrollback_toggled_cb);
-    CONNECT_SIGNAL ("check_scroll_on_output","toggled",check_scroll_on_output_toggled_cb);
-    CONNECT_SIGNAL ("check_scroll_on_keystroke","toggled",check_scroll_on_keystroke_toggled_cb);
+    CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb, tw);
+    CONNECT_SIGNAL ("spin_scrollback_amount","value-changed",spin_scrollback_amount_value_changed_cb, tw);
+    CONNECT_SIGNAL ("check_infinite_scrollback", "toggled", check_infinite_scrollback_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_scroll_on_output","toggled",check_scroll_on_output_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_scroll_on_keystroke","toggled",check_scroll_on_keystroke_toggled_cb, tw);
 
     /* Compatibility Tab */
-    CONNECT_SIGNAL ("combo_backspace_binding","changed",combo_backspace_binding_changed_cb);
-    CONNECT_SIGNAL ("combo_delete_binding","changed",combo_delete_binding_changed_cb);
-    CONNECT_SIGNAL ("button_reset_compatibility_options","clicked",button_reset_compatibility_options_clicked_cb);
+    CONNECT_SIGNAL ("combo_backspace_binding","changed",combo_backspace_binding_changed_cb, tw);
+    CONNECT_SIGNAL ("combo_delete_binding","changed",combo_delete_binding_changed_cb, tw);
+    CONNECT_SIGNAL ("button_reset_compatibility_options","clicked",button_reset_compatibility_options_clicked_cb, tw);
 
     /* Keybinding Tab */
-    CONNECT_SIGNAL ("button_keybinding_pulldown","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_quit","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_addtab","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_closetab","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_nexttab","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_prevtab","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_movetableft","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_movetabright","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_copy","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_paste","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab1","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab2","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab3","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab4","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab5","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab6","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab7","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab8","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab9","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_gototab10","clicked",button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_fullscreen", "clicked", button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb);
-    CONNECT_SIGNAL ("button_keybinding_toggle_searchbar", "clicked", button_keybinding_clicked_cb);
+    CONNECT_SIGNAL ("button_keybinding_pulldown","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_quit","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_addtab","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_closetab","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_nexttab","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_prevtab","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_movetableft","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_movetabright","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_copy","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_paste","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab1","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab2","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab3","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab4","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab5","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab6","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab7","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab8","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab9","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_gototab10","clicked",button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_fullscreen", "clicked", button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_toggle_transparency", "clicked", button_keybinding_clicked_cb, tw);
+    CONNECT_SIGNAL ("button_keybinding_toggle_searchbar", "clicked", button_keybinding_clicked_cb, tw);
 
     /* Close Button */
-    CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb);
-    CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb);
+    CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb, tw);
+    CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb, tw);
 
 #if (VTE_290 || VTE_MINOR_VERSION >= 40)
-    CONNECT_SIGNAL ("entry_word_chars", "changed", entry_word_chars_changed);
+    CONNECT_SIGNAL ("entry_word_chars", "changed", entry_word_chars_changed, tw);
 #endif
 
     /* VTE-2.90 SIGNALS */
 #ifdef VTE_290
-    CONNECT_SIGNAL ("check_use_image_for_background","toggled",check_use_image_for_background_toggled_cb);
-    CONNECT_SIGNAL ("button_background_image","selection-changed",button_background_image_selection_changed_cb);
-    CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb);
+    CONNECT_SIGNAL ("check_use_image_for_background","toggled",check_use_image_for_background_toggled_cb, tw);
+    CONNECT_SIGNAL ("button_background_image","selection-changed",button_background_image_selection_changed_cb, tw);
+    CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb, tw);
 #endif
 }
 
