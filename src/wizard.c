@@ -1291,8 +1291,8 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
 static void spin_width_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw);
 static void spin_width_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw);
 
-static void initializeScrollbackSettings ();
-static void initialize_set_as_desktop_checkbox ();
+static void initialize_scrollback_settings(void);
+static void initialize_set_as_desktop_checkbox (void);
 
 static void spin_height_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
@@ -1463,7 +1463,7 @@ static void spin_y_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    
+
     const GtkWidget *label_level_of_transparency =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_level_of_transparency"));
     const GtkWidget *spin_level_of_transparency =
@@ -1495,7 +1495,6 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_win
 static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gdouble transparency_level = (status / 100.0);
     guint i;
     tilda_term *tt;
     GdkRGBA bg;
@@ -2332,7 +2331,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     }
 
     /* Scrolling Tab */
-    initializeScrollbackSettings ();
+    initialize_scrollback_settings();
 
     /* Compatibility Tab */
     COMBO_BOX ("combo_backspace_binding", "backspace_key");
@@ -2383,7 +2382,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     BUTTON_LABEL_FROM_CFG ("button_keybinding_toggle_searchbar", "toggle_searchbar_key");
 }
 
-static void initializeScrollbackSettings () {
+static void initialize_scrollback_settings(void) {
     COMBO_BOX ("combo_scrollbar_position", "scrollbar_pos");
     SPIN_BUTTON ("spin_scrollback_amount", "lines");
 
@@ -2401,7 +2400,7 @@ static void initializeScrollbackSettings () {
     CHECK_BUTTON ("check_scroll_on_keystroke", "scroll_on_key");
 }
 
-static void initialize_set_as_desktop_checkbox () {
+static void initialize_set_as_desktop_checkbox (void) {
     CHECK_BUTTON ("check_set_as_desktop", "set_as_desktop");
 
     GtkWidget *check_set_as_desktop =            GTK_WIDGET(gtk_builder_get_object (xml, "check_set_as_desktop"));
