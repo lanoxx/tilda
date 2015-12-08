@@ -1788,6 +1788,9 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
         color_button =
             GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
         gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &bg);
+#ifndef VTE_290
+        bg.alpha = (config_getbool("enable_transparency") ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
+#endif
 
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
 
