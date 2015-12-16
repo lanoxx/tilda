@@ -1,3 +1,11 @@
+version 1.3.1 (2015-12-16):
+	* Despite the claim that the transparency was fixed for GNOME Shell
+	  there was a regression that broke it again. With this version
+	  it should finally be fixed (again).
+	* Images in the appdata file and Readme.md have been updated.
+	* Fixed an issue that would the background transparancy to be
+	  reset on a color palette change (Sergey Zolotarev).
+
 version 1.3.0 (2015-11-17):
 	* Fixed an issue with transparency in GNOME Shell (Ingmar Olsson)
 	* Fixed wrong move-tab behaviour (Andrew Lin)
