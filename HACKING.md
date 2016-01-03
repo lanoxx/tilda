@@ -4,13 +4,13 @@
 
  * Glib >= 2.30 - http://developer.gnome.org/glib/2.30/
  * Gtk+3 >= 3.0 - http://developer.gnome.org/gtk3/3.0/
- * VTE >= 2.90 - http://developer.gnome.org/vte/0.30/
+ * VTE >= 2.91 - http://developer.gnome.org/vte/0.30/
  * libConfuse - http://www.nongnu.org/confuse/
  * libx11-dev - http://www.x.org/wiki/
 
 On Ubuntu based system install dependencies with:
 
-    sudo apt-get install git dh-autoreconf autotools-dev debhelper dh-autoreconf libconfuse-dev libgtk-3-dev libvte-2.90-dev pkg-config
+    sudo apt-get install git dh-autoreconf autotools-dev debhelper dh-autoreconf libconfuse-dev libgtk-3-dev libvte-2.91-dev pkg-config
 
 You possibly need other packages such as `gettext`, `automake`, `autoconf`, `autopoint`, and X11 development libraries.
 
