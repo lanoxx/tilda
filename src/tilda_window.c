@@ -756,12 +756,12 @@ static void tilda_window_search (G_GNUC_UNUSED GtkWidget *widget, tilda_window *
     g_regex_unref(regex);
 }
 
-static void tilda_window_search_forward_cb (GtkButton *button, tilda_window *tw) {
+static void tilda_window_search_forward_cb (GtkWidget *button, tilda_window *tw) {
     /* The default is to search forward */
     tilda_window_search (button, tw, FALSE);
 }
 
-static void tilda_window_search_backward_cb (GtkButton *button, tilda_window *tw) {
+static void tilda_window_search_backward_cb (GtkWidget *button, tilda_window *tw) {
     tilda_window_search (button, tw, TRUE);
 }
 
