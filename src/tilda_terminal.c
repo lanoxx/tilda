@@ -868,7 +868,7 @@ menu_searchbar_cb(GSimpleAction *action,
     DEBUG_FUNCTION ("menu_fullscreen_cb");
     DEBUG_ASSERT (user_data != NULL);
 
-    toggle_searchbar_cb (TILDA_WINDOW(user_data));
+    tilda_window_toggle_searchbar (TILDA_WINDOW(user_data));
 }
 
 static void
