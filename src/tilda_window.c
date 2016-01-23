@@ -826,6 +826,8 @@ static tilda_search *tilda_search_box_init(tilda_window *tw)
     tilda_search *search = malloc(sizeof(tilda_search));
 
     search->search_box = GTK_WIDGET(gtk_builder_get_object (gtk_builder, "search_box"));
+    gtk_widget_set_name (GTK_WIDGET (search->search_box), "search");
+
     DEBUG_ASSERT(search->search_box != NULL);
     search->button_next = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "button_search_next"));
     search->button_prev = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "button_search_prev"));
