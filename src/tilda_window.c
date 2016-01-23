@@ -859,17 +859,18 @@ static void page_reordered_cb (GtkNotebook  *notebook,
                         guint         page_num,
                         tilda_window *tw) {
     DEBUG_FUNCTION ("page_reordered_cb");
-    GList *terms = tw->terms;
+    GList *terminals;
+    tilda_term *tilda_term;
+    guint i;
 
-    /* We use the VteTerminal pointer relative to the current tab's child widget to find the correct
-     * tilda_term structure in the list of terminals. The assumption here is, that the VteTerminal
-     * is either the first or second widget in the container (depending on the location of the scrollbar) */
-    for (GList *item = terms; item != NULL; item = item->next) {
-        tilda_term *current_term = item->data;
-        if (current_term->hbox == child) {
-            terms = g_list_remove (terms, current_term);
-            terms = g_list_insert (terms, current_term, page_num);
-            tw->terms = terms;
+    terminals = tw->terms;
+
+    for (i = 0; i < g_list_length (terminals); i++)
+    {
+        tilda_term = g_list_nth_data (terminals, i);
+        if (tilda_term->hbox == child) {
+            terminals = g_list_remove (terminals, tilda_term);
+            tw->terms = g_list_insert (terminals, tilda_term, page_num);
             break;
         }
     }
