@@ -154,10 +154,10 @@ void tilda_window_set_active (tilda_window *tw)
     DEBUG_FUNCTION ("tilda_window_set_active");
     DEBUG_ASSERT (tw != NULL);
 
-    Display *x11_display = GDK_WINDOW_XDISPLAY (gtk_widget_get_window (tw->window) );
-    Window x11_window = GDK_WINDOW_XID (gtk_widget_get_window (tw->window) );
-    Window x11_root_window = GDK_WINDOW_XID ( gtk_widget_get_root_window (tw->window) );
     GdkScreen *screen = gtk_widget_get_screen (tw->window);
+    Display *x11_display = GDK_WINDOW_XDISPLAY (gdk_screen_get_root_window (screen));
+    Window x11_window = GDK_WINDOW_XID (gtk_widget_get_window (tw->window) );
+    Window x11_root_window = GDK_WINDOW_XID ( gdk_screen_get_root_window (screen) );
 
     XEvent event;
     long mask = SubstructureRedirectMask | SubstructureNotifyMask;
