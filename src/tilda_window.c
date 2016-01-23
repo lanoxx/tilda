@@ -319,15 +319,18 @@ gint tilda_window_next_tab (tilda_window *tw)
 
     int num_pages;
     int current_page;
+    GtkNotebook *notebook;
+
+    notebook = GTK_NOTEBOOK (tw->notebook);
 
     /* If we are on the last page, go to first page */
-    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    num_pages = gtk_notebook_get_n_pages (notebook);
+    current_page = gtk_notebook_get_current_page (notebook);
 
     if ((num_pages - 1) == current_page)
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), 0);
+      gtk_notebook_set_current_page (notebook, 0);
     else
-      gtk_notebook_next_page (GTK_NOTEBOOK (tw->notebook));
+      gtk_notebook_next_page (notebook);
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
@@ -341,14 +344,17 @@ gint tilda_window_prev_tab (tilda_window *tw)
 
     int num_pages;
     int current_page;
+    GtkNotebook *notebook;
 
-    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
-    current_page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+    notebook = GTK_NOTEBOOK (tw->notebook);
+
+    num_pages = gtk_notebook_get_n_pages (notebook);
+    current_page = gtk_notebook_get_current_page (notebook);
 
     if (current_page == 0)
-        gtk_notebook_set_current_page (GTK_NOTEBOOK (tw->notebook), (num_pages -1));
+      gtk_notebook_set_current_page (notebook, (num_pages - 1));
     else
-      gtk_notebook_prev_page (GTK_NOTEBOOK (tw->notebook));
+      gtk_notebook_prev_page (notebook);
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
     // keystroke into the vte terminal widget.
@@ -366,19 +372,21 @@ static gint move_tab (tilda_window *tw, int direction)
     int current_page_index;
     int new_page_index;
     GtkWidget* current_page;
+    GtkNotebook* notebook;
 
-    num_pages = gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook));
+    notebook = GTK_NOTEBOOK (tw->notebook);
+
+    num_pages = gtk_notebook_get_n_pages (notebook);
 
     if (num_pages > 1) {
-        current_page_index = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-        current_page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook),
+        current_page_index = gtk_notebook_get_current_page (notebook);
+        current_page = gtk_notebook_get_nth_page (notebook,
                                                   current_page_index);
 
         /* wrap over if new_page_index over-/underflows */
         new_page_index = (current_page_index + direction) % num_pages;
 
-        gtk_notebook_reorder_child (GTK_NOTEBOOK (tw->notebook), current_page,
-                                    new_page_index);
+        gtk_notebook_reorder_child (notebook, current_page, new_page_index);
     }
 
     // It worked. Having this return GDK_EVENT_STOP makes the callback not carry the
