@@ -995,7 +995,6 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     /* Display the menu */
     gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
-    gtk_widget_show_all(menu);
 }
 
 static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, gpointer data)
