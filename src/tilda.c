@@ -632,22 +632,37 @@ static void load_application_css () {
 
 static void load_custom_css_file () {
     GtkCssProvider *provider;
-    char* cssfilename = g_build_filename(
-        g_get_user_config_dir (), "tilda", "style.css", NULL);
-    if (g_file_test (cssfilename, G_FILE_TEST_EXISTS)) {
-        g_print (_("Found style.css in the user config directory, "
-            "applying user css style.\n"));
-        provider = gtk_css_provider_new ();
-        gtk_style_context_add_provider_for_screen (
-            gdk_screen_get_default(),
-            GTK_STYLE_PROVIDER(provider),
-            GTK_STYLE_PROVIDER_PRIORITY_USER
-        );
-        GFile *cssfile = g_file_new_for_path (cssfilename);
-        gtk_css_provider_load_from_file (GTK_CSS_PROVIDER (provider),
-            cssfile, NULL);
-        g_object_unref (cssfile);
+    GFile *file;
+    GError *error;
+    gchar *filename;
+
+    filename = g_build_filename (g_get_user_config_dir (),
+                                 "tilda", "style.css", NULL);
+
+    if (!g_file_test (filename, G_FILE_TEST_EXISTS))
+        return;
+
+    g_print (_("Found style.css in the user config directory, "
+               "applying user css style.\n"));
+
+    provider = gtk_css_provider_new ();
+
+    gtk_style_context_add_provider_for_screen (gdk_screen_get_default(),
+                                               GTK_STYLE_PROVIDER(provider),
+                                               GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
+    file = g_file_new_for_path (filename);
+    error = NULL;
+    gtk_css_provider_load_from_file (provider, file, &error);
+
+    if (error) {
+        g_print ("Error: %s", error->message);
+        g_error_free (error);
     }
+
+    g_object_unref (file);
+    g_free (filename);
 }
 
 int main (int argc, char *argv[])
