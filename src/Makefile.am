@@ -16,6 +16,16 @@ src/glade-resources.c src/glade-resources.h: \
     src/glade-resources.gresource.xml \
     $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(srcdir)/src/glade-resources.gresource.xml --sourcedir=$(srcdir)/src)
 
+ENUM_TYPES = \
+	$(srcdir)/src/tilda-search-box.h \
+	$(NULL)
+
+src/tilda-enum-types.h: $(srcdir)/src/tilda-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) ($(GLIB_MKENUMS) --template $(srcdir)/src/tilda-enum-types.h.template $(ENUM_TYPES)) > $@
+
+src/tilda-enum-types.c: $(srcdir)/src/tilda-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
+	$(AM_V_GEN) ($(GLIB_MKENUMS) --template $(srcdir)/src/tilda-enum-types.c.template $(ENUM_TYPES)) > $@
+
 src_tilda_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_builddir)/src \
@@ -24,21 +34,26 @@ src_tilda_CPPFLAGS = \
 	-DPKGDATADIR='"$(pkgdatadir)"' \
 	$(NULL)
 
+BUILT_SOURCES = \
+		src/glade-resources.h src/glade-resources.c \
+		src/tilda-enum-types.c src/tilda-enum-types.h \
+		$(NULL)
+
 # Keep the headers here so that make dist-bzip2 works
 src_tilda_SOURCES = \
+		$(BUILT_SOURCES) \
 		src/configsys.h src/configsys.c \
 		src/debug.h \
 		src/eggaccelerators.h src/eggaccelerators.c \
 		src/key_grabber.h src/key_grabber.c \
 		src/tilda.h src/tilda.c \
 		src/tilda-keybinding.c src/tilda-keybinding.h \
+		src/tilda-search-box.c src/tilda-search-box.h \
 		src/tilda_terminal.h src/tilda_terminal.c \
 		src/tilda_window.h src/tilda_window.c \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
 		src/wizard.h src/wizard.c \
 		src/xerror.h src/xerror.c \
-		src/glade-resources.h src/glade-resources.c \
-		src/glade-resources.gresource.xml \
 		$(NULL)
 
 src_tilda_CFLAGS = \
@@ -76,4 +91,9 @@ EXTRA_DIST += \
 		src/tilda.ui \
 		$(NULL)
 
-CLEANFILES += src/glade-resources.h src/glade-resources.c
+CLEANFILES += \
+		src/glade-resources.h \
+		src/glade-resources.c \
+		src/tilda-enum-types.h \
+		src/tilda-enum-types.c \
+		$(NULL)

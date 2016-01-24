@@ -130,6 +130,11 @@ fi
 
 
 
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums, no)
+if test x$GLIB_MKENUMS = xno; then
+  AC_MSG_ERROR(Could not find a glib-mkenums in your PATH)
+fi
+
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources, no)
 if test x$GLIB_COMPILE_RESOURCES = xno; then
   AC_MSG_ERROR(Could not find a glib-compile-resources in your PATH)
