@@ -882,13 +882,15 @@ menu_close_tab_cb (GSimpleAction *action,
     tilda_window_close_current_tab (TILDA_WINDOW(user_data));
 }
 
-static void on_popup_hide (GtkWidget *widget, gpointer data)
+static void on_popup_hide (GtkWidget *widget, tilda_window *tw)
 {
     DEBUG_FUNCTION("on_popup_hide");
     DEBUG_ASSERT(widget != NULL);
-    DEBUG_ASSERT(data != NULL);
+    DEBUG_ASSERT(tw != NULL);
 
-    tilda_window *tw = TILDA_WINDOW(data);
+    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (tw->action_group), "close-tab");
+    g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+
     tw->disable_auto_hide = FALSE;
 }
 
@@ -951,6 +953,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
 
     /* Create the action group */
     GSimpleActionGroup *action_group = g_simple_action_group_new();
+    tw->action_group = action_group;
 
     /* We need two different lists of entries because the
      * because the actions have different scope, some concern the
