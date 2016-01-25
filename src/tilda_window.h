@@ -22,6 +22,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#include "tilda-search-box.h"
+
 G_BEGIN_DECLS
 
 enum pull_action {
@@ -44,6 +46,7 @@ struct tilda_window_
 {
     GtkWidget *window;
     GtkWidget *notebook;
+    GtkWidget *search;
 
     GList *terms;
     GtkAccelGroup * accel_group;
@@ -83,8 +86,6 @@ struct tilda_window_
 
     gint unscaled_font_size;
     gdouble current_scale_factor;
-
-    tilda_search *search;
 
     enum pull_action last_action;
     gint64 last_action_time;
@@ -203,7 +204,7 @@ void tilda_window_refresh_transparency(tilda_window *tw);
 /**
  * Toggles the search bar of the tilda window.
  */
-gint tilda_window_toggle_searchbar (tilda_window *tw);
+void tilda_window_toggle_searchbar (tilda_window *tw);
 
 /**
  * Show confirm dialog before quitting (if enabled)

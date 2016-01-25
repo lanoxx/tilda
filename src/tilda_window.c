@@ -227,19 +227,49 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
         }
 }
 
-gint tilda_window_toggle_searchbar (tilda_window *tw)
+static gboolean
+search_cb (TildaSearchBox       *search,
+           GRegex               *regex,
+           TildaSearchDirection  direction,
+           gboolean              wrap_on_search,
+           tilda_window         *tw)
 {
-    DEBUG_FUNCTION ("toggle_searbar");
-    DEBUG_ASSERT (tw != NULL);
-    DEBUG_ASSERT (tw->search != NULL);
-    gboolean visible = !gtk_widget_get_visible(tw->search->search_box);
-    if (visible) {
-        gtk_widget_grab_focus (tw->search->entry_search);
-    } else {
-        gtk_widget_grab_focus (tilda_window_get_current_terminal (tw)->vte_term);
-    }
-    gtk_widget_set_visible(tw->search->search_box, visible);
-    return GDK_EVENT_STOP;
+  VteTerminal *vte_terminal;
+  tilda_term *term;
+
+  term = tilda_window_get_current_terminal (tw);
+
+  vte_terminal = VTE_TERMINAL (term->vte_term);
+
+  vte_terminal_search_set_gregex (vte_terminal, regex, (GRegexMatchFlags) 0);
+
+  vte_terminal_search_set_wrap_around (vte_terminal, wrap_on_search);
+
+  if (direction == SEARCH_BACKWARD)
+    return vte_terminal_search_find_previous (vte_terminal);
+  else
+    return vte_terminal_search_find_next (vte_terminal);
+}
+
+static void
+search_focus_out_cb (TildaSearchBox *box,
+                     tilda_window   *tw)
+{
+  gtk_widget_grab_focus (tilda_window_get_current_terminal (tw)->vte_term);
+}
+
+static gboolean
+toggle_searchbar_cb (tilda_window *tw)
+{
+  tilda_window_toggle_searchbar (tw);
+
+  return GDK_EVENT_STOP;
+}
+
+void
+tilda_window_toggle_searchbar (tilda_window *tw)
+{
+  tilda_search_box_toggle (TILDA_SEARCH_BOX (tw->search));
 }
 
 /* Zoom helpers */
@@ -699,7 +729,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(tilda_window_confirm_quit),      tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
-    tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(tilda_window_toggle_searchbar),     tw);
+    tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(toggle_searchbar_cb),       tw);
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
@@ -737,66 +767,6 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw) {
     return NULL;
 }
 
-static void tilda_window_search (G_GNUC_UNUSED GtkWidget *widget, tilda_window *tw, gboolean terminal_search_backwards) {
-    GRegexCompileFlags compile_flags = G_REGEX_OPTIMIZE;
-    gboolean wrap_on_search = FALSE;
-    tilda_search *search = tw->search;
-    gboolean is_regex = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (search->check_regex));
-    const gchar *text = gtk_entry_buffer_get_text (GTK_ENTRY_BUFFER (gtk_entry_get_buffer (GTK_ENTRY (search->entry_search))));
-
-    if (!search->is_search_result) {
-        wrap_on_search = TRUE;
-    }
-
-    gchar *pattern;
-    if (is_regex) {
-        compile_flags |= G_REGEX_MULTILINE;
-        pattern = (gchar *) text;
-    }
-    else {
-        pattern = g_regex_escape_string (text, -1);
-    }
-    if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (search->check_match_case))) {
-        compile_flags |= G_REGEX_CASELESS;
-    }
-
-    tilda_term* term = tilda_window_get_current_terminal (tw);
-    GtkWidget *vteTerminal = term->vte_term;
-
-    GError *error = NULL;
-    GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
-    vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex,
-                                    (GRegexMatchFlags) 0);
-
-    vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), wrap_on_search);
-
-    gboolean search_result;
-    if (terminal_search_backwards) {
-        search_result = vte_terminal_search_find_previous (VTE_TERMINAL (vteTerminal));
-    }
-    else {
-        search_result = vte_terminal_search_find_next (VTE_TERMINAL (vteTerminal));
-    }
-
-    gtk_widget_set_visible (search->label_search_end, !search_result);
-    search->is_search_result = search_result;
-
-    /* If the text was not a regex, then we escaped the text with g_regex_escape_string and so we need to free it. */
-    if (!is_regex) {
-        g_free (pattern);
-    }
-    g_regex_unref(regex);
-}
-
-static void tilda_window_search_forward_cb (GtkWidget *button, tilda_window *tw) {
-    /* The default is to search forward */
-    tilda_window_search (button, tw, FALSE);
-}
-
-static void tilda_window_search_backward_cb (GtkWidget *button, tilda_window *tw) {
-    tilda_window_search (button, tw, TRUE);
-}
-
 static gint tilda_window_set_icon (tilda_window *tw, gchar *filename)
 {
     GdkPixbuf *window_icon = gdk_pixbuf_new_from_file (filename, NULL);
@@ -821,64 +791,6 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
 {
     gtk_main_quit ();
     return FALSE;
-}
-
-static gboolean search_box_key_cb (GtkWidget *widget,
-                                   GdkEvent  *event,
-                                   tilda_window *tw)
-{
-    GdkEventKey *event_key = (GdkEventKey*)event;
-    if (event_key->keyval == GDK_KEY_Return) {
-        tilda_window_search(widget, tw, FALSE);
-        return GDK_EVENT_STOP;
-    }
-
-    /* If the search entry has focus the user can hide the search bar by pressing escape. */
-    if (event_key->keyval == GDK_KEY_Escape) {
-        if (gtk_widget_has_focus (tw->search->entry_search)) {
-            gtk_widget_grab_focus (tilda_window_get_current_terminal (tw)->vte_term);
-            gtk_widget_set_visible (tw->search->search_box, FALSE);
-            return GDK_EVENT_STOP;
-        }
-    }
-
-    return GDK_EVENT_PROPAGATE;
-}
-
-static gboolean entry_search_text_changed_callback (G_GNUC_UNUSED GtkEditable *editable,
-                                                    tilda_window *tw)
-{
-    gtk_widget_hide (tw->search->label_search_end);
-    tw->search->is_search_result = TRUE;
-
-    return GDK_EVENT_STOP;
-}
-
-static tilda_search *tilda_search_box_init(tilda_window *tw)
-{
-    DEBUG_FUNCTION ("tilda_search_box_init");
-    GtkBuilder *gtk_builder = tw->gtk_builder;
-
-    tilda_search *search = malloc(sizeof(tilda_search));
-
-    search->search_box = GTK_WIDGET(gtk_builder_get_object (gtk_builder, "search_box"));
-    gtk_widget_set_name (GTK_WIDGET (search->search_box), "search");
-
-    DEBUG_ASSERT(search->search_box != NULL);
-    search->button_next = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "button_search_next"));
-    search->button_prev = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "button_search_prev"));
-    search->entry_search = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "entry_search"));
-    search->check_match_case = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "check_match_case"));
-    search->check_regex = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "check_regex"));
-    search->label_search_end = GTK_WIDGET (gtk_builder_get_object (gtk_builder, "search_label"));
-    /* Initialize to true to prevent search from wrapping around on first search. */
-    search->is_search_result = TRUE;
-
-    g_signal_connect (G_OBJECT (search->button_next), "clicked", G_CALLBACK (tilda_window_search_forward_cb), tw);
-    g_signal_connect (G_OBJECT (search->button_prev), "clicked", G_CALLBACK (tilda_window_search_backward_cb), tw);
-    g_signal_connect (G_OBJECT(search->entry_search), "key-press-event", G_CALLBACK(search_box_key_cb), tw);
-    g_signal_connect (G_OBJECT (search->entry_search), "changed", G_CALLBACK (entry_search_text_changed_callback), tw);
-    return search;
 }
 
 /* Detect changes in GtkNotebook tab order and update the tw->terms list to reflect such changes. */
@@ -1050,21 +962,25 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
      * of tilda_terms in the tw->terms structure in sync with the order of tabs. */
     g_signal_connect (G_OBJECT(tw->notebook), "page-reordered", G_CALLBACK (page_reordered_cb), tw);
 
-    /* Setup the tilda window. The tilda window consists of a toplevel window that contains the following widgets:
+    /* Setup the tilda window. The tilda window consists of a top level window that contains the following widgets:
      *   * The main_box holds a GtkNotebook with all the terminal tabs
-     *   * The search_box holds the search widgets and a label to indicate when the search has reached the bottom
+     *   * The search_box holds the TildaSearchBox widget
      */
     GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-    tw->search = tilda_search_box_init(tw);
+    tw->search = tilda_search_box_new ();
 
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (main_box), tw->search->search_box, FALSE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (main_box), tw->search, FALSE, TRUE, 0);
 
+    g_signal_connect (tw->search, "search",
+                      G_CALLBACK (search_cb), tw);
+    g_signal_connect (tw->search, "focus-out",
+                      G_CALLBACK (search_focus_out_cb), tw);
 
     /* Show the widgets */
     gtk_widget_show_all (main_box);
-    gtk_widget_set_visible(tw->search->search_box, FALSE);
+    gtk_widget_set_visible(tw->search, FALSE);
     /* the tw->window widget will be shown later, by pull() */
 
     /* Position the window */
@@ -1100,7 +1016,7 @@ gint tilda_window_free (tilda_window *tw)
     }
 
     g_free (tw->config_file);
-    g_free (tw->search);
+    gtk_widget_destroy (tw->search);
     if (tw->gtk_builder != NULL) {
         g_object_unref (G_OBJECT(tw->gtk_builder));
     }
