@@ -1,3 +1,14 @@
+version 1.3.2 (2016-02-14):
+	* Updated Hacking.md's instructions to reflect VTE 2.91 api bump (Thanks to HiTuX)
+	* Added a widget name to the search widget for easier styling (Sebastian Geiger)
+	* Several code cleanups and a few deprecation warnings where removed (Sebastian Geiger)
+	* Added default styling to the tilda search bar (Sebastian Geiger)
+	* Cleanup code for CSS loading. It now reports an error if something went wrong (Sebastian Geiger)
+	* Fixed a problem that caused tilda to close two tabs when the close tab hotkey
+	  was used (Sebastian Geiger)
+	* The preference dialog is now also shown above the tilda window if the tilda
+	  window is in fullscreen mode (Alexander Maznev)
+
 version 1.3.1 (2015-12-16):
 	* Despite the claim that the transparency was fixed for GNOME Shell
 	  there was a regression that broke it again. With this version
