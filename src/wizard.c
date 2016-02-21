@@ -1692,6 +1692,8 @@ static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
             vte_terminal_set_color_foreground_rgba (VTE_TERMINAL(tt->vte_term), &gdk_text);
             vte_terminal_set_color_background_rgba (VTE_TERMINAL(tt->vte_term), &gdk_back);
         }
+
+        tilda_window_refresh_transparency(tw);
     }
 }
 static void colorbutton_cursor_color_set_cb (GtkWidget *w, tilda_window *tw)
