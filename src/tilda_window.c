@@ -159,10 +159,22 @@ gint toggle_transparency_cb (tilda_window *tw)
 
 void tilda_window_toggle_transparency (tilda_window *tw)
 {
-    tilda_term *tt;
-    guint i;
     gboolean status = !config_getbool ("enable_transparency");
     config_setbool ("enable_transparency", status);
+    tilda_window_apply_transparency (tw, status);
+}
+
+void tilda_window_refresh_transparency (tilda_window *tw)
+{
+    gboolean status = config_getbool ("enable_transparency");
+    tilda_window_apply_transparency (tw, status);    
+}
+
+void tilda_window_apply_transparency (tilda_window *tw, gboolean status) 
+{
+    tilda_term *tt;
+    guint i;
+
 #ifdef VTE_290
     gdouble transparency_level = 0.0;
     transparency_level = ((gdouble) config_getint ("transparency"))/100;

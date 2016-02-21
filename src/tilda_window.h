@@ -191,6 +191,11 @@ gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gch
 void tilda_window_toggle_transparency(tilda_window *tw);
 
 /**
+ * Refreshes transparency
+ */
+void tilda_window_refresh_transparency(tilda_window *tw);
+
+/**
  * Toggles the search bar of the tilda window.
  */
 gint tilda_window_toggle_searchbar (tilda_window *tw);
