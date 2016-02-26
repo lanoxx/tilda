@@ -33,6 +33,12 @@
  */
 
 #if DEBUG
+    #define DEBUG_PRINTF(args...) do { g_print ("debug: " args); } while (0)
+#else
+    #define DEBUG_PRINTF(args...) do { /* nothing */ } while (0)
+#endif
+
+#if DEBUG
 
     /* Enable asserts */
     #undef NDEBUG

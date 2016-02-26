@@ -40,12 +40,6 @@
 
 #include <gdk/gdkx.h>
 
-#if DEBUG
-#define debug_printf(args...) do { g_print ("debug: " args); } while (0)
-#else
-#define debug_printf(args...) do { /* nothing */ } while (0)
-#endif
-
 #define ANIMATION_UP 0
 #define ANIMATION_DOWN 1
 
@@ -297,7 +291,7 @@ static void pull_up (struct tilda_window_ *tw) {
      * Case 2 - Animation off: Just hide the window */
     gtk_widget_hide (GTK_WIDGET(tw->window));
 
-    debug_printf ("pull_up(): MOVED UP\n");
+    DEBUG_PRINTF ("pull_up(): MOVED UP\n");
     tw->current_state = STATE_UP;
 }
 
@@ -376,7 +370,7 @@ static void pull_down (struct tilda_window_ *tw) {
      * not work anymore. This is working for now... */
     tilda_window_set_active (tw);
 
-    debug_printf ("pull_down(): MOVED DOWN\n");
+    DEBUG_PRINTF ("pull_down(): MOVED DOWN\n");
     tw->current_state = STATE_DOWN;
 }
 
