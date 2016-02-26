@@ -224,9 +224,9 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
 
     if (tw->current_state == STATE_DOWN && needsFocus) {
         /**
-        * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
-        * This conditional branch will only focus tilda but it does not actually pull the window up.
-        */
+         * See tilda_window.c in focus_out_event_cb for an explanation about focus_loss_on_keypress
+         * This conditional branch will only focus tilda but it does not actually pull the window up.
+         */
         TRACE (g_print("Tilda window not focused but visible\n"));
         gdk_x11_window_set_user_time(gtk_widget_get_window(tw->window),
                 tomboy_keybinder_get_current_event_time());
