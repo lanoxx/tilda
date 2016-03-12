@@ -174,7 +174,7 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("scroll_background", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("use_image", FALSE, CFGF_NODEFAULT),
     CFG_INT("transparency", 0, CFGF_NONE),
-#if VTE_MINOR_VERSION >= 40 /* VTE-2.91 */
+#if VTE_MINOR_VERSION >= 38 /* VTE-2.91 */
     CFG_INT("back_alpha", 0xffff, CFGF_NONE),
 #endif
     CFG_END()
