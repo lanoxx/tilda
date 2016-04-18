@@ -888,9 +888,6 @@ static void on_popup_hide (GtkWidget *widget, tilda_window *tw)
     DEBUG_ASSERT(widget != NULL);
     DEBUG_ASSERT(tw != NULL);
 
-    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (tw->action_group), "close-tab");
-    g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
-
     tw->disable_auto_hide = FALSE;
 }
 

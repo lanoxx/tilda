@@ -1193,5 +1193,5 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     /* Free the terminal, we are done with it */
     tilda_term_free (tt);
 
-    return 0;
+    return TRUE;
 }
