@@ -47,7 +47,6 @@ struct tilda_window_
 
     GList *terms;
     GtkAccelGroup * accel_group;
-    GActionGroup  *action_group;
     GtkBuilder *gtk_builder;
     GtkWidget *wizard_window; /* GtkDialog that contains the wizard */
 
