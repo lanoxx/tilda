@@ -568,7 +568,7 @@ static gboolean goto_tab_generic (tilda_window *tw, guint tab_number)
         goto_tab (tw, tab_number - 1);
     }
 
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 /* These all just call the generic function since they're all basically the same
@@ -602,8 +602,7 @@ static gint ccopy (tilda_window *tw)
     }
     vte_terminal_copy_clipboard (VTE_TERMINAL(list->data));
 
-    /* Stop the event's propagation */
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 static gint cpaste (tilda_window *tw)
@@ -623,8 +622,7 @@ static gint cpaste (tilda_window *tw)
     }
     vte_terminal_paste_clipboard (VTE_TERMINAL(list->data));
 
-    /* Stop the event's propagation */
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
 
 /* Tie a single keyboard shortcut to a callback function */
@@ -1114,7 +1112,7 @@ gint tilda_window_add_tab (tilda_window *tw)
     /* The new terminal should grab the focus automatically */
     gtk_widget_grab_focus (tt->vte_term);
 
-    return TRUE; //index;
+    return GDK_EVENT_STOP; //index;
 }
 
 gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_exit)
@@ -1193,5 +1191,5 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     /* Free the terminal, we are done with it */
     tilda_term_free (tt);
 
-    return TRUE;
+    return GDK_EVENT_STOP;
 }
