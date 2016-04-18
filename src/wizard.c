@@ -207,6 +207,7 @@ enum dimensions { HEIGHT, WIDTH };
  * keep things "in the code" so that they can be grepped for easily. */
 static GtkBuilder *xml = NULL;
 
+// Not a huge fan of having this in the module space rather than explicitly passed around
 static GtkListStore *keybindings_model = NULL;
 
 /* Prototypes for use in the wizard() */
@@ -355,6 +356,7 @@ static gboolean save_keybindings(const tilda_window *tw)
 	return TRUE;
 }
 
+// Maybe now is a good time to extract Keybindings setup to their own .c file ?
 static void keybindings_model_init()
 {
 	GtkWidget *tree_view_keybindings =
@@ -423,6 +425,8 @@ static void keybindings_model_init()
 
 	}
 
+    // Not a huge fan of generating these dynamically, it's not really saving that much Code
+    // And it makes it considerably harder to read in order to tell which keys are actually bindable
 	for(int i = 1; i <= 10; ++i)
 	{
 		gchar *config_name = g_strdup_printf("gototab_%i_key", i);
@@ -512,9 +516,7 @@ gint wizard (tilda_window *tw)
     gtk_window_set_title (GTK_WINDOW(tw->wizard_window), window_title);
     gtk_window_set_type_hint (GTK_WINDOW(tw->wizard_window), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-// <
 	keybindings_model_init();
-// <
 
     gtk_widget_show_all (tw->wizard_window);
 
