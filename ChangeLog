@@ -1,3 +1,7 @@
+version 1.3.4 (2016-05-14):
+	* Fixed crash that occured when the VTE version in use
+	  is VTE 0.38
+
 version 1.3.3 (2016-04-18):
 	* Bumped GTK+ version to 3.10, we are already implicitly depending on it.
 	* Fixed the close-tab regression introduced in the last patch.
