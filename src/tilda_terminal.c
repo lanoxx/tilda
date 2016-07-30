@@ -32,7 +32,7 @@
 #include <vte/vte.h>
 #include <string.h>
 
-#define HTTP_REGEXP "(ftp|http)s?://[-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
+#define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
 GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
