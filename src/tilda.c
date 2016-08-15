@@ -309,13 +309,16 @@ static gint remove_stale_lock_files ()
  *
  * @param argc argc from main
  * @param argv argv from main
+ * @param config_file pointer to config file path if specified via command-line
  * @return TRUE if we should show the configuration wizard, FALSE otherwise
  */
-static gboolean parse_cli (int argc, char *argv[])
+static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
 {
     DEBUG_FUNCTION ("parse_cli");
     DEBUG_ASSERT (argc != 0);
     DEBUG_ASSERT (argv != NULL);
+    // *config_file must be non-null only if a configuration file path has been parsed
+    DEBUG_ASSERT (*config_file == NULL);
 
     /* Set default values */
     gchar *background_color = config_getstr ("background_color");
@@ -347,6 +350,7 @@ static gboolean parse_cli (int argc, char *argv[])
         { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           N_("Run a command at startup"), NULL },
         { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            N_("Start Tilda hidden"), NULL },
         { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              N_("Set the font to the following string"), NULL },
+        { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,        N_("Configuration file"), NULL },
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             N_("Scrollback Lines"), NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         N_("Use Scrollbar"), NULL },
         { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           N_("Print the version, then exit"), NULL },
@@ -363,13 +367,27 @@ static gboolean parse_cli (int argc, char *argv[])
         { NULL }
     };
 
-
     /* Set up the command-line parser */
     GError *error = NULL;
     GOptionContext *context = g_option_context_new (NULL);
     g_option_context_add_main_entries (context, cl_opts, NULL);
     g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free (context);
+
+    /* Check for mutually exclusive options, and exit gracefully if there are some */
+    if (*config_file != NULL) {
+        if (antialias || background_color || command || font || hidden || lines ||
+#ifdef VTE_290
+            image || transparency ||
+#else
+            back_alpha ||
+#endif
+            scrollbar || working_dir || x_pos || y_pos) {
+            g_printerr (_("Error: %s\n"),
+                   "Option 'config-file' is not compatible with any of the other options that can be found in a configuration file." );
+            exit (EXIT_FAILURE);
+        }
+    }
 
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
@@ -719,7 +737,7 @@ int main (int argc, char *argv[])
     lock.pid = getpid ();
     lock.instance = get_instance_number ();
     lock_file = create_lock_file (&lock);
-    config_file = get_config_file_name (lock.instance);
+
     /* End of atomic section */
 
     flock(global_lock.file_descriptor, LOCK_UN);
@@ -746,11 +764,24 @@ int main (int argc, char *argv[])
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
+    /* Parse the command line */
+    config_file = NULL;
+    need_wizard = parse_cli (argc, argv, &config_file);
+
+    if (config_file != NULL) {
+        if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
+            g_printerr (_("Specified config file '%s' does not exist. Reverting to default path.\n"),
+                    config_file);
+            config_file = NULL;
+        }
+    }
+    if (config_file == NULL) {
+        config_file = get_config_file_name (lock.instance);
+    }
+
     /* Start up the configuration system */
     gint config_init_result = config_init (config_file);
 
-    /* Parse the command line */
-    need_wizard = parse_cli (argc, argv);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
