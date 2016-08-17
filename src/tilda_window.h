@@ -221,6 +221,11 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw, enum dimensions d
 
 void tilda_window_update_window_position (tilda_window *tw);
 
+/**
+ * Move the tilda window to the monitor the mouse cursor is located on.
+ */
+gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen);
+
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
 /* Allow scales a bit smaller and a bit larger than the usual pango ranges */

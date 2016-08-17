@@ -792,6 +792,15 @@ static void entry_word_chars_changed (GtkWidget *w, tilda_window *tw)
     }
 }
 
+static void check_show_on_mouse_monitor_toggled_cb(GtkWidget *w, tilda_window *tw) {
+    const gboolean show_on_mouse_monitor = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    const GtkWidget *combo_choose_monitor =
+                           GTK_WIDGET (gtk_builder_get_object (xml, "combo_choose_monitor"));
+
+    config_setbool ("show_on_mouse_monitor", show_on_mouse_monitor);
+    gtk_widget_set_sensitive (GTK_WIDGET(combo_choose_monitor), !show_on_mouse_monitor);
+}
+
 /*
  * Prototypes for the next 4 functions.
  */
@@ -1356,7 +1365,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
                                            &gdk_back_color);
-        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term), 
+        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term),
                                                   &gdk_back_color);
     }
 }
@@ -1786,8 +1795,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     /* Initialize the monitor chooser combo box with the numbers of the monitor */
     initialize_combo_choose_monitor(tw);
 
-
     initialize_geometry_spinners(tw);
+    CHECK_BUTTON ("check_show_on_mouse_monitor", "show_on_mouse_monitor");
     CHECK_BUTTON ("check_enable_transparency", "enable_transparency");
     CHECK_BUTTON ("check_animated_pulldown", "animation");
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
@@ -1798,6 +1807,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_show_single_tab", "show_single_tab");
     CHECK_BUTTON ("check_show_title_tooltip", "show_title_tooltip");
 
+    SET_SENSITIVE_BY_CONFIG_NBOOL ("combo_choose_monitor", "show_on_mouse_monitor");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_animation_delay","animation");
@@ -1937,6 +1947,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     /* Appearance Tab */
     CONNECT_SIGNAL ("combo_choose_monitor", "changed", combo_monitor_selection_changed_cb, tw);
+    CONNECT_SIGNAL ("check_show_on_mouse_monitor", "toggled", check_show_on_mouse_monitor_toggled_cb, tw);
     CONNECT_SIGNAL ("spin_height_percentage","value-changed",spin_height_percentage_value_changed_cb, tw);
     CONNECT_SIGNAL ("spin_height_pixels","value-changed",spin_height_pixels_value_changed_cb, tw);
     CONNECT_SIGNAL ("spin_width_percentage","value-changed",spin_width_percentage_value_changed_cb, tw);

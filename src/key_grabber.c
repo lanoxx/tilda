@@ -40,6 +40,7 @@
 #include <string.h>
 
 #include <gdk/gdkx.h>
+#include <gdk/gdk.h>
 
 #define ANIMATION_UP 0
 #define ANIMATION_DOWN 1
@@ -161,7 +162,13 @@ void tilda_window_set_active (tilda_window *tw)
 
     XEvent event;
     long mask = SubstructureRedirectMask | SubstructureNotifyMask;
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+    if (config_getbool("show_on_mouse_monitor")) {
+        tilda_window_move_to_mouse_monitor (tw, screen);
+    } else {
+        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    }
+
     if (gdk_x11_screen_supports_net_wm_hint (screen,
                                              gdk_atom_intern_static_string ("_NET_ACTIVE_WINDOW")))
     {
