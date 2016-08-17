@@ -1169,3 +1169,47 @@ gint tilda_window_confirm_quit (tilda_window *tw)
 
     return GDK_EVENT_STOP;
 }
+
+/* Get the index of the monitor the mouse cursor is currently on */
+gint get_monitor_for_cursor (tilda_window *tw, GdkScreen *screen)
+{
+    gint mouse_x, mouse_y;
+    GdkDisplay *disp = gdk_display_get_default ();
+    GdkDeviceManager *device_manager = gdk_display_get_device_manager (disp);
+    GdkDevice *device = gdk_device_manager_get_client_pointer (device_manager);
+
+    gdk_device_get_position (device, &screen, &mouse_x, &mouse_y);
+    return gdk_screen_get_monitor_at_point (screen, mouse_x, mouse_y);
+}
+
+gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen)
+{
+    if (config_getbool("show_on_mouse_monitor")) {
+        gint mouse_monitor = get_monitor_for_cursor(tw, screen);
+
+        /* Get the monitor number on which the window is currently shown
+         * Idea: get the configured window position relatively to the
+         * configured monitor on which Tilda usually appears, and apply the
+         * same position on the monitor the mouse cursor is currently on */
+        gint config_monitor = find_monitor_number (tw);
+        if (config_monitor != mouse_monitor) {
+            gint window_x, window_y;
+            GdkRectangle* config_monitor_rect = malloc (sizeof (GdkRectangle));
+            GdkRectangle* mouse_monitor_rect = malloc (sizeof (GdkRectangle));;
+            gdk_screen_get_monitor_workarea (screen, config_monitor, config_monitor_rect);
+            gdk_screen_get_monitor_workarea (screen, mouse_monitor, mouse_monitor_rect);
+
+            gint x_offset,y_offset;
+            x_offset = config_getint ("x_pos") - config_monitor_rect->x;
+            y_offset = config_getint ("y_pos") - config_monitor_rect->y;
+            window_x = mouse_monitor_rect->x + x_offset;
+            window_y = mouse_monitor_rect->y + y_offset;
+
+            free (config_monitor_rect);
+            free (mouse_monitor_rect);
+            gtk_window_move (GTK_WINDOW(tw->window), window_x, window_y);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
