@@ -307,12 +307,13 @@ static gint remove_stale_lock_files ()
  * Parse all of the Command-Line Options given to tilda.
  * This can modify argv and argc, and will set values in the config.
  *
+ * @param cli_opts pointer to a struct to store command-line options into
  * @param argc argc from main
  * @param argv argv from main
  * @param config_file pointer to config file path if specified via command-line
  * @return TRUE if we should show the configuration wizard, FALSE otherwise
  */
-static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
+static gboolean parse_cli (int argc, char *argv[], struct tilda_cli_opts *cli_opts, gchar **config_file)
 {
     DEBUG_FUNCTION ("parse_cli");
     DEBUG_ASSERT (argc != 0);
@@ -321,49 +322,49 @@ static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
     DEBUG_ASSERT (*config_file == NULL);
 
     /* Set default values */
-    gchar *background_color = config_getstr ("background_color");
-    gchar *command = config_getstr ("command");
-    gchar *font = config_getstr ("font");
-    gchar *working_dir = config_getstr ("working_dir");
+    cli_opts->background_color = config_getstr ("background_color");
+    cli_opts->command = config_getstr ("command");
+    cli_opts->font = config_getstr ("font");
+    cli_opts->working_dir = config_getstr ("working_dir");
 
 #ifdef VTE_290
-    gchar *image = config_getstr ("image");
-    gint transparency = config_getint ("transparency");
+    cli_opts->image = config_getstr ("image");
+    cli_opts->transparency = config_getint ("transparency");
 #else
-    gint back_alpha = config_getint ("back_alpha");
+    cli_opts->back_alpha = config_getint ("back_alpha");
 #endif
 
-    gint lines = config_getint ("lines");
-    gint x_pos = config_getint ("x_pos");
-    gint y_pos = config_getint ("y_pos");
+    cli_opts->lines = config_getint ("lines");
+    cli_opts->x_pos = config_getint ("x_pos");
+    cli_opts->y_pos = config_getint ("y_pos");
 
-    gboolean antialias = config_getbool ("antialias");
-    gboolean scrollbar = config_getbool ("scrollbar");
-    gboolean show_config = FALSE;
-    gboolean version = FALSE;
-    gboolean hidden = config_getbool ("hidden");
+    cli_opts->antialias = config_getbool ("antialias");
+    cli_opts->scrollbar = config_getbool ("scrollbar");
+    cli_opts->show_config = FALSE;
+    cli_opts->version = FALSE;
+    cli_opts->hidden = config_getbool ("hidden");
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
-        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &antialias,         N_("Use Antialiased Fonts"), NULL },
-        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &background_color,  N_("Set the background color"), NULL },
-        { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           N_("Run a command at startup"), NULL },
-        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            N_("Start Tilda hidden"), NULL },
-        { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              N_("Set the font to the following string"), NULL },
+        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &(cli_opts->antialias),         N_("Use Antialiased Fonts"), NULL },
+        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &(cli_opts->background_color),  N_("Set the background color"), NULL },
+        { "command",            'c', 0, G_OPTION_ARG_STRING,    &(cli_opts->command),           N_("Run a command at startup"), NULL },
+        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &(cli_opts->hidden),            N_("Start Tilda hidden"), NULL },
+        { "font",               'f', 0, G_OPTION_ARG_STRING,    &(cli_opts->font),              N_("Set the font to the following string"), NULL },
         { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,        N_("Configuration file"), NULL },
-        { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             N_("Scrollback Lines"), NULL },
-        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         N_("Use Scrollbar"), NULL },
-        { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           N_("Print the version, then exit"), NULL },
-        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &working_dir,       N_("Set Initial Working Directory"), NULL },
-        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &x_pos,             N_("X Position"), NULL },
-        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &y_pos,             N_("Y Position"), NULL },
+        { "lines",              'l', 0, G_OPTION_ARG_INT,       &(cli_opts->lines),             N_("Scrollback Lines"), NULL },
+        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &(cli_opts->scrollbar),         N_("Use Scrollbar"), NULL },
+        { "version",            'v', 0, G_OPTION_ARG_NONE,      &(cli_opts->version),           N_("Print the version, then exit"), NULL },
+        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &(cli_opts->working_dir),       N_("Set Initial Working Directory"), NULL },
+        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &(cli_opts->x_pos),             N_("X Position"), NULL },
+        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &(cli_opts->y_pos),             N_("Y Position"), NULL },
 #ifdef VTE_290
-        { "image",              'B', 0, G_OPTION_ARG_STRING,    &image,             N_("Set Background Image"), NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &transparency,      N_("Opaqueness: 0-100%"), NULL },
+        { "image",              'B', 0, G_OPTION_ARG_STRING,    &(cli_opts->image),             N_("Set Background Image"), NULL },
+        { "transparency",       't', 0, G_OPTION_ARG_INT,       &(cli_opts->transparency),      N_("Opaqueness: 0-100%"), NULL },
 #else
-        { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &back_alpha,        N_("Opaqueness: 0-100%"), NULL },
+        { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &(cli_opts->back_alpha),        N_("Opaqueness: 0-100%"), NULL },
 #endif
-        { "config",             'C', 0, G_OPTION_ARG_NONE,      &show_config,       N_("Show Configuration Wizard"), NULL },
+        { "config",             'C', 0, G_OPTION_ARG_NONE,      &(cli_opts->show_config),       N_("Show Configuration Wizard"), NULL },
         { NULL }
     };
 
@@ -373,21 +374,6 @@ static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
     g_option_context_add_main_entries (context, cl_opts, NULL);
     g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free (context);
-
-    /* Check for mutually exclusive options, and exit gracefully if there are some */
-    if (*config_file != NULL) {
-        if (antialias || background_color || command || font || hidden || lines ||
-#ifdef VTE_290
-            image || transparency ||
-#else
-            back_alpha ||
-#endif
-            scrollbar || working_dir || x_pos || y_pos) {
-            g_printerr (_("Error: %s\n"),
-                   "Option 'config-file' is not compatible with any of the other options that can be found in a configuration file." );
-            exit (EXIT_FAILURE);
-        }
-    }
 
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
@@ -399,7 +385,7 @@ static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
     }
 
     /* If we need to show the version, show it then exit normally */
-    if (version)
+    if (cli_opts->version)
     {
         g_print ("%s\n\n", TILDA_VERSION);
 
@@ -436,68 +422,122 @@ static gboolean parse_cli (int argc, char *argv[], gchar **config_file)
         exit (EXIT_FAILURE);
     }
 
-    /* Now set the options in the config, if they changed */
-    if (background_color != config_getstr ("background_color")) {
-        config_setstr ("background_color", background_color);
+    /* TRUE if we should show the config wizard, FALSE otherwize */
+    return cli_opts->show_config;
+}
+
+/**
+ * Initialize a structure in which command-line parameters will be stored.
+ * @return a pointer to that structure
+ */
+struct tilda_cli_opts *init_cli_opts_struct()
+{
+    struct tilda_cli_opts *tco = malloc(sizeof(struct tilda_cli_opts));
+    if (!tco)
+    {
+        g_printerr (_("Error allocating memory for a new tilda_cli_opts structure.\n"));
+        exit (EXIT_FAILURE);
+    }
+
+    tco->background_color = NULL;
+    tco->command = NULL;
+    tco->font = NULL;
+    tco->working_dir = NULL;
+#ifdef VTE_290
+    tco->image = NULL;
+    tco-> *transparency = 0;
+#else
+    tco-> back_alpha = 0;
+#endif
+    tco-> lines = 0;
+    tco-> x_pos = 0;
+    tco-> y_pos = 0;
+    tco->antialias = 0;
+    tco->scrollbar = 0;
+    tco->show_config = 0;
+    tco->version = 0;
+    tco->hidden = 0;
+
+    return tco;
+}
+
+/**
+ * Set values in the config from command-line parameters
+ *
+ * @param cli_opts pointer to a struct containing command-line options
+ */
+static void setup_config_from_cli_opts(struct tilda_cli_opts *cli_opts)
+{
+    if (cli_opts->background_color != NULL
+            && cli_opts->background_color != config_getstr ("background_color")) {
+        config_setstr ("background_color", cli_opts->background_color);
 
         GdkColor col;
-        if (gdk_color_parse(background_color, &col)) {
+        if (gdk_color_parse(cli_opts->background_color, &col)) {
             config_setint("back_red", col.red);
             config_setint("back_green", col.green);
             config_setint("back_blue", col.blue);
         }
 
-        g_free(background_color);
+        g_free(cli_opts->background_color);
     }
-    if (command != config_getstr ("command"))
+    if (cli_opts->command != NULL
+            && cli_opts->command != config_getstr ("command"))
     {
         config_setbool ("run_command", TRUE);
-        config_setstr ("command", command);
-        g_free(command);
+        config_setstr ("command", cli_opts->command);
+        g_free(cli_opts->command);
     }
-    if (font != config_getstr ("font")) {
-        config_setstr ("font", font);
-        g_free(font);
+    if (cli_opts->font != NULL
+            && cli_opts->font != config_getstr ("font")) {
+        config_setstr ("font", cli_opts->font);
+        g_free(cli_opts->font);
     }
 #ifdef VTE_290
-    if (image != config_getstr ("image")) {
-        config_setstr ("image", image);
-        g_free(image);
+    if (cli_opts->image != NULL
+            && cli_opts->image != config_getstr ("image")) {
+        config_setstr ("image", cli_opts->image);
+        g_free(cli_opts->image);
     }
-    if (transparency != config_getint ("transparency"))
+    if (cli_opts->transparency != 0
+            && cli_opts->transparency != config_getint ("transparency"))
     {
-        config_setbool ("enable_transparency", transparency);
-        config_setint ("transparency", transparency);
+        config_setbool ("enable_transparency", cli_opts->transparency);
+        config_setint ("transparency", cli_opts->transparency);
     }
 #else
-    if (back_alpha != config_getint ("back_alpha"))
+    if (cli_opts->back_alpha != 0
+            && cli_opts->back_alpha != config_getint ("back_alpha"))
     {
-        config_setbool ("enable_transparency", ~back_alpha & 0xffff);
-        config_setint ("back_alpha", back_alpha);
+        config_setbool ("enable_transparency", ~cli_opts->back_alpha & 0xffff);
+        config_setint ("back_alpha", cli_opts->back_alpha);
     }
 #endif
-    if (working_dir != config_getstr ("working_dir")) {
-        config_setstr ("working_dir", working_dir);
-        g_free(working_dir);
+    if (cli_opts->working_dir != NULL
+            && cli_opts->working_dir != config_getstr ("working_dir")) {
+        config_setstr ("working_dir", cli_opts->working_dir);
+        g_free(cli_opts->working_dir);
     }
 
-    if (lines != config_getint ("lines"))
-        config_setint ("lines", lines);
+    if (cli_opts->lines != 0
+            && cli_opts->lines != config_getint ("lines"))
+        config_setint ("lines", cli_opts->lines);
+    if (cli_opts->x_pos != 0
+            && cli_opts->x_pos != config_getint ("x_pos"))
+        config_setint ("x_pos", cli_opts->x_pos);
+    if (cli_opts->y_pos != 0
+            && cli_opts->y_pos != config_getint ("y_pos"))
+        config_setint ("y_pos", cli_opts->y_pos);
 
-    if (x_pos != config_getint ("x_pos"))
-        config_setint ("x_pos", x_pos);
-    if (y_pos != config_getint ("y_pos"))
-        config_setint ("y_pos", y_pos);
-
-    if (antialias != config_getbool ("antialias"))
-        config_setbool ("antialias", antialias);
-    if (hidden != config_getbool ("hidden"))
-        config_setbool ("hidden", hidden);
-    if (scrollbar != config_getbool ("scrollbar"))
-        config_setbool ("scrollbar", scrollbar);
-
-    /* TRUE if we should show the config wizard, FALSE otherwize */
-    return show_config;
+    if (cli_opts->antialias != 0
+            && cli_opts->antialias != config_getbool ("antialias"))
+        config_setbool ("antialias", cli_opts->antialias);
+    if (cli_opts->hidden != 0
+            && cli_opts->hidden != config_getbool ("hidden"))
+        config_setbool ("hidden", cli_opts->hidden);
+    if (cli_opts->scrollbar != 0
+            && cli_opts->scrollbar != config_getbool ("scrollbar"))
+        config_setbool ("scrollbar", cli_opts->scrollbar);
 }
 
 /**
@@ -766,7 +806,8 @@ int main (int argc, char *argv[])
 #endif
     /* Parse the command line */
     config_file = NULL;
-    need_wizard = parse_cli (argc, argv, &config_file);
+    struct tilda_cli_opts *cli_opts = init_cli_opts_struct();
+    need_wizard = parse_cli (argc, argv, cli_opts, &config_file);
 
     if (config_file != NULL) {
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
@@ -782,6 +823,8 @@ int main (int argc, char *argv[])
     /* Start up the configuration system */
     gint config_init_result = config_init (config_file);
 
+    /* Set up possible overridden config options */
+    setup_config_from_cli_opts(cli_opts);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);

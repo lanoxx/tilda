@@ -34,6 +34,27 @@ struct lock_info
     gint file_descriptor;
 };
 
+struct tilda_cli_opts {
+    gchar *background_color;
+    gchar *command;
+    gchar *font;
+    gchar *working_dir;
+#ifdef VTE_290
+    gchar *image;
+    gint *transparency;
+#else
+    gint back_alpha;
+#endif
+    gint lines;
+    gint x_pos;
+    gint y_pos;
+    gboolean antialias;
+    gboolean scrollbar;
+    gboolean show_config;
+    gboolean version;
+    gboolean hidden;
+};
+
 #define GUINT16_TO_FLOAT(color) (color / (double) 0xFFFF)
 #define GUINT16_FROM_FLOAT(value) ((int) (value * 0xFFFF + 0.5))
 
