@@ -897,56 +897,9 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
-    static const gchar menu_str[] = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            "<interface>\n"
-            "  <menu id=\"menu\">\n"
-            "    <section>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_New Tab</attribute>\n"
-            "        <attribute name=\"action\">window.new-tab</attribute>\n"
-            "      </item>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Close Tab</attribute>\n"
-            "        <attribute name=\"action\">window.close-tab</attribute>\n"
-            "      </item>\n"
-            "    </section>\n"
-            "    <section>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Copy</attribute>\n"
-            "        <attribute name=\"action\">window.copy</attribute>\n"
-            "      </item>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Paste</attribute>\n"
-            "        <attribute name=\"action\">window.paste</attribute>\n"
-            "      </item>\n"
-            "    </section> \n"
-            "    <section>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Toggle Fullscreen</attribute>\n"
-            "        <attribute name=\"action\">window.fullscreen</attribute>\n"
-            "      </item>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Toggle Searchbar</attribute>\n"
-            "        <attribute name=\"action\">window.searchbar</attribute>\n"
-            "      </item>\n"
-            "    </section> \n"
-            "    <section>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Preferences</attribute>\n"
-            "        <attribute name=\"action\">window.preferences</attribute>\n"
-            "      </item>\n"
-            "    </section> \n"
-            "    <section>\n"
-            "      <item>\n"
-            "        <attribute name=\"label\" translatable=\"yes\">_Quit</attribute>\n"
-            "        <attribute name=\"action\">window.quit</attribute>\n"
-            "      </item>\n"
-            "    </section> \n"
-            "  </menu>\n"
-            "</interface>";
-
     GtkBuilder *builder = gtk_builder_new();
-    gtk_builder_add_from_string(builder, menu_str, strlen(menu_str), NULL);
+
+    gtk_builder_add_from_resource (builder, "/org/tilda/menu.ui", NULL);
 
     /* Create the action group */
     GSimpleActionGroup *action_group = g_simple_action_group_new();
