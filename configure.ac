@@ -17,6 +17,7 @@ AC_INIT([Tilda],
         [tilda],
         [tilda_repository])
 
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/tilda.c])
 AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 
