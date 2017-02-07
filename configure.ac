@@ -1,16 +1,31 @@
-# Autoconf file for tilda
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
+dnl ****************************************************************************
+dnl Tilda autoconf configuration file.
+dnl Use autogen.sh to bootstrap the build system.
+dnl ****************************************************************************
+
+m4_define ([tilda_issues],
+           [https://github.com/lanoxx/tilda/issues])
+
+m4_define ([tilda_repository],
+           [https://github.com/lanoxx/tilda])
 
 AC_PREREQ([2.68])
-AC_INIT([Tilda],[1.4~alpha],[https://github.com/lanoxx/tilda/issues],[tilda],[https://github.com/lanoxx/tilda])
+
+AC_INIT([Tilda],
+        [1.4~alpha],
+        [tilda_issues],
+        [tilda],
+        [tilda_repository])
+
+AC_CONFIG_SRCDIR([src/tilda.c])
+AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
+
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # We are going to use silent builds which have a much
-# nicer output. More information can be foudn here:
+# nicer output. More information can be found here:
 #     https://wiki.gnome.org/Initiatives/GnomeGoals/NicerBuilds
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-
+AM_SILENT_RULES([yes])
 
 # See http://www.gnu.org/savannah-checkouts/gnu/automake/manual/html_node/maintainer_002dmode.html
 # for an explanation of using this macro. The short explanation is:
@@ -18,13 +33,13 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 #     AM_MAINTAINER_MODE([enable]) is good
 AM_MAINTAINER_MODE([enable])
 
-# This registeres the option '--enable-maintainer-flags' to the ./configure script
+# This registers the option '--enable-maintainer-flags' to the ./configure script
 # If this option is set then it activates both the '--enable-debug' and '--enable-debug-functions'
 # options that are defined below. It also activates several flags to the compile such that it
 # will show more warnings and errors to indicate problems in the source code.
 AC_ARG_ENABLE([maintainer-flags],
 	[AS_HELP_STRING([--enable-maintainer-flags],[\
-            Enables extra debugging; use this option if you want to develope for tilda,
+            Enables extra debugging; use this option if you want to develop for tilda,
             but to not use it as an end user if you just want to compile and use tilda. \
             This option includes the --enable-debug and --enable-debug-functions \
             options. And sets several CFLAGS to enable more gcc warnings and errors.])])
@@ -136,9 +151,6 @@ fi
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
-
-AC_CONFIG_SRCDIR([src/tilda.c])
-AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
 
 # This will initialize the internationalization
 # capabilities of glib (glib/gi18n.h) and gettext
