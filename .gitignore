@@ -48,3 +48,6 @@ INSTALL
 .project
 .cproject
 .kdev4
+.idea
+build/
+cmake-build-debug/
