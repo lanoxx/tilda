@@ -39,6 +39,14 @@
 /* INT_MAX */
 #include <limits.h>
 
+struct TildaWizard_
+{
+    tilda_window            *tw;
+    GtkBuilder              *builder;
+};
+
+typedef struct TildaWizard_ TildaWizard;
+
 const GdkRGBA
 terminal_palette_tango[TERMINAL_PALETTE_SIZE] = {
     { RGB(0x2e2e, 0x3434, 0x3636) },
@@ -209,7 +217,7 @@ static GtkBuilder *xml = NULL;
 
 /* Prototypes for use in the wizard() */
 static void set_wizard_state_from_config (tilda_window *tw);
-static void connect_wizard_signals (tilda_window *tw);
+static void connect_wizard_signals (TildaWizard *wizard);
 static void init_palette_scheme_menu (void);
 static void update_palette_color_button(gint idx);
 static gboolean validate_pulldown_keybinding(const gchar* accel, tilda_window* tw, const gchar* message);
@@ -253,6 +261,8 @@ gint wizard (tilda_window *tw)
         return 0;
     }
 
+    TildaWizard *wizard = g_malloc (sizeof (TildaWizard));
+
     GError* error = NULL;
     xml = gtk_builder_new ();
 
@@ -270,6 +280,9 @@ gint wizard (tilda_window *tw)
         return 2;
     }
 
+    wizard->builder = xml;
+    wizard->tw = tw;
+
     tw->wizard_window = GTK_WIDGET (
         gtk_builder_get_object (xml, "wizard_window")
     );
@@ -286,7 +299,7 @@ gint wizard (tilda_window *tw)
      * the wizard so that all of the handlers don't get called as we copy in
      * the values. This function manually connects the required signals for
      * all the widgets */
-    connect_wizard_signals (tw);
+    connect_wizard_signals (wizard);
 
     /* Unbind the current keybinding. I'm aware that this opens up an opportunity to
      * let "someone else" grab the key, but it also saves us some trouble, and makes
@@ -360,9 +373,11 @@ static gboolean validate_keybinding(const gchar* accel, const tilda_window *tw, 
 /* Gets called just after the wizard is closed. This should clean up after
  * the wizard, and do anything that couldn't be done immediately during the
  * wizard's lifetime. */
-static void wizard_close_dialog (tilda_window *tw)
+static void wizard_close_dialog (TildaWizard *wizard)
 {
     DEBUG_FUNCTION ("wizard_close_dialog");
+
+    tilda_window *tw = wizard->tw;
 
     const gchar *key = GET_BUTTON_LABEL("button_keybinding_pulldown");
     const gchar *addtab_key = GET_BUTTON_LABEL("button_keybinding_addtab");
@@ -512,6 +527,10 @@ static void wizard_close_dialog (tilda_window *tw)
 
     /* Enables auto hide */
     tw->disable_auto_hide = FALSE;
+
+    wizard->tw = NULL;
+    wizard->builder = NULL;
+    g_free (wizard);
 }
 
 void show_invalid_keybinding_dialog (GtkWindow *parent_window, const gchar* message)
@@ -787,19 +806,19 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
 /*                       ALL Callbacks are below                              */
 /******************************************************************************/
 
-static void wizard_button_close_clicked_cb (GtkButton *button,
-                                            tilda_window *tw)
+static void wizard_button_close_clicked_cb (GtkButton   *button,
+                                            TildaWizard *wizard)
 {
     /* Call the clean-up function */
-    wizard_close_dialog (tw);
+    wizard_close_dialog (wizard);
 }
 
-static void wizard_window_delete_event_cb (GtkWidget *widget,
-                                           GdkEvent  *event,
-                                           tilda_window *tw)
+static void wizard_window_delete_event_cb (GtkWidget   *widget,
+                                           GdkEvent    *event,
+                                           TildaWizard *wizard)
 {
     /* Call the clean-up function */
-    wizard_close_dialog (tw);
+    wizard_close_dialog (wizard);
 }
 
 static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w, tilda_window *tw)
@@ -2426,9 +2445,10 @@ static void initialize_set_as_desktop_checkbox (void) {
 
 /* Connect all signals in the wizard. This should be done after setting all
  * values, that way all of the signal handlers don't get called */
-static void connect_wizard_signals (tilda_window *tw)
+static void connect_wizard_signals (TildaWizard *wizard)
 {
     gint i;
+    tilda_window *tw = wizard->tw;
 
     /* General Tab */
     CONNECT_SIGNAL ("check_display_on_all_workspaces","toggled",check_display_on_all_workspaces_toggled_cb, tw);
@@ -2540,8 +2560,8 @@ static void connect_wizard_signals (tilda_window *tw)
     CONNECT_SIGNAL ("button_keybinding_toggle_searchbar", "clicked", button_keybinding_clicked_cb, tw);
 
     /* Close Button */
-    CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb, tw);
-    CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb, tw);
+    CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb, wizard);
+    CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb, wizard);
 
 #if (VTE_290 || VTE_MINOR_VERSION >= 40)
     CONNECT_SIGNAL ("entry_word_chars", "changed", entry_word_chars_changed, tw);
