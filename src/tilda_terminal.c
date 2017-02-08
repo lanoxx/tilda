@@ -982,12 +982,15 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             terminal  = VTE_TERMINAL(tt->vte_term);
             ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
 
+            glong column = (glong) ((event->x - ypad) /
+                                    vte_terminal_get_char_width (terminal));
+            glong row = (glong) ((event->y - ypad) /
+                                 vte_terminal_get_char_height (terminal));
+
             match = vte_terminal_match_check (terminal,
-                    (event->x - ypad) /
-                    vte_terminal_get_char_width (terminal),
-                    (event->y - ypad) /
-                    vte_terminal_get_char_height (terminal),
-                    &tag);
+                                              column,
+                                              row,
+                                              &tag);
 
             /* Check if we can launch a web browser, and do so if possible */
             if (match != NULL)
