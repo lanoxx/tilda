@@ -312,6 +312,57 @@ static gboolean decrease_font_size (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
+gint cycle_monitor_cb (tilda_window *tw)
+{
+    DEBUG_FUNCTION("cycle_monitor_cb");
+    DEBUG_ASSERT(tw != NULL);
+
+    // Figure out what monitor we're on, and
+    // which monitor we're going to
+    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+    int original_monitor = config_getint("show_on_monitor_number");
+    int num_monitors = gdk_screen_get_n_monitors(screen);
+    int new_monitor = (original_monitor + 1) % num_monitors;
+
+    // Calculate the workareas of the two
+    // monitors
+    GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
+    for (int i = 0; i < num_monitors; i++) {
+        gdk_screen_get_monitor_workarea(screen, i, rect + i);
+    }
+    GdkRectangle *original_workarea = rect + original_monitor;
+    GdkRectangle *new_workarea = rect + new_monitor;
+
+    // Try to keep the same relative position
+    // on the new monitor if possible, but
+    // sometimes the saved (x, y) absolutes
+    // are in disagreement with the selected
+    // monitor; in that case set x or y to 0
+    int original_absolute_x = config_getint("x_pos");
+    int original_absolute_y = config_getint("y_pos");
+    int relative_x = original_absolute_x - original_workarea->x;
+    int relative_y = original_absolute_y - original_workarea->y;
+    if (relative_x < 0 || relative_x > new_workarea->width) {
+        relative_x = 0;
+    }
+    if (relative_y < 0 || relative_y > new_workarea->height) {
+        relative_y = 0;
+    }
+    int new_absolute_x = new_workarea->x + relative_x;
+    int new_absolute_y = new_workarea->y + relative_y;
+
+    config_setint("show_on_monitor_number", new_monitor);
+    config_setint("x_pos", new_absolute_x);
+    config_setint("y_pos", new_absolute_y);
+
+    // Make the change
+    gtk_window_move(GTK_WINDOW(tw->window), new_absolute_x, new_absolute_y);
+    generate_animation_positions(tw);
+    free(rect);
+
+    return GDK_EVENT_STOP;
+}
+
 gint tilda_window_next_tab (tilda_window *tw)
 {
     DEBUG_FUNCTION ("next_tab");
@@ -672,6 +723,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
     tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(tilda_window_toggle_searchbar),     tw);
+    tilda_add_config_accelerator_by_path("cycle_monitor_key", "<tilda>/context/Cycle Monitor",  G_CALLBACK(cycle_monitor_cb),               tw);
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);
