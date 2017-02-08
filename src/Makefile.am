@@ -31,6 +31,7 @@ src_tilda_SOURCES = src/callback_func.h src/callback_func.c \
 		src/eggaccelerators.h src/eggaccelerators.c \
 		src/key_grabber.h src/key_grabber.c \
 		src/tilda.h src/tilda.c \
+		src/tilda-keybinding.c src/tilda-keybinding.h \
 		src/tilda_terminal.h src/tilda_terminal.c \
 		src/tilda_window.h src/tilda_window.c \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
