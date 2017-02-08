@@ -2147,7 +2147,7 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
 	 */
 	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
 	int num_monitors = gdk_screen_get_n_monitors(screen);
-    int monitor_number = find_monitor_number(tw);
+	int monitor_number = find_monitor_number(tw);
 
 	GtkComboBox* combo_choose_monitor =
 			GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
