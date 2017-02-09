@@ -28,8 +28,15 @@ you need to install.
 Generally if you have installed the development packages (e.g. *-dev or *-devel) of
 the dependencies above and the autotools suite then it should be possible to compile with:
 
-    ./autogen.sh --prefix=/usr
+    mkdir build
+    cd build
+    ../autogen.sh --prefix=/usr
     make --silent
+
+Changing to `build/` and calling autogen.sh relative from there
+makes sure that we perform an out-of-tree build and all generated files are
+stored inside `build/`. This way build artifacts will not clutter the
+source directory.
 
 If you get the following error message, then you are missing the autopoint binary which is part of the autotools suite. On Ubuntu the
 `dh-autoreconf` package installs it along with automake, autoconf and autoreconf.
