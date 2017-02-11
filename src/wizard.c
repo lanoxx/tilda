@@ -940,6 +940,14 @@ static void validate_executable_command_cb (GtkWidget *w,
     }
 }
 
+static void check_confirm_close_tab_cb (GtkWidget *w,
+                                        G_GNUC_UNUSED tilda_window *tw)
+{
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("confirm_close_tab", active);
+}
+
 static void combo_command_exit_changed_cb (GtkWidget *w, tilda_window *tw) {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
 
@@ -2009,6 +2017,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     TEXT_ENTRY ("entry_web_browser", "web_browser");
 
+    CHECK_BUTTON ("check_confirm_close_tab", "confirm_close_tab");
+
     /* Appearance Tab */
     /* Initialize the monitor chooser combo box with the numbers of the monitor */
 	initialize_combo_choose_monitor(tw);
@@ -2173,6 +2183,8 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed, tw);
     CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb, tw);
+
+    CONNECT_SIGNAL ("check_confirm_close_tab", "toggled", check_confirm_close_tab_cb, tw);
 
     /* Appearance Tab */
     CONNECT_SIGNAL ("combo_choose_monitor", "changed", combo_monitor_selection_changed_cb, tw);

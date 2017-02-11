@@ -92,7 +92,13 @@ void tilda_window_close_current_tab (tilda_window *tw)
     DEBUG_FUNCTION ("close_current_tab");
     DEBUG_ASSERT (tw != NULL);
 
-    if (show_confirmation_dialog (tw)) {
+    gboolean can_close = TRUE;
+
+    if (config_getbool ("confirm_close_tab")) {
+        can_close = show_confirmation_dialog (tw);
+    }
+
+    if (can_close) {
         gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
         tilda_window_close_tab (tw, pos, FALSE);
     }
