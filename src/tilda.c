@@ -825,6 +825,7 @@ int main (int argc, char *argv[])
 
     /* Set up possible overridden config options */
     setup_config_from_cli_opts(cli_opts);
+    g_free(cli_opts);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
