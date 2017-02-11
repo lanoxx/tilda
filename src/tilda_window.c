@@ -37,6 +37,8 @@
 
 static tilda_term* tilda_window_get_current_terminal (tilda_window *tw);
 
+static gboolean show_confirmation_dialog (tilda_window *tw);
+
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
 {
@@ -90,10 +92,40 @@ void tilda_window_close_current_tab (tilda_window *tw)
     DEBUG_FUNCTION ("close_current_tab");
     DEBUG_ASSERT (tw != NULL);
 
-    gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
-    tilda_window_close_tab (tw, pos, FALSE);
+    if (show_confirmation_dialog (tw)) {
+        gint pos = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw->notebook));
+        tilda_window_close_tab (tw, pos, FALSE);
+    }
 }
 
+static gboolean
+show_confirmation_dialog (tilda_window *tw)
+{
+    gboolean result;
+
+    GtkWidget *dialog
+            = gtk_message_dialog_new (GTK_WINDOW (tw->window),
+                                      GTK_DIALOG_DESTROY_WITH_PARENT,
+                                      GTK_MESSAGE_QUESTION,
+                                      GTK_BUTTONS_OK_CANCEL,
+                                      _ ("Are you sure you want to close this tab?"));
+
+    gtk_window_set_keep_above (GTK_WINDOW (dialog), TRUE);
+    gint response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+    switch (response) {
+        case GTK_RESPONSE_OK:
+            result = TRUE;
+            break;
+        default:
+            result = FALSE;
+            break;
+    }
+
+    gtk_widget_destroy (dialog);
+
+    return result;
+}
 
 gint tilda_window_set_tab_position (tilda_window *tw, enum notebook_tab_positions pos)
 {
