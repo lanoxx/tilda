@@ -34,7 +34,9 @@ struct lock_info
     gint file_descriptor;
 };
 
-struct tilda_cli_opts {
+typedef struct tilda_cli_options tilda_cli_options;
+
+struct tilda_cli_options {
     gchar *background_color;
     gchar *command;
     gchar *font;
