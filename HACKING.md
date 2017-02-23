@@ -10,7 +10,7 @@
 
 On Ubuntu based system install dependencies with:
 
-    sudo apt-get install git dh-autoreconf autotools-dev debhelper dh-autoreconf libconfuse-dev libgtk-3-dev libvte-2.91-dev pkg-config
+    sudo apt-get install git dh-autoreconf autotools-dev debhelper libconfuse-dev libgtk-3-dev libvte-2.91-dev pkg-config
 
 You possibly need other packages such as `gettext`, `automake`, `autoconf`, `autopoint`, and X11 development libraries.
 
