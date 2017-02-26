@@ -5,7 +5,6 @@
  * Session support, so Tilda will load with the same number of tabs that it had
    upon closing.
  * Ability to rename a tab manually
- * Add -c option to specify specific configuration file for Tilda instance
 
 # Future Plans
 
