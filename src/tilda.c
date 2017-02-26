@@ -74,6 +74,8 @@
 #include <vte/vte.h>
 #include <glib/gstdio.h>
 
+static gchar *config_file = NULL;
+
 /**
 * If lock->pid is 0 then the file is not opened exclusively. Instead flock() must be used to obtain a lock.
 * Otherwise an exclusive lock file is created for the process.
@@ -348,6 +350,7 @@ static gboolean parse_cli (int argc, char *argv[])
         { "command",            'c', 0, G_OPTION_ARG_STRING,    &command,           N_("Run a command at startup"), NULL },
         { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &hidden,            N_("Start Tilda hidden"), NULL },
         { "font",               'f', 0, G_OPTION_ARG_STRING,    &font,              N_("Set the font to the following string"), NULL },
+        { "config-file",        'g', 0, G_OPTION_ARG_STRING,    &config_file,       N_("Configuration file"), NULL },
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &lines,             N_("Scrollback Lines"), NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &scrollbar,         N_("Use Scrollbar"), NULL },
         { "version",            'v', 0, G_OPTION_ARG_NONE,      &version,           N_("Print the version, then exit"), NULL },
@@ -371,6 +374,21 @@ static gboolean parse_cli (int argc, char *argv[])
     g_option_context_add_main_entries (context, cl_opts, NULL);
     g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free (context);
+
+    /* Check for mutually exclusive options, and exit gracefully if there are some */
+    if (config_file != NULL) {
+        if (antialias || background_color || command || font || hidden || lines ||
+#ifdef VTE_290
+            image || transparency ||
+#else
+            back_alpha ||
+#endif
+            scrollbar || working_dir || x_pos || y_pos) {
+            g_printerr (_("Error: %s\n"),
+                   "Option 'config-file' is not compatible with any of the other options that can be found in a configuration file." );
+            exit (EXIT_FAILURE);
+        }
+    }
 
     /* Check for unknown options, and give a nice message if there are some */
     if (error)
@@ -505,7 +523,6 @@ static gchar *get_config_file_name (gint instance)
     }
 
     gchar *config_file_prefix = g_build_filename (config_dir, "config_", NULL);
-    gchar *config_file;
 
     config_file = g_strdup_printf ("%s%d", config_file_prefix, instance);
     g_free (config_file_prefix);
@@ -678,7 +695,7 @@ int main (int argc, char *argv[])
     struct sigaction sa;
     struct lock_info lock;
     gboolean need_wizard = FALSE;
-    gchar *config_file, *lock_file, *old_config_path;
+    gchar *lock_file, *old_config_path;
 
     /*
      * Migration code to move old files to new XDG folders
@@ -720,7 +737,7 @@ int main (int argc, char *argv[])
     lock.pid = getpid ();
     lock.instance = get_instance_number ();
     lock_file = create_lock_file (&lock);
-    config_file = get_config_file_name (lock.instance);
+
     /* End of atomic section */
 
     flock(global_lock.file_descriptor, LOCK_UN);
@@ -747,11 +764,23 @@ int main (int argc, char *argv[])
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
+    /* Parse the command line */
+    need_wizard = parse_cli (argc, argv);
+
+    if (config_file != NULL) {
+        if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
+            g_printerr (_("Specified config file '%s' does not exist. Reverting to default path.\n"),
+                    config_file);
+            config_file = NULL;
+        }
+    }
+    if (config_file == NULL) {
+        config_file = get_config_file_name (lock.instance);
+    }
+
     /* Start up the configuration system */
     gint config_init_result = config_init (config_file);
 
-    /* Parse the command line */
-    need_wizard = parse_cli (argc, argv);
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
