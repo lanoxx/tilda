@@ -167,10 +167,10 @@ void tilda_window_toggle_transparency (tilda_window *tw)
 void tilda_window_refresh_transparency (tilda_window *tw)
 {
     gboolean status = config_getbool ("enable_transparency");
-    tilda_window_apply_transparency (tw, status);    
+    tilda_window_apply_transparency (tw, status);
 }
 
-void tilda_window_apply_transparency (tilda_window *tw, gboolean status) 
+void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
 {
     tilda_term *tt;
     guint i;
