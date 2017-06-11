@@ -323,27 +323,27 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
     DEBUG_ASSERT (*config_file == NULL);
 
     /* Set default values */
-    cli_options->background_color = config_getstr ("background_color");
-    cli_options->command = config_getstr ("command");
-    cli_options->font = config_getstr ("font");
-    cli_options->working_dir = config_getstr ("working_dir");
+    cli_options->background_color = NULL;
+    cli_options->command = NULL;
+    cli_options->font = NULL;
+    cli_options->working_dir = NULL;
 
 #ifdef VTE_290
-    cli_options->image = config_getstr ("image");
-    cli_options->transparency = config_getint ("transparency");
+    cli_options->image = NULL;
+    cli_options->transparency = 0;
 #else
-    cli_options->back_alpha = config_getint ("back_alpha");
+    cli_options->back_alpha = 0;
 #endif
 
-    cli_options->lines = config_getint ("lines");
-    cli_options->x_pos = config_getint ("x_pos");
-    cli_options->y_pos = config_getint ("y_pos");
+    cli_options->lines = 0;
+    cli_options->x_pos = 0;
+    cli_options->y_pos = 0;
 
-    cli_options->antialias = config_getbool ("antialias");
-    cli_options->scrollbar = config_getbool ("scrollbar");
+    cli_options->antialias = FALSE;
+    cli_options->scrollbar = FALSE;
     cli_options->show_config = FALSE;
     cli_options->version = FALSE;
-    cli_options->hidden = config_getbool ("hidden");
+    cli_options->hidden = FALSE;
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
@@ -352,7 +352,7 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
         { "command",            'c', 0, G_OPTION_ARG_STRING,    &(cli_options->command),           N_("Run a command at startup"), NULL },
         { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &(cli_options->hidden),            N_("Start Tilda hidden"), NULL },
         { "font",               'f', 0, G_OPTION_ARG_STRING,    &(cli_options->font),              N_("Set the font to the following string"), NULL },
-        { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,        N_("Configuration file"), NULL },
+        { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,                       N_("Configuration file"), NULL },
         { "lines",              'l', 0, G_OPTION_ARG_INT,       &(cli_options->lines),             N_("Scrollback Lines"), NULL },
         { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &(cli_options->scrollbar),         N_("Use Scrollbar"), NULL },
         { "version",            'v', 0, G_OPTION_ARG_NONE,      &(cli_options->version),           N_("Print the version, then exit"), NULL },
@@ -786,23 +786,25 @@ int main (int argc, char *argv[])
         if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
             g_mem_set_vtable (glib_mem_profiler_table);
 #endif
-    /* Parse the command line */
+
     config_file = NULL;
+
+    /* Parse the command line */
     tilda_cli_options *cli_options = init_cli_options();
     need_wizard = parse_cli (argc, argv, cli_options, &config_file);
 
-    if (config_file != NULL) {
+    if (config_file) {	  // if there was a config file specified via cli
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
             g_printerr (_("Specified config file '%s' does not exist. Reverting to default path.\n"),
                     config_file);
             config_file = NULL;
         }
-    }
-    if (config_file == NULL) {
+        printf("\nconfig passed, using standard\n");
+    } else {    // if not, we look for the defaut config file
         config_file = get_config_file_name (lock.instance);
     }
 
-    /* Start up the configuration system */
+    /* Start up the configuration system and load from file */
     gint config_init_result = config_init (config_file);
 
     /* Set up possible overridden config options */
@@ -911,4 +913,3 @@ initialization_failed:
     g_free (config_file);
     return 0;
 }
-
