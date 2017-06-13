@@ -799,7 +799,6 @@ int main (int argc, char *argv[])
                     config_file);
             config_file = NULL;
         }
-        printf("\nconfig passed, using standard\n");
     } else {    // if not, we look for the defaut config file
         config_file = get_config_file_name (lock.instance);
     }
