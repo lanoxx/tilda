@@ -774,7 +774,7 @@ int main (int argc, char *argv[])
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
             g_printerr (_("Specified config file '%s' does not exist. Reverting to default path.\n"),
                     config_file);
-            config_file = NULL;
+            config_file = get_config_file_name (lock.instance);
         }
     } else {    // if not, we look for the defaut config file
         config_file = get_config_file_name (lock.instance);
