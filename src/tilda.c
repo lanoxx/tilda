@@ -322,29 +322,6 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
     // *config_file must be non-null only if a configuration file path has been parsed
     DEBUG_ASSERT (*config_file == NULL);
 
-    /* Set default values */
-    cli_options->background_color = NULL;
-    cli_options->command = NULL;
-    cli_options->font = NULL;
-    cli_options->working_dir = NULL;
-
-#ifdef VTE_290
-    cli_options->image = NULL;
-    cli_options->transparency = 0;
-#else
-    cli_options->back_alpha = 0;
-#endif
-
-    cli_options->lines = 0;
-    cli_options->x_pos = 0;
-    cli_options->y_pos = 0;
-
-    cli_options->antialias = FALSE;
-    cli_options->scrollbar = FALSE;
-    cli_options->show_config = FALSE;
-    cli_options->version = FALSE;
-    cli_options->hidden = FALSE;
-
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
         { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &(cli_options->antialias),         N_("Use Antialiased Fonts"), NULL },
