@@ -189,6 +189,26 @@ terminal_palette_solarizedD[TERMINAL_PALETTE_SIZE] = {
 	{ RGB(0xfdfd, 0xf6f6, 0xe3e3) }
 };
 
+const GdkRGBA
+terminal_palette_snazzy[TERMINAL_PALETTE_SIZE] = {
+	{ RGB(0x2828, 0x2a2a, 0x3636) },
+	{ RGB(0xffff, 0x5c5c, 0x5757) },
+	{ RGB(0x5a5a, 0xf7f7, 0x8e8e) },
+	{ RGB(0xf3f3, 0xf9f9, 0x9d9d) },
+	{ RGB(0x5757, 0xc7c7, 0xffff) },
+	{ RGB(0xffff, 0x6a6a, 0xc1c1) },
+	{ RGB(0x9a9a, 0xeded, 0xfefe) },
+	{ RGB(0xf1f1, 0xf1f1, 0xf0f0) },
+	{ RGB(0x6868, 0x6868, 0x6868) },
+	{ RGB(0xffff, 0x5c5c, 0x5757) },
+	{ RGB(0x5a5a, 0xf7f7, 0x8e8e) },
+	{ RGB(0xf3f3, 0xf9f9, 0x9d9d) },
+	{ RGB(0x5757, 0xc7c7, 0xffff) },
+	{ RGB(0xffff, 0x6a6a, 0xc1c1) },
+	{ RGB(0x9a9a, 0xeded, 0xfefe) },
+	{ RGB(0xf1f1, 0xf1f1, 0xf0f0) }
+};
+
 typedef struct _TerminalPaletteScheme
 {
   const char *name;
@@ -203,7 +223,8 @@ static TerminalPaletteScheme palette_schemes[] = {
     { N_("Rxvt"), terminal_palette_rxvt },
     { N_("Zenburn"), terminal_palette_zenburn },
     { N_("Solarized Light"), terminal_palette_solarizedL },
-    { N_("Solarized Dark"), terminal_palette_solarizedD }
+    { N_("Solarized Dark"), terminal_palette_solarizedD },
+    { N_("Snazzy"), terminal_palette_snazzy }
 };
 
 /* For use in get_display_dimension() */
@@ -1470,6 +1491,15 @@ static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
 			gdk_text.blue = 0.59;
 			gdk_back.red = 0.0;
 			gdk_back.green = 0.17;
+			gdk_back.blue = 0.21;
+			break;
+		/* Snazzy */
+		case 7:
+			gdk_text.red = 0.94;
+			gdk_text.green = 0.94;
+			gdk_text.blue = 0.92;
+			gdk_back.red = 0.16;
+			gdk_back.green = 0.16;
 			gdk_back.blue = 0.21;
 			break;
 	    /* Custom */
