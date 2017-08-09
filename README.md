@@ -17,7 +17,7 @@ the context menu or with a configurable hotkey that defaults to `<Ctrl><Shift>F`
 ![General](images/tilda_general.png)
 ## Appearance options
 ![Appearance](images/tilda_appearance.png)
-##Keybindings options
+## Keybindings options
 ![Keybindings](images/tilda_keybindings.png)
 
 # Installing Tilda
