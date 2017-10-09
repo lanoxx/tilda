@@ -1115,6 +1115,14 @@ gint tilda_window_add_tab (tilda_window *tw)
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
     gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
+    if(config_getbool ("expand_tabs")) {
+        gtk_container_child_set (GTK_CONTAINER(tw->notebook),
+            GTK_WIDGET(tt->hbox),
+            "tab-expand", TRUE,
+            "tab-fill", TRUE,
+            NULL);
+    }
+
     /* We should show the tabs if there are more than one tab in the notebook,
      * and tab position is not set to hidden */
     if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 &&

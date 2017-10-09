@@ -1263,6 +1263,23 @@ static void combo_tab_pos_changed_cb (GtkWidget *w, tilda_window *tw)
     }
 }
 
+static void check_expand_tabs_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("expand_tabs", status);
+
+    int page = 0;
+    GtkWidget *child = NULL;
+    while((child = gtk_notebook_get_nth_page(tw->notebook, page++))){
+        gtk_container_child_set (GTK_CONTAINER(tw->notebook),
+            child,
+            "tab-expand", status,
+            "tab-fill", status,
+            NULL);
+    }
+}
+
 static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -1993,6 +2010,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     COMBO_BOX ("combo_animation_orientation", "animation_orientation");
 
     COMBO_BOX ("combo_tab_pos", "tab_pos");
+    CHECK_BUTTON ("check_expand_tabs", "expand_tabs");
 
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
@@ -2157,6 +2175,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("spin_y_position","value-changed",spin_y_position_value_changed_cb, tw);
 
     CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
+    CONNECT_SIGNAL ("check_expand_tabs","toggled",check_expand_tabs_toggled_cb, tw);
 
     CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
     CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);
