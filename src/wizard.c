@@ -810,34 +810,6 @@ static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w, tilda_window *tw
     config_setint ("non_focus_pull_up_behaviour", status);
 }
 
-static void combo_tab_pos_changed_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    const GtkPositionType positions[] = {
-                             GTK_POS_TOP,
-                             GTK_POS_BOTTOM,
-                             GTK_POS_LEFT,
-                             GTK_POS_RIGHT };
-
-    if (status < 0 || status > 4) {
-        DEBUG_ERROR ("Notebook tab position invalid");
-        g_printerr (_("Invalid tab position setting, ignoring\n"));
-        return;
-    }
-
-    config_setint ("tab_pos", status);
-
-    if(NB_HIDDEN == status) {
-        gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
-    }
-    else {
-        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK (tw->notebook)) > 1) {
-            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tw->notebook), TRUE);
-        }
-        gtk_notebook_set_tab_pos (GTK_NOTEBOOK(tw->notebook), positions[status]);
-    }
-}
-
 static void button_font_font_set_cb (GtkWidget *w, tilda_window *tw)
 {
     const gchar *font = gtk_font_button_get_font_name (GTK_FONT_BUTTON (w));
@@ -1263,6 +1235,33 @@ static void spin_y_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
     generate_animation_positions (tw);
 }
 
+static void combo_tab_pos_changed_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
+    const GtkPositionType positions[] = {
+                             GTK_POS_TOP,
+                             GTK_POS_BOTTOM,
+                             GTK_POS_LEFT,
+                             GTK_POS_RIGHT };
+
+    if (status < 0 || status > 4) {
+        DEBUG_ERROR ("Notebook tab position invalid");
+        g_printerr (_("Invalid tab position setting, ignoring\n"));
+        return;
+    }
+
+    config_setint ("tab_pos", status);
+
+    if(NB_HIDDEN == status) {
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK(tw->notebook), FALSE);
+    }
+    else {
+        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK (tw->notebook)) > 1) {
+            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(tw->notebook), TRUE);
+        }
+        gtk_notebook_set_tab_pos (GTK_NOTEBOOK(tw->notebook), positions[status]);
+    }
+}
 
 static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
@@ -1955,7 +1954,6 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     CHECK_BUTTON ("check_enable_antialiasing", "antialias");
     CHECK_BUTTON ("check_allow_bold_text", "bold");
-    COMBO_BOX ("combo_tab_pos", "tab_pos");
     FONT_BUTTON ("button_font", "font");
 
     SPIN_BUTTON_SET_RANGE ("spin_auto_hide_time", 0, 99999);
@@ -1993,6 +1991,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_animated_pulldown", "animation");
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
     COMBO_BOX ("combo_animation_orientation", "animation_orientation");
+
+    COMBO_BOX ("combo_tab_pos", "tab_pos");
 
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
@@ -2122,7 +2122,6 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     CONNECT_SIGNAL ("check_enable_antialiasing","toggled",check_enable_antialiasing_toggled_cb, tw);
     CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb, tw);
-    CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
     CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb, tw);
 
     CONNECT_SIGNAL ("spin_auto_hide_time","value-changed",spin_auto_hide_time_value_changed_cb, tw);
@@ -2156,6 +2155,8 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_centered_vertically","toggled",check_centered_vertically_toggled_cb, tw);
     CONNECT_SIGNAL ("spin_x_position","value-changed",spin_x_position_value_changed_cb, tw);
     CONNECT_SIGNAL ("spin_y_position","value-changed",spin_y_position_value_changed_cb, tw);
+
+    CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
 
     CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
     CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);
