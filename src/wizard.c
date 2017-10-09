@@ -1280,6 +1280,17 @@ static void check_expand_tabs_toggled_cb (GtkWidget *w, tilda_window *tw)
     }
 }
 
+static void check_show_single_tab_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("show_single_tab", status);
+
+    /* Only need to do something if the current number of tabs is 1 */
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), status);
+}
+
 static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -2011,6 +2022,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     COMBO_BOX ("combo_tab_pos", "tab_pos");
     CHECK_BUTTON ("check_expand_tabs", "expand_tabs");
+    CHECK_BUTTON ("check_show_single_tab", "show_single_tab");
 
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
@@ -2176,6 +2188,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
     CONNECT_SIGNAL ("check_expand_tabs","toggled",check_expand_tabs_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_show_single_tab","toggled",check_show_single_tab_toggled_cb, tw);
 
     CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
     CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);

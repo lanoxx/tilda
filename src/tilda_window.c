@@ -1123,9 +1123,11 @@ gint tilda_window_add_tab (tilda_window *tw)
             NULL);
     }
 
-    /* We should show the tabs if there are more than one tab in the notebook,
+    /* We should show the tabs if there are more than one tab in the notebook
+     * (or show single tab is set),
      * and tab position is not set to hidden */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 &&
+    if ((gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) > 1 ||
+            config_getbool("show_single_tab")) &&
             config_getint("tab_pos") != NB_HIDDEN)
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), TRUE);
 

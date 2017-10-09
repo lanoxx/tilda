@@ -85,6 +85,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("y_pos", 0, CFGF_NONE),
     CFG_INT("tab_pos", 0, CFGF_NONE),
     CFG_BOOL("expand_tabs", FALSE, CFGF_NONE),
+    CFG_BOOL("show_single_tab", FALSE, CFGF_NONE),
     CFG_INT("backspace_key", 0, CFGF_NONE),
     CFG_INT("delete_key", 1, CFGF_NONE),
     CFG_INT("d_set_title", 3, CFGF_NONE),
