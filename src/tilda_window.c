@@ -681,7 +681,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("copy_key",       "<tilda>/context/Copy",              G_CALLBACK(ccopy),                          tw);
     tilda_add_config_accelerator_by_path("paste_key",      "<tilda>/context/Paste",             G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
-    tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(tilda_window_confirm_quit),      tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
     tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(tilda_window_toggle_searchbar),     tw);
 
@@ -1204,4 +1204,29 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     tilda_term_free (tt);
 
     return GDK_EVENT_STOP;
+}
+
+gint tilda_window_confirm_quit (tilda_window *tw)
+{
+    DEBUG_FUNCTION(__FUNCTION__);
+    gint result = GTK_RESPONSE_YES;
+    if(config_getbool("prompt_on_exit"))
+    {
+        GtkDialog *dialog = gtk_message_dialog_new (GTK_WINDOW(tw->window),
+            GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_QUESTION,
+            GTK_BUTTONS_YES_NO,
+            "Are you sure you want to Quit?");
+        result = gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+    }
+
+    switch (result)
+    {
+        case GTK_RESPONSE_YES:
+            gtk_main_quit ();
+            break;
+        default:
+            break;
+    }
 }

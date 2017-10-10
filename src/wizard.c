@@ -993,6 +993,13 @@ static void combo_on_last_terminal_exit_changed_cb (GtkWidget *w, tilda_window *
     config_setint ("on_last_terminal_exit", status);
 }
 
+static void check_prompt_on_exit_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean prompt_on_exit = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("prompt_on_exit", prompt_on_exit);
+}
+
 static void entry_web_browser_changed (GtkWidget *w, tilda_window *tw) {
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
 
@@ -1978,6 +1985,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_command_login_shell", "command_login_shell");
     COMBO_BOX ("combo_command_exit", "command_exit");
     COMBO_BOX ("combo_on_last_terminal_exit", "on_last_terminal_exit");
+    CHECK_BUTTON ("check_prompt_on_exit", "prompt_on_exit");
     SET_SENSITIVE_BY_CONFIG_BOOL ("entry_custom_command","run_command");
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_custom_command", "run_command");
 
@@ -2130,6 +2138,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_auto_hide_on_mouse_leave","toggled",check_auto_hide_on_mouse_leave_toggled_cb, tw);
 
     CONNECT_SIGNAL ("combo_on_last_terminal_exit","changed",combo_on_last_terminal_exit_changed_cb, tw);
+    CONNECT_SIGNAL ("check_prompt_on_exit","toggled",check_prompt_on_exit_toggled_cb, tw);
 
     /* Title and Command Tab */
     CONNECT_SIGNAL ("entry_title","changed",entry_title_changed_cb, tw);

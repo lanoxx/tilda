@@ -835,7 +835,7 @@ menu_quit_cb (GSimpleAction *action,
 {
     DEBUG_FUNCTION ("menu_quit_cb");
 
-    gtk_main_quit ();
+    tilda_window_confirm_quit(TILDA_WINDOW(user_data));
 }
 
 static void
