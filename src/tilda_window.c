@@ -37,7 +37,8 @@
 
 static tilda_term* tilda_window_get_current_terminal (tilda_window *tw);
 
-static gboolean show_confirmation_dialog (tilda_window *tw);
+static gboolean show_confirmation_dialog (tilda_window *tw,
+                                          const char *message);
 
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
@@ -95,7 +96,9 @@ void tilda_window_close_current_tab (tilda_window *tw)
     gboolean can_close = TRUE;
 
     if (config_getbool ("confirm_close_tab")) {
-        can_close = show_confirmation_dialog (tw);
+        char * message = _("Are you sure you want to close this tab?");
+
+        can_close = show_confirmation_dialog (tw, message);
     }
 
     if (can_close) {
@@ -105,7 +108,7 @@ void tilda_window_close_current_tab (tilda_window *tw)
 }
 
 static gboolean
-show_confirmation_dialog (tilda_window *tw)
+show_confirmation_dialog (tilda_window *tw, const char *message)
 {
     gboolean result;
 
@@ -114,7 +117,9 @@ show_confirmation_dialog (tilda_window *tw)
                                       GTK_DIALOG_DESTROY_WITH_PARENT,
                                       GTK_MESSAGE_QUESTION,
                                       GTK_BUTTONS_OK_CANCEL,
-                                      _ ("Are you sure you want to close this tab?"));
+                                      NULL);
+
+    gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG(dialog), message);
 
     gtk_window_set_keep_above (GTK_WINDOW (dialog), TRUE);
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -719,7 +724,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("copy_key",       "<tilda>/context/Copy",              G_CALLBACK(ccopy),                          tw);
     tilda_add_config_accelerator_by_path("paste_key",      "<tilda>/context/Paste",             G_CALLBACK(cpaste),                         tw);
     tilda_add_config_accelerator_by_path("fullscreen_key", "<tilda>/context/Toggle Fullscreen", G_CALLBACK(toggle_fullscreen_cb),           tw);
-    tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(gtk_main_quit),                  tw);
+    tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(tilda_window_confirm_quit),      tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
     tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(tilda_window_toggle_searchbar),     tw);
 
@@ -1250,6 +1255,25 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
 
     /* Free the terminal, we are done with it */
     tilda_term_free (tt);
+
+    return GDK_EVENT_STOP;
+}
+
+gint tilda_window_confirm_quit (tilda_window *tw)
+{
+    DEBUG_FUNCTION(__FUNCTION__);
+
+    gboolean can_quit = TRUE;
+
+    if(config_getbool("prompt_on_exit")) {
+        char * message = _("Are you sure you want to Quit?");
+
+        can_quit = show_confirmation_dialog (tw, message);
+    }
+
+    if (can_quit) {
+        gtk_main_quit ();
+    }
 
     return GDK_EVENT_STOP;
 }
