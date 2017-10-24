@@ -1202,7 +1202,8 @@ gint tilda_window_close_tab (tilda_window *tw, gint tab_index, gboolean force_ex
     gtk_notebook_remove_page (GTK_NOTEBOOK (tw->notebook), tab_index);
 
     /* We should hide the tabs if there is only one tab left */
-    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1)
+    if (gtk_notebook_get_n_pages (GTK_NOTEBOOK (tw->notebook)) == 1 &&
+            !config_getbool("show_single_tab"))
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (tw->notebook), FALSE);
 
     /* With no pages left, either leave the program or create a new
