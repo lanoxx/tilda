@@ -281,6 +281,23 @@
       </row>
     </data>
   </object>
+  <object class="GtkListStore" id="model12">
+    <columns>
+      <!-- column-name gchararray -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Show whole tab title</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Show first n chars of title</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Show last n chars of title</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkListStore" id="monitor_list_store">
     <columns>
       <!-- column-name monitor_plug_name -->
@@ -1160,6 +1177,18 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkLabel" id="label_title_max_length">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Title Max Length:</property>
+                                <property name="xalign">1</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkSpinButton" id="spin_title_max_length">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1168,7 +1197,7 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="top_attach">2</property>
+                                <property name="top_attach">3</property>
                               </packing>
                             </child>
                             <child>
@@ -1201,24 +1230,31 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="alignment39">
+                              <object class="GtkLabel" id="label_title_behaviour">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Title Behaviour:</property>
                                 <property name="xalign">1</property>
-                                <property name="xscale">0</property>
-                                <child>
-                                  <object class="GtkCheckButton" id="check_title_max_length">
-                                    <property name="label" translatable="yes">Limit maximum length of tab title:</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="xalign">0</property>
-                                    <property name="draw_indicator">True</property>
-                                  </object>
-                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBox" id="combo_title_behaviour">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="model">model12</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="renderer18"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
                                 <property name="top_attach">2</property>
                               </packing>
                             </child>

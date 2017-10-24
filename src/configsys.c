@@ -103,6 +103,7 @@ static cfg_opt_t config_opts[] = {
 
     /* Deprecated tilda options */
     CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
+    CFG_BOOL("title_max_length_flag", TRUE, CFGF_NONE),
     /* End deprecated tilda options */
 
     /* The length of a tab title */
@@ -164,8 +165,8 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("double_buffer", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_focus_lost", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
-    /* Whether we limit the length of a tab title */
-    CFG_BOOL("title_max_length_flag", TRUE, CFGF_NONE),
+    /* Whether and how we limit the length of a tab title */
+    CFG_INT("title_behaviour", 2, CFGF_NONE),
     /* Whether to set a new tab's working dir to the current tab's */
     CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
@@ -422,7 +423,7 @@ gint config_init (const gchar *config_file)
      * This is a lame work around until we get a permenant solution to
      * libconfuse lacking for this functionality
      */
-    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number"};
+    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number","title_max_length_flag"};
     remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
 
 #if VTE_MINOR_VERSION >= 40
