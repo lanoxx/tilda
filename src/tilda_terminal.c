@@ -254,10 +254,16 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     }
 
     guint length = (guint) config_getint ("title_max_length");
-
-    if(config_getbool("title_max_length_flag") && strlen(title) > length) {
-        gchar *titleOffset = title + strlen(title) - length;
-        gchar *shortTitle = g_strdup_printf ("...%s", titleOffset);
+    guint title_behaviour = config_getint("title_behaviour");
+    if(title_behaviour && strlen(title) > length) {
+        gchar *shortTitle = NULL;
+        if(title_behaviour == 1) {
+            shortTitle = g_strdup_printf ("%.*s...", length, title);
+        }
+        else {
+            gchar *titleOffset = title + strlen(title) - length;
+            shortTitle = g_strdup_printf ("...%s", titleOffset);
+        }
         gtk_label_set_text (GTK_LABEL(label), shortTitle);
         if (active) {
             gtk_window_set_title (GTK_WINDOW (tt->tw->window), shortTitle);
