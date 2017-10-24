@@ -20,6 +20,17 @@ the context menu or with a configurable hotkey that defaults to `<Ctrl><Shift>F`
 ## Keybindings options
 ![Keybindings](images/tilda_keybindings.png)
 
+## Supported Platforms
+Tilda currently works only on Xorg-based desktops. Previously that
+meant that virtually all Linux distributions and some BSD's would be supported.
+Recently however, some Linux distributions
+(such as Ubuntu 17.10) have started to use Wayland as their
+default display server. Tilda currently does not support Wayland will not
+work on such desktops. As a result it will fail to start.
+Patches that introduce wayland support for tilda are very welcome. Please
+look into the issue section or write me a mail if you would like to contribute
+to tilda.
+
 # Installing Tilda
 
 Tilda should be packaged for your distribution if you are running Debian or any Debian derived distribution such as
@@ -105,9 +116,29 @@ developers directly.
 
 # Contributing to Tilda
 
-Tilda is written in C with the use of the libraries **glib**, **GTK+**, **libconfuse** and **X11**.
-If you would like to help us develop Tilda you can look at the issue section to see if you can help to fix an open issue.
-Or you can send an email to the developers. Pull requests and patches are always welcome.
+Tilda is an open source project that lives by the help of volunteers
+who fix bugs and implement new features in their spare time. Everybody is
+welcome to join and help us to fix bugs or to implement new features.
+Pull requests and patches are always welcome.
 
-You can also look into the [TODO.md](TODO.md) file and see if there is something there that
-you would like to do.
+## Prerequisites
+
+Tilda is written in C with the use of the libraries
+**glib**, **GTK+**, **libconfuse** and **X11**. You should have a
+good background in C and some experience with GTK and glib already. Some
+areas of tilda will also require to know a little about X11 programming.
+
+## What to work on?
+
+If you already have the necessary background feel free to submit a patch
+that fixes an issue or implements a new feature. If you are unsure if
+your patch will be accepted then open an issue first, describe your issue
+and ask if its likely that the patch gets accepted.
+
+You can also look into the [TODO.md](TODO.md) file and see if there
+is something there that you would like to do.
+
+## Getting help
+
+Feel free to mail the developers if you have questions about the
+tilda source code or if you are unsure how something works.
