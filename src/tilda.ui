@@ -214,6 +214,9 @@
       <row>
         <col id="0" translatable="yes">Solarized Dark</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">Snazzy</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="model6">
