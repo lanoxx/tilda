@@ -200,6 +200,11 @@ void tilda_window_refresh_transparency(tilda_window *tw);
  */
 gint tilda_window_toggle_searchbar (tilda_window *tw);
 
+/**
+ * Show confirm dialog before quitting (if enabled)
+ */
+gint tilda_window_confirm_quit (tilda_window *tw);
+
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
 /* Allow scales a bit smaller and a bit larger than the usual pango ranges */
