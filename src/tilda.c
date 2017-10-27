@@ -40,7 +40,6 @@
 
 #include "debug.h"
 #include "tilda.h"
-#include "callback_func.h"
 #include "configsys.h"
 #include "tilda_window.h"
 #include "key_grabber.h" /* for pull */

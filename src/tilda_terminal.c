@@ -19,7 +19,6 @@
 #include "tilda.h"
 #include "tilda_window.h"
 #include "tilda_terminal.h"
-#include "callback_func.h"
 #include "configsys.h"
 #include "wizard.h" /* wizard */
 
@@ -239,7 +238,7 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
-    gchar *title = get_window_title (widget);
+    gchar *title = tilda_terminal_get_title (data);
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
@@ -1044,3 +1043,53 @@ gboolean key_press_cb (GtkWidget *widget,
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
+
+gchar *tilda_terminal_get_title (tilda_term *tt)
+{
+    DEBUG_FUNCTION ("get_window_title");
+    DEBUG_ASSERT (tt != NULL);
+
+    const gchar *vte_title;
+    gchar *window_title;
+    gchar *initial;
+    gchar *title;
+
+    vte_title = vte_terminal_get_window_title (VTE_TERMINAL (tt->vte_term));
+    window_title = g_strdup (vte_title);
+    initial = g_strdup (config_getstr ("title"));
+
+    /* These are not needed anywhere else. If they ever are, move them to a header file */
+    enum d_set_title { NOT_DISPLAYED, AFTER_INITIAL, BEFORE_INITIAL, REPLACE_INITIAL };
+
+    switch (config_getint ("d_set_title"))
+    {
+        case REPLACE_INITIAL:
+            title = (window_title != NULL) ? g_strdup (window_title)
+                                           : g_strdup (_("Untitled"));
+            break;
+
+        case BEFORE_INITIAL:
+            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", window_title, initial)
+                                           : g_strdup (initial);
+            break;
+
+        case AFTER_INITIAL:
+            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", initial, window_title)
+                                           : g_strdup (initial);
+            break;
+
+        case NOT_DISPLAYED:
+            title = g_strdup (initial);
+            break;
+
+        default:
+            g_printerr (_("Bad value for \"d_set_title\" in config file\n"));
+            title = g_strdup ("");
+            break;
+    }
+
+    g_free (window_title);
+    g_free (initial);
+
+    return title;
+}

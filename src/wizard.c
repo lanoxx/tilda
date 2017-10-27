@@ -23,7 +23,6 @@
 #include "wizard.h"
 #include "key_grabber.h"
 #include "configsys.h"
-#include "callback_func.h"
 #include "tilda_window.h"
 #include "tilda-keybinding.h"
 
@@ -579,7 +578,7 @@ static void window_title_change_all (tilda_window *tw)
     for (i=0;i<size;i++,list_count--)
     {
         tt = g_list_nth (tw->terms, list_count)->data;
-        title = get_window_title (tt->vte_term);
+        title = tilda_terminal_get_title (tt);
         page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (tw->notebook), i);
         label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw->notebook), page);
 

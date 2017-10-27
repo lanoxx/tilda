@@ -25,7 +25,7 @@ src_tilda_CPPFLAGS = \
 	$(NULL)
 
 # Keep the headers here so that make dist-bzip2 works
-src_tilda_SOURCES = src/callback_func.h src/callback_func.c \
+src_tilda_SOURCES = \
 		src/configsys.h src/configsys.c \
 		src/debug.h \
 		src/eggaccelerators.h src/eggaccelerators.c \
@@ -38,7 +38,8 @@ src_tilda_SOURCES = src/callback_func.h src/callback_func.c \
 		src/wizard.h src/wizard.c \
 		src/xerror.h src/xerror.c \
 		src/glade-resources.h src/glade-resources.c \
-		src/glade-resources.gresource.xml
+		src/glade-resources.gresource.xml \
+		$(NULL)
 
 src_tilda_CFLAGS = \
 		$(AM_CFLAGS) \
