@@ -19,7 +19,6 @@
 #ifndef __EGG_ACCELERATORS_H__
 #define __EGG_ACCELERATORS_H__
 
-#include <gtk/gtk.h>
 #include <gdk/gdk.h>
 
 G_BEGIN_DECLS
@@ -65,18 +64,9 @@ typedef enum {
 
 } EggVirtualModifierType;
 
-gboolean egg_accelerator_parse_virtual        (const gchar            *accelerator,
-                                               guint                  *accelerator_key,
-                                               EggVirtualModifierType *accelerator_mods);
 void     egg_keymap_resolve_virtual_modifiers (GdkKeymap              *keymap,
                                                EggVirtualModifierType  virtual_mods,
                                                GdkModifierType        *concrete_mods);
-void     egg_keymap_virtualize_modifiers      (GdkKeymap              *keymap,
-                                               GdkModifierType         concrete_mods,
-                                               EggVirtualModifierType *virtual_mods);
-
-gchar* egg_virtual_accelerator_name (guint                  accelerator_key,
-                                     EggVirtualModifierType accelerator_mods);
 
 G_END_DECLS
 

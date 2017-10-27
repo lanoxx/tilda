@@ -25,11 +25,27 @@
 
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
+#include <gtk/gtk.h>
 #include <X11/Xlib.h>
 
 #include "eggaccelerators.h"
 #include "tomboykeybinder.h"
 #include "debug.h"
+
+/**
+ * This mask corresponds to the first 8 modifier masks of GdkModifierType
+ * and is equal to a combination of all key masks as defined in the X
+ * Windowing system. It can be used to remove virtual modifiers from a
+ * list of virtual and real modifiers.
+ */
+#define REAL_MODIFIER_MASK (GDK_SHIFT_MASK \
+                           | GDK_LOCK_MASK \
+                           | GDK_CONTROL_MASK \
+                           | GDK_MOD1_MASK \
+                           | GDK_MOD2_MASK \
+                           | GDK_MOD3_MASK \
+                           | GDK_MOD4_MASK \
+                           | GDK_MOD5_MASK)
 
 typedef struct _Binding {
 	TomboyBindkeyHandler  handler;
@@ -108,16 +124,19 @@ do_grab_key (Binding *binding)
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	EggVirtualModifierType virtual_mods = 0;
+	GdkModifierType virtual_mods = (GdkModifierType) 0;
 	guint keysym = 0;
 
 	if (keymap == NULL || rootwin == NULL)
 		return FALSE;
 
-	if (!egg_accelerator_parse_virtual (binding->keystring,
+	gtk_accelerator_parse (binding->keystring,
 					    &keysym,
-					    &virtual_mods))
+					    &virtual_mods);
+
+	if (keysym == 0 && virtual_mods == 0) {
 		return FALSE;
+	}
 
 	g_debug ("Got accel %d, %d", keysym, virtual_mods);
 
@@ -127,12 +146,14 @@ do_grab_key (Binding *binding)
 		return FALSE;
 
 	g_debug ("Got keycode %d", binding->keycode);
+	GdkModifierType mapped_modifiers = virtual_mods;
 
-	egg_keymap_resolve_virtual_modifiers (keymap,
-					      virtual_mods,
-					      &binding->modifiers);
+	gdk_keymap_map_virtual_modifiers (keymap,
+									  &mapped_modifiers);
 
 	g_debug ("Got modmask %d", binding->modifiers);
+	// mask out virtual modifiers so we get only the real modifiers
+	binding->modifiers = mapped_modifiers & REAL_MODIFIER_MASK;
 
 	gdk_error_trap_push ();
 
@@ -181,7 +202,7 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
              * windows to avoid anti-focus-stealing code.
              */
             processing_event = TRUE;
-            last_event_time = xevent->xkey.time;
+            last_event_time = (guint32) xevent->xkey.time;
 
             g_debug ("Current event time %d", last_event_time);
 
