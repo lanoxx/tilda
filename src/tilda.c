@@ -756,14 +756,6 @@ int main (int argc, char *argv[])
     textdomain (PACKAGE);
 #endif
 
-
-#ifdef DEBUG
-    /* Have to do this early. */
-    if (getenv ("VTE_PROFILE_MEMORY"))
-        if (atol (getenv ("VTE_PROFILE_MEMORY")) != 0)
-            g_mem_set_vtable (glib_mem_profiler_table);
-#endif
-
     config_file = NULL;
 
     /* Parse the command line */
