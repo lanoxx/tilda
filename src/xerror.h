@@ -23,11 +23,6 @@
 #include <X11/Xlib.h>
 #include <glib.h>
 
-/* can be used to track errors */
-extern gboolean xerror_occurred;
-
 gint xerror_handler(Display *, XErrorEvent *);
-
-void xerror_set_ignore(Display *dpy, gboolean ignore);
 
 #endif

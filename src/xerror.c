@@ -24,43 +24,19 @@
 #include "xerror.h"
 #include "debug.h"
 
-#include <glib.h>
 #include <glib/gi18n.h>
-#include <X11/Xlib.h>
-
-static gboolean xerror_ignore = FALSE;
-gboolean xerror_occurred = FALSE;
 
 gint xerror_handler(Display *d, XErrorEvent *e)
 {
     DEBUG_FUNCTION ("xerror_handler");
 
-    xerror_occurred = TRUE;
-#ifdef DEBUG
-    if (!xerror_ignore) {
-        gchar errtxt[128];
+    gchar errtxt[128];
 
-        /*if (e->error_code != BadWindow) */
-        {
-            XGetErrorText(d, e->error_code, errtxt, 127);
-            if (e->error_code == BadWindow)
-                /*g_warning("X Error: %s", errtxt)*/;
-            else
-                g_error(_("X Error: %s"), errtxt);
-        }
+    if (e->error_code != BadWindow)
+    {
+        XGetErrorText(d, e->error_code, errtxt, 127);
+        g_error(_("X Error: %s"), errtxt);
     }
-#else
-    (void)d; (void)e;
-#endif
+
     return 0;
 }
-
-void xerror_set_ignore(Display *dpy, gboolean ignore)
-{
-    DEBUG_FUNCTION ("xerror_set_ignore");
-    DEBUG_ASSERT (dpy != NULL);
-
-    XSync(dpy, FALSE);
-    xerror_ignore = ignore;
-}
-
