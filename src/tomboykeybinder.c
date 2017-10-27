@@ -230,9 +230,8 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
  * @param map Pointer to the current key map.
  */
 static void
-keymap_changed (G_GNUC_UNUSED GdkKeymap *map)
+keymap_changed (GdkKeymap *map)
 {
-	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GSList *iter;
 
 	g_debug ("Keymap changed! Regrabbing keys...");
@@ -242,7 +241,7 @@ keymap_changed (G_GNUC_UNUSED GdkKeymap *map)
 		do_ungrab_key (binding);
 	}
 
-	lookup_ignorable_modifiers (keymap);
+	lookup_ignorable_modifiers (map);
 
 	for (iter = bindings; iter != NULL; iter = iter->next) {
 		Binding *binding = (Binding *) iter->data;
