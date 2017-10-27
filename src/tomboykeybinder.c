@@ -215,6 +215,20 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
 	return GDK_FILTER_CONTINUE;
 }
 
+/**
+ * This is invoked if the keymap changes, for example if some virtual
+ * modifier are remapped to real modifiers with `xmodmap`.
+ *
+ * To how this function work one can set the virtual modifier 'Scroll_Lock'
+ * to the real modifier 'mod3' and clear it again:
+ *
+ *     xmodmap -e "add mod3 = Scroll_Lock"
+ *     xmodmap -e "clear mod3"
+ *
+ * This will cause this callback to be invoked.
+ *
+ * @param map Pointer to the current key map.
+ */
 static void
 keymap_changed (G_GNUC_UNUSED GdkKeymap *map)
 {
