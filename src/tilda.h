@@ -23,9 +23,6 @@
 G_BEGIN_DECLS
 
 #define TILDA_VERSION PACKAGE_NAME " " PACKAGE_VERSION
-#define QUICK_STRCMP(a, b) (*(a)!=*(b)? \
-    (int) ((unsigned char) *(a) - (unsigned char) *(b)) : \
-    strcmp ((a), (b)))
 
 struct lock_info
 {
