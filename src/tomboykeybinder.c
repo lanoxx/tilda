@@ -52,13 +52,19 @@ lookup_ignorable_modifiers (GdkKeymap *keymap)
 					      EGG_VIRTUAL_LOCK_MASK,
 					      &caps_lock_mask);
 
+    g_debug ("Virtual modifier for 'caps_lock_mask' set to: %d", caps_lock_mask);
+
 	egg_keymap_resolve_virtual_modifiers (keymap,
 					      EGG_VIRTUAL_NUM_LOCK_MASK,
 					      &num_lock_mask);
 
+    g_debug ("Virtual modifier for 'num_lock_mask' set to: %d", num_lock_mask);
+
 	egg_keymap_resolve_virtual_modifiers (keymap,
 					      EGG_VIRTUAL_SCROLL_LOCK_MASK,
 					      &scroll_lock_mask);
+
+    g_debug ("Virtual modifier for 'scroll_lock_mask' set to: %d", scroll_lock_mask);
 }
 
 static void
@@ -265,6 +271,9 @@ tomboy_keybinder_bind (const char           *keystring,
 	success = do_grab_key (binding);
 
 	if (success) {
+
+        g_debug("Added binding. Keystring: %s", binding->keystring);
+
 		bindings = g_slist_prepend (bindings, binding);
 	} else {
 		g_free (binding->keystring);
