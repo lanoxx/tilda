@@ -33,13 +33,6 @@
  */
 
 #if DEBUG
-    #define DEBUG_PRINTF(args...) do { g_print ("debug: " args); } while (0)
-#else
-    #define DEBUG_PRINTF(args...) do { /* nothing */ } while (0)
-#endif
-
-#if DEBUG
-
     /* Enable asserts */
     #undef NDEBUG
     #include <assert.h>
@@ -89,12 +82,6 @@
 
 /* A macro that calls perror() with a consistent header string */
 #define TILDA_PERROR() perror("Tilda encountered an error")
-
-#ifdef DEBUG
-#  define TRACE(x) x
-#else
-#  define TRACE(x) do {} while (FALSE);
-#endif
 
 #endif /* DEBUG_H */
 

@@ -113,20 +113,20 @@ do_grab_key (Binding *binding)
 					    &virtual_mods))
 		return FALSE;
 
-	TRACE (g_print ("Got accel %d, %d\n", keysym, virtual_mods));
+	g_debug ("Got accel %d, %d", keysym, virtual_mods);
 
 	binding->keycode = XKeysymToKeycode (GDK_WINDOW_XDISPLAY (rootwin),
 					     keysym);
 	if (binding->keycode == 0)
 		return FALSE;
 
-	TRACE (g_print ("Got keycode %d\n", binding->keycode));
+	g_debug ("Got keycode %d", binding->keycode);
 
 	egg_keymap_resolve_virtual_modifiers (keymap,
 					      virtual_mods,
 					      &binding->modifiers);
 
-	TRACE (g_print ("Got modmask %d\n", binding->modifiers));
+	g_debug ("Got modmask %d", binding->modifiers);
 
 	gdk_error_trap_push ();
 
@@ -149,7 +149,7 @@ do_ungrab_key (Binding *binding)
 {
 	GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	TRACE (g_print ("Removing grab for '%s'\n", binding->keystring));
+	g_debug ("Removing grab for '%s'", binding->keystring);
 
 	grab_ungrab_with_ignorable_modifiers (rootwin,
 					      binding,
@@ -166,9 +166,9 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
 
     switch (xevent->type) {
         case KeyPress:
-            TRACE (g_print ("Got KeyPress! keycode: %d, modifiers: %d\n",
-                    xevent->xkey.keycode,
-                    xevent->xkey.state));
+            g_debug ("Got KeyPress! keycode: %d, modifiers: %d",
+                     xevent->xkey.keycode,
+                     xevent->xkey.state);
 
             /*
              * Set the last event time for use when showing
@@ -176,7 +176,8 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
              */
             processing_event = TRUE;
             last_event_time = xevent->xkey.time;
-            TRACE (g_print ("Current event time %d\n", last_event_time));
+
+            g_debug ("Current event time %d", last_event_time);
 
             event_mods = xevent->xkey.state & ~(num_lock_mask  |
                                 caps_lock_mask |
@@ -188,8 +189,8 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
                 if (binding->keycode == xevent->xkey.keycode &&
                     binding->modifiers == event_mods) {
 
-                    TRACE (g_print ("Calling handler for '%s'...\n",
-                            binding->keystring));
+                    g_debug ("Calling handler for '%s'...",
+                             binding->keystring);
 
                     (binding->handler) (binding->keystring,
                                 binding->user_data);
@@ -199,7 +200,7 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
             processing_event = FALSE;
             break;
         case KeyRelease:
-            TRACE (g_print ("Got KeyRelease! \n"));
+            g_debug ("Got KeyRelease!");
             break;
         default:
             break;
@@ -214,7 +215,7 @@ keymap_changed (G_GNUC_UNUSED GdkKeymap *map)
 	GdkKeymap *keymap = gdk_keymap_get_default ();
 	GSList *iter;
 
-	TRACE (g_print ("Keymap changed! Regrabbing keys..."));
+	g_debug ("Keymap changed! Regrabbing keys...");
 
 	for (iter = bindings; iter != NULL; iter = iter->next) {
 		Binding *binding = (Binding *) iter->data;

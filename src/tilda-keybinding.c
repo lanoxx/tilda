@@ -374,9 +374,7 @@ keybinding_dialog_key_press_event_cb (GtkWidget *dialog,
 
         gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
-#ifdef DEBUG
-        g_printerr ("KEY GRABBED: %s\n", key);
-#endif
+        g_debug ("KEY GRABBED: %s", key);
 
         /* Free the string */
         g_free (key);

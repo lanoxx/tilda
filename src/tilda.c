@@ -682,10 +682,30 @@ static void load_custom_css_file () {
     g_free (filename);
 }
 
+#ifdef DEBUG
+void tilda_log_handler(const gchar *log_domain,
+                       GLogLevelFlags log_level,
+                       const gchar *message,
+                       gpointer user_data)
+{
+    g_printf("%s\n", message);
+}
+#endif
+
 int main (int argc, char *argv[])
 {
     DEBUG_FUNCTION_MESSAGE ("main", "Using libvte version: %i.%i.%i\n",
                             VTE_MAJOR_VERSION, VTE_MINOR_VERSION, VTE_MICRO_VERSION);
+
+#ifdef DEBUG
+    /**
+     * This allows us to adjust the logging of debug messages at compile time.
+     * By default, the glib g_log_default_handler does not output log messages
+     * with debug and info levels. However by setting our custom handler
+     * we will always output these messages.
+     */
+    g_log_set_default_handler (tilda_log_handler, NULL);
+#endif
 
     tilda_window tw;
     /* NULL set the tw pointers so we can get a clean exit on initialization failure */

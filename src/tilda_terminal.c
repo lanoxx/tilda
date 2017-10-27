@@ -1001,20 +1001,19 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             /* Check if we can launch a web browser, and do so if possible */
             if (match != NULL)
             {
-#if DEBUG
-                g_print ("Got a Left Click -- Matched: `%s' (%d)\n", match, tag);
-#endif
+                g_debug ("Got a Left Click -- Matched: `%s' (%d)", match, tag);
+
                 web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
                 cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
-#if DEBUG
-                g_print ("Launching command: `%s'\n", cmd);
-#endif
+
+                g_debug ("Launching command: `%s'", cmd);
+
                 ret = g_spawn_command_line_async(cmd, NULL);
 
                 /* Check that the command launched */
                 if (!ret)
                 {
-                    g_printerr (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
+                    g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
                     TILDA_PERROR ();
                 }
 
