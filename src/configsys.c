@@ -103,7 +103,7 @@ static cfg_opt_t config_opts[] = {
 
     /* Deprecated tilda options */
     CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
-    CFG_BOOL("title_max_length_flag", TRUE, CFGF_NONE),
+    CFG_BOOL("title_max_length_flag", FALSE, CFGF_NODEFAULT),
     /* End deprecated tilda options */
 
     /* The length of a tab title */
