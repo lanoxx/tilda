@@ -39,6 +39,9 @@ static tilda_term* tilda_window_get_current_terminal (tilda_window *tw);
 static gboolean show_confirmation_dialog (tilda_window *tw,
                                           const char *message);
 
+static void tilda_window_apply_transparency (tilda_window *tw,
+                                             gboolean status);
+
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
 {
@@ -212,7 +215,7 @@ void tilda_window_refresh_transparency (tilda_window *tw)
     tilda_window_apply_transparency (tw, status);
 }
 
-void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
+static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
 {
     tilda_term *tt;
     guint i;
