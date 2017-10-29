@@ -28,16 +28,16 @@
 
 G_BEGIN_DECLS
 
-typedef void (* TomboyBindkeyHandler) (char *keystring, gpointer user_data);
+typedef void (*TomboyBindkeyHandler) (char *keystring, gpointer user_data);
 
-void tomboy_keybinder_init   (void);
+void tomboy_keybinder_init (void);
 
-gboolean tomboy_keybinder_bind (const char           *keystring,
-				TomboyBindkeyHandler  handler,
-				gpointer              user_data);
+gboolean tomboy_keybinder_bind (const char *keystring,
+                                TomboyBindkeyHandler handler,
+                                gpointer user_data);
 
-void tomboy_keybinder_unbind   (const char           *keystring,
-				TomboyBindkeyHandler  handler);
+void tomboy_keybinder_unbind (const char *keystring,
+                              TomboyBindkeyHandler handler);
 
 gboolean tomboy_keybinder_is_modifier (guint keycode);
 

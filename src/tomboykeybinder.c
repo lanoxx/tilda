@@ -48,15 +48,15 @@
                            | GDK_MOD5_MASK)
 
 typedef struct _Binding {
-	TomboyBindkeyHandler  handler;
-	gpointer              user_data;
-	char                 *keystring;
-	unsigned int          keycode;
-	unsigned int          modifiers;
+    TomboyBindkeyHandler handler;
+    gpointer             user_data;
+    char                *keystring;
+    unsigned int         keycode;
+    GdkModifierType      modifiers;
 } Binding;
 
-static GSList *bindings = NULL;
-static guint32 last_event_time = 0;
+static GSList   *bindings        = NULL;
+static guint32  last_event_time  = 0;
 static gboolean processing_event = FALSE;
 
 /**
@@ -71,7 +71,7 @@ static GdkModifierType num_lock_mask, caps_lock_mask, scroll_lock_mask;
  * @param virtual_modifiers
  * @return A string containing the string representation of all virtual modifiers separated by ' | '.
  */
-static gchar * virtual_modifiers_as_string (GdkModifierType virtual_modifiers);
+static gchar *virtual_modifiers_as_string (GdkModifierType virtual_modifiers);
 
 /**
  * Gdk does not allow us to determine the real modifiers for some
@@ -83,148 +83,152 @@ static gchar * virtual_modifiers_as_string (GdkModifierType virtual_modifiers);
 static void
 lookup_ignorable_modifiers (GdkKeymap *keymap)
 {
-	gchar *string;
+    gchar *string;
 
-	egg_keymap_resolve_virtual_modifiers (keymap,
-					      EGG_VIRTUAL_LOCK_MASK,
-					      &caps_lock_mask);
+    egg_keymap_resolve_virtual_modifiers (keymap,
+                                          EGG_VIRTUAL_LOCK_MASK,
+                                          &caps_lock_mask);
 
-	string = virtual_modifiers_as_string (caps_lock_mask);
+    string = virtual_modifiers_as_string (caps_lock_mask);
     g_debug ("Virtual modifier for 'caps_lock_mask' set to: %s", string);
-	g_free (string);
+    g_free (string);
 
-	egg_keymap_resolve_virtual_modifiers (keymap,
-					      EGG_VIRTUAL_NUM_LOCK_MASK,
-					      &num_lock_mask);
+    egg_keymap_resolve_virtual_modifiers (keymap,
+                                          EGG_VIRTUAL_NUM_LOCK_MASK,
+                                          &num_lock_mask);
 
-	string = virtual_modifiers_as_string (num_lock_mask);
+    string = virtual_modifiers_as_string (num_lock_mask);
     g_debug ("Virtual modifier for 'num_lock_mask' set to: %s", string);
-	g_free(string);
+    g_free (string);
 
-	egg_keymap_resolve_virtual_modifiers (keymap,
-					      EGG_VIRTUAL_SCROLL_LOCK_MASK,
-					      &scroll_lock_mask);
+    egg_keymap_resolve_virtual_modifiers (keymap,
+                                          EGG_VIRTUAL_SCROLL_LOCK_MASK,
+                                          &scroll_lock_mask);
 
-	string = virtual_modifiers_as_string (scroll_lock_mask);
+    string = virtual_modifiers_as_string (scroll_lock_mask);
     g_debug ("Virtual modifier for 'scroll_lock_mask' set to: %s", string);
-	g_free(string);
+    g_free (string);
 }
 
 static void
 grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
-				      Binding   *binding,
-				      gboolean   grab)
+                                      Binding *binding,
+                                      gboolean grab)
 {
-	guint mod_masks [] = {
-		0, /* modifier only */
-		num_lock_mask,
-		caps_lock_mask,
-		scroll_lock_mask,
-		num_lock_mask  | caps_lock_mask,
-		num_lock_mask  | scroll_lock_mask,
-		caps_lock_mask | scroll_lock_mask,
-		num_lock_mask  | caps_lock_mask | scroll_lock_mask,
-	};
-	guint i;
+    guint mod_masks[] = {
+            0, /* modifier only */
+            num_lock_mask,
+            caps_lock_mask,
+            scroll_lock_mask,
+            num_lock_mask | caps_lock_mask,
+            num_lock_mask | scroll_lock_mask,
+            caps_lock_mask | scroll_lock_mask,
+            num_lock_mask | caps_lock_mask | scroll_lock_mask,
+    };
+    guint i;
 
-	for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
-		if (grab) {
-			XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
-				  binding->keycode,
-				  binding->modifiers | mod_masks [i],
-				  GDK_WINDOW_XID (rootwin),
-				  False,
-				  GrabModeAsync,
-				  GrabModeAsync);
-		} else {
-			XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
-				    binding->keycode,
-				    binding->modifiers | mod_masks [i],
-				    GDK_WINDOW_XID (rootwin));
-		}
-	}
+    for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
+        if (grab) {
+            XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
+                      binding->keycode,
+                      binding->modifiers | mod_masks[i],
+                      GDK_WINDOW_XID (rootwin),
+                      False,
+                      GrabModeAsync,
+                      GrabModeAsync);
+        } else {
+            XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
+                        binding->keycode,
+                        binding->modifiers | mod_masks[i],
+                        GDK_WINDOW_XID (rootwin));
+        }
+    }
 }
 
 static gboolean
 do_grab_key (Binding *binding)
 {
-	GdkKeymap *keymap = gdk_keymap_get_default ();
-	GdkWindow *rootwin = gdk_get_default_root_window ();
+    GdkKeymap *keymap  = gdk_keymap_get_default ();
+    GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	GdkModifierType virtual_mods = (GdkModifierType) 0;
-	guint keysym = 0;
+    GdkModifierType virtual_mods = (GdkModifierType) 0;
+    guint           keysym       = 0;
 
-	if (keymap == NULL || rootwin == NULL)
-		return FALSE;
+    if (keymap == NULL || rootwin == NULL)
+        return FALSE;
 
-	gtk_accelerator_parse (binding->keystring,
-					    &keysym,
-					    &virtual_mods);
+    gtk_accelerator_parse (binding->keystring,
+                           &keysym,
+                           &virtual_mods);
 
-	if (keysym == 0 && virtual_mods == 0) {
-		return FALSE;
-	}
+    if (keysym == 0 && virtual_mods == 0) {
+        return FALSE;
+    }
 
-	binding->keycode = XKeysymToKeycode (GDK_WINDOW_XDISPLAY (rootwin),
-					     keysym);
-	if (binding->keycode == 0)
-		return FALSE;
+    binding->keycode = XKeysymToKeycode (GDK_WINDOW_XDISPLAY (rootwin),
+                                         keysym);
+    if (binding->keycode == 0)
+        return FALSE;
 
-	GdkModifierType mapped_modifiers = virtual_mods;
+    GdkModifierType mapped_modifiers = virtual_mods;
 
-	gdk_keymap_map_virtual_modifiers (keymap,
-									  &mapped_modifiers);
+    gdk_keymap_map_virtual_modifiers (keymap,
+                                      &mapped_modifiers);
 
-	// mask out virtual modifiers so we get only the real modifiers
-	binding->modifiers = mapped_modifiers & REAL_MODIFIER_MASK;
+    // mask out virtual modifiers so we get only the real modifiers
+    binding->modifiers = mapped_modifiers & REAL_MODIFIER_MASK;
 
-	gdk_error_trap_push ();
+    gdk_error_trap_push ();
 
-	grab_ungrab_with_ignorable_modifiers (rootwin,
-					      binding,
-					      TRUE /* grab */);
+    grab_ungrab_with_ignorable_modifiers (rootwin,
+                                          binding,
+                                          TRUE /* grab */);
 
-	gdk_flush ();
+    gdk_flush ();
 
-	if (gdk_error_trap_pop ()) {
-	   g_warning ("Binding '%s' failed!\n", binding->keystring);
-	   return FALSE;
-	}
+    if (gdk_error_trap_pop ()) {
+        g_warning ("Binding '%s' failed!\n", binding->keystring);
+        return FALSE;
+    }
 
-	gchar *virtual_modifier_string = virtual_modifiers_as_string(virtual_mods);
-	g_debug ("Resolved accelerator: %s. KeySymbol: %d, Virtual Modifiers: %s",
-			 binding->keystring,
-			 keysym,
-			 virtual_modifier_string);
-	g_free (virtual_modifier_string);
+    gchar *virtual_modifier_string = virtual_modifiers_as_string (virtual_mods);
+    g_debug ("Resolved accelerator: %s. KeySymbol: %d, Virtual Modifiers: %s",
+             binding->keystring,
+             keysym,
+             virtual_modifier_string);
+    g_free (virtual_modifier_string);
 
-	g_debug ("Binding to keycode %d", binding->keycode);
+    g_debug ("Binding to keycode %d", binding->keycode);
 
-	gchar *real_modifiers_as_string = virtual_modifiers_as_string ((GdkModifierType) binding->modifiers);
-	g_debug ("Binding to real modifier mask %d (%s)", binding->modifiers, real_modifiers_as_string);
-	g_free(real_modifiers_as_string);
+    gchar *real_modifiers_as_string = virtual_modifiers_as_string (
+            (GdkModifierType) binding->modifiers);
+    g_debug ("Binding to real modifier mask %d (%s)", binding->modifiers,
+             real_modifiers_as_string);
+    g_free (real_modifiers_as_string);
 
-	return TRUE;
+    return TRUE;
 }
 
 static gboolean
 do_ungrab_key (Binding *binding)
 {
-	GdkWindow *rootwin = gdk_get_default_root_window ();
+    GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	g_debug ("Removing grab for '%s'", binding->keystring);
+    g_debug ("Removing grab for '%s'", binding->keystring);
 
-	grab_ungrab_with_ignorable_modifiers (rootwin,
-					      binding,
-					      FALSE /* ungrab */);
+    grab_ungrab_with_ignorable_modifiers (rootwin,
+                                          binding,
+                                          FALSE /* ungrab */);
 
-	return TRUE;
+    return TRUE;
 }
 
 static GdkFilterReturn
-filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
+filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event,
+             G_GNUC_UNUSED gpointer data)
+{
     XEvent *xevent = (XEvent *) gdk_xevent;
-    guint event_mods;
+    guint  event_mods;
     GSList *iter;
 
     switch (xevent->type) {
@@ -238,13 +242,13 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
              * windows to avoid anti-focus-stealing code.
              */
             processing_event = TRUE;
-            last_event_time = (guint32) xevent->xkey.time;
+            last_event_time  = (guint32) xevent->xkey.time;
 
             g_debug ("Current event time %d", last_event_time);
 
-            event_mods = xevent->xkey.state & ~(num_lock_mask  |
-                                caps_lock_mask |
-                                scroll_lock_mask);
+            event_mods = xevent->xkey.state & ~(num_lock_mask |
+                                                caps_lock_mask |
+                                                scroll_lock_mask);
 
             for (iter = bindings; iter != NULL; iter = iter->next) {
                 Binding *binding = (Binding *) iter->data;
@@ -256,7 +260,7 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
                              binding->keystring);
 
                     (binding->handler) (binding->keystring,
-                                binding->user_data);
+                                        binding->user_data);
                 }
             }
 
@@ -267,9 +271,9 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
             break;
         default:
             break;
-	}
+    }
 
-	return GDK_FILTER_CONTINUE;
+    return GDK_FILTER_CONTINUE;
 }
 
 /**
@@ -289,100 +293,100 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED
 static void
 keymap_changed (GdkKeymap *map)
 {
-	GSList *iter;
+    GSList *iter;
 
-	g_debug ("Keymap changed! Regrabbing keys...");
+    g_debug ("Keymap changed! Regrabbing keys...");
 
-	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
-		do_ungrab_key (binding);
-	}
+    for (iter = bindings; iter != NULL; iter = iter->next) {
+        Binding *binding = (Binding *) iter->data;
+        do_ungrab_key (binding);
+    }
 
-	lookup_ignorable_modifiers (map);
+    lookup_ignorable_modifiers (map);
 
-	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
-		do_grab_key (binding);
-	}
+    for (iter = bindings; iter != NULL; iter = iter->next) {
+        Binding *binding = (Binding *) iter->data;
+        do_grab_key (binding);
+    }
 }
 
 void
 tomboy_keybinder_init (void)
 {
-	GdkKeymap *keymap = gdk_keymap_get_default ();
-	GdkWindow *rootwin = gdk_get_default_root_window ();
+    GdkKeymap *keymap  = gdk_keymap_get_default ();
+    GdkWindow *rootwin = gdk_get_default_root_window ();
 
-	lookup_ignorable_modifiers (keymap);
+    lookup_ignorable_modifiers (keymap);
 
-	gdk_window_add_filter (rootwin,
-			       filter_func,
-			       NULL);
+    gdk_window_add_filter (rootwin,
+                           filter_func,
+                           NULL);
 
-	g_signal_connect (keymap,
-			  "keys_changed",
-			  G_CALLBACK (keymap_changed),
-			  NULL);
+    g_signal_connect (keymap,
+                      "keys_changed",
+                      G_CALLBACK (keymap_changed),
+                      NULL);
 }
 
 gboolean
-tomboy_keybinder_bind (const char           *keystring,
-		       TomboyBindkeyHandler  handler,
-		       gpointer              user_data)
+tomboy_keybinder_bind (const char *keystring,
+                       TomboyBindkeyHandler handler,
+                       gpointer user_data)
 {
-	Binding *binding;
-	gboolean success;
+    Binding  *binding;
+    gboolean success;
 
-	binding = g_new0 (Binding, 1);
-	binding->keystring = g_strdup (keystring);
-	binding->handler = handler;
-	binding->user_data = user_data;
+    binding = g_new0 (Binding, 1);
+    binding->keystring = g_strdup (keystring);
+    binding->handler   = handler;
+    binding->user_data = user_data;
 
-	/* Sets the binding's keycode and modifiers */
-	success = do_grab_key (binding);
+    /* Sets the binding's keycode and modifiers */
+    success = do_grab_key (binding);
 
-	if (success) {
+    if (success) {
 
         g_debug("Added binding. Keystring: %s", binding->keystring);
 
-		bindings = g_slist_prepend (bindings, binding);
-	} else {
-		g_free (binding->keystring);
-		g_free (binding);
-	}
+        bindings = g_slist_prepend (bindings, binding);
+    } else {
+        g_free (binding->keystring);
+        g_free (binding);
+    }
 
-	return success;
+    return success;
 }
 
 void
-tomboy_keybinder_unbind (const char           *keystring,
-			 TomboyBindkeyHandler  handler)
+tomboy_keybinder_unbind (const char *keystring,
+                         TomboyBindkeyHandler handler)
 {
-	GSList *iter;
+    GSList *iter;
 
-	for (iter = bindings; iter != NULL; iter = iter->next) {
-		Binding *binding = (Binding *) iter->data;
+    for (iter = bindings; iter != NULL; iter = iter->next) {
+        Binding *binding = (Binding *) iter->data;
 
-		if (strcmp (keystring, binding->keystring) != 0 ||
-		    handler != binding->handler)
-			continue;
+        if (strcmp (keystring, binding->keystring) != 0 ||
+            handler != binding->handler)
+            continue;
 
-		do_ungrab_key (binding);
+        do_ungrab_key (binding);
 
-		bindings = g_slist_remove (bindings, binding);
+        bindings = g_slist_remove (bindings, binding);
 
-		g_free (binding->keystring);
-		g_free (binding);
-		break;
-	}
+        g_free (binding->keystring);
+        g_free (binding);
+        break;
+    }
 }
 
 guint32
 tomboy_keybinder_get_current_event_time (void)
 {
-	if (processing_event)
-		return last_event_time;
-	else
-		return GDK_CURRENT_TIME;
+    if (processing_event)
+        return last_event_time;
+    else
+        return GDK_CURRENT_TIME;
 }
 
 /**
@@ -395,41 +399,40 @@ tomboy_keybinder_get_current_event_time (void)
  * @param virtual_modifiers
  * @return A string containing the string representation of all virtual modifiers separated by ' | '.
  */
-static gchar * virtual_modifiers_as_string (GdkModifierType virtual_modifiers)
+static gchar *virtual_modifiers_as_string (GdkModifierType virtual_modifiers)
 {
-	int modifier = 1;
-	int index = 0;
+    int modifier = 1;
+    int index    = 0;
 
-	GFlagsClass *flags_class;
-	GFlagsValue *enum_value;
+    GFlagsClass *flags_class;
+    GFlagsValue *enum_value;
 
-	g_return_val_if_fail (G_TYPE_IS_FLAGS (GDK_TYPE_MODIFIER_TYPE), NULL);
+    g_return_val_if_fail (G_TYPE_IS_FLAGS (GDK_TYPE_MODIFIER_TYPE), NULL);
 
-	flags_class = g_type_class_ref (GDK_TYPE_MODIFIER_TYPE);
+    flags_class = g_type_class_ref (GDK_TYPE_MODIFIER_TYPE);
 
-	const char ** modifierStrings = g_malloc0_n (sizeof (char*),
-												 flags_class->n_values);
+    const char **modifierStrings = g_malloc0_n (sizeof (char *),
+                                                flags_class->n_values);
 
-	while (modifier < GDK_RELEASE_MASK)
-	{
-		enum_value = g_flags_get_first_value (G_FLAGS_CLASS (flags_class), virtual_modifiers & modifier);
+    while (modifier < GDK_RELEASE_MASK) {
+        enum_value = g_flags_get_first_value (G_FLAGS_CLASS (flags_class),
+                                              virtual_modifiers & modifier);
 
-		if (enum_value) {
-			modifierStrings[index] = enum_value->value_name;
-		}
+        if (enum_value) {
+            modifierStrings[index] = enum_value->value_name;
+        }
 
-		if (modifierStrings[index])
-		{
-			index++;
-		}
+        if (modifierStrings[index]) {
+            index++;
+        }
 
-		modifier = modifier << 1;
-	}
+        modifier = modifier << 1;
+    }
 
-	char * result = g_strjoinv (" | ", (gchar **) modifierStrings);
+    char *result = g_strjoinv (" | ", (gchar **) modifierStrings);
 
-	g_free (modifierStrings);
-	g_type_class_unref (flags_class);
+    g_free (modifierStrings);
+    g_type_class_unref (flags_class);
 
-	return result;
+    return result;
 }
