@@ -430,11 +430,12 @@ static void setup_config_from_cli_options(tilda_cli_options *cli_options)
             && cli_options->background_color != config_getstr ("background_color")) {
         config_setstr ("background_color", cli_options->background_color);
 
-        GdkColor col;
-        if (gdk_color_parse(cli_options->background_color, &col)) {
-            config_setint("back_red", col.red);
-            config_setint("back_green", col.green);
-            config_setint("back_blue", col.blue);
+        GdkRGBA col;
+        if (gdk_rgba_parse (&col, cli_options->background_color))
+        {
+            config_setint("back_red", GUINT16_FROM_FLOAT (col.red));
+            config_setint("back_green", GUINT16_FROM_FLOAT (col.green));
+            config_setint("back_blue", GUINT16_FROM_FLOAT (col.blue));
         }
 
         g_free(cli_options->background_color);
