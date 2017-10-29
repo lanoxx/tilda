@@ -162,7 +162,7 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
     CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
     CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),
-    CFG_BOOL("double_buffer", FALSE, CFGF_NONE),
+    CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("auto_hide_on_focus_lost", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
     /* Whether and how we limit the length of a tab title */
@@ -423,7 +423,7 @@ gint config_init (const gchar *config_file)
      * This is a lame work around until we get a permenant solution to
      * libconfuse lacking for this functionality
      */
-    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number","title_max_length_flag"};
+    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number","title_max_length_flag","double_buffer"};
     remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
 
 #if VTE_MINOR_VERSION >= 40

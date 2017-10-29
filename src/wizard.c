@@ -698,20 +698,6 @@ static void check_start_tilda_hidden_toggled_cb (GtkWidget *w, tilda_window *tw)
     config_setbool ("hidden", status);
 }
 
-static void check_enable_double_buffering_toggled_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    guint i;
-    tilda_term *tt;
-
-    config_setbool ("double_buffer", status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        gtk_widget_set_double_buffered (GTK_WIDGET(tt->vte_term), status);
-    }
-}
-
 static void check_terminal_bell_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -2023,7 +2009,6 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_do_not_show_in_taskbar", "notaskbar");
     CHECK_BUTTON ("check_start_tilda_hidden", "hidden");
     CHECK_BUTTON ("check_show_notebook_border", "notebook_border");
-    CHECK_BUTTON ("check_enable_double_buffering", "double_buffer");
     COMBO_BOX ("combo_non_focus_pull_up_behaviour", "non_focus_pull_up_behaviour");
 
     CHECK_BUTTON ("check_terminal_bell", "bell");
@@ -2193,7 +2178,6 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb, tw);
     CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb, tw);
     CONNECT_SIGNAL ("check_start_tilda_hidden","toggled",check_start_tilda_hidden_toggled_cb, tw);
-    CONNECT_SIGNAL ("check_enable_double_buffering","toggled",check_enable_double_buffering_toggled_cb, tw);
     CONNECT_SIGNAL ("combo_non_focus_pull_up_behaviour","changed",combo_non_focus_pull_up_behaviour_cb, tw);
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb, tw);

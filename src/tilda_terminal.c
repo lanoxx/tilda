@@ -715,7 +715,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     /** Text Properties **/
     vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
-    gtk_widget_set_double_buffered (tt->vte_term, config_getbool("double_buffer"));
+
     PangoFontDescription *description =
         pango_font_description_from_string (config_getstr ("font"));
     vte_terminal_set_font (VTE_TERMINAL (tt->vte_term), description);
