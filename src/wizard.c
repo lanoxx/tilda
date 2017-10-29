@@ -1298,7 +1298,9 @@ static void check_expand_tabs_toggled_cb (GtkWidget *w, tilda_window *tw)
 
     int page = 0;
     GtkWidget *child = NULL;
-    while((child = gtk_notebook_get_nth_page(tw->notebook, page++))){
+    while((child = gtk_notebook_get_nth_page(GTK_NOTEBOOK (tw->notebook),
+                                             page++)))
+    {
         gtk_container_child_set (GTK_CONTAINER(tw->notebook),
             child,
             "tab-expand", status,
