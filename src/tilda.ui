@@ -691,20 +691,6 @@
                             <property name="column_spacing">5</property>
                             <property name="column_homogeneous">True</property>
                             <child>
-                              <object class="GtkFontButton" id="button_font">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="font">Sans 12</property>
-                                <property name="preview_text"/>
-                                <property name="show_preview_entry">False</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkCheckButton" id="check_enable_antialiasing">
                                 <property name="label" translatable="yes">Enable Antialiasing</property>
                                 <property name="visible">True</property>
@@ -733,6 +719,20 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkFontButton" id="button_font">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="font">Sans 12</property>
+                                <property name="preview_text"/>
+                                <property name="show_preview_entry">False</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkLabel" id="label_font">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -741,7 +741,7 @@
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
-                                <property name="top_attach">2</property>
+                                <property name="top_attach">1</property>
                               </packing>
                             </child>
                           </object>
