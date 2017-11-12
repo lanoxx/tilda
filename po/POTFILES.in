@@ -1,7 +1,6 @@
 # List of source files which contain translatable strings.
 
 src/tilda.ui
-src/callback_func.c
 src/configsys.c
 src/tilda.c
 src/tilda_terminal.c
