@@ -963,7 +963,6 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     tilda_term *tt;
     gchar *match;
     gint tag;
-    gint ypad;
     gchar *cmd;
     gchar *web_browser_cmd;
     gboolean ret = FALSE;
@@ -991,7 +990,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
                                                     (GdkEvent *) event,
                                                     &tag);
 #else
-            ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
+            gint ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
 
             glong column = (glong) ((event->x - ypad) /
                                     vte_terminal_get_char_width (terminal));
