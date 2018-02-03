@@ -194,7 +194,7 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-gint toggle_transparency_cb (tilda_window *tw)
+static gint toggle_transparency_cb (tilda_window *tw)
 {
     DEBUG_FUNCTION ("toggle_transparency");
     DEBUG_ASSERT (tw != NULL);
@@ -854,7 +854,10 @@ static gboolean delete_event_callback (G_GNUC_UNUSED GtkWidget *widget,
     return FALSE;
 }
 
-gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *tw) {
+static gboolean search_box_key_cb (GtkWidget *widget,
+                                   GdkEvent  *event,
+                                   tilda_window *tw)
+{
     GdkEventKey *event_key = (GdkEventKey*)event;
     if (event_key->keyval == GDK_KEY_Return) {
         tilda_window_search(widget, tw, FALSE);
@@ -873,8 +876,9 @@ gboolean search_box_key_cb (GtkWidget *widget, GdkEvent  *event, tilda_window *t
     return GDK_EVENT_PROPAGATE;
 }
 
-gboolean entry_search_text_changed_callback (G_GNUC_UNUSED GtkEditable *editable,
-                                             tilda_window *tw) {
+static gboolean entry_search_text_changed_callback (G_GNUC_UNUSED GtkEditable *editable,
+                                                    tilda_window *tw)
+{
     gtk_widget_hide (tw->search->label_search_end);
     tw->search->is_search_result = TRUE;
 

@@ -407,7 +407,7 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
  * Initialize a structure in which command-line parameters will be stored.
  * @return a pointer to that structure
  */
-tilda_cli_options *init_cli_options()
+static tilda_cli_options *init_cli_options()
 {
     tilda_cli_options *options = g_malloc0(sizeof(tilda_cli_options));
     if (!options)
@@ -683,10 +683,10 @@ static void load_custom_css_file () {
 }
 
 #ifdef DEBUG
-void tilda_log_handler(const gchar *log_domain,
-                       GLogLevelFlags log_level,
-                       const gchar *message,
-                       gpointer user_data)
+static void tilda_log_handler(const gchar *log_domain,
+                              GLogLevelFlags log_level,
+                              const gchar *message,
+                              gpointer user_data)
 {
     g_printf("%s\n", message);
 }
