@@ -919,17 +919,17 @@ static void page_reordered_cb (GtkNotebook  *notebook,
                         tilda_window *tw) {
     DEBUG_FUNCTION ("page_reordered_cb");
     GList *terminals;
-    tilda_term *tilda_term;
+    tilda_term *terminal;
     guint i;
 
     terminals = tw->terms;
 
     for (i = 0; i < g_list_length (terminals); i++)
     {
-        tilda_term = g_list_nth_data (terminals, i);
-        if (tilda_term->hbox == child) {
-            terminals = g_list_remove (terminals, tilda_term);
-            tw->terms = g_list_insert (terminals, tilda_term, page_num);
+        terminal = g_list_nth_data (terminals, i);
+        if (terminal->hbox == child) {
+            terminals = g_list_remove (terminals, terminal);
+            tw->terms = g_list_insert (terminals, terminal, page_num);
             break;
         }
     }
