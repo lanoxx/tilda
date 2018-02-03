@@ -10,22 +10,34 @@ below show some of the options that Tilda provides.
 ## Tilda Terminal
 ![Tilda window with search bar](images/tilda_terminal_with_search_bar.png)
 
-Starting with version 1.3 Tilda will also come with a search bar. Currently we support searching forwards and backwards
+Starting with version 1.3 Tilda comes with a search bar. Currently we support searching forwards and backwards
 as well as options to search case sensitive and to use regular expressions. The search bar can be activated from
 the context menu or with a configurable hotkey that defaults to `<Ctrl><Shift>F`
 ## General options
-![General](images/tilda_general.png)
+![General](images/tilda_general-16-9.png)
+
+## Title and Command
+![Title And Command](images/tilda_title_and_command-16-9.png)
+
 ## Appearance options
-![Appearance](images/tilda_appearance.png)
+![Appearance](images/tilda_appearance-16-9.png)
+
+## Colors
+![Colors](images/tilda_colors-16-9.png)
+
 ## Keybindings options
-![Keybindings](images/tilda_keybindings.png)
+
+Starting with version 1.4 Tilda's keybindings page switches to
+a new list based layout that is easier to use.
+
+![Keybindings](images/tilda_keybindings-16-9.png)
 
 ## Supported Platforms
 Tilda currently works only on Xorg-based desktops. Previously that
 meant that virtually all Linux distributions and some BSD's would be supported.
 Recently however, some Linux distributions
 (such as Ubuntu 17.10) have started to use Wayland as their
-default display server. Tilda currently does not support Wayland will not
+default display server. Tilda currently does not support Wayland and will not
 work on such desktops. As a result it will fail to start.
 Patches that introduce wayland support for tilda are very welcome. Please
 look into the issue section or write me a mail if you would like to contribute
@@ -70,7 +82,7 @@ little trouble as possible. Some example keybindings follow:
 | Keybinding String | Notes                                                             |
 |-------------------|-------------------------------------------------------------------|
 | `grave`           | This will use the tilde key. Many people want this.               |
-| `~`               | This is the same as <Shift>grave                                  |
+| `~`               | This is the same as `<Shift>grave`                                |
 | `space`           | This will use the spacebar to show / hide Tilda. NOT RECOMMENDED! |
 | `<Shift><Ctrl>A`  | Press Shift, Control, and the "a" key at the same time            |
 | `<Shift>space`    | Press Shift and the spacebar at the same time                     |
@@ -80,7 +92,7 @@ That should cover most of the cases. If you want to use something else, it
 probably follows the pattern, so give it a try. Alternatively, you can use the
 configuration wizard, and press the "Pull Down Terminal" button on the
 "Keybindings" tab, then type the combination you want to use. Hopefully, Tilda
-will be able to grab it for you. The `<TAB>` key cannot be grabbed, so at the moment
+will be able to grab it for you. The `<Tab>` key cannot be grabbed, so at the moment
 combinations such as `<Ctrl><Tab>` are not possible.
 
 # Files that Tilda creates
