@@ -164,6 +164,11 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 gint tilda_window_free (tilda_window *tw);
 
 /**
+ * Applies or reapplies the current fullscreen state of the tilda window.
+ */
+void tilda_window_set_fullscreen(tilda_window *tw);
+
+/**
  * This toggles the fullscreen mode on or off. This is intended to be registered
  * as a GCallback in order to be invoked after some user action.
  */
