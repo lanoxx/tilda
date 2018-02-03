@@ -1,3 +1,28 @@
+version 1.4.0 (2018-02-03):
+	* Fixes a problem with close-tab action in the context menu (Alexander Maznev)
+	* The default word matching expression now matches IPv6 addresses (Srđan Panić)
+	* The keybindings in the wizard are now displayed in form of a list
+	  (Sivno Toranaga-San, Alexander Maznev, Sebastian Geiger)
+	* Fixed an issue which broke the transparency feature after changing the color scheme
+	  (Corentin Néau)
+	* Fixed an issue that prevented the initial tab title from being correctly
+	  set (Hoel Kervadec)
+	* Tilda now supports a new command line option to specify the configuration 
+	  file (Corentin Néau)
+	* The 'Tab Position' option has been moved to appearance section in the wizard
+	  (Tom Briden)
+	* New option 'Expand Tabs' causes tabs in the tilda window to fill
+	  all available horizontal space (Tom Briden)
+	* New option 'Show Single Tab' to show the tab bar also when only a single tab
+	  is open (Tom Briden)
+	* Tilda can now be configured to show a confirmation dialog when closing
+	  a tab or when when tilda is closed (Sebastian Geiger)
+	* Tilda now knows a new color scheme called 'Snazzy' (Thanks to devtrium)
+	* The tab title learned more options to configure behavior of long
+	  tab tiles (Tom Briden)
+	* The option for double buffering has long been deprecated and was 
+	  removed in this release (Sebastian Geiger)
+
 version 1.3.2 (2016-02-14):
 	* Updated Hacking.md's instructions to reflect VTE 2.91 api bump (Thanks to HiTuX)
 	* Added a widget name to the search widget for easier styling (Sebastian Geiger)
