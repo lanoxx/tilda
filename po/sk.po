@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2014-10-16 17:06+0200\n"
+"POT-Creation-Date: 2018-02-08 20:52+0100\n"
 "PO-Revision-Date: 2007-11-22 22:15+0000\n"
 "Last-Translator: Matej Duman <matejduman@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
@@ -30,19 +30,19 @@ msgstr ""
 msgid "Open a new terminal and hide"
 msgstr ""
 
-#: src/tilda.ui:86 src/tilda.ui:160
+#: src/tilda.ui:86 src/tilda.ui:177
 msgid "Top"
 msgstr ""
 
-#: src/tilda.ui:89 src/tilda.ui:163
+#: src/tilda.ui:89 src/tilda.ui:180
 msgid "Bottom"
 msgstr ""
 
-#: src/tilda.ui:92 src/tilda.ui:166
+#: src/tilda.ui:92 src/tilda.ui:183
 msgid "Left"
 msgstr ""
 
-#: src/tilda.ui:95 src/tilda.ui:169
+#: src/tilda.ui:95 src/tilda.ui:186
 msgid "Right"
 msgstr ""
 
@@ -59,239 +59,284 @@ msgid "Hide Terminal"
 msgstr ""
 
 #: src/tilda.ui:123
-msgid "Isn't displayed"
+msgid "Block Cursor"
 msgstr ""
 
 #: src/tilda.ui:126
-msgid "Goes after initial title"
+msgid "IBeam Cursor"
 msgstr ""
 
 #: src/tilda.ui:129
+msgid "Underline Cursor"
+msgstr ""
+
+#: src/tilda.ui:140
+msgid "Isn't displayed"
+msgstr ""
+
+#: src/tilda.ui:143
+msgid "Goes after initial title"
+msgstr ""
+
+#: src/tilda.ui:146
 msgid "Goes before initial title"
 msgstr ""
 
-#: src/tilda.ui:132
+#: src/tilda.ui:149
 #, fuzzy
 msgid "Replace initial title"
 msgstr "Počiatočný titulok:"
 
-#: src/tilda.ui:143
+#: src/tilda.ui:160
 msgid "Drop to the default shell"
 msgstr ""
 
-#: src/tilda.ui:146
+#: src/tilda.ui:163
 msgid "Restart the command"
 msgstr ""
 
-#: src/tilda.ui:149
+#: src/tilda.ui:166
 msgid "Exit the terminal"
 msgstr ""
 
-#: src/tilda.ui:180 src/tilda.ui:209 src/wizard.c:188
+#: src/tilda.ui:197 src/tilda.ui:229 src/wizard.c:218
 msgid "Custom"
 msgstr ""
 
-#: src/tilda.ui:183
+#: src/tilda.ui:200
 msgid "Green on Black"
 msgstr ""
 
-#: src/tilda.ui:186
+#: src/tilda.ui:203
 msgid "Black on White"
 msgstr ""
 
-#: src/tilda.ui:189
+#: src/tilda.ui:206
 msgid "White on Black"
 msgstr ""
 
-#: src/tilda.ui:192 src/wizard.c:193
+#: src/tilda.ui:209 src/wizard.c:223
 msgid "Zenburn"
 msgstr ""
 
-#: src/tilda.ui:195 src/wizard.c:194
+#: src/tilda.ui:212 src/wizard.c:224
 msgid "Solarized Light"
 msgstr ""
 
-#: src/tilda.ui:198 src/wizard.c:195
+#: src/tilda.ui:215 src/wizard.c:225
 msgid "Solarized Dark"
 msgstr ""
 
-#: src/tilda.ui:220
+#: src/tilda.ui:218 src/wizard.c:226
+msgid "Snazzy"
+msgstr ""
+
+#: src/tilda.ui:240
 msgid "On the Left"
 msgstr ""
 
-#: src/tilda.ui:223
+#: src/tilda.ui:243
 msgid "On the Right"
 msgstr ""
 
-#: src/tilda.ui:226
+#: src/tilda.ui:246
 msgid "Disabled"
 msgstr ""
 
-#: src/tilda.ui:237 src/tilda.ui:254
+#: src/tilda.ui:257 src/tilda.ui:274
 msgid "ASCII DEL"
 msgstr ""
 
-#: src/tilda.ui:240 src/tilda.ui:257
+#: src/tilda.ui:260 src/tilda.ui:277
 msgid "Escape sequence"
 msgstr ""
 
-#: src/tilda.ui:243 src/tilda.ui:260
+#: src/tilda.ui:263 src/tilda.ui:280
 msgid "Control-H"
 msgstr ""
 
-#: src/tilda.ui:278
+#: src/tilda.ui:291
+msgid "Show whole tab title"
+msgstr ""
+
+#: src/tilda.ui:294
+msgid "Show first n chars of title"
+msgstr ""
+
+#: src/tilda.ui:297
+msgid "Show last n chars of title"
+msgstr ""
+
+#: src/tilda.ui:314
 msgid "Tilda Config"
 msgstr ""
 
-#: src/tilda.ui:355
-msgid "Enable Double Buffering"
-msgstr "Povoliť dvojitý buffering"
-
-#: src/tilda.ui:371 src/tilda.c:322
+#: src/tilda.ui:392 src/tilda.c:329
 msgid "Start Tilda hidden"
 msgstr "Spustiť Tildu skrytú"
 
-#: src/tilda.ui:387
+#: src/tilda.ui:406
 msgid "Always on top"
 msgstr "Vždy navrchu"
 
-#: src/tilda.ui:403
+#: src/tilda.ui:420
 msgid "Display on all workspaces"
 msgstr "Zobraziť na všetkých plochách"
 
-#: src/tilda.ui:419
+#: src/tilda.ui:434
 msgid "Do not show in taskbar"
 msgstr "Nezobrazovať v paneli úloh"
 
-#: src/tilda.ui:435
+#: src/tilda.ui:448
 msgid "Show Notebook Border"
 msgstr "Zobraziť rám"
 
-#: src/tilda.ui:452
+#: src/tilda.ui:462
+msgid "Set as Desktop window"
+msgstr ""
+
+#: src/tilda.ui:477
+msgid "Start in fullscreen"
+msgstr ""
+
+#: src/tilda.ui:506
 msgid "Non-focus Pull Up Behaviour:"
 msgstr ""
 
-#: src/tilda.ui:492
+#: src/tilda.ui:554
 msgid "<b>Window Display</b>"
 msgstr "<b>Zobrazenie okna</b>"
 
-#: src/tilda.ui:531
+#: src/tilda.ui:592
 msgid "Cursor Blinks"
 msgstr ""
 
-#: src/tilda.ui:547
+#: src/tilda.ui:606
 msgid "Audible Terminal Bell"
 msgstr ""
 
-#: src/tilda.ui:569
+#: src/tilda.ui:622
+msgid "Cursor Shape: "
+msgstr ""
+
+#: src/tilda.ui:657
 msgid "<b>Terminal Display</b>"
 msgstr "<b>Zobrazenie terminálu</b>"
 
-#: src/tilda.ui:625
+#: src/tilda.ui:695
 msgid "Enable Antialiasing"
 msgstr ""
 
-#: src/tilda.ui:641
+#: src/tilda.ui:709
 msgid "Allow Bold Text"
 msgstr ""
 
-#: src/tilda.ui:660
-msgid "Position of Tabs:"
-msgstr ""
-
-#: src/tilda.ui:693
+#: src/tilda.ui:739
 msgid "Font:"
 msgstr ""
 
-#: src/tilda.ui:710
+#: src/tilda.ui:755
 msgid "<b>Font</b>"
 msgstr "<b>Písmo</b>"
 
-#: src/tilda.ui:763
+#: src/tilda.ui:804
 msgid "Hide Tilda when mouse leaves it"
 msgstr ""
 
-#: src/tilda.ui:783
+#: src/tilda.ui:821
 msgid "Auto Hide Delay:"
 msgstr ""
 
-#: src/tilda.ui:794
+#: src/tilda.ui:831
 msgid "Hide when Tilda loses focus"
 msgstr ""
 
-#: src/tilda.ui:816
+#: src/tilda.ui:851
 #, fuzzy
 msgid "<b>Auto Hide</b>"
 msgstr "<b>Titulok</b>"
 
-#: src/tilda.ui:858
+#: src/tilda.ui:890
 msgid "When last terminal is closed:"
 msgstr ""
 
-#: src/tilda.ui:894
+#: src/tilda.ui:917
+#, fuzzy
+msgid "Always prompt on exit"
+msgstr "Vždy navrchu"
+
+#: src/tilda.ui:937
 #, fuzzy
 msgid "<b>Program Exit</b>"
 msgstr "<b>Umiestnenie</b>"
 
-#: src/tilda.ui:916
+#: src/tilda.ui:955
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr ""
 
-#: src/tilda.ui:933
+#: src/tilda.ui:972
 msgid "General"
 msgstr "Všeobecné"
 
-#: src/tilda.ui:982
+#: src/tilda.ui:1017
 msgid "Word Characters:"
 msgstr ""
 
-#: src/tilda.ui:998
+#: src/tilda.ui:1045
 msgid "<b>Select by Word</b>"
 msgstr ""
 
-#: src/tilda.ui:1049
+#: src/tilda.ui:1095
 msgid "Web Browser *:"
 msgstr ""
 
-#: src/tilda.ui:1065
+#: src/tilda.ui:1112
 msgid "<b>URL Handling</b>"
 msgstr ""
 
-#: src/tilda.ui:1100
+#: src/tilda.ui:1147
 msgid "Initial Title:"
 msgstr "Počiatočný titulok:"
 
-#: src/tilda.ui:1112
+#: src/tilda.ui:1169
+msgid "Title Max Length:"
+msgstr ""
+
+#: src/tilda.ui:1210
 msgid "Dynamically-set Title:"
 msgstr "Dynamický titulok:"
 
-#: src/tilda.ui:1162
-msgid "Limit maximum length of tab title:"
+#: src/tilda.ui:1222
+msgid "Title Behaviour:"
 msgstr ""
 
-#: src/tilda.ui:1200
+#: src/tilda.ui:1255
 msgid "<b>Title</b>"
 msgstr "<b>Titulok</b>"
 
-#: src/tilda.ui:1230
+#: src/tilda.ui:1316
 msgid "Run a custom command instead of the shell"
 msgstr ""
 
-#: src/tilda.ui:1247
+#: src/tilda.ui:1332
 msgid "Custom Command:"
 msgstr ""
 
-#: src/tilda.ui:1261
+#: src/tilda.ui:1344
 msgid "When Command Exits:"
 msgstr ""
 
-#: src/tilda.ui:1316
+#: src/tilda.ui:1354
+msgid "Use a login shell"
+msgstr ""
+
+#: src/tilda.ui:1380
 msgid "<b>Command</b>"
 msgstr "<b>Príkaz</b>"
 
-#: src/tilda.ui:1354
+#: src/tilda.ui:1407
 msgid ""
 "* A valid command that can open a browser must be entered here. It is "
 "possible to use the name of a specific browser such as 'firefox' and 'google-"
@@ -299,172 +344,261 @@ msgid ""
 "best command may be different depending on the system."
 msgstr ""
 
-#: src/tilda.ui:1375
+#: src/tilda.ui:1444
+msgid "Show confirmation dialog when closing tab"
+msgstr ""
+
+#: src/tilda.ui:1467
+msgid "Close Action"
+msgstr ""
+
+#: src/tilda.ui:1488
 msgid "Title and Command"
 msgstr "Titulok a príkaz"
 
-#: src/tilda.ui:1408 src/tilda.ui:1501
+#: src/tilda.ui:1532 src/tilda.ui:1709
 msgid "Percentage"
 msgstr "Percentuálne vyjadrenie"
 
-#: src/tilda.ui:1435 src/tilda.ui:1514
+#: src/tilda.ui:1555 src/tilda.ui:1721
 msgid "In Pixels"
 msgstr "V pixeloch"
 
-#: src/tilda.ui:1467
+#: src/tilda.ui:1582
 msgid "<b>Height</b>"
 msgstr "<b>Výška</b>"
 
-#: src/tilda.ui:1560
-msgid "<b>Width</b>"
-msgstr "<b>Šírka</b>"
-
-#: src/tilda.ui:1592
-msgid "Centered Horizontally"
-msgstr "Zarovnať vodorovne"
-
-#: src/tilda.ui:1610
-msgid "Centered Vertically"
-msgstr "Zarovnať zvislo"
-
-#: src/tilda.ui:1632 src/tilda.c:329
-msgid "X Position"
-msgstr "Pozícia X"
-
-#: src/tilda.ui:1647 src/tilda.c:330
-msgid "Y Position"
-msgstr "Pozícia Y"
-
-#: src/tilda.ui:1699
-msgid "<b>Position</b>"
-msgstr "<b>Umiestnenie</b>"
-
-#: src/tilda.ui:1734
-msgid "Enable Transparency"
-msgstr "Povoliť priehľadnosť"
-
-#: src/tilda.ui:1752
-msgid "Level of Transparency"
-msgstr "Úroveň priehľadnosti"
-
-#: src/tilda.ui:1778
-msgid "Animated Pulldown"
-msgstr "Animované vysunutie"
-
-#: src/tilda.ui:1795
-msgid "Use Image for Background"
-msgstr "Použiť obrázok ako pozadie"
-
-#: src/tilda.ui:1815
-msgid "Animation Delay (usec)"
-msgstr "Dĺžka animácie (mikrosekundy)"
-
-#: src/tilda.ui:1832
-msgid "Animation Orientation"
-msgstr "Začiatok animácie"
-
-#: src/tilda.ui:1905
-msgid "<b>Extras</b>"
-msgstr "<b>Doplnky</b>"
-
-#: src/tilda.ui:1940
+#: src/tilda.ui:1618
 msgid "Monitor:"
 msgstr ""
 
-#: src/tilda.ui:2003
+#: src/tilda.ui:1673
 #, fuzzy
 msgid "<b>Select monitor</b>"
 msgstr "<b>Titulok</b>"
 
-#: src/tilda.ui:2023
+#: src/tilda.ui:1759
+msgid "<b>Width</b>"
+msgstr "<b>Šírka</b>"
+
+#: src/tilda.ui:1795
+msgid "Centered Horizontally"
+msgstr "Zarovnať vodorovne"
+
+#: src/tilda.ui:1813 src/tilda.c:337
+msgid "Y Position"
+msgstr "Pozícia Y"
+
+#: src/tilda.ui:1847 src/tilda.c:336
+msgid "X Position"
+msgstr "Pozícia X"
+
+#: src/tilda.ui:1857
+msgid "Centered Vertically"
+msgstr "Zarovnať zvislo"
+
+#: src/tilda.ui:1885
+msgid "<b>Position</b>"
+msgstr "<b>Umiestnenie</b>"
+
+#: src/tilda.ui:1923
+msgid "Position of Tabs:"
+msgstr ""
+
+#: src/tilda.ui:1950
+msgid "Expand Tabs"
+msgstr ""
+
+#: src/tilda.ui:1964
+msgid "Show single Tab"
+msgstr ""
+
+#: src/tilda.ui:1987
+#, fuzzy
+msgid "<b>Tabs</b>"
+msgstr "<b>Titulok</b>"
+
+#: src/tilda.ui:2036
+msgid "Animation Delay (usec)"
+msgstr "Dĺžka animácie (mikrosekundy)"
+
+#: src/tilda.ui:2048
+msgid "Animation Orientation"
+msgstr "Začiatok animácie"
+
+#: src/tilda.ui:2097
+msgid "Use Image for Background"
+msgstr "Použiť obrázok ako pozadie"
+
+#: src/tilda.ui:2111
+msgid "Animated Pulldown"
+msgstr "Animované vysunutie"
+
+#: src/tilda.ui:2127
+msgid "Level of Transparency"
+msgstr "Úroveň priehľadnosti"
+
+#: src/tilda.ui:2137
+msgid "Enable Transparency"
+msgstr "Povoliť priehľadnosť"
+
+#: src/tilda.ui:2160
+msgid "<b>Extras</b>"
+msgstr "<b>Doplnky</b>"
+
+#: src/tilda.ui:2179
 msgid "Appearance"
 msgstr "Vzhľad"
 
-#: src/tilda.ui:2069
-msgid "Built-in Schemes"
+#: src/tilda.ui:2248
+msgid "Cursor Color"
 msgstr ""
 
-#: src/tilda.ui:2100
+#: src/tilda.ui:2296
 msgid "Text Color"
 msgstr ""
 
-#: src/tilda.ui:2114
+#: src/tilda.ui:2308
 msgid "Background Color"
 msgstr ""
 
-#: src/tilda.ui:2163
+#: src/tilda.ui:2320
+msgid "Built-in Schemes"
+msgstr ""
+
+#: src/tilda.ui:2334
 msgid "<b>Foreground and Background Colors</b>"
 msgstr ""
 
-#: src/tilda.ui:2194 src/tilda.ui:2801
-msgid "    "
-msgstr ""
-
-#: src/tilda.ui:2215
+#: src/tilda.ui:2366
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
 
-#: src/tilda.ui:2502
-msgid "Color palette:"
+#: src/tilda.ui:2409
+msgid "Choose Color 14"
 msgstr ""
 
-#: src/tilda.ui:2519
+#: src/tilda.ui:2422
+msgid "Choose Color 13"
+msgstr ""
+
+#: src/tilda.ui:2435
+msgid "Choose Color 15"
+msgstr ""
+
+#: src/tilda.ui:2448
+msgid "Choose Color 12"
+msgstr ""
+
+#: src/tilda.ui:2461
+msgid "Choose Color 10"
+msgstr ""
+
+#: src/tilda.ui:2474
+msgid "Choose Color 11"
+msgstr ""
+
+#: src/tilda.ui:2487
+msgid "Choose Color 9"
+msgstr ""
+
+#: src/tilda.ui:2500
+msgid "Choose Color 7"
+msgstr ""
+
+#: src/tilda.ui:2513
+msgid "Choose Color 6"
+msgstr ""
+
+#: src/tilda.ui:2526
+msgid "Choose Color 5"
+msgstr ""
+
+#: src/tilda.ui:2539
+msgid "Choose Color 4"
+msgstr ""
+
+#: src/tilda.ui:2552
+msgid "Choose Color 3"
+msgstr ""
+
+#: src/tilda.ui:2565
+msgid "Choose Color 2"
+msgstr ""
+
+#: src/tilda.ui:2578
+msgid "Choose Color 1"
+msgstr ""
+
+#: src/tilda.ui:2591
+msgid "Choose Color 0"
+msgstr ""
+
+#: src/tilda.ui:2605
+msgid "Choose Color 8"
+msgstr ""
+
+#: src/tilda.ui:2622
 msgid "Built-in schemes:"
 msgstr ""
 
-#: src/tilda.ui:2546
+#: src/tilda.ui:2637
+msgid "Color palette:"
+msgstr ""
+
+#: src/tilda.ui:2653
 #, fuzzy
 msgid "<b>Palette</b>"
 msgstr "<b>Titulok</b>"
 
-#: src/tilda.ui:2568
+#: src/tilda.ui:2672
 msgid "Colors"
 msgstr "Farby"
 
-#: src/tilda.ui:2619
-msgid "lines"
-msgstr ""
-
-#: src/tilda.ui:2659
+#: src/tilda.ui:2729
 msgid "Scrollbar is:"
 msgstr "Posúvač je:"
 
-#: src/tilda.ui:2669
+#: src/tilda.ui:2738
 #, fuzzy
 msgid "Limit scrollback to:"
 msgstr "História"
 
-#: src/tilda.ui:2673
+#: src/tilda.ui:2742
 msgid "Unselect for unlimited scrollback."
 msgstr ""
 
-#: src/tilda.ui:2686
+#: src/tilda.ui:2754
 msgid "Scroll on Output"
 msgstr "Posúvať pri výstupe"
 
-#: src/tilda.ui:2703
+#: src/tilda.ui:2768
 msgid "Scroll on Keystroke"
 msgstr ""
 
-#: src/tilda.ui:2720
+#: src/tilda.ui:2782
 msgid "Scroll Background"
 msgstr "Posúvať pozadie"
 
-#: src/tilda.ui:2744
+#: src/tilda.ui:2804
+msgid "0"
+msgstr ""
+
+#: src/tilda.ui:2816
+msgid "lines"
+msgstr ""
+
+#: src/tilda.ui:2845
 msgid "<b>Scrolling</b>"
 msgstr ""
 
-#: src/tilda.ui:2766
+#: src/tilda.ui:2866
 msgid "Scrolling"
 msgstr "Posúvanie"
 
-#: src/tilda.ui:2784
-msgid "<b>Compatibility</b>"
-msgstr ""
-
-#: src/tilda.ui:2820
+#: src/tilda.ui:2905
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
@@ -472,212 +606,129 @@ msgid ""
 "i></small>"
 msgstr ""
 
-#: src/tilda.ui:2843
-msgid "_Delete key generates:"
-msgstr ""
-
-#: src/tilda.ui:2859
+#: src/tilda.ui:2921
 msgid "_Backspace key generates:"
 msgstr ""
 
-#: src/tilda.ui:2922
+#: src/tilda.ui:2935
+msgid "_Delete key generates:"
+msgstr ""
+
+#: src/tilda.ui:2947
 msgid "_Reset Compatibility Options to Defaults"
 msgstr ""
 
-#: src/tilda.ui:2959
+#: src/tilda.ui:3001
+msgid "<b>Compatibility</b>"
+msgstr ""
+
+#: src/tilda.ui:3020
 msgid "Compatibility"
 msgstr "Kompatibilita"
 
-#: src/tilda.ui:2987 src/tilda.ui:3027 src/tilda.ui:3065 src/tilda.ui:3103
-#: src/tilda.ui:3142 src/tilda.ui:3182 src/tilda.ui:3220 src/tilda.ui:3258
-#: src/tilda.ui:3296 src/tilda.ui:3334 src/tilda.ui:3372 src/tilda.ui:3412
-#: src/tilda.ui:3452 src/tilda.ui:3490 src/tilda.ui:3526 src/tilda.ui:3566
-#: src/tilda.ui:3606 src/tilda.ui:3646 src/tilda.ui:3686 src/tilda.ui:3724
-#: src/tilda.ui:3764
-msgid " "
-msgstr ""
-
-#: src/tilda.ui:3000
+#: src/tilda.ui:3072
 #, fuzzy
-msgid "<b>Paste</b>"
-msgstr "<b>Titulok</b>"
+msgid "<b>Keybindings</b>"
+msgstr "Klávesové skratky"
 
-#: src/tilda.ui:3040
-msgid "<b>Go To Next Tab</b>"
-msgstr ""
-
-#: src/tilda.ui:3078
-#, fuzzy
-msgid "<b>Quit</b>"
-msgstr "<b>Titulok</b>"
-
-#: src/tilda.ui:3116
-#, fuzzy
-msgid "<b>Add Tab</b>"
-msgstr "<b>Titulok</b>"
-
-#: src/tilda.ui:3155
-msgid "<b>Go To Tab 10</b>"
-msgstr ""
-
-#: src/tilda.ui:3195
-msgid "<b>Go To Tab 5</b>"
-msgstr ""
-
-#: src/tilda.ui:3233
-msgid "<b>Go To Tab 4</b>"
-msgstr ""
-
-#: src/tilda.ui:3271
-msgid "<b>Go To Tab 3</b>"
-msgstr ""
-
-#: src/tilda.ui:3309
-msgid "<b>Go To Tab 2</b>"
-msgstr ""
-
-#: src/tilda.ui:3347
-msgid "<b>Go To Tab 1</b>"
-msgstr ""
-
-#: src/tilda.ui:3385
-msgid "<b>Go To Previous Tab</b>"
-msgstr ""
-
-#: src/tilda.ui:3425
-#, fuzzy
-msgid "<b>Close Tab</b>"
-msgstr "<b>Príkaz</b>"
-
-#: src/tilda.ui:3465
-#, fuzzy
-msgid "<b>Copy</b>"
-msgstr "<b>Písmo</b>"
-
-#: src/tilda.ui:3503
-#, fuzzy
-msgid "<b>Pull Down Terminal</b>"
-msgstr "<b>Zobrazenie terminálu</b>"
-
-#: src/tilda.ui:3539
-msgid "<b>Go To Tab 6</b>"
-msgstr ""
-
-#: src/tilda.ui:3579
-msgid "<b>Go To Tab 7</b>"
-msgstr ""
-
-#: src/tilda.ui:3619
-msgid "<b>Go To Tab 8</b>"
-msgstr ""
-
-#: src/tilda.ui:3659
-msgid "<b>Go To Tab 9</b>"
-msgstr ""
-
-#: src/tilda.ui:3699
-#, fuzzy
-msgid "<b>Move Tab Left</b>"
-msgstr "<b>Príkaz</b>"
-
-#: src/tilda.ui:3737
-#, fuzzy
-msgid "<b>Move Tab Right</b>"
-msgstr "<b>Výška</b>"
-
-#: src/tilda.ui:3777
-msgid "<b>Toggle Fullscreen</b>"
-msgstr ""
-
-#: src/tilda.ui:3799
+#: src/tilda.ui:3091
 msgid "Keybindings"
 msgstr "Klávesové skratky"
 
-#: src/callback_func.c:53
-msgid "Untitled"
+#: src/tilda.ui:3123
+msgid ""
+"Search term not found, search again to continue the search at the beginning."
 msgstr ""
 
-#: src/callback_func.c:71
-msgid "Bad value for \"d_set_title\" in config file\n"
+#: src/tilda.ui:3157
+msgid "_Next"
 msgstr ""
 
-#: src/configsys.c:199
-#, fuzzy
-msgid "Problem when opening config file\n"
-msgstr "Nemôžem zatvoriť konfiguračný súbor\n"
-
-#: src/configsys.c:203
-msgid "An unexpected error occured while parsing the config file\n"
+#: src/tilda.ui:3172
+msgid "_Prev"
 msgstr ""
 
-#: src/configsys.c:371
+#: src/tilda.ui:3187
+msgid "_Match Case"
+msgstr ""
+
+#: src/tilda.ui:3204
+msgid "_Regex"
+msgstr ""
+
+#: src/configsys.c:365
 msgid "Unable to sync the config file to disk\n"
 msgstr "Nemôžem synchronizovať konfiguračný súbor na disk\n"
 
-#: src/configsys.c:381
+#: src/configsys.c:375
 msgid "Unable to close the config file\n"
 msgstr "Nemôžem zatvoriť konfiguračný súbor\n"
 
-#: src/configsys.c:390
+#: src/configsys.c:388
 #, c-format
 msgid "Unable to write the config file to %s\n"
 msgstr "Nemôžem zapísať konfiguračný súbor do %s\n"
 
-#: src/tilda.c:216
+#: src/tilda.c:237
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr ""
 
-#: src/tilda.c:255 src/tilda.c:492
+#: src/tilda.c:276 src/tilda.c:566
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr ""
 
-#: src/tilda.c:319
+#: src/tilda.c:326
 msgid "Use Antialiased Fonts"
 msgstr "Použiť vyhladzovanie písma"
 
-#: src/tilda.c:320
+#: src/tilda.c:327
 msgid "Set the background color"
 msgstr "Nastaviť farbu pozadia"
 
-#: src/tilda.c:321
+#: src/tilda.c:328
 msgid "Run a command at startup"
 msgstr "Spustiť pri štarte príkaz"
 
-#: src/tilda.c:323
+#: src/tilda.c:330
 msgid "Set the font to the following string"
 msgstr "Nastaviť písmo pre nasledujúci reťazec"
 
-#: src/tilda.c:324
+#: src/tilda.c:331
+#, fuzzy
+msgid "Configuration file"
+msgstr "Zobraziť sprievodcu konfiguráciou"
+
+#: src/tilda.c:332
 msgid "Scrollback Lines"
 msgstr "História riadkov"
 
-#: src/tilda.c:325
+#: src/tilda.c:333
 msgid "Use Scrollbar"
 msgstr "Použiť posúvač"
 
-#: src/tilda.c:326
-msgid "Opaqueness: 0-100%"
-msgstr "Priehľadnosť: 0-100%"
-
-#: src/tilda.c:327
+#: src/tilda.c:334
 msgid "Print the version, then exit"
 msgstr "Napísať číslo verzie a potom skončiť"
 
-#: src/tilda.c:328
+#: src/tilda.c:335
 msgid "Set Initial Working Directory"
 msgstr "Nastaviť počiatočný pracovný priečinok"
 
-#: src/tilda.c:331
+#: src/tilda.c:339
 msgid "Set Background Image"
 msgstr "Nastaviť obrázok pozadia"
 
-#: src/tilda.c:332
+#: src/tilda.c:340 src/tilda.c:342
+msgid "Opaqueness: 0-100%"
+msgstr "Priehľadnosť: 0-100%"
+
+#: src/tilda.c:344
 msgid "Show Configuration Wizard"
 msgstr "Zobraziť sprievodcu konfiguráciou"
 
-#: src/tilda.c:348
+#: src/tilda.c:358
 #, c-format
 msgid ""
 "Error parsing command-line options. Try \"tilda --help\"\n"
@@ -690,226 +741,174 @@ msgstr ""
 "\n"
 "Chybové hlásenie: %s\n"
 
-#: src/tilda.c:445
+#: src/tilda.c:396
+#, fuzzy, c-format
+msgid ""
+"Error parsing Glib and GTK specific command-line options. Try \"tilda --help-"
+"all\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Chyba pri skúmaní možnosti príkazového riadku. Skúste \"tilda --help\"\n"
+"pre zobrazenie všetkých možností.\n"
+"\n"
+"Chybové hlásenie: %s\n"
+
+#: src/tilda.c:415
+msgid "Error allocating memory for a new tilda_cli_options structure.\n"
+msgstr ""
+
+#: src/tilda.c:519
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr ""
 
-#: src/tilda.c:560
+#: src/tilda.c:662
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 
-#: src/tilda.c:591
+#: src/tilda.c:724
 msgid "Migrating old config path to XDG folders\n"
 msgstr ""
 
-#: src/tilda.c:717 src/wizard.c:370
+#: src/tilda.c:787
+#, c-format
+msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
+msgstr ""
+
+#: src/tilda.c:878
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr ""
 
-#: src/tilda_terminal.c:408
+#: src/tilda_terminal.c:419
 #, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:446
+#: src/tilda_terminal.c:457
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:447 src/tilda_terminal.c:476
+#: src/tilda_terminal.c:458 src/tilda_terminal.c:500
 msgid "Launching default shell instead\n"
 msgstr ""
 
-#: src/tilda_terminal.c:475
+#: src/tilda_terminal.c:499
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:530
+#: src/tilda_terminal.c:583
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr ""
 
-#: src/tilda_terminal.c:818
-msgid "_New Tab"
-msgstr ""
-
-#: src/tilda_terminal.c:822
-msgid "_Close Tab"
-msgstr ""
-
-#: src/tilda_terminal.c:834
-msgid "Toggle fullscreen"
-msgstr ""
-
-#: src/tilda_terminal.c:930
+#: src/tilda_terminal.c:1021
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr ""
 
+#: src/tilda_terminal.c:1074
+msgid "Untitled"
+msgstr ""
+
+#: src/tilda_terminal.c:1092
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr ""
+
 #: src/tilda_window.c:101
+msgid "Are you sure you want to close this tab?"
+msgstr ""
+
+#: src/tilda_window.c:148
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr ""
 
-#: src/tilda_window.c:509
+#: src/tilda_window.c:839
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Nemôžem nastaviť ikonu tildy: %s\n"
 
-#: src/tilda_window.c:695
+#: src/tilda_window.c:1156
 msgid "Out of memory, cannot create tab\n"
 msgstr "Nedostatok pamäte, nemôžem vytvoriť kartu\n"
 
-#: src/wizard.c:189
+#: src/tilda_window.c:1276
+msgid "Are you sure you want to Quit?"
+msgstr ""
+
+#: src/wizard.c:219
 msgid "Tango"
 msgstr ""
 
-#: src/wizard.c:190
+#: src/wizard.c:220
 msgid "Linux console"
 msgstr ""
 
-#: src/wizard.c:191
+#: src/wizard.c:221
 msgid "XTerm"
 msgstr ""
 
-#: src/wizard.c:192
+#: src/wizard.c:222
 msgid "Rxvt"
 msgstr ""
 
-#: src/wizard.c:286
+#: src/wizard.c:340
 #, c-format
 msgid "Tilda %d Config"
 msgstr ""
 
-#: src/wizard.c:374
-msgid ""
-"The keybinding you chose for \"Add Tab\" is invalid. Please choose another."
+#: src/wizard.c:794
+msgid "Invalid Cursor Type, reseting to default\n"
 msgstr ""
 
-#: src/wizard.c:376
-msgid ""
-"The keybinding you chose for \"Close Tab\" is invalid. Please choose another."
-msgstr ""
-
-#: src/wizard.c:378
-msgid ""
-"The keybinding you chose for \"Next Tab\" is invalid. Please choose another."
-msgstr ""
-
-#: src/wizard.c:380
-msgid ""
-"The keybinding you chose for \"Previous Tab\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:382
-msgid ""
-"The keybinding you chose for \"Move Tab to Left\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:384
-msgid ""
-"The keybinding you chose for \"Move Tab to Right\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:386
-msgid ""
-"The keybinding you chose for \"Copy\" is invalid. Please choose another."
-msgstr ""
-
-#: src/wizard.c:388
-msgid ""
-"The keybinding you chose for \"Paste\" is invalid. Please choose another."
-msgstr ""
-
-#: src/wizard.c:390
-msgid ""
-"The keybinding you chose for \"Quit\" is invalid. Please choose another."
-msgstr ""
-
-#: src/wizard.c:392
-msgid ""
-"The keybinding you chose for \"Go To Tab 1\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:394
-msgid ""
-"The keybinding you chose for \"Go To Tab 2\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:396
-msgid ""
-"The keybinding you chose for \"Go To Tab 3\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:398
-msgid ""
-"The keybinding you chose for \"Go To Tab 4\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:400
-msgid ""
-"The keybinding you chose for \"Go To Tab 5\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:402
-msgid ""
-"The keybinding you chose for \"Go To Tab 6\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:404
-msgid ""
-"The keybinding you chose for \"Go To Tab 7\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:406
-msgid ""
-"The keybinding you chose for \"Go To Tab 8\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:408
-msgid ""
-"The keybinding you chose for \"Go To Tab 9\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:410
-msgid ""
-"The keybinding you chose for \"Go To Tab 10\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:412
-msgid ""
-"The keybinding you chose for \"Toggle Fullscreen\" is invalid. Please choose "
-"another."
-msgstr ""
-
-#: src/wizard.c:870
+#: src/wizard.c:811
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
 msgstr ""
 
-#: src/wizard.c:895
+#: src/wizard.c:1276
 msgid "Invalid tab position setting, ignoring\n"
 msgstr ""
 
-#: src/wizard.c:1871
-msgid "Enter keyboard shortcut"
-msgstr ""
+#~ msgid "Enable Double Buffering"
+#~ msgstr "Povoliť dvojitý buffering"
+
+#, fuzzy
+#~ msgid "<b>Paste</b>"
+#~ msgstr "<b>Titulok</b>"
+
+#, fuzzy
+#~ msgid "<b>Quit</b>"
+#~ msgstr "<b>Titulok</b>"
+
+#, fuzzy
+#~ msgid "<b>Close Tab</b>"
+#~ msgstr "<b>Príkaz</b>"
+
+#, fuzzy
+#~ msgid "<b>Copy</b>"
+#~ msgstr "<b>Písmo</b>"
+
+#, fuzzy
+#~ msgid "<b>Pull Down Terminal</b>"
+#~ msgstr "<b>Zobrazenie terminálu</b>"
+
+#, fuzzy
+#~ msgid "<b>Move Tab Left</b>"
+#~ msgstr "<b>Príkaz</b>"
+
+#, fuzzy
+#~ msgid "<b>Move Tab Right</b>"
+#~ msgstr "<b>Výška</b>"
+
+#, fuzzy
+#~ msgid "Problem when opening config file\n"
+#~ msgstr "Nemôžem zatvoriť konfiguračný súbor\n"
 
 #, fuzzy
 #~ msgid "Problem while parsing config file\n"
