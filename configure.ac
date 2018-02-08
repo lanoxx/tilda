@@ -12,7 +12,7 @@ m4_define ([tilda_repository],
 AC_PREREQ([2.68])
 
 AC_INIT([Tilda],
-        [1.4.0],
+        [1.4.1],
         [tilda_issues],
         [tilda],
         [tilda_repository])
