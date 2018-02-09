@@ -69,34 +69,54 @@ Replace '#' with the number of the current minor release.
  1. Check out the latest stable branch (e.g. tilda-1-2)
    and commit any changes or patches which you want to include,
    then commit these changes.
- 2. Update the changelog with a message such as:
+ 2. Change into the `po/` folder and run `make update-po`.
+ 3. Update the changelog with a message such as:
        "Update the change log for 1.2.#"
- 3. Update the version number in configure.ac and make
+ 4. Update the version number in configure.ac and make
    a commit with the version number:
        "1.2.#"
- 4. Create a tarball using git-archive:
+ 5. Create a tarball using git-archive:
 
         git archive --prefix=tilda-1.2.#/ -o ../tilda_1.2.#.orig.tar.gz HEAD
 
 # Building a package
 
-You now have a tarball which can be build into a package. The following steps
-are just to document the basic commands that are required to build the package,
-then verify its correct and upload the package to mentors. However the steps which
-are required to setup such a development environment are not explained here:
+With the above `git archive` command you get a tarball
+from which a Debian package can be build. A Debian package
+consists of a separate source and binary package. The following steps
+document the basic commands that are required to build both the source package
+and the binary package, to verify that both are correct and to
+upload the source package to *mentors.debian.org*.
 
- 5. `cd ..; tar -xf tilda_1.2.#.orig.tar.gz`
- 6. `cd tilda-1.2.#`
- 7. Checkout the `tilda-debian` repository from Github and copy the `debian/` folder
+I am using **pbuilder** to build the source and binary packages.
+Please refer to the man pages **pbuilder(8)** on howto 
+setup the base image. I also use **pdebuild** as a convenient script to
+run `debuild` inside the **pbuilder** environment (see **pdebuild(1)**).
+
+ 1. `cd ..; tar -xf tilda_1.2.#.orig.tar.gz`
+ 2. `cd tilda-1.2.#`
+ 3. Checkout the `tilda-debian` repository from Github and copy the `debian/` folder
     to `tilda-1.2.#/`.
- 8. Update the Debian specific change log at `debian/changelog`, such that it contains the latest version that you are building.
- 9. Run `debuild`
-10. If `debuild` finishes without a problem next run `pbuilder`, this will verify that
+ 4. Update the Debian specific change log at `debian/changelog`, 
+    such that it contains the latest version that you are building.
+ 5. To build the source package you need to run **debuild**. You can use one of
+    the following two methods to do this:
+    * Run **debuild** inside a change root by using `pdebuild`:
+    
+          sudo pdebuild --use-pdebuild-internal \
+            -- --basetgz ~/pbuilder/unstable-base.tgz
+    * Run `debuild` directly from the current folder (e.g. from `tilda-1.#.#/`)
+ 
+ 6. If `debuild` finishes without a problem next run `pbuilder`, this will verify that
     the packge is buildable (without warnings or errors) in a clean environment:
 
         sudo pbuilder --build --basetgz ~/pbuilder/unstable-base.tgz tilda_1.2.#-1.dsc
 
-11. If `pbuilder` does not complain and you don not see any warnings in `lintian`, then
+ 7. Run `debsign` to sign the package with your PGP key:
+ 
+        debsign tilda_1.#.#-1_amd64.changes
+ 
+ 8. If `pbuilder` does not complain and you don not see any warnings in `lintian`, then
     upload the package to mentors:
 
-        dput mentors tilda_1.2.#-1_amd64.changes
+        dput mentors tilda_1.#.#-1_amd64.changes
