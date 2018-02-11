@@ -39,7 +39,7 @@ MAINTAINERCLEANFILES = \
 Applicationsdir = ${datadir}/applications
 Applications_DATA = tilda.desktop
 
-Appdatadir = ${datadir}/appdata
+Appdatadir = ${datadir}/metainfo
 Appdata_DATA = tilda.appdata.xml
 
 Pixmapsdir = ${datadir}/pixmaps
