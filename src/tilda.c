@@ -31,7 +31,7 @@
  * file except a parse error.
  */
 #define TILDA_CONFIG_OTHER_ERROR \
-    "<b>An unexpected error occured while parsing the config file.</b>\n\n" \
+    "<b>An unexpected error occurred while parsing the config file.</b>\n\n" \
     "The default configuration will be used instead. This error can occur if the configuration file is corrupted" \
     "or otherwise unreadable. Tilda will now start with a default configuration."
 

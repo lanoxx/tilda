@@ -791,7 +791,7 @@ static void combo_cursor_shape_changed_cb(GtkWidget *w, tilda_window *tw)
 
     if (status < 0 || status > 2) {
         DEBUG_ERROR ("Invalid Cursor Type");
-        g_printerr (_("Invalid Cursor Type, reseting to default\n"));
+        g_printerr (_("Invalid Cursor Type, resetting to default\n"));
         status = 0;
     }
     config_setint("cursor_shape", (VteTerminalCursorShape)status);
