@@ -101,11 +101,6 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
     CFG_INT("cursor_shape", 0, CFGF_NONE),
 
-    /* Deprecated tilda options */
-    CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
-    CFG_BOOL("title_max_length_flag", FALSE, CFGF_NODEFAULT),
-    /* End deprecated tilda options */
-
     /* The length of a tab title */
     CFG_INT("title_max_length", 25, CFGF_NONE),
 
@@ -162,7 +157,6 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("centered_horizontally", FALSE, CFGF_NONE),
     CFG_BOOL("centered_vertically", FALSE, CFGF_NONE),
     CFG_BOOL("enable_transparency", FALSE, CFGF_NONE),
-    CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("auto_hide_on_focus_lost", FALSE, CFGF_NONE),
     CFG_BOOL("auto_hide_on_mouse_leave", FALSE, CFGF_NONE),
     /* Whether and how we limit the length of a tab title */
@@ -179,8 +173,11 @@ static cfg_opt_t config_opts[] = {
     /* Deprecated tilda options */
     CFG_STR("image", NULL, CFGF_NODEFAULT),
 
+    CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
     CFG_INT("transparency", 0, CFGF_NODEFAULT),
-    //Even when CFGF_NODEFAULT flag is passed libconfuse won't let us pass a NULL value to a bool
+
+    CFG_BOOL("title_max_length_flag", FALSE, CFGF_NODEFAULT),
+    CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("scroll_background", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("use_image", FALSE, CFGF_NODEFAULT),
     /* End deprecated tilda options */
