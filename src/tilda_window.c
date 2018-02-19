@@ -172,11 +172,6 @@ void tilda_window_set_fullscreen(tilda_window *tw)
   }
   else {
     gtk_window_unfullscreen (GTK_WINDOW (tw->window));
-    // This appears to be necssary on (at least) xfwm4 if you tabbed out
-    // while fullscreened.
-    gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-    gtk_window_move(GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
   }
 }
 

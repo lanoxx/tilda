@@ -247,6 +247,11 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
 static void pull_up (struct tilda_window_ *tw) {
     tw->current_state = STATE_GOING_UP;
 
+    if (tw->fullscreen)
+    {
+        gtk_window_unfullscreen (GTK_WINDOW(tw->window));
+    }
+
     if (config_getbool ("animation") && !tw->fullscreen) {
         GdkWindow *x11window;
         GdkDisplay *display;
@@ -369,6 +374,11 @@ static void pull_down (struct tilda_window_ *tw) {
      * focus stealing prevention to make the old _NET_WM_USER_TIME hack
      * not work anymore. This is working for now... */
     tilda_window_set_active (tw);
+
+    if (tw->fullscreen)
+    {
+        gtk_window_fullscreen (GTK_WINDOW(tw->window));
+    }
 
     g_debug ("pull_down(): MOVED DOWN");
     tw->current_state = STATE_DOWN;
