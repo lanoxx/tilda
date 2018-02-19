@@ -247,6 +247,9 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
 static void pull_up (struct tilda_window_ *tw) {
     tw->current_state = STATE_GOING_UP;
 
+    gdk_x11_window_set_user_time (gtk_widget_get_window (tw->window),
+                                  tomboy_keybinder_get_current_event_time());
+
     if (tw->fullscreen)
     {
         gtk_window_unfullscreen (GTK_WINDOW(tw->window));
