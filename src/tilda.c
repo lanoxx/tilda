@@ -323,7 +323,6 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
-        { "antialias",          'a', 0, G_OPTION_ARG_NONE,      &(cli_options->antialias),         N_("Use Antialiased Fonts"), NULL },
         { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &(cli_options->background_color),  N_("Set the background color"), NULL },
         { "command",            'c', 0, G_OPTION_ARG_STRING,    &(cli_options->command),           N_("Run a command at startup"), NULL },
         { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &(cli_options->hidden),            N_("Start Tilda hidden"), NULL },
@@ -471,9 +470,6 @@ static void setup_config_from_cli_options(tilda_cli_options *cli_options)
             && cli_options->y_pos != config_getint ("y_pos"))
         config_setint ("y_pos", cli_options->y_pos);
 
-    if (cli_options->antialias != FALSE
-            && cli_options->antialias != config_getbool ("antialias"))
-        config_setbool ("antialias", cli_options->antialias);
     if (cli_options->hidden != FALSE
             && cli_options->hidden != config_getbool ("hidden"))
         config_setbool ("hidden", cli_options->hidden);

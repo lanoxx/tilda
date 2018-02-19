@@ -42,7 +42,6 @@ struct tilda_cli_options {
     gint lines;
     gint x_pos;
     gint y_pos;
-    gboolean antialias;
     gboolean scrollbar;
     gboolean show_config;
     gboolean version;

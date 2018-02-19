@@ -719,22 +719,6 @@ static void check_cursor_blinks_toggled_cb (GtkWidget *w, tilda_window *tw)
     }
 }
 
-static void check_enable_antialiasing_toggled_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    guint i;
-    tilda_term *tt;
-
-    config_setbool ("antialias", status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        PangoFontDescription *description =
-            pango_font_description_from_string (config_getstr ("font"));
-        vte_terminal_set_font (VTE_TERMINAL(tt->vte_term), description);
-    }
-}
-
 static void spin_auto_hide_time_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint auto_hide_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
@@ -1908,7 +1892,6 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
     COMBO_BOX ("vte_cursor_shape", "cursor_shape");
 
-    CHECK_BUTTON ("check_enable_antialiasing", "antialias");
     CHECK_BUTTON ("check_allow_bold_text", "bold");
     FONT_BUTTON ("button_font", "font");
 
@@ -2063,7 +2046,6 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb, tw);
 
-    CONNECT_SIGNAL ("check_enable_antialiasing","toggled",check_enable_antialiasing_toggled_cb, tw);
     CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb, tw);
     CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb, tw);
 
