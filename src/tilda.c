@@ -335,12 +335,7 @@ static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_option
         { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &(cli_options->working_dir),       N_("Set Initial Working Directory"), NULL },
         { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &(cli_options->x_pos),             N_("X Position"), NULL },
         { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &(cli_options->y_pos),             N_("Y Position"), NULL },
-#ifdef VTE_290
-        { "image",              'B', 0, G_OPTION_ARG_STRING,    &(cli_options->image),             N_("Set Background Image"), NULL },
-        { "transparency",       't', 0, G_OPTION_ARG_INT,       &(cli_options->transparency),      N_("Opaqueness: 0-100%"), NULL },
-#else
         { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &(cli_options->back_alpha),        N_("Opaqueness: 0-100%"), NULL },
-#endif
         { "config",             'C', 0, G_OPTION_ARG_NONE,      &(cli_options->show_config),       N_("Show Configuration Wizard"), NULL },
         { NULL }
     };
@@ -452,26 +447,14 @@ static void setup_config_from_cli_options(tilda_cli_options *cli_options)
         config_setstr ("font", cli_options->font);
         g_free(cli_options->font);
     }
-#ifdef VTE_290
-    if (cli_options->image != NULL
-            && cli_options->image != config_getstr ("image")) {
-        config_setstr ("image", cli_options->image);
-        g_free(cli_options->image);
-    }
-    if (cli_options->transparency != 0
-            && cli_options->transparency != config_getint ("transparency"))
-    {
-        config_setbool ("enable_transparency", cli_options->transparency);
-        config_setint ("transparency", cli_options->transparency);
-    }
-#else
+
     if (cli_options->back_alpha != 0
             && cli_options->back_alpha != config_getint ("back_alpha"))
     {
         config_setbool ("enable_transparency", ~cli_options->back_alpha & 0xffff);
         config_setint ("back_alpha", cli_options->back_alpha);
     }
-#endif
+
     if (cli_options->working_dir != NULL
             && cli_options->working_dir != config_getstr ("working_dir")) {
         config_setstr ("working_dir", cli_options->working_dir);

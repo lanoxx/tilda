@@ -38,13 +38,9 @@ GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
 static gint tilda_term_config_defaults (tilda_term *tt);
 
-#ifdef VTE_290
-    static void child_exited_cb (GtkWidget *widget, gpointer data);
-#else
-    static void eof_cb (GtkWidget *widget, gpointer data);
-    /* VTE 2.91 introduced a new status argument to the "child-exited" signal */
-    static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
-#endif
+static void eof_cb (GtkWidget *widget, gpointer data);
+/* VTE 2.91 introduced a new status argument to the "child-exited" signal */
+static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
@@ -56,9 +52,6 @@ static void maximize_window_cb (GtkWidget *widget, gpointer data);
 static void restore_window_cb (GtkWidget *widget, gpointer data);
 static void refresh_window_cb (GtkWidget *widget, gpointer data);
 static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
-#ifdef VTE_290
-static void status_line_changed_cb (GtkWidget *widget, gpointer data);
-#endif
 
 gint tilda_term_free (struct tilda_term_ *term)
 {
@@ -149,15 +142,10 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(child_exited_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "window-title-changed",
                       G_CALLBACK(window_title_changed_cb), term);
-#ifdef VTE_290
-    g_signal_connect (G_OBJECT(term->vte_term), "eof",
-                      G_CALLBACK(child_exited_cb), term);
-    g_signal_connect (G_OBJECT(term->vte_term), "status-line-changed",
-                      G_CALLBACK(status_line_changed_cb), term);
-#else
+
     g_signal_connect (G_OBJECT(term->vte_term), "eof",
                       G_CALLBACK(eof_cb), term);
-#endif
+
     g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
                       G_CALLBACK(button_press_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "key-press-event",
@@ -277,16 +265,6 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
 
     g_free (title);
 }
-
-#ifdef VTE_290
-static void status_line_changed_cb (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
-{
-    DEBUG_FUNCTION ("status_line_changed_cb");
-    DEBUG_ASSERT (widget != NULL);
-
-    g_print ("Status = `%s'.\n", vte_terminal_get_status_line (VTE_TERMINAL(widget)));
-}
-#endif
 
 static void iconify_window_cb (G_GNUC_UNUSED GtkWidget *widget, gpointer data)
 {
@@ -464,19 +442,7 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
         char **envv = malloc(2*sizeof(void *));
         envv[0] = getenv("PATH");
         envv[1] = NULL;
-#ifdef VTE_290
-        ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
-            VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-            working_dir, /* const char *working_directory */
-            argv, /* char **argv */
-            envv, /* char **envv */
-            G_SPAWN_SEARCH_PATH,    /* GSpawnFlags spawn_flags */
-            NULL, /* GSpawnChildSetupFunc child_setup */
-            NULL, /* gpointer child_setup_data */
-            &tt->pid, /* GPid *child_pid */
-            NULL  /* GError **error */
-            );
-#else
+
         ret = vte_terminal_spawn_sync (VTE_TERMINAL (tt->vte_term),
             VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
             working_dir, /* const char *working_directory */
@@ -488,8 +454,8 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
             &tt->pid, /* GPid *child_pid */
             NULL, /* GCancellable * cancellable, */
             NULL  /* GError **error */
-            );
-#endif
+        );
+
         g_strfreev (argv);
         g_free (envv);
 
@@ -549,19 +515,7 @@ launch_default_shell:
         argv[0] = default_command;
         argv[1] = NULL;
     }
-#ifdef VTE_290
-    ret = vte_terminal_fork_command_full (VTE_TERMINAL (tt->vte_term),
-        VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-        working_dir, /* const char *working_directory */
-        argv, /* char **argv */
-        NULL, /* char **envv */
-        flags,    /* GSpawnFlags spawn_flags */
-        NULL, /* GSpawnChildSetupFunc child_setup */
-        NULL, /* gpointer child_setup_data */
-        &tt->pid, /* GPid *child_pid */
-        NULL  /* GError **error */
-        );
-#else
+
     ret = vte_terminal_spawn_sync (VTE_TERMINAL (tt->vte_term),
         VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
         working_dir, /* const char *working_directory */
@@ -573,8 +527,8 @@ launch_default_shell:
         &tt->pid, /* GPid *child_pid */
         NULL, /* GCancellable *cancellable */
         NULL  /* GError **error */
-        );
-#endif
+    );
+
     g_free(argv1);
     g_free (argv);
 
@@ -587,7 +541,6 @@ launch_default_shell:
     return 0;
 }
 
-#ifdef VTE_291
 static void eof_cb (GtkWidget *widget, gpointer data) {
     DEBUG_FUNCTION ("eof_cb");
     DEBUG_ASSERT (widget != NULL);
@@ -595,13 +548,8 @@ static void eof_cb (GtkWidget *widget, gpointer data) {
 
     child_exited_cb (widget, 0, data);
 }
-#endif
 
-#ifdef VTE_290
-static void child_exited_cb (GtkWidget *widget, gpointer data)
-#else
 static void child_exited_cb (GtkWidget *widget, gint status, gpointer data)
-#endif
 {
     DEBUG_FUNCTION ("child_exited_cb");
     DEBUG_ASSERT (widget != NULL);
@@ -660,12 +608,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
-#ifdef VTE_290
-    bg.alpha =    1.0;
-    gdouble transparency_level = 0.0;
-#else
+
     bg.alpha =    (config_getbool("enable_transparency") ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
-#endif
 
     fg.red   =    GUINT16_TO_FLOAT(config_getint ("text_red"));
     fg.green =    GUINT16_TO_FLOAT(config_getint ("text_green"));
@@ -684,29 +628,29 @@ static gint tilda_term_config_defaults (tilda_term *tt)
         current_palette[i].alpha = 1.0;
     }
 
-    vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term), &fg, &bg, current_palette, TERMINAL_PALETTE_SIZE);
+    vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term),
+                             &fg,
+                             &bg,
+                             current_palette,
+                             TERMINAL_PALETTE_SIZE);
 
     /** Bells **/
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
-#ifdef VTE_290
-    vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));
-#endif
+
     /** Cursor **/
     vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
             (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
-    vte_terminal_set_color_cursor_rgba (VTE_TERMINAL(tt->vte_term), &cc);
+    vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cc);
 
     cursor_shape = config_getint("cursor_shape");
     if (cursor_shape < 0 || cursor_shape > 2) {
         config_setint("cursor_shape", 0);
         cursor_shape = 0;
     }
-    vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term), (VteTerminalCursorShape)cursor_shape);
+    vte_terminal_set_cursor_shape(VTE_TERMINAL(tt->vte_term),
+                                  (VteCursorShape) cursor_shape);
 
     /** Scrolling **/
-#ifdef VTE_290
-    vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_background"));
-#endif
     vte_terminal_set_scroll_on_output (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_output"));
     vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), config_getbool ("scroll_on_key"));
 
@@ -764,33 +708,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
         word_chars = DEFAULT_WORD_CHARS;
     }
 
-    /**
-     * The word_chars feature was removed from VTE in 38.x and reintroduced with a different API function in VTE
-     * 40.x, so we need the following compile guards to ensure we only include the word_chars feature in the
-     * supported versions.
-     **/
+    vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
 
-#ifdef VTE_290 /* VTE 2.90 only */
-    vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
-
-    /** Background **/
-    if (config_getbool ("use_image"))
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), config_getstr ("image"));
-    else
-        vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
-    transparency_level = ((gdouble) config_getint ("transparency"))/100;
-
-    if (config_getbool ("enable_transparency") && transparency_level > 0)
-    {
-        vte_terminal_set_background_saturation (VTE_TERMINAL (tt->vte_term), transparency_level);
-        vte_terminal_set_opacity (VTE_TERMINAL (tt->vte_term), (1.0 - transparency_level) * 0xffff);
-        vte_terminal_set_background_transparent (VTE_TERMINAL(tt->vte_term), !tt->tw->have_argb_visual);
-    }
-#else
-    #if VTE_MINOR_VERSION >= 40
-        vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
-    #endif
-#endif
     return 0;
 }
 

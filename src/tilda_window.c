@@ -215,29 +215,6 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
     tilda_term *tt;
     guint i;
 
-#ifdef VTE_290
-    gdouble transparency_level = 0.0;
-    transparency_level = ((gdouble) config_getint ("transparency"))/100;
-
-    if (status)
-    {
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), transparency_level);
-            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), !tw->have_argb_visual);
-            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), (1.0 - transparency_level) * 0xffff);
-        }
-    }
-    else
-    {
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), 0);
-            vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), FALSE);
-            vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), 0xffff);
-        }
-    }
-#else
     GdkRGBA bg;
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
@@ -248,7 +225,6 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
             tt = g_list_nth_data (tw->terms, i);
             vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
         }
-#endif
 }
 
 gint tilda_window_toggle_searchbar (tilda_window *tw)
@@ -789,11 +765,9 @@ static void tilda_window_search (G_GNUC_UNUSED GtkWidget *widget, tilda_window *
 
     GError *error = NULL;
     GRegex *regex = g_regex_new (pattern, compile_flags, G_REGEX_MATCH_NEWLINE_ANY, &error);
-#ifdef VTE_290
-    vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex);
-#else
-    vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex, 0);
-#endif
+    vte_terminal_search_set_gregex (VTE_TERMINAL (vteTerminal), regex,
+                                    (GRegexMatchFlags) 0);
+
     vte_terminal_search_set_wrap_around (VTE_TERMINAL (vteTerminal), wrap_on_search);
 
     gboolean search_result;

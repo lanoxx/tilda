@@ -38,12 +38,7 @@ struct tilda_cli_options {
     gchar *command;
     gchar *font;
     gchar *working_dir;
-#ifdef VTE_290
-    gchar *image;
-    gint *transparency;
-#else
     gint back_alpha;
-#endif
     gint lines;
     gint x_pos;
     gint y_pos;
@@ -64,13 +59,3 @@ struct tilda_cli_options {
 G_END_DECLS
 
 #endif
-
-/* Future compatibility with VTE-2.90 */
-#ifndef VTE_290 
-#define vte_terminal_set_colors_rgba vte_terminal_set_colors
-#define vte_terminal_set_color_background_rgba vte_terminal_set_color_background
-#define vte_terminal_set_color_foreground_rgba vte_terminal_set_color_foreground
-#define vte_terminal_set_color_cursor_rgba vte_terminal_set_color_cursor
-#define VteTerminalCursorShape VteCursorShape
-#endif
-

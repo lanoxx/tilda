@@ -174,15 +174,17 @@ static cfg_opt_t config_opts[] = {
     /* Whether closing a tab shows a confirmation dialog. */
     CFG_BOOL("confirm_close_tab", FALSE, CFGF_NONE),
 
-    /* Config settings for VTE-2.90 features */
+    CFG_INT("back_alpha", 0xffff, CFGF_NONE),
+
+    /* Deprecated tilda options */
     CFG_STR("image", NULL, CFGF_NODEFAULT),
+
+    CFG_INT("transparency", 0, CFGF_NODEFAULT),
     //Even when CFGF_NODEFAULT flag is passed libconfuse won't let us pass a NULL value to a bool
     CFG_BOOL("scroll_background", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("use_image", FALSE, CFGF_NODEFAULT),
-    CFG_INT("transparency", 0, CFGF_NONE),
-#if VTE_MINOR_VERSION >= 38 /* VTE-2.91 */
-    CFG_INT("back_alpha", 0xffff, CFGF_NONE),
-#endif
+    /* End deprecated tilda options */
+
     CFG_END()
 };
 
@@ -420,27 +422,19 @@ gint config_init (const gchar *config_file)
 	}
 
     /* Deprecate old config settings
-     * This is a lame work around until we get a permenant solution to
-     * libconfuse lacking for this functionality
-     */
-    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number","title_max_length_flag","double_buffer"};
-    remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
-
-#if VTE_MINOR_VERSION >= 40
-    /* Deprecate old config settings
      * This is a lame work around until we get a permanent solution to
      * libconfuse lacking for this functionality
      */
-    const gchar *deprecated_vte_config_options[] = {"image", "scroll_background", "use_image"};
-    remove_deprecated_config_options (deprecated_vte_config_options, G_N_ELEMENTS(deprecated_vte_config_options));
-#else
-    if (cfg_getopt(tc, "use_image")->nvalues < 1) {
-        cfg_setbool(tc, "use_image", FALSE);
-    }
-    if (cfg_getopt(tc, "scroll_background")->nvalues < 1) {
-        cfg_setbool(tc, "scroll_background", TRUE);
-    }
-#endif
+    const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number",
+                                                      "title_max_length_flag",
+                                                      "double_buffer",
+                                                      "image",
+                                                      "transparency",
+                                                      "scroll_background",
+                                                      "use_image"
+    };
+    remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
+
     #ifndef NO_THREADSAFE
         g_mutex_init(&mutex);
     #endif

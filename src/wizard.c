@@ -245,10 +245,6 @@ static void update_palette_color_button(gint idx);
 static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
 static void initialize_geometry_spinners(tilda_window *tw);
 
-#ifndef VTE_290
-static void wizard_hide_deprecated_options(void);
-#endif
-
 static gint find_monitor_number(tilda_window *tw)
 {
     DEBUG_FUNCTION ("find_monitor_number");
@@ -342,10 +338,6 @@ gint wizard (tilda_window *tw)
     gtk_window_set_type_hint (GTK_WINDOW(tw->wizard_window), GDK_WINDOW_TYPE_HINT_DIALOG);
 
     gtk_widget_show_all (tw->wizard_window);
-
-#ifndef VTE_290
-    wizard_hide_deprecated_options();
-#endif
 
     /* This is needed to ensure that the wizard appears above of the terminal window */
     gtk_window_present(GTK_WINDOW(tw->wizard_window));
@@ -709,9 +701,6 @@ static void check_terminal_bell_toggled_cb (GtkWidget *w, tilda_window *tw)
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), status);
-#ifdef VTE_290
-        vte_terminal_set_visible_bell (VTE_TERMINAL(tt->vte_term), !status);
-#endif
     }
 }
 
@@ -794,11 +783,12 @@ static void combo_cursor_shape_changed_cb(GtkWidget *w, tilda_window *tw)
         g_printerr (_("Invalid Cursor Type, resetting to default\n"));
         status = 0;
     }
-    config_setint("cursor_shape", (VteTerminalCursorShape)status);
+    config_setint("cursor_shape", (VteCursorShape) status);
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_cursor_shape (VTE_TERMINAL(tt->vte_term), (VteTerminalCursorShape)status);
+        vte_terminal_set_cursor_shape (VTE_TERMINAL(tt->vte_term),
+                                       (VteCursorShape) status);
     }
 }
 
@@ -998,7 +988,6 @@ static void entry_web_browser_changed (GtkWidget *w, tilda_window *tw) {
     config_setstr ("web_browser", web_browser);
 }
 
-#if (VTE_290 || VTE_MINOR_VERSION >= 40)
 static void entry_word_chars_changed (GtkWidget *w, tilda_window *tw)
 {
     guint i;
@@ -1013,37 +1002,9 @@ static void entry_word_chars_changed (GtkWidget *w, tilda_window *tw)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-    #if VTE_MINOR_VERSION >= 40
-            vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
-    #else
-            vte_terminal_set_word_chars (VTE_TERMINAL(tt->vte_term), word_chars);
-    #endif
+        vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
     }
 }
-#endif
-
-#ifdef VTE_291
-static void wizard_hide_deprecated_options(void) {
-    /**
-     * Word chars are only unavailable in VTE 38.x
-     */
-    #if VTE_MINOR_VERSION < 40
-        GtkWidget *frame_word_chars =
-          GTK_WIDGET(gtk_builder_get_object (xml, ("frame_word_chars")));
-        gtk_widget_hide (frame_word_chars);
-    #endif
-
-    GtkWidget *check_use_image_for_background =
-      GTK_WIDGET (gtk_builder_get_object (xml, ("check_use_image_for_background")));
-    GtkWidget *button_background_image =
-        GTK_WIDGET (gtk_builder_get_object (xml, ("button_background_image")));
-    GtkWidget *check_scroll_background =
-      GTK_WIDGET (gtk_builder_get_object (xml, ("check_scroll_background")));
-    gtk_widget_hide (check_use_image_for_background);
-    gtk_widget_hide (button_background_image);
-    gtk_widget_hide (check_scroll_background);
-}
-#endif
 
 /*
  * Finds the coordinate that will center the tilda window in the screen.
@@ -1334,24 +1295,7 @@ static void check_enable_transparency_toggled_cb (GtkWidget *w, tilda_window *tw
 
     tilda_window_toggle_transparency(tw);
 }
-#ifdef VTE_290
-static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gdouble transparency_level = (status / 100.0);
-    guint i;
-    tilda_term *tt;
 
-    config_setint ("transparency", status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_background_saturation (VTE_TERMINAL(tt->vte_term), transparency_level);
-        vte_terminal_set_opacity (VTE_TERMINAL(tt->vte_term), (1.0 - transparency_level) * 0xffff);
-        vte_terminal_set_background_transparent(VTE_TERMINAL(tt->vte_term), !tw->have_argb_visual);
-    }
-}
-#else
 static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
@@ -1370,7 +1314,7 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_win
             vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
         }
 }
-#endif
+
 static void spin_animation_delay_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
@@ -1424,50 +1368,6 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w, tilda_window *tw)
         gtk_window_resize (GTK_WINDOW(tw->window), 1, 1);
     }
 }
-
-#ifdef VTE_290
-static void check_use_image_for_background_toggled_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    const GtkWidget *button_background_image =
-        GTK_WIDGET (gtk_builder_get_object (xml, "button_background_image"));
-
-    const gchar *image = config_getstr ("image");
-    guint i;
-    tilda_term *tt;
-
-
-    config_setbool ("use_image", status);
-
-    gtk_widget_set_sensitive (GTK_WIDGET(button_background_image), status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-
-        if (status)
-            vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), image);
-        else
-            vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), NULL);
-    }
-}
-
-static void button_background_image_selection_changed_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gchar *image = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(w));
-    guint i;
-    tilda_term *tt;
-
-    config_setstr ("image", image);
-
-    if (config_getbool ("use_image"))
-    {
-        for (i=0; i<g_list_length (tw->terms); i++) {
-            tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_background_image_file (VTE_TERMINAL(tt->vte_term), image);
-        }
-    }
-}
-#endif
 
 static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
 {
@@ -1558,8 +1458,10 @@ static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
 
         for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
-            vte_terminal_set_color_foreground_rgba (VTE_TERMINAL(tt->vte_term), &gdk_text);
-            vte_terminal_set_color_background_rgba (VTE_TERMINAL(tt->vte_term), &gdk_back);
+            vte_terminal_set_color_foreground (VTE_TERMINAL(tt->vte_term),
+                                               &gdk_text);
+            vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
+                                               &gdk_back);
         }
 
         tilda_window_refresh_transparency(tw);
@@ -1586,7 +1488,8 @@ static void colorbutton_cursor_color_set_cb (GtkWidget *w, tilda_window *tw)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_color_cursor_rgba (VTE_TERMINAL(tt->vte_term), &gdk_cursor_color);
+        vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term),
+                                       &gdk_cursor_color);
     }
 }
 
@@ -1611,7 +1514,8 @@ static void colorbutton_text_color_set_cb (GtkWidget *w, tilda_window *tw)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_color_foreground_rgba (VTE_TERMINAL(tt->vte_term), &gdk_text_color);
+        vte_terminal_set_color_foreground (VTE_TERMINAL(tt->vte_term),
+                                           &gdk_text_color);
     }
 }
 
@@ -1635,7 +1539,8 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
 
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_color_background_rgba (VTE_TERMINAL(tt->vte_term), &gdk_back_color);
+        vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
+                                           &gdk_back_color);
     }
 }
 
@@ -1659,20 +1564,20 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
         color_button =
             GTK_WIDGET (gtk_builder_get_object (xml, "colorbutton_back"));
         gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(color_button), &bg);
-#ifndef VTE_290
-        bg.alpha = (config_getbool("enable_transparency") ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
-#endif
+
+        bg.alpha = (config_getbool("enable_transparency")
+                    ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
 
         memcpy(current_palette, palette_schemes[i].palette, sizeof(current_palette));
 
         /* Set terminal palette. */
         for (j=0; j<g_list_length (tw->terms); j++) {
             tt = g_list_nth_data (tw->terms, j);
-            vte_terminal_set_colors_rgba (VTE_TERMINAL(tt->vte_term),
-                                          &fg,
-                                          &bg,
-                                          current_palette,
-                                          TERMINAL_PALETTE_SIZE);
+            vte_terminal_set_colors (VTE_TERMINAL(tt->vte_term),
+                                     &fg,
+                                     &bg,
+                                     current_palette,
+                                     TERMINAL_PALETTE_SIZE);
         }
 
         for (j=0; j<TERMINAL_PALETTE_SIZE; j++) {
@@ -1745,11 +1650,11 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w, tilda_window *tw)
     for (i=0; i<g_list_length (tw->terms); i++)
     {
         tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_colors_rgba (VTE_TERMINAL (tt->vte_term),
-                                      &fg,
-                                      &bg,
-                                      current_palette,
-                                      TERMINAL_PALETTE_SIZE);
+        vte_terminal_set_colors (VTE_TERMINAL (tt->vte_term),
+                                 &fg,
+                                 &bg,
+                                 current_palette,
+                                 TERMINAL_PALETTE_SIZE);
     }
 }
 
@@ -1837,21 +1742,7 @@ static void check_scroll_on_keystroke_toggled_cb (GtkWidget *w, tilda_window *tw
         vte_terminal_set_scroll_on_keystroke (VTE_TERMINAL(tt->vte_term), status);
     }
 }
-#ifdef VTE_290
-static void check_scroll_background_toggled_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    guint i;
-    tilda_term *tt;
 
-    config_setbool ("scroll_background", status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_scroll_background (VTE_TERMINAL(tt->vte_term), status);
-    }
-}
-#endif
 static void combo_backspace_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -2106,25 +1997,9 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     COMBO_BOX ("combo_backspace_binding", "backspace_key");
     COMBO_BOX ("combo_delete_binding", "delete_key");
 
-    #if (VTE_290 || VTE_MINOR_VERSION >= 40)
-        TEXT_ENTRY ("entry_word_chars", "word_chars");
-    #endif
+    TEXT_ENTRY ("entry_word_chars", "word_chars");
 
-    /* VTE-2.90 Compatibility */
-#ifdef VTE_290
-    SPIN_BUTTON ("spin_level_of_transparency", "transparency");
-    CHECK_BUTTON ("check_scroll_background", "scroll_background");
-    CHECK_BUTTON ("check_use_image_for_background", "use_image");
-    SET_SENSITIVE_BY_CONFIG_BOOL ("button_background_image","use_image");
-
-    char* filename = config_getstr ("image");
-    if(filename != NULL) {
-        FILE_BUTTON ("button_background_image", filename);
-    }
-#else
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(xml, ("spin_level_of_transparency"))), (100 - 100*GUINT16_TO_FLOAT(config_getint("back_alpha"))));
-#endif
-
 }
 
 static void initialize_scrollback_settings(void) {
@@ -2266,16 +2141,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("button_wizard_close","clicked", wizard_button_close_clicked_cb, wizard);
     CONNECT_SIGNAL ("wizard_window","delete_event", wizard_window_delete_event_cb, wizard);
 
-#if (VTE_290 || VTE_MINOR_VERSION >= 40)
     CONNECT_SIGNAL ("entry_word_chars", "changed", entry_word_chars_changed, tw);
-#endif
-
-    /* VTE-2.90 SIGNALS */
-#ifdef VTE_290
-    CONNECT_SIGNAL ("check_use_image_for_background","toggled",check_use_image_for_background_toggled_cb, tw);
-    CONNECT_SIGNAL ("button_background_image","selection-changed",button_background_image_selection_changed_cb, tw);
-    CONNECT_SIGNAL ("check_scroll_background","toggled",check_scroll_background_toggled_cb, tw);
-#endif
 }
 
 /* Initialize the palette scheme menu.
