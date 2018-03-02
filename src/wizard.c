@@ -1292,7 +1292,7 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_win
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
     bg.alpha =    1.0 - (status / 100.0);
 
-    config_setint ("back_alpha", (100 - status) * 0x290 - 65);
+    config_setint ("back_alpha", GUINT16_FROM_FLOAT (bg.alpha));
     for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
             vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
