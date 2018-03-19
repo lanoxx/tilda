@@ -1,11 +1,11 @@
 New Translations
 ================================================================================
-We, the Tilda developers, have decided to use Launchpad to assist with our
-translation effort. Please use it if you can. It is located at
+We, the Tilda developers, have stopped using Launchpad to assist with our
+translation effort. It was located at
 https://translations.launchpad.net/tilda/trunk/+pots/tilda
 
-We would appreciate if you do translations on Launchpad to save yourself and
-others from unneeded effort.
+Please directly submit Pull Requests on GitHub to update translations or
+initialize new translation.
 
 
 How to integrate a new translation into Tilda
@@ -30,6 +30,11 @@ msginit -l en_US         # (for USA English. Creates en.po)
 # extension.
 #
 # That would be "en" for the above examples
+#
+# If po/Makefile does not exist, please configure this project first:
+#
+# autoreconf --install --verbose --force
+# ./configure
 
 Then run the following commands:
 
