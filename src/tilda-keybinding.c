@@ -112,13 +112,13 @@ tilda_keybinding_init (GtkBuilder *builder)
     GtkTreeViewColumn *column;
     GtkTreeIter iter;
 
-    column = gtk_tree_view_column_new_with_attributes (_ ("Action"), renderer,
+    column = gtk_tree_view_column_new_with_attributes (_("Action"), renderer,
                                                        "text", KB_TREE_ACTION,
                                                        NULL);
 
     gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
 
-    column = gtk_tree_view_column_new_with_attributes (_ ("Shortcut"), renderer,
+    column = gtk_tree_view_column_new_with_attributes (_("Shortcut"), renderer,
                                                        "text", KB_TREE_SHORTCUT,
                                                        NULL);
 
