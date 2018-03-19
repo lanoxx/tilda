@@ -4,6 +4,7 @@ src/menu.ui
 src/tilda.ui
 src/configsys.c
 src/tilda.c
+src/tilda-keybinding.c
 src/tilda_terminal.c
 src/tilda_window.c
 src/wizard.c
