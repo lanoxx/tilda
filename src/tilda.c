@@ -676,6 +676,9 @@ int main (int argc, char *argv[])
     g_setenv ("G_MESSAGES_DEBUG", "tilda", FALSE);
 #endif
 
+    /* Set supported backend to X11 */
+    gdk_set_allowed_backends ("x11");
+
     tilda_window tw;
     /* NULL set the tw pointers so we can get a clean exit on initialization failure */
     memset(&tw, 0, sizeof(tilda_window));
