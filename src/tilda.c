@@ -686,6 +686,9 @@ int main (int argc, char *argv[])
     g_log_set_default_handler (tilda_log_handler, NULL);
 #endif
 
+    /* Set supported backend to X11 */
+    gdk_set_allowed_backends ("x11");
+
     tilda_window tw;
     /* NULL set the tw pointers so we can get a clean exit on initialization failure */
     memset(&tw, 0, sizeof(tilda_window));
