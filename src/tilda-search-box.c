@@ -256,7 +256,7 @@ tilda_search_box_init (TildaSearchBox *box)
 
   search_box = TILDA_SEARCH_BOX (box);
 
-  search_box->last_direction = SEARCH_FORWARD;
+  search_box->last_direction = SEARCH_BACKWARD;
 
   /* Initialize to true to prevent search from
    * wrapping around on first search. */
