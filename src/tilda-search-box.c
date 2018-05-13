@@ -18,6 +18,9 @@
 #include "tilda-search-box.h"
 #include "tilda-enum-types.h"
 
+#define PCRE2_CODE_UNIT_WIDTH 0
+#include <pcre2.h>
+
 #define GRESOURCE "/org/tilda/"
 
 struct _TildaSearchBox
@@ -55,17 +58,19 @@ search (TildaSearchBox       *search,
   GtkEntryBuffer *buffer;
   GtkToggleButton *toggle_button;
 
-  GRegexCompileFlags compile_flags;
+  guint32 compile_flags;
   gboolean wrap_on_search;
   gboolean is_regex;
+  gboolean match_case;
   const gchar *text;
   gchar *pattern;
+  size_t pattern_length;
   gboolean search_result;
 
   GError *error;
-  GRegex *regex;
+  VteRegex *regex;
 
-  compile_flags = G_REGEX_OPTIMIZE;
+  compile_flags = 0;
   wrap_on_search = FALSE;
   toggle_button = GTK_TOGGLE_BUTTON (search->check_regex);
   is_regex = gtk_toggle_button_get_active (toggle_button);
@@ -78,22 +83,28 @@ search (TildaSearchBox       *search,
 
   if (is_regex)
     {
-      compile_flags |= G_REGEX_MULTILINE;
+      compile_flags |= PCRE2_MULTILINE;
       pattern = g_strdup (text);
     }
   else
     pattern = g_regex_escape_string (text, -1);
 
+  pattern_length = strlen (pattern);
+
   toggle_button = GTK_TOGGLE_BUTTON (search->check_match_case);
-  if (!gtk_toggle_button_get_active (toggle_button))
+  match_case = gtk_toggle_button_get_active (toggle_button);
+
+  if (!match_case)
   {
-    compile_flags |= G_REGEX_CASELESS;
+    compile_flags |= PCRE2_CASELESS;
   }
 
+  compile_flags |= PCRE2_MULTILINE;
+
   error = NULL;
-  regex = g_regex_new (pattern, compile_flags,
-                       G_REGEX_MATCH_NEWLINE_ANY,
-                       &error);
+
+  regex = vte_regex_new_for_search (pattern, pattern_length, compile_flags, &error);
+
   g_free (pattern);
 
   if (error)
@@ -113,7 +124,7 @@ search (TildaSearchBox       *search,
   gtk_widget_set_visible (search->label, !search_result);
   search->last_search_successful = search_result;
 
-  g_regex_unref(regex);
+  vte_regex_unref (regex);
 }
 
 static gboolean
@@ -213,7 +224,7 @@ tilda_search_box_class_init (TildaSearchBoxClass *box_class)
   signals[SIGNAL_SEARCH] =
     g_signal_new ("search", TILDA_TYPE_SEARCH_BOX, G_SIGNAL_RUN_LAST, 0,
                   NULL, NULL, NULL, G_TYPE_BOOLEAN,
-                  3, G_TYPE_REGEX, TILDA_TYPE_SEARCH_DIRECTION, G_TYPE_BOOLEAN);
+                  3, VTE_TYPE_REGEX, TILDA_TYPE_SEARCH_DIRECTION, G_TYPE_BOOLEAN);
 
   /**
    * TildaSearchBox::focus-out:

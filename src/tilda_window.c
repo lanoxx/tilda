@@ -236,7 +236,7 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
 
 static gboolean
 search_cb (TildaSearchBox       *search,
-           GRegex               *regex,
+           VteRegex             *regex,
            TildaSearchDirection  direction,
            gboolean              wrap_on_search,
            tilda_window         *tw)
@@ -248,7 +248,7 @@ search_cb (TildaSearchBox       *search,
 
   vte_terminal = VTE_TERMINAL (term->vte_term);
 
-  vte_terminal_search_set_gregex (vte_terminal, regex, (GRegexMatchFlags) 0);
+  vte_terminal_search_set_regex (vte_terminal, regex, (GRegexMatchFlags) 0);
 
   vte_terminal_search_set_wrap_around (vte_terminal, wrap_on_search);
 
