@@ -29,6 +29,8 @@ src/tilda-enum-types.c: $(srcdir)/src/tilda-enum-types.c.template $(ENUM_TYPES) 
 src_tilda_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_builddir)/src \
+	-DG_LOG_DOMAIN='"tilda"' \
+	-DG_LOG_USE_STRUCTURED \
 	-DDATADIR='"$(datadir)"' \
 	-DLOCALEDIR='"$(localedir)"' \
 	-DPKGDATADIR='"$(pkgdatadir)"' \
