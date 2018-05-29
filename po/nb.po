@@ -1,0 +1,880 @@
+# Norwegian (bokmål) translation of Tilda.
+# Copyright (C) 2018 Ira W. Snyder
+# This file is distributed under the same license as the tilda package.
+# Åka Sikrom <a4@hush.com>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda 1.5~alpha\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2018-05-29 08:40+0200\n"
+"PO-Revision-Date: 2018-05-29 10:38+0100\n"
+"Last-Translator: Åka Sikrom <a4@hush.com>\n"
+"Language-Team: Norwegian Bokmaal <i18n-nb@lister.ping.uio.no>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Norwegian Bokmal\n"
+"X-Poedit-Country: NORWAY\n"
+
+#: src/menu.ui:6
+msgid "_New Tab"
+msgstr "_Ny fane"
+
+#: src/menu.ui:10
+msgid "_Close Tab"
+msgstr "_Lukk fane"
+
+#: src/menu.ui:16
+msgid "_Copy"
+msgstr "_Kopier"
+
+#: src/menu.ui:20
+msgid "_Paste"
+msgstr "_Lim inn"
+
+#: src/menu.ui:26
+msgid "_Toggle Fullscreen"
+msgstr "_Slå på/av fullskjerm"
+
+#: src/menu.ui:30
+msgid "_Toggle Searchbar"
+msgstr "_Slå på/av søkelinje"
+
+#: src/menu.ui:36
+msgid "_Preferences"
+msgstr "_Innstillinger"
+
+#: src/menu.ui:42
+msgid "_Quit"
+msgstr "_Avslutt"
+
+#: src/tilda.ui:69
+msgid "Close Tilda"
+msgstr "Lukk Tilda"
+
+#: src/tilda.ui:72
+msgid "Open a new terminal"
+msgstr "Åpne ny terminal"
+
+#: src/tilda.ui:75
+msgid "Open a new terminal and hide"
+msgstr "Åpne ny terminal og skjul"
+
+#: src/tilda.ui:86
+#: src/tilda.ui:194
+msgid "Top"
+msgstr "Topp"
+
+#: src/tilda.ui:89
+#: src/tilda.ui:197
+msgid "Bottom"
+msgstr "Bunn"
+
+#: src/tilda.ui:92
+#: src/tilda.ui:200
+msgid "Left"
+msgstr "Venstre"
+
+#: src/tilda.ui:95
+#: src/tilda.ui:203
+msgid "Right"
+msgstr "Høyre"
+
+#: src/tilda.ui:98
+msgid "Hidden"
+msgstr "Skjult"
+
+#: src/tilda.ui:109
+msgid "Focus Terminal"
+msgstr "Fokuser terminal"
+
+#: src/tilda.ui:112
+msgid "Hide Terminal"
+msgstr "Skjul terminal"
+
+#: src/tilda.ui:123
+msgid "Block Cursor"
+msgstr "Blokk-peker"
+
+#: src/tilda.ui:126
+msgid "IBeam Cursor"
+msgstr "IBeam-peker"
+
+#: src/tilda.ui:129
+msgid "Underline Cursor"
+msgstr "Understrek-peker"
+
+#: src/tilda.ui:140
+msgid "Show whole tab title"
+msgstr "Vis fullstendig fanetittel"
+
+#: src/tilda.ui:143
+msgid "Show first n chars of title"
+msgstr "Vis første n antall tegn i tittel"
+
+#: src/tilda.ui:146
+msgid "Show last n chars of title"
+msgstr "Vis siste n antall tegn i tittel"
+
+#: src/tilda.ui:157
+msgid "Isn't displayed"
+msgstr "Ikke vis"
+
+#: src/tilda.ui:160
+msgid "Goes after initial title"
+msgstr "Etter opprinnelig tittel"
+
+#: src/tilda.ui:163
+msgid "Goes before initial title"
+msgstr "Før opprinnelig tittel"
+
+#: src/tilda.ui:166
+msgid "Replace initial title"
+msgstr "Erstatt opprinnelig tittel"
+
+#: src/tilda.ui:177
+msgid "Drop to the default shell"
+msgstr "Gå til forvalgt skall"
+
+#: src/tilda.ui:180
+msgid "Restart the command"
+msgstr "Start kommandolinje på nytt"
+
+#: src/tilda.ui:183
+msgid "Exit the terminal"
+msgstr "Avslutt terminal"
+
+#: src/tilda.ui:214
+#: src/tilda.ui:246
+#: src/wizard.c:218
+msgid "Custom"
+msgstr "Selvvalgt"
+
+#: src/tilda.ui:217
+msgid "Green on Black"
+msgstr "Grønt på svart"
+
+#: src/tilda.ui:220
+msgid "Black on White"
+msgstr "Svart på hvitt"
+
+#: src/tilda.ui:223
+msgid "White on Black"
+msgstr "Hvitt på svart"
+
+#: src/tilda.ui:226
+#: src/wizard.c:223
+msgid "Zenburn"
+msgstr "Zenburn"
+
+#: src/tilda.ui:229
+#: src/wizard.c:224
+msgid "Solarized Light"
+msgstr "Høykontrast lys"
+
+#: src/tilda.ui:232
+#: src/wizard.c:225
+msgid "Solarized Dark"
+msgstr "Høykontrast mørk"
+
+#: src/tilda.ui:235
+#: src/wizard.c:226
+msgid "Snazzy"
+msgstr "Pyntete"
+
+#: src/tilda.ui:257
+msgid "On the Left"
+msgstr "Til venstre"
+
+#: src/tilda.ui:260
+msgid "On the Right"
+msgstr "Til høyre"
+
+#: src/tilda.ui:263
+msgid "Disabled"
+msgstr "Slått av"
+
+#: src/tilda.ui:274
+#: src/tilda.ui:291
+msgid "ASCII DEL"
+msgstr "ASCII DEL"
+
+#: src/tilda.ui:277
+#: src/tilda.ui:294
+msgid "Escape sequence"
+msgstr "Skiftesekvens"
+
+#: src/tilda.ui:280
+#: src/tilda.ui:297
+msgid "Control-H"
+msgstr "Control-H"
+
+#: src/tilda.ui:314
+msgid "Tilda Config"
+msgstr "Tilda-oppsett"
+
+#: src/tilda.ui:392
+#: src/tilda.c:328
+msgid "Start Tilda hidden"
+msgstr "Start Tilda skjult"
+
+#: src/tilda.ui:406
+msgid "Always on top"
+msgstr "Alltid øverst"
+
+#: src/tilda.ui:420
+msgid "Display on all workspaces"
+msgstr "Vis på alle arbeidsområder"
+
+#: src/tilda.ui:434
+msgid "Do not show in taskbar"
+msgstr "Ikke vis på oppgavelinje"
+
+#: src/tilda.ui:448
+msgid "Show Notebook Border"
+msgstr "Vis grenselinje"
+
+#: src/tilda.ui:462
+msgid "Set as Desktop window"
+msgstr "Bruk som skrivebordsvindu"
+
+#: src/tilda.ui:477
+msgid "Start in fullscreen"
+msgstr "Start i fullskjerm"
+
+#: src/tilda.ui:506
+msgid "Non-focus Pull Up Behaviour:"
+msgstr "Oppførsel ved ufokusert opprulling:"
+
+#: src/tilda.ui:557
+msgid "<b>Window Display</b>"
+msgstr "<b>Vinduvisning</b>"
+
+#: src/tilda.ui:595
+msgid "Cursor Blinks"
+msgstr "Pekerblinking"
+
+#: src/tilda.ui:609
+msgid "Audible Terminal Bell"
+msgstr "Terminal-varsellyd"
+
+#: src/tilda.ui:625
+msgid "Cursor Shape: "
+msgstr "Pekerutforming:"
+
+#: src/tilda.ui:660
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Terminalvisning</b>"
+
+#: src/tilda.ui:698
+msgid "Allow Bold Text"
+msgstr "Tillat fet skrift"
+
+#: src/tilda.ui:728
+msgid "Font:"
+msgstr "Skrifttype:"
+
+#: src/tilda.ui:747
+msgid "<b>Font</b>"
+msgstr "<b>Skrifttype</b>"
+
+#: src/tilda.ui:796
+msgid "Hide Tilda when mouse leaves it"
+msgstr "Skjul Tilda når musepeker går utenfor"
+
+#: src/tilda.ui:813
+msgid "Auto Hide Delay:"
+msgstr "Tidsavbrudd for auto-skjul:"
+
+#: src/tilda.ui:823
+msgid "Hide when Tilda loses focus"
+msgstr "Skjul når Tilda mister fokus"
+
+#: src/tilda.ui:843
+msgid "<b>Auto Hide</b>"
+msgstr "<b>Auto-skjul</b>"
+
+#: src/tilda.ui:882
+msgid "When last terminal is closed:"
+msgstr "Når siste terminal lukkes:"
+
+#: src/tilda.ui:909
+msgid "Always prompt on exit"
+msgstr "Spør alltid ved avslutning"
+
+#: src/tilda.ui:932
+msgid "<b>Program Exit</b>"
+msgstr "<b>Avslutning</b>"
+
+#: src/tilda.ui:950
+msgid "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></small>"
+msgstr "<small><i><b>Merk:</b> Enkelte valg trer ikke i kraft før du starter Tilda på nytt.</i></small>"
+
+#: src/tilda.ui:967
+msgid "General"
+msgstr "Generelt"
+
+#: src/tilda.ui:1012
+msgid "Word Characters:"
+msgstr "Ordtegn:"
+
+#: src/tilda.ui:1040
+msgid "<b>Select by Word</b>"
+msgstr "<b>Velg etter ord</b>"
+
+#: src/tilda.ui:1090
+msgid "Web Browser *:"
+msgstr "Nettleser *:"
+
+#: src/tilda.ui:1107
+msgid "<b>URL Handling</b>"
+msgstr "<b>Håndtering av nettadresser</b>"
+
+#: src/tilda.ui:1142
+msgid "Initial Title:"
+msgstr "Opprinnelig tittel:"
+
+#: src/tilda.ui:1164
+msgid "Title Max Length:"
+msgstr "Maksimal tittellengde:"
+
+#: src/tilda.ui:1205
+msgid "Dynamically-set Title:"
+msgstr "Dynamisk tittel:"
+
+#: src/tilda.ui:1217
+msgid "Title Behaviour:"
+msgstr "Tittel-oppførsel:"
+
+#: src/tilda.ui:1250
+msgid "<b>Title</b>"
+msgstr "<b>Tittel</b>"
+
+#: src/tilda.ui:1311
+msgid "Run a custom command instead of the shell"
+msgstr "Kjør selvvalgt kommando i stedet for forvalgt skall"
+
+#: src/tilda.ui:1327
+msgid "Custom Command:"
+msgstr "Selvvalgt kommando:"
+
+#: src/tilda.ui:1339
+msgid "When Command Exits:"
+msgstr "Når kommando avslutter:"
+
+#: src/tilda.ui:1349
+msgid "Use a login shell"
+msgstr "Bruk innloggingsskall"
+
+#: src/tilda.ui:1375
+msgid "<b>Command</b>"
+msgstr "<b>Kommando</b>"
+
+#: src/tilda.ui:1402
+msgid "* A valid command that can open a browser must be entered here. It is possible to use the name of a specific browser such as 'firefox' and 'google-chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The best command may be different depending on the system."
+msgstr "* Dette feltet krever en gyldig nettleser-kommando. Du kan bruke navnet på en konkrét nettleser, som f.eks. «firefox» eller «google-chrome», eller generiske kommandoer som «x-www-browser» og «xdg-open». Hvilken kommando/variant som er best avhenger av systemet ditt."
+
+#: src/tilda.ui:1439
+msgid "Show confirmation dialog when closing tab"
+msgstr "Vis bekreftelsesdialog ved lukking av fane"
+
+#: src/tilda.ui:1459
+msgid "Close Action"
+msgstr "Handling ved lukking"
+
+#: src/tilda.ui:1480
+msgid "Title and Command"
+msgstr "Tittel og kommando"
+
+#: src/tilda.ui:1524
+#: src/tilda.ui:1701
+msgid "Percentage"
+msgstr "Prosent"
+
+#: src/tilda.ui:1547
+#: src/tilda.ui:1713
+msgid "In Pixels"
+msgstr "I piksler"
+
+#: src/tilda.ui:1574
+msgid "<b>Height</b>"
+msgstr "<b>Høyde</b>"
+
+#: src/tilda.ui:1610
+msgid "Monitor:"
+msgstr "Skjerm:"
+
+#: src/tilda.ui:1665
+msgid "<b>Select monitor</b>"
+msgstr "<b>Velg skjerm</b>"
+
+#: src/tilda.ui:1751
+msgid "<b>Width</b>"
+msgstr "<b>Bredde</b>"
+
+#: src/tilda.ui:1787
+msgid "Centered Horizontally"
+msgstr "Horisontalt midtstilt"
+
+#: src/tilda.ui:1805
+#: src/tilda.c:336
+msgid "Y Position"
+msgstr "Y-posisjon"
+
+#: src/tilda.ui:1839
+#: src/tilda.c:335
+msgid "X Position"
+msgstr "X-posisjon"
+
+#: src/tilda.ui:1849
+msgid "Centered Vertically"
+msgstr "Vertikalt midtstilt"
+
+#: src/tilda.ui:1877
+msgid "<b>Position</b>"
+msgstr "<b>Plassering</b>"
+
+#: src/tilda.ui:1915
+msgid "Position of Tabs:"
+msgstr "Plassering av faner:"
+
+#: src/tilda.ui:1942
+msgid "Expand Tabs"
+msgstr "Utvid faner"
+
+#: src/tilda.ui:1956
+msgid "Show single Tab"
+msgstr "Vis enkeltfane"
+
+#: src/tilda.ui:1976
+msgid "<b>Tabs</b>"
+msgstr "<b>Faner</b>"
+
+#: src/tilda.ui:2025
+msgid "Animation Delay (usec)"
+msgstr "Animasjonsforsinkelse (i mikrosek.)"
+
+#: src/tilda.ui:2037
+msgid "Animation Orientation"
+msgstr "Animasjonsretning"
+
+#: src/tilda.ui:2075
+msgid "Animated Pulldown"
+msgstr "Animert nedrulling"
+
+#: src/tilda.ui:2091
+msgid "Level of Transparency"
+msgstr "Gjennomsiktighet"
+
+#: src/tilda.ui:2101
+msgid "Enable Transparency"
+msgstr "Slå på gjennomsiktighet"
+
+#: src/tilda.ui:2124
+msgid "<b>Extras</b>"
+msgstr "<b>Ekstra</b>"
+
+#: src/tilda.ui:2143
+msgid "Appearance"
+msgstr "Utseende"
+
+#: src/tilda.ui:2212
+msgid "Cursor Color"
+msgstr "Pekerfarge"
+
+#: src/tilda.ui:2260
+msgid "Text Color"
+msgstr "Tekstfarge"
+
+#: src/tilda.ui:2272
+msgid "Background Color"
+msgstr "Bakgrunnsfarge"
+
+#: src/tilda.ui:2284
+msgid "Built-in Schemes"
+msgstr "Innebygde skjemaer"
+
+#: src/tilda.ui:2298
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Forgrunns- og bakgrunnsfarger</b>"
+
+#: src/tilda.ui:2330
+msgid "<small><i><b>Note:</b> Terminal applications have these colors available to them.</i></small>"
+msgstr "<small><i><b>Merk:</b> Terminalprogrammer har mulighet til å bruke disse fargene.</i></small>"
+
+#: src/tilda.ui:2373
+msgid "Choose Color 14"
+msgstr "Velg farge 14"
+
+#: src/tilda.ui:2386
+msgid "Choose Color 13"
+msgstr "Velg farge 13"
+
+#: src/tilda.ui:2399
+msgid "Choose Color 15"
+msgstr "Velg farge 15"
+
+#: src/tilda.ui:2412
+msgid "Choose Color 12"
+msgstr "Velg farge 12"
+
+#: src/tilda.ui:2425
+msgid "Choose Color 10"
+msgstr "Velg farge 10"
+
+#: src/tilda.ui:2438
+msgid "Choose Color 11"
+msgstr "Velg farge 11"
+
+#: src/tilda.ui:2451
+msgid "Choose Color 9"
+msgstr "Velg farge 9"
+
+#: src/tilda.ui:2464
+msgid "Choose Color 7"
+msgstr "Velg farge 7"
+
+#: src/tilda.ui:2477
+msgid "Choose Color 6"
+msgstr "Velg farge 6"
+
+#: src/tilda.ui:2490
+msgid "Choose Color 5"
+msgstr "Velg farge 5"
+
+#: src/tilda.ui:2503
+msgid "Choose Color 4"
+msgstr "Velg farge 4"
+
+#: src/tilda.ui:2516
+msgid "Choose Color 3"
+msgstr "Velg farge 3"
+
+#: src/tilda.ui:2529
+msgid "Choose Color 2"
+msgstr "Velg farge 2"
+
+#: src/tilda.ui:2542
+msgid "Choose Color 1"
+msgstr "Velg farge 1"
+
+#: src/tilda.ui:2555
+msgid "Choose Color 0"
+msgstr "Velg farge 0"
+
+#: src/tilda.ui:2569
+msgid "Choose Color 8"
+msgstr "Velg farge 8"
+
+#: src/tilda.ui:2586
+msgid "Built-in schemes:"
+msgstr "Innebygde skjemaer:"
+
+#: src/tilda.ui:2601
+msgid "Color palette:"
+msgstr "Fargepalett:"
+
+#: src/tilda.ui:2617
+msgid "<b>Palette</b>"
+msgstr "<b>Palett</b>"
+
+#: src/tilda.ui:2636
+msgid "Colors"
+msgstr "Farger"
+
+#: src/tilda.ui:2693
+msgid "Scrollbar is:"
+msgstr "Rullefelt er:"
+
+#: src/tilda.ui:2702
+msgid "Limit scrollback to:"
+msgstr "Begrens tilbakerulling til:"
+
+#: src/tilda.ui:2706
+msgid "Unselect for unlimited scrollback."
+msgstr "Fjern merke for ubegrenset tilbakerulling."
+
+#: src/tilda.ui:2718
+msgid "Scroll on Output"
+msgstr "Rull ved utdata"
+
+#: src/tilda.ui:2732
+msgid "Scroll on Keystroke"
+msgstr "Rull ved knappetrykk"
+
+#: src/tilda.ui:2754
+msgid "0"
+msgstr "0"
+
+#: src/tilda.ui:2766
+msgid "lines"
+msgstr "linjer"
+
+#: src/tilda.ui:2792
+msgid "<b>Scrolling</b>"
+msgstr "<b>Rulling</b>"
+
+#: src/tilda.ui:2813
+msgid "Scrolling"
+msgstr "Rulling"
+
+#: src/tilda.ui:2852
+msgid "<small><i><b>Note:</b> These options may cause some applications to behave incorrectly.  They are only here to allow you to work around certain applications and operating systems that expect different terminal behavior.</i></small>"
+msgstr "<small><i><b>Merk:</b> Disse valgene kan føre til at enkelte programmer oppfører seg rart. Valgene ligger her for at du skal kunne tilpasse Tilda til operativsystemer og programmer som forventer en annen oppførsel fra terminalprogrammer.</i></small>"
+
+#: src/tilda.ui:2868
+msgid "_Backspace key generates:"
+msgstr "_Rettetast:"
+
+#: src/tilda.ui:2882
+msgid "_Delete key generates:"
+msgstr "_Delete-tast:"
+
+#: src/tilda.ui:2894
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Tilbakestill kompatibilitetsvalg til standardverdier"
+
+#: src/tilda.ui:2948
+msgid "<b>Compatibility</b>"
+msgstr "<b>Kompatibilitet</b>"
+
+#: src/tilda.ui:2967
+msgid "Compatibility"
+msgstr "Kompatibilitet"
+
+#: src/tilda.ui:3019
+msgid "<b>Keybindings</b>"
+msgstr "<b>Tastatursnarveier</b>"
+
+#: src/tilda.ui:3038
+msgid "Keybindings"
+msgstr "Tastatursnarveier"
+
+#: src/configsys.c:365
+msgid "Unable to sync the config file to disk\n"
+msgstr "Klarte ikke å synkronisere oppsettsfil til disk\n"
+
+#: src/configsys.c:375
+msgid "Unable to close the config file\n"
+msgstr "Klarte ikke å lukke oppsettsfil\n"
+
+#: src/configsys.c:388
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Klarte ikke å lagre oppsettsfil som %s\n"
+
+#: src/tilda.c:237
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "Klarte ikke å kjøre kommando: «%s»\n"
+
+#: src/tilda.c:276
+#: src/tilda.c:545
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Klarte ikke å åpne låsemappe: %s\n"
+
+#: src/tilda.c:326
+msgid "Set the background color"
+msgstr "Endre bakgrunnsfarge"
+
+#: src/tilda.c:327
+msgid "Run a command at startup"
+msgstr "Kjør kommando ved oppstart"
+
+#: src/tilda.c:329
+msgid "Set the font to the following string"
+msgstr "Bruk følgende streng som skrifttype"
+
+#: src/tilda.c:330
+msgid "Configuration file"
+msgstr "Oppsettsfil"
+
+#: src/tilda.c:331
+msgid "Scrollback Lines"
+msgstr "Tilbakerullingslinjer"
+
+#: src/tilda.c:332
+msgid "Use Scrollbar"
+msgstr "Bruk rullefelt"
+
+#: src/tilda.c:333
+msgid "Print the version, then exit"
+msgstr "Skriv ut versjonsnummer og avslutt"
+
+#: src/tilda.c:334
+msgid "Set Initial Working Directory"
+msgstr "Endre forvalgt arbeidsmappe"
+
+#: src/tilda.c:337
+msgid "Opaqueness: 0-100%"
+msgstr "Ugjennomsiktighet: 0-100%"
+
+#: src/tilda.c:338
+msgid "Show Configuration Wizard"
+msgstr "Vis oppsettsveiviser"
+
+#: src/tilda.c:352
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Feil under tolking av kommandolinjevalg. Bruk «tilda --help»\n"
+"for å se alle tilgjengelige valg.\n"
+"\n"
+"Feilmelding: %s\n"
+
+#: src/tilda.c:390
+#, c-format
+msgid ""
+"Error parsing Glib and GTK specific command-line options. Try \"tilda --help-all\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+"Feil under tolking av kommandolinjevalg for Glib og GTK. Bruk «tilda --help-all»\n"
+"for å se alle tilgjengelige valg.\n"
+"\n"
+"Feilmelding: %s\n"
+
+#: src/tilda.c:409
+msgid "Error allocating memory for a new tilda_cli_options structure.\n"
+msgstr "Feil under tildeling av minn for ny «tilda_cli_options»-struktur.\n"
+
+#: src/tilda.c:498
+#, c-format
+msgid "Creating directory:'%s'\n"
+msgstr "Lager mappe: «%s»\n"
+
+#: src/tilda.c:641
+msgid "Found style.css in the user config directory, applying user css style.\n"
+msgstr "Fant style.css i brukermappe. Bruker selvvalgt css-stil.\n"
+
+#: src/tilda.c:696
+msgid "Migrating old config path to XDG folders\n"
+msgstr "Flytter gammel oppsettssti til XDG-mapper\n"
+
+#: src/tilda.c:759
+#, c-format
+msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
+msgstr "Valgt oppsettsfil «%s» finnes ikke. Bruker forvalgt sti.\n"
+
+#: src/tilda.c:850
+#: src/tilda-keybinding.c:409
+msgid "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another."
+msgstr "Valgt snarvei for «Pull Down Terminal» er ugyldig. Velg en annen snarvei."
+
+#: src/tilda-keybinding.c:115
+msgid "Action"
+msgstr "Handling"
+
+#: src/tilda-keybinding.c:121
+msgid "Shortcut"
+msgstr "Snarvei"
+
+#: src/tilda-keybinding.c:306
+msgid "Enter keyboard shortcut"
+msgstr "Skriv inn tastatursnarvei"
+
+#: src/tilda-keybinding.c:417
+#, c-format
+msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
+msgstr "Valgt snarvei for «%s» er ugyldig. Velg en annen snarvei."
+
+#: src/tilda_terminal.c:397
+#, c-format
+msgid "Problem reading link %s: %s\n"
+msgstr "Klarte ikke å lese lenke %s: %s\n"
+
+#: src/tilda_terminal.c:435
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Klarte ikke å tolke selvvalgt kommando: %s\n"
+
+#: src/tilda_terminal.c:436
+#: src/tilda_terminal.c:466
+msgid "Launching default shell instead\n"
+msgstr "Starter forvalgt skall i stedet\n"
+
+#: src/tilda_terminal.c:465
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Klarte ikke å starte selvvalgt kommando: %s\n"
+
+#: src/tilda_terminal.c:537
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Klarte ikke å starte forvalgt skall: %s\n"
+
+#: src/tilda_terminal.c:940
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr "Klarte ikke å starte nettleser. Kommandoen som ble forsøkt var «%s»\n"
+
+#: src/tilda_terminal.c:993
+msgid "Untitled"
+msgstr "Uten navn"
+
+#: src/tilda_terminal.c:1011
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Oppsettsverdien «d_set_title» har ugyldig verdi\n"
+
+#: src/tilda_window.c:101
+msgid "Are you sure you want to close this tab?"
+msgstr "Er du sikker på at du vil lukke denne fana?"
+
+#: src/tilda_window.c:148
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "Oppsettsfila di inneholder ugyldig verdi for «tab_pos»\n"
+
+#: src/tilda_window.c:778
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Klarte ikke å bytte ikon for tilda: %s\n"
+
+#: src/tilda_window.c:1041
+msgid "Out of memory, cannot create tab\n"
+msgstr "Minnet er fullt. Klarte ikke å åpne ny fane\n"
+
+#: src/tilda_window.c:1161
+msgid "Are you sure you want to Quit?"
+msgstr "Er du sikker på at du vil avslutte?"
+
+#: src/wizard.c:219
+msgid "Tango"
+msgstr "Tango"
+
+#: src/wizard.c:220
+msgid "Linux console"
+msgstr "Linux-konsoll"
+
+#: src/wizard.c:221
+msgid "XTerm"
+msgstr "XTerm"
+
+#: src/wizard.c:222
+msgid "Rxvt"
+msgstr "Rxvt"
+
+#: src/wizard.c:336
+#, c-format
+msgid "Tilda %d Config"
+msgstr "Oppsett for Tilda %d"
+
+#: src/wizard.c:767
+msgid "Invalid Cursor Type, resetting to default\n"
+msgstr "Ugyldig pekertype. Tilbakestiller til forvalgt verdi\n"
+
+#: src/wizard.c:785
+msgid "Invalid non-focus pull up behaviour, ignoring\n"
+msgstr "Ugyldig oppførsel for ufokusert opprulling. Valget blir ignorert\n"
+
+#: src/wizard.c:1221
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Ugyldig tab-posisjonsvalg. Valget blir ignorert\n"
