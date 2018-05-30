@@ -590,6 +590,10 @@ static void window_title_change_all (tilda_window *tw)
         } else {
             gtk_label_set_text (GTK_LABEL(label), title);
         }
+        if(config_getbool("show_title_tooltip"))
+          gtk_widget_set_tooltip_text(label, title);
+        else
+          gtk_widget_set_tooltip_text(label, "");
 
         g_free (title);
     }
@@ -964,6 +968,14 @@ static void check_prompt_on_exit_toggled_cb (GtkWidget *w, tilda_window *tw)
     const gboolean prompt_on_exit = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 
     config_setbool("prompt_on_exit", prompt_on_exit);
+}
+
+static void check_show_title_tooltip_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean show_title_tooltip = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("show_title_tooltip", show_title_tooltip);
+    window_title_change_all (tw);
 }
 
 static void entry_web_browser_changed (GtkWidget *w, tilda_window *tw) {
@@ -1936,6 +1948,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     COMBO_BOX ("combo_tab_pos", "tab_pos");
     CHECK_BUTTON ("check_expand_tabs", "expand_tabs");
     CHECK_BUTTON ("check_show_single_tab", "show_single_tab");
+    CHECK_BUTTON ("check_show_title_tooltip", "show_title_tooltip");
 
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
@@ -2087,6 +2100,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("combo_tab_pos","changed",combo_tab_pos_changed_cb, tw);
     CONNECT_SIGNAL ("check_expand_tabs","toggled",check_expand_tabs_toggled_cb, tw);
     CONNECT_SIGNAL ("check_show_single_tab","toggled",check_show_single_tab_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_show_title_tooltip","toggled",check_show_title_tooltip_toggled_cb, tw);
 
     CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
     CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);

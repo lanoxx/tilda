@@ -170,6 +170,9 @@ static cfg_opt_t config_opts[] = {
 
     CFG_INT("back_alpha", 0xffff, CFGF_NONE),
 
+    /* Whether to show the full tab title as a tooltip */
+    CFG_BOOL("show_title_tooltip", FALSE, CFGF_NONE),
+
     /* Deprecated tilda options */
     CFG_STR("image", NULL, CFGF_NODEFAULT),
 
