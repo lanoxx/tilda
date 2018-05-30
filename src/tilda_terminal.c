@@ -262,6 +262,10 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
             gtk_window_set_title (GTK_WINDOW (tt->tw->window), title);
         }
     }
+    if(config_getbool("show_title_tooltip"))
+      gtk_widget_set_tooltip_text(label, title);
+    else
+      gtk_widget_set_tooltip_text(label, "");
 
     g_free (title);
 }
