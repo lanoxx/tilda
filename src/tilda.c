@@ -47,6 +47,7 @@
 #include "xerror.h"
 #include "tomboykeybinder.h"
 #include "tilda-keybinding.h"
+#include "tilda-cli-options.h"
 
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -301,116 +302,6 @@ static gint remove_stale_lock_files ()
     g_slist_free(pids);
 
     return 0;
-}
-
-/**
- * Parse all of the Command-Line Options given to tilda.
- * This can modify argv and argc, and will set values in the config.
- *
- * @param cli_options pointer to a struct to store command-line options into
- * @param argc argc from main
- * @param argv argv from main
- * @param config_file pointer to config file path if specified via command-line
- * @return TRUE if we should show the configuration wizard, FALSE otherwise
- */
-static gboolean parse_cli (int argc, char *argv[], tilda_cli_options *cli_options, gchar **config_file)
-{
-    DEBUG_FUNCTION ("parse_cli");
-    DEBUG_ASSERT (argc != 0);
-    DEBUG_ASSERT (argv != NULL);
-    // *config_file must be non-null only if a configuration file path has been parsed
-    DEBUG_ASSERT (*config_file == NULL);
-
-    /* All of the various command-line options */
-    GOptionEntry cl_opts[] = {
-        { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &(cli_options->background_color),  N_("Set the background color"), NULL },
-        { "command",            'c', 0, G_OPTION_ARG_STRING,    &(cli_options->command),           N_("Run a command at startup"), NULL },
-        { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &(cli_options->hidden),            N_("Start Tilda hidden"), NULL },
-        { "font",               'f', 0, G_OPTION_ARG_STRING,    &(cli_options->font),              N_("Set the font to the following string"), NULL },
-        { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,                       N_("Configuration file"), NULL },
-        { "lines",              'l', 0, G_OPTION_ARG_INT,       &(cli_options->lines),             N_("Scrollback Lines"), NULL },
-        { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &(cli_options->scrollbar),         N_("Use Scrollbar"), NULL },
-        { "version",            'v', 0, G_OPTION_ARG_NONE,      &(cli_options->version),           N_("Print the version, then exit"), NULL },
-        { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &(cli_options->working_dir),       N_("Set Initial Working Directory"), NULL },
-        { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &(cli_options->x_pos),             N_("X Position"), NULL },
-        { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &(cli_options->y_pos),             N_("Y Position"), NULL },
-        { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &(cli_options->back_alpha),        N_("Opaqueness: 0-100%"), NULL },
-        { "config",             'C', 0, G_OPTION_ARG_NONE,      &(cli_options->show_config),       N_("Show Configuration Wizard"), NULL },
-        { NULL }
-    };
-
-    /* Set up the command-line parser */
-    GError *error = NULL;
-    GOptionContext *context = g_option_context_new (NULL);
-    g_option_context_add_main_entries (context, cl_opts, NULL);
-    g_option_context_parse (context, &argc, &argv, &error);
-    g_option_context_free (context);
-
-    /* Check for unknown options, and give a nice message if there are some */
-    if (error)
-    {
-        g_printerr (_("Error parsing command-line options. Try \"tilda --help\"\nto see all possible options.\n\nError message: %s\n"),
-                    error->message);
-
-        exit (EXIT_FAILURE);
-    }
-
-    /* If we need to show the version, show it then exit normally */
-    if (cli_options->version)
-    {
-        g_print ("%s\n\n", TILDA_VERSION);
-
-        g_print ("Copyright (c) 2012-2013 Sebastian Geiger (lanoxx@gmx.net)\n");
-        g_print ("Copyright (c) 2005-2009 Tristan Sloughter (sloutri@iit.edu)\n");
-        g_print ("Copyright (c) 2005-2009 Ira W. Snyder (tilda@irasnyder.com)\n\n");
-
-        g_print ("General Information: https://github.com/lanoxx/tilda\n");
-        g_print ("Bug Reports: https://github.com/lanoxx/tilda/issues?state=open\n\n");
-
-        g_print ("This program comes with ABSOLUTELY NO WARRANTY.\n");
-        g_print ("This is free software, and you are welcome to redistribute it\n");
-        g_print ("under certain conditions. See the file COPYING for details.\n");
-
-        exit (EXIT_SUCCESS);
-    }
-
-    /* This block is only used to initialize the Glib and GTK internal options. That way the users can pass additional command line options,
-     * that are used by Glib and GTK. We do this separate from the above options, because we pass TRUE to the gtk_get_option group function
-     * which causes GTK to initialize the default display. This way it is possible to invoke `tilda --version` without getting an
-     * error if there is no display available.
-     */
-    error = NULL;
-    context = g_option_context_new (NULL);
-    g_option_context_add_group (context, gtk_get_option_group (TRUE));
-    g_option_context_parse (context, &argc, &argv, &error);
-    g_option_context_free (context);
-
-    if (error)
-    {
-        g_printerr (_("Error parsing Glib and GTK specific command-line options. Try \"tilda --help-all\"\nto see all possible options.\n\nError message: %s\n"),
-                    error->message);
-
-        exit (EXIT_FAILURE);
-    }
-
-    /* TRUE if we should show the config wizard, FALSE otherwize */
-    return cli_options->show_config;
-}
-
-/**
- * Initialize a structure in which command-line parameters will be stored.
- * @return a pointer to that structure
- */
-static tilda_cli_options *init_cli_options()
-{
-    tilda_cli_options *options = g_malloc0(sizeof(tilda_cli_options));
-    if (!options)
-    {
-        g_printerr (_("Error allocating memory for a new tilda_cli_options structure.\n"));
-        exit (EXIT_FAILURE);
-    }
-
-    return options;
 }
 
 /**
@@ -751,8 +642,8 @@ int main (int argc, char *argv[])
     config_file = NULL;
 
     /* Parse the command line */
-    tilda_cli_options *cli_options = init_cli_options();
-    need_wizard = parse_cli (argc, argv, cli_options, &config_file);
+    tilda_cli_options *cli_options = tilda_cli_options_new ();
+    need_wizard = tilda_cli_options_parse_options (cli_options, argc, argv, &config_file);
 
     if (config_file) {	  // if there was a config file specified via cli
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
