@@ -645,6 +645,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_cursor_blink_mode (VTE_TERMINAL(tt->vte_term),
             (config_getbool ("blinks"))?VTE_CURSOR_BLINK_ON:VTE_CURSOR_BLINK_OFF);
     vte_terminal_set_color_cursor (VTE_TERMINAL(tt->vte_term), &cc);
+    vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term), &bg);
 
     cursor_shape = config_getint("cursor_shape");
     if (cursor_shape < 0 || cursor_shape > 2) {
