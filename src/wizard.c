@@ -1537,6 +1537,8 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
                                            &gdk_back_color);
+        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term), 
+                                                  &gdk_back_color);
     }
 }
 
