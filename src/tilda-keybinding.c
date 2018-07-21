@@ -221,6 +221,7 @@ init_bindings_from_config (GtkListStore *list_store, GtkTreeIter *iter)
                     {"Toggle Fullscreen",   "fullscreen_key"},
                     {"Toggle Transparency", "toggle_transparency_key"},
                     {"Toggle Searchbar",    "toggle_searchbar_key"},
+										{"Tab Title Aleluya",    "tab_title_aleluya_key"},
                     {NULL, NULL}
             };
 

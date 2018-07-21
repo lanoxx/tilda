@@ -94,6 +94,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     char *current_tt_dir = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
+		term->label_aleluya = g_strdup(_("ALELUYA"));
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, term);
@@ -799,7 +800,16 @@ menu_searchbar_cb(GSimpleAction *action,
 
     tilda_window_toggle_searchbar (TILDA_WINDOW(user_data));
 }
+static void
+menu_tab_title_aleluya_cb(GSimpleAction *action,
+                    GVariant      *parameter,
+                    gpointer       user_data)
+{
+    DEBUG_FUNCTION ("menu_tab_name_aleluya_cb");
+    DEBUG_ASSERT (user_data != NULL);
 
+    tilda_window_rename_current_tab_aleluya (TILDA_WINDOW(user_data));
+}
 static void
 menu_close_tab_cb (GSimpleAction *action,
                    GVariant      *parameter,
@@ -847,6 +857,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
         { .name="close-tab", menu_close_tab_cb },
         { .name="fullscreen", menu_fullscreen_cb },
         { .name="searchbar", menu_searchbar_cb },
+				{ .name="tab-title-aleluya", menu_tab_title_aleluya_cb },
         { .name="preferences", menu_preferences_cb },
         { .name="quit", menu_quit_cb }
     };
@@ -987,39 +998,41 @@ gchar *tilda_terminal_get_title (tilda_term *tt)
     vte_title = vte_terminal_get_window_title (VTE_TERMINAL (tt->vte_term));
     window_title = g_strdup (vte_title);
     initial = g_strdup (config_getstr ("title"));
-
+    
     /* These are not needed anywhere else. If they ever are, move them to a header file */
     enum d_set_title { NOT_DISPLAYED, AFTER_INITIAL, BEFORE_INITIAL, REPLACE_INITIAL };
 
-    switch (config_getint ("d_set_title"))
-    {
+  	if( tt->label_aleluya != NULL ) 
+			title = g_strdup(tt->label_aleluya  );
+    else
+			switch (config_getint ("d_set_title"))
+				{
         case REPLACE_INITIAL:
-            title = (window_title != NULL) ? g_strdup (window_title)
-                                           : g_strdup (_("Untitled"));
-            break;
+					title = (window_title != NULL) ? g_strdup (window_title)
+						: g_strdup (_("Untitled"));
+					break;
 
         case BEFORE_INITIAL:
-            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", window_title, initial)
-                                           : g_strdup (initial);
-            break;
+					title = (window_title != NULL) ? g_strdup_printf ("%s - %s", window_title, initial)
+						: g_strdup (initial);
+					break;
 
         case AFTER_INITIAL:
-            title = (window_title != NULL) ? g_strdup_printf ("%s - %s", initial, window_title)
-                                           : g_strdup (initial);
-            break;
+					title = (window_title != NULL) ? g_strdup_printf ("%s - %s", initial, window_title)
+						: g_strdup (initial);
+					break;
 
         case NOT_DISPLAYED:
-            title = g_strdup (initial);
-            break;
+					title = g_strdup (initial);
+					break;
 
         default:
-            g_printerr (_("Bad value for \"d_set_title\" in config file\n"));
-            title = g_strdup ("");
-            break;
-    }
+					g_printerr (_("Bad value for \"d_set_title\" in config file\n"));
+					title = g_strdup ("");
+					break;
+				}
 
     g_free (window_title);
     g_free (initial);
-
     return title;
 }

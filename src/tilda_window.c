@@ -266,6 +266,112 @@ toggle_searchbar_cb (tilda_window *tw)
   return GDK_EVENT_STOP;
 }
 
+static gboolean
+tab_title_aleluya_cb(tilda_window *tw)
+{
+	tilda_window_rename_current_tab_aleluya(tw);
+	return GDK_EVENT_STOP;
+}
+
+void
+tilda_window_rename_current_tab_aleluya (tilda_window *tw_aleluya)
+{
+	int AUTO_TITLE_RESPONSE_ALELUYA = 782;
+	int OK_ID_ALELUYA = -3;
+	gint pos_aleluya = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw_aleluya->notebook));
+	tilda_term *current_term_aleluya;
+	gboolean active_aleluya = TRUE;
+	const gchar * vte_aleluya;
+
+	if (pos_aleluya >= 0) {
+		current_term_aleluya = g_list_nth_data (tw_aleluya->terms, (guint) pos_aleluya);
+		//        active_aleluya = widget == current_term_aleluya->vte_term;
+	} else {
+		current_term_aleluya =g_list_nth_data (tw_aleluya->terms, (guint) 0);
+			}
+	vte_aleluya =vte_terminal_get_window_title (VTE_TERMINAL (current_term_aleluya->vte_term));
+  gchar *current_title_aleluya = NULL;
+	
+	if( current_term_aleluya->label_aleluya == NULL ) 
+		current_title_aleluya = g_strdup( vte_aleluya );
+	else
+	  current_title_aleluya = g_strdup( current_term_aleluya->label_aleluya);
+																			
+	GtkWidget *main_app_window_aleluya = tw_aleluya->window; // Window the dialog should show up on
+	GtkWidget *dialog_aleluya;
+	GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
+		dialog_aleluya = gtk_dialog_new_with_buttons ("Rename Tab Aleluya",
+																									main_app_window_aleluya,
+                                      flags,
+                                      _("_OK"),
+                                      GTK_RESPONSE_ACCEPT,
+                                      _("_Cancel"),
+                                      GTK_RESPONSE_REJECT,
+                                      NULL);
+
+		gtk_dialog_add_button (dialog_aleluya,
+                       "Auto Aleluya",
+                       AUTO_TITLE_RESPONSE_ALELUYA);
+		GtkWidget *action_area_aleluya = gtk_dialog_get_action_area(dialog_aleluya);
+		GtkEntry *user_entry_aleluya = gtk_entry_new();
+    
+    gtk_entry_set_text(user_entry_aleluya, current_title_aleluya);
+    gtk_box_pack_end(action_area_aleluya, user_entry_aleluya, False, False, 0);
+		gtk_widget_show_all(dialog_aleluya);
+
+		//# enter key should trigger the default action
+
+		gtk_entry_set_activates_default(user_entry_aleluya, TRUE);
+		gtk_dialog_set_default_response(dialog_aleluya, GTK_RESPONSE_ACCEPT);
+		//# make OK button the default
+		//thank You Lord Jesus for Björn @https://stackoverflow.com/q/23983975
+	  //GtkWidget *ok_aleluya = gtk_get_widget_for_response(GtkResponseType.OK)
+		//gtk_widget_grab_default(ok_button);
+		//	gtk_widget_set_can_default(ok_aleluya, TRUE);
+		//okButton.grab_default()
+
+	  int result_aleluya = gtk_dialog_run (dialog_aleluya);
+		gchar *label_str_aleluya =  g_strdup( gtk_entry_get_text(user_entry_aleluya) );
+		gtk_widget_destroy (dialog_aleluya);
+    if( result_aleluya == GTK_RESPONSE_ACCEPT || result_aleluya == AUTO_TITLE_RESPONSE_ALELUYA ) {
+			GtkWidget *label_aleluya = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw_aleluya->notebook), current_term_aleluya->hbox);
+			if( current_term_aleluya->label_aleluya != NULL ) free(current_term_aleluya->label_aleluya);
+			gchar *fintitle_aleluya;
+			if( result_aleluya != GTK_RESPONSE_ACCEPT ) {
+				current_term_aleluya->label_aleluya = NULL;
+				fintitle_aleluya = g_strdup( vte_aleluya );
+			} else {
+				current_term_aleluya->label_aleluya = g_strdup( label_str_aleluya );
+        fintitle_aleluya = g_strdup( label_str_aleluya );
+			}
+
+			guint length_aleluya = (guint) config_getint ("title_max_length");
+			guint title_behaviour_aleluya = config_getint("title_behaviour");
+      gchar *short_title_aleluya = NULL;
+			if(title_behaviour_aleluya && strlen(fintitle_aleluya) > length_aleluya) {
+
+        if(title_behaviour_aleluya == 1) {
+					short_title_aleluya = g_strdup_printf ("%.*s...", length_aleluya, fintitle_aleluya);
+        }
+        else {
+					gchar *title_offset_aleluya = fintitle_aleluya + strlen(fintitle_aleluya) - length_aleluya;
+					short_title_aleluya = g_strdup_printf ("...%s", title_offset_aleluya);
+        }
+        
+			} else {
+				short_title_aleluya = g_strdup( fintitle_aleluya );
+			}
+        		
+			gtk_label_set_text (GTK_LABEL(label_aleluya), short_title_aleluya);
+			gtk_widget_set_tooltip_text(label_aleluya, fintitle_aleluya);
+			free( fintitle_aleluya );
+			free( short_title_aleluya );
+		}
+		free(label_str_aleluya);
+		//gtk_window_activate_default(tw_aleluya->window);
+		gtk_window_present(tw_aleluya->window);
+}
+
 void
 tilda_window_toggle_searchbar (tilda_window *tw)
 {
@@ -730,6 +836,7 @@ static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)
     tilda_add_config_accelerator_by_path("quit_key",       "<tilda>/context/Quit",              G_CALLBACK(tilda_window_confirm_quit),      tw);
     tilda_add_config_accelerator_by_path("toggle_transparency_key", "<tilda>/context/Toggle Transparency", G_CALLBACK(toggle_transparency_cb),      tw);
     tilda_add_config_accelerator_by_path("toggle_searchbar_key", "<tilda>/context/Toggle Searchbar", G_CALLBACK(toggle_searchbar_cb),       tw);
+		tilda_add_config_accelerator_by_path("tab_title_aleluya_key", "<tilda>/context/Tab Title Aleluya", G_CALLBACK(tab_title_aleluya_cb),       tw);
 
     tilda_add_config_accelerator_by_path("nexttab_key",      "<tilda>/context/Next Tab",        G_CALLBACK(tilda_window_next_tab),          tw);
     tilda_add_config_accelerator_by_path("prevtab_key",      "<tilda>/context/Previous Tab",    G_CALLBACK(tilda_window_prev_tab),          tw);

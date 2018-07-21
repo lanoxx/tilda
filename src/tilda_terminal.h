@@ -30,6 +30,7 @@ struct tilda_term_
     GtkWidget *hbox;
     GtkWidget *scrollbar;
     GRegex *http_regexp;
+ 	  gchar *label_aleluya;
     GPid pid;
     /* We remember if we have already dropped to the default
      * shell before, if so, then we know that this time we can
