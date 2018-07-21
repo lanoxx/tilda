@@ -33,7 +33,7 @@
     </section>
 		<section>
       <item>
-        <attribute name="label" translatable="yes">_Tab Aleluya</attribute>
+        <attribute name="label" translatable="yes">_✝Edit Tab Title</attribute>
         <attribute name="action">window.tab-title-aleluya</attribute>
       </item>
     </section>

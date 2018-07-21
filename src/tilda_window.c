@@ -262,114 +262,120 @@ static gboolean
 toggle_searchbar_cb (tilda_window *tw)
 {
   tilda_window_toggle_searchbar (tw);
-
   return GDK_EVENT_STOP;
 }
 
 static gboolean
-tab_title_aleluya_cb(tilda_window *tw)
+tab_title_aleluya_cb(tilda_window *tw_aleluya)
 {
-	tilda_window_rename_current_tab_aleluya(tw);
+	tilda_window_rename_current_tab_aleluya(tw_aleluya);
 	return GDK_EVENT_STOP;
 }
 
+//Jesus Loves you, you can search and replace _aleluya with whatever thing you find most edifying in the Lord.
 void
 tilda_window_rename_current_tab_aleluya (tilda_window *tw_aleluya)
 {
-	int AUTO_TITLE_RESPONSE_ALELUYA = 782;
-	int OK_ID_ALELUYA = -3;
+	int AUTO_TITLE_RESPONSE_aleluya = 712;
+
+	/* First grab the current terminal, its vte set label, and its currently displayed label*/
 	gint pos_aleluya = gtk_notebook_get_current_page (GTK_NOTEBOOK (tw_aleluya->notebook));
 	tilda_term *current_term_aleluya;
-	gboolean active_aleluya = TRUE;
+  gchar *current_title_aleluya = NULL;
 	const gchar * vte_aleluya;
-
-	if (pos_aleluya >= 0) {
+	//gboolean active_aleluya = TRUE; // right now we only rename the active terminal windo
+	
+	if (pos_aleluya >= 0) 
 		current_term_aleluya = g_list_nth_data (tw_aleluya->terms, (guint) pos_aleluya);
 		//        active_aleluya = widget == current_term_aleluya->vte_term;
-	} else {
+	else 
 		current_term_aleluya =g_list_nth_data (tw_aleluya->terms, (guint) 0);
-			}
-	vte_aleluya =vte_terminal_get_window_title (VTE_TERMINAL (current_term_aleluya->vte_term));
-  gchar *current_title_aleluya = NULL;
+	vte_aleluya = vte_terminal_get_window_title (VTE_TERMINAL (current_term_aleluya->vte_term));
 	
 	if( current_term_aleluya->label_aleluya == NULL ) 
 		current_title_aleluya = g_strdup( vte_aleluya );
 	else
 	  current_title_aleluya = g_strdup( current_term_aleluya->label_aleluya);
-																			
-	GtkWidget *main_app_window_aleluya = tw_aleluya->window; // Window the dialog should show up on
+
+	/* Now display a dialog to ask for the new label,
+     this can optionally clear the manually set label, which will
+     revert to automatically setting from VTE */
+	GtkWidget *main_app_window_aleluya = tw_aleluya->window; 
 	GtkWidget *dialog_aleluya;
 	GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
-		dialog_aleluya = gtk_dialog_new_with_buttons ("Rename Tab Aleluya",
-																									main_app_window_aleluya,
-                                      flags,
-                                      _("_OK"),
-                                      GTK_RESPONSE_ACCEPT,
-                                      _("_Cancel"),
-                                      GTK_RESPONSE_REJECT,
-                                      NULL);
+	dialog_aleluya = gtk_dialog_new_with_buttons ("Rename Tab ✝",
+																								main_app_window_aleluya,
+																								flags,
+																								_("_OK"),
+																								GTK_RESPONSE_ACCEPT,
+																								_("_Cancel"),
+																								GTK_RESPONSE_REJECT,
+																								NULL);
 
-		gtk_dialog_add_button (dialog_aleluya,
-                       "Auto Aleluya",
-                       AUTO_TITLE_RESPONSE_ALELUYA);
-		GtkWidget *action_area_aleluya = gtk_dialog_get_action_area(dialog_aleluya);
-		GtkEntry *user_entry_aleluya = gtk_entry_new();
+	gtk_dialog_add_button (dialog_aleluya,
+												 _("_✝ Automatic"),
+												 AUTO_TITLE_RESPONSE_aleluya);
+		
+	GtkWidget *action_area_aleluya = gtk_dialog_get_action_area(dialog_aleluya);
+	GtkEntry *user_entry_aleluya = gtk_entry_new();
     
-    gtk_entry_set_text(user_entry_aleluya, current_title_aleluya);
-    gtk_box_pack_end(action_area_aleluya, user_entry_aleluya, False, False, 0);
-		gtk_widget_show_all(dialog_aleluya);
+	gtk_entry_set_text(user_entry_aleluya, current_title_aleluya);
+	gtk_box_pack_end(action_area_aleluya, user_entry_aleluya, False, False, 0);
+	gtk_widget_show_all(dialog_aleluya);
 
-		//# enter key should trigger the default action
+	//# enter key should trigger the OK button default action
+  //thank You Lord Jesus for Björn @https://stackoverflow.com/q/23983975
+	gtk_entry_set_activates_default(user_entry_aleluya, TRUE);
+	gtk_dialog_set_default_response(dialog_aleluya, GTK_RESPONSE_ACCEPT);
 
-		gtk_entry_set_activates_default(user_entry_aleluya, TRUE);
-		gtk_dialog_set_default_response(dialog_aleluya, GTK_RESPONSE_ACCEPT);
-		//# make OK button the default
-		//thank You Lord Jesus for Björn @https://stackoverflow.com/q/23983975
-	  //GtkWidget *ok_aleluya = gtk_get_widget_for_response(GtkResponseType.OK)
-		//gtk_widget_grab_default(ok_button);
-		//	gtk_widget_set_can_default(ok_aleluya, TRUE);
-		//okButton.grab_default()
+	// run the dialog and copy result before it is destroyed
+	int result_aleluya = gtk_dialog_run (dialog_aleluya);
+	gchar *label_str_aleluya =  g_strdup( gtk_entry_get_text(user_entry_aleluya) );
+	gtk_widget_destroy (dialog_aleluya);
 
-	  int result_aleluya = gtk_dialog_run (dialog_aleluya);
-		gchar *label_str_aleluya =  g_strdup( gtk_entry_get_text(user_entry_aleluya) );
-		gtk_widget_destroy (dialog_aleluya);
-    if( result_aleluya == GTK_RESPONSE_ACCEPT || result_aleluya == AUTO_TITLE_RESPONSE_ALELUYA ) {
-			GtkWidget *label_aleluya = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw_aleluya->notebook), current_term_aleluya->hbox);
-			if( current_term_aleluya->label_aleluya != NULL ) free(current_term_aleluya->label_aleluya);
-			gchar *fintitle_aleluya;
-			if( result_aleluya != GTK_RESPONSE_ACCEPT ) {
-				current_term_aleluya->label_aleluya = NULL;
-				fintitle_aleluya = g_strdup( vte_aleluya );
-			} else {
-				current_term_aleluya->label_aleluya = g_strdup( label_str_aleluya );
-        fintitle_aleluya = g_strdup( label_str_aleluya );
-			}
+	//if not a cancellation action
+	if( result_aleluya == GTK_RESPONSE_ACCEPT || result_aleluya == AUTO_TITLE_RESPONSE_aleluya ) {
+		//we operate on the label object
+		GtkWidget *label_aleluya = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tw_aleluya->notebook), current_term_aleluya->hbox);
+		gchar *fintitle_aleluya; //not so final title
+		
+		if( current_term_aleluya->label_aleluya != NULL ) free(current_term_aleluya->label_aleluya);
 
-			guint length_aleluya = (guint) config_getint ("title_max_length");
-			guint title_behaviour_aleluya = config_getint("title_behaviour");
-      gchar *short_title_aleluya = NULL;
-			if(title_behaviour_aleluya && strlen(fintitle_aleluya) > length_aleluya) {
-
-        if(title_behaviour_aleluya == 1) {
-					short_title_aleluya = g_strdup_printf ("%.*s...", length_aleluya, fintitle_aleluya);
-        }
-        else {
-					gchar *title_offset_aleluya = fintitle_aleluya + strlen(fintitle_aleluya) - length_aleluya;
-					short_title_aleluya = g_strdup_printf ("...%s", title_offset_aleluya);
-        }
-        
-			} else {
-				short_title_aleluya = g_strdup( fintitle_aleluya );
-			}
-        		
-			gtk_label_set_text (GTK_LABEL(label_aleluya), short_title_aleluya);
-			gtk_widget_set_tooltip_text(label_aleluya, fintitle_aleluya);
-			free( fintitle_aleluya );
-			free( short_title_aleluya );
+		//are we going to use the manual title or automatic?
+		if( result_aleluya != GTK_RESPONSE_ACCEPT ) {
+			current_term_aleluya->label_aleluya = NULL;
+			fintitle_aleluya = g_strdup( vte_aleluya );
+		} else {
+			current_term_aleluya->label_aleluya = g_strdup( label_str_aleluya );
+			fintitle_aleluya = g_strdup( label_str_aleluya );
 		}
-		free(label_str_aleluya);
-		//gtk_window_activate_default(tw_aleluya->window);
-		gtk_window_present(tw_aleluya->window);
+
+		//Shorten the tab title and display full title as tooltip
+		guint length_aleluya = (guint) config_getint ("title_max_length");
+		guint title_behaviour_aleluya = config_getint("title_behaviour");
+		gchar *short_title_aleluya = NULL;
+		
+		if(title_behaviour_aleluya && strlen(fintitle_aleluya) > length_aleluya) {
+			if(title_behaviour_aleluya == 1) {
+				short_title_aleluya = g_strdup_printf ("%.*s...", length_aleluya, fintitle_aleluya);
+			}
+			else {
+				gchar *title_offset_aleluya = fintitle_aleluya + strlen(fintitle_aleluya) - length_aleluya;
+				short_title_aleluya = g_strdup_printf ("...%s", title_offset_aleluya);
+			}
+		} else 
+			short_title_aleluya = g_strdup( fintitle_aleluya );
+		
+    //Set the gtk title/tooltip and free resources    		
+		gtk_label_set_text (GTK_LABEL(label_aleluya), short_title_aleluya);
+		gtk_widget_set_tooltip_text(label_aleluya, fintitle_aleluya);
+		g_free( fintitle_aleluya );
+		g_free( short_title_aleluya );
+	}
+
+	//we may have cancelled but still free final resources and return focus to main window
+	free(label_str_aleluya);
+	gtk_window_present(tw_aleluya->window);
 }
 
 void

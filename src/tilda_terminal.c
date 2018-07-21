@@ -57,7 +57,7 @@ gint tilda_term_free (struct tilda_term_ *term)
 {
     DEBUG_FUNCTION ("tilda_term_free");
     DEBUG_ASSERT (term != NULL);
-
+    
     g_free (term);
 
     return 0;
@@ -94,7 +94,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     char *current_tt_dir = NULL;
 
     term = g_malloc (sizeof (struct tilda_term_));
-		term->label_aleluya = g_strdup(_("ALELUYA"));
+		term->label_aleluya = NULL; //will use when not NULL
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, term);
@@ -805,7 +805,7 @@ menu_tab_title_aleluya_cb(GSimpleAction *action,
                     GVariant      *parameter,
                     gpointer       user_data)
 {
-    DEBUG_FUNCTION ("menu_tab_name_aleluya_cb");
+    DEBUG_FUNCTION ("menu_tab_title_aleluya_cb");
     DEBUG_ASSERT (user_data != NULL);
 
     tilda_window_rename_current_tab_aleluya (TILDA_WINDOW(user_data));
