@@ -172,6 +172,7 @@ void tilda_window_set_fullscreen(tilda_window *tw)
   }
   else {
     gtk_window_unfullscreen (GTK_WINDOW (tw->window));
+    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
   }
 }
 
