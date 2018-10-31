@@ -33,8 +33,6 @@
 
 #define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
-GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
-
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
 static gint tilda_term_config_defaults (tilda_term *tt);
 
@@ -604,6 +602,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     DEBUG_FUNCTION ("tilda_term_config_defaults");
     DEBUG_ASSERT (tt != NULL);
     GdkRGBA fg, bg, cc;
+    GdkRGBA *current_palette;
     gchar* word_chars;
     gint i;
     gint cursor_shape;
@@ -625,7 +624,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     cc.blue  =    GUINT16_TO_FLOAT(config_getint ("cursor_blue"));
     cc.alpha = 1.0;
 
-    for(i = 0;i < TERMINAL_PALETTE_SIZE; i++) {
+    current_palette = tilda_palettes_get_current_palette ();
+
+    for(i = 0; i < TILDA_COLOR_PALETTE_SIZE; i++) {
         current_palette[i].red   = GUINT16_TO_FLOAT(config_getnint ("palette", i*3));
         current_palette[i].green = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+1));
         current_palette[i].blue  = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+2));
@@ -636,7 +637,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
                              &fg,
                              &bg,
                              current_palette,
-                             TERMINAL_PALETTE_SIZE);
+                             TILDA_COLOR_PALETTE_SIZE);
 
     /** Bells **/
     vte_terminal_set_audible_bell (VTE_TERMINAL(tt->vte_term), config_getbool ("bell"));

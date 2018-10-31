@@ -51,6 +51,7 @@ src_tilda_SOURCES = \
 		src/tilda.h src/tilda.c \
 		src/tilda-keybinding.c src/tilda-keybinding.h \
 		src/tilda-cli-options.c src/tilda-cli-options.h \
+		src/tilda-palettes.h src/tilda-palettes.c \
 		src/tilda-search-box.c src/tilda-search-box.h \
 		src/tilda_terminal.h src/tilda_terminal.c \
 		src/tilda_window.h src/tilda_window.c \

@@ -17,6 +17,7 @@
 #define TILDA_TERMINALN_H
 
 #include "tilda_window.h"
+#include "tilda-palettes.h"
 
 #include <gtk/gtk.h>
 
@@ -82,10 +83,6 @@ void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale);
 gchar * tilda_terminal_get_title (tilda_term *tt);
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
-
-#define TERMINAL_PALETTE_SIZE 16
-
-extern GdkRGBA current_palette[TERMINAL_PALETTE_SIZE];
 
 G_END_DECLS
 
