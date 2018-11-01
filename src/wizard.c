@@ -265,23 +265,23 @@ static void wizard_close_dialog (TildaWizard *wizard)
 #define SPIN_BUTTON_GET_VALUE(GLADE_NAME) gtk_spin_button_get_value (GTK_SPIN_BUTTON( \
     gtk_builder_get_object (xml, (GLADE_NAME))))
 #define SPIN_BUTTON_GET_RANGE(GLADE_NAME,MIN_POINTER,MAX_POINTER) gtk_spin_button_get_range (GTK_SPIN_BUTTON( \
-	gtk_builder_get_object (xml, (GLADE_NAME))), MIN_POINTER, MAX_POINTER)
+    gtk_builder_get_object (xml, (GLADE_NAME))), MIN_POINTER, MAX_POINTER)
 
 /******************************************************************************/
 /*      Utility functions to get the current monitors height and width        */
 /******************************************************************************/
 static int get_max_height() {
-	gdouble height_min;
-	gdouble height_max;
-	SPIN_BUTTON_GET_RANGE("spin_height_pixels", &height_min, &height_max);
-	return (int) height_max;
+    gdouble height_min;
+    gdouble height_max;
+    SPIN_BUTTON_GET_RANGE("spin_height_pixels", &height_min, &height_max);
+    return (int) height_max;
 }
 
 static int get_max_width() {
-	gdouble width_min;
-	gdouble width_max;
-	SPIN_BUTTON_GET_RANGE("spin_width_pixels", &width_min, &width_max);
-	return (int) width_max;
+    gdouble width_min;
+    gdouble width_max;
+    SPIN_BUTTON_GET_RANGE("spin_width_pixels", &width_min, &width_max);
+    return (int) width_max;
 }
 
 /******************************************************************************/
@@ -308,73 +308,73 @@ static int percentage_dimension (int max_size, int current_size) {
  * is then done by the callback functions of the respective widgets.
  */
 static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *tw) {
-	// Get the monitor number on which the window is currently shown
-	int last_monitor = find_monitor_number(tw);
-	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-	int num_monitors = gdk_screen_get_n_monitors(screen);
-	GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
-	int i;
-	for(i=0; i<num_monitors; i++) {
-		GdkRectangle* current_rectangle = rect+i;
-		gdk_screen_get_monitor_workarea(screen, i, current_rectangle);
-	}
+    // Get the monitor number on which the window is currently shown
+    int last_monitor = find_monitor_number(tw);
+    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+    int num_monitors = gdk_screen_get_n_monitors(screen);
+    GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
+    int i;
+    for(i=0; i<num_monitors; i++) {
+        GdkRectangle* current_rectangle = rect+i;
+        gdk_screen_get_monitor_workarea(screen, i, current_rectangle);
+    }
 
-	GtkTreeIter active_iter;
+    GtkTreeIter active_iter;
 
-	GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
+    GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
 
-	if(!gtk_combo_box_get_active_iter(combo_choose_monitor, &active_iter))
-	{
-		return FALSE;
-	}
+    if(!gtk_combo_box_get_active_iter(combo_choose_monitor, &active_iter))
+    {
+        return FALSE;
+    }
 
-	gchar* new_monitor_name = NULL;
-	gint new_monitor_number;
+    gchar* new_monitor_name = NULL;
+    gint new_monitor_number;
 
     gtk_tree_model_get(gtk_combo_box_get_model(combo_choose_monitor), &active_iter,
                        0, &new_monitor_name,
                        1, &new_monitor_number,
                        -1);
 
-	//Save the new monitor value
-	config_setstr("show_on_monitor", new_monitor_name);
-	GdkRectangle* current_rectangle = rect + new_monitor_number;
-	GdkRectangle* last_rectangle = rect + last_monitor;
-	/* The dimensions of the monitor might have changed,
-	 * so we need to update the spinner widgets for height,
-	 * width, and their percentages as well as their ranges.
-	 * Keep in mind that we use the max range of the pixel spinners
-	 * to store the size of the screen. This only works well if we hide
-	 * the window before updating all the spinners.
-	 */
-	gtk_widget_hide(tw->window);
-	if(current_rectangle->width != last_rectangle->width) {
-		int width_percent = SPIN_BUTTON_GET_VALUE ("spin_width_percentage");
-		int new_max_width = current_rectangle->width;
-		int width = percentage2pixels(new_max_width, width_percent);
-		SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
-		SPIN_BUTTON_SET_VALUE ("spin_width_pixels", width);
+    //Save the new monitor value
+    config_setstr("show_on_monitor", new_monitor_name);
+    GdkRectangle* current_rectangle = rect + new_monitor_number;
+    GdkRectangle* last_rectangle = rect + last_monitor;
+    /* The dimensions of the monitor might have changed,
+     * so we need to update the spinner widgets for height,
+     * width, and their percentages as well as their ranges.
+     * Keep in mind that we use the max range of the pixel spinners
+     * to store the size of the screen. This only works well if we hide
+     * the window before updating all the spinners.
+     */
+    gtk_widget_hide(tw->window);
+    if(current_rectangle->width != last_rectangle->width) {
+        int width_percent = SPIN_BUTTON_GET_VALUE ("spin_width_percentage");
+        int new_max_width = current_rectangle->width;
+        int width = percentage2pixels(new_max_width, width_percent);
+        SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
+        SPIN_BUTTON_SET_VALUE ("spin_width_pixels", width);
 
-		gtk_window_resize (GTK_WINDOW(tw->window), width, config_getint("max_height"));
-	}
-	if(current_rectangle->height != last_rectangle->height) {
-		int height_percent = SPIN_BUTTON_GET_VALUE ("spin_height_percentage");
-		int new_max_height = current_rectangle->height;
-		int height = percentage2pixels(new_max_height, height_percent);
-		SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
-		SPIN_BUTTON_SET_VALUE ("spin_height_pixels", height);
+        gtk_window_resize (GTK_WINDOW(tw->window), width, config_getint("max_height"));
+    }
+    if(current_rectangle->height != last_rectangle->height) {
+        int height_percent = SPIN_BUTTON_GET_VALUE ("spin_height_percentage");
+        int new_max_height = current_rectangle->height;
+        int height = percentage2pixels(new_max_height, height_percent);
+        SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
+        SPIN_BUTTON_SET_VALUE ("spin_height_pixels", height);
 
-		gtk_window_resize (GTK_WINDOW(tw->window), config_getint("max_width"), height);
-	}
+        gtk_window_resize (GTK_WINDOW(tw->window), config_getint("max_width"), height);
+    }
 
-	SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
-	SPIN_BUTTON_SET_VALUE("spin_x_position", current_rectangle->x);
-	SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
-	SPIN_BUTTON_SET_VALUE("spin_y_position", current_rectangle->y);
+    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
+    SPIN_BUTTON_SET_VALUE("spin_x_position", current_rectangle->x);
+    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
+    SPIN_BUTTON_SET_VALUE("spin_y_position", current_rectangle->y);
 
     gtk_widget_show(tw->window);
     free(rect);
-	return TRUE; //callback was handled
+    return TRUE; //callback was handled
 }
 
 static void window_title_change_all (tilda_window *tw)
@@ -1225,38 +1225,38 @@ static void combo_colorschemes_changed_cb (GtkWidget *w, tilda_window *tw)
             break;
         /* Zenburn */
         case 4:
-			gdk_text.red = 0.86;
-			gdk_text.green = gdk_text.blue = 0.64;
-			gdk_back.red = gdk_back.green = gdk_back.blue = 0.25;
-			break;
-		/* Solarized Light */
-		case 5:
-			gdk_text.red = 0.4;
-			gdk_text.green = 0.48;
-			gdk_text.blue = 0.51;
-			gdk_back.red = 0.99;
-			gdk_back.green = 0.96;
-			gdk_back.blue = 0.89;
-			break;
-		/* Solarized Dark */
-		case 6:
-			gdk_text.red = 0.51;
-			gdk_text.green = 0.58;
-			gdk_text.blue = 0.59;
-			gdk_back.red = 0.0;
-			gdk_back.green = 0.17;
-			gdk_back.blue = 0.21;
-			break;
-		/* Snazzy */
-		case 7:
-			gdk_text.red = 0.94;
-			gdk_text.green = 0.94;
-			gdk_text.blue = 0.92;
-			gdk_back.red = 0.16;
-			gdk_back.green = 0.16;
-			gdk_back.blue = 0.21;
-			break;
-	    /* Custom */
+            gdk_text.red = 0.86;
+            gdk_text.green = gdk_text.blue = 0.64;
+            gdk_back.red = gdk_back.green = gdk_back.blue = 0.25;
+            break;
+        /* Solarized Light */
+        case 5:
+            gdk_text.red = 0.4;
+            gdk_text.green = 0.48;
+            gdk_text.blue = 0.51;
+            gdk_back.red = 0.99;
+            gdk_back.green = 0.96;
+            gdk_back.blue = 0.89;
+            break;
+        /* Solarized Dark */
+        case 6:
+            gdk_text.red = 0.51;
+            gdk_text.green = 0.58;
+            gdk_text.blue = 0.59;
+            gdk_back.red = 0.0;
+            gdk_back.green = 0.17;
+            gdk_back.blue = 0.21;
+            break;
+        /* Snazzy */
+        case 7:
+            gdk_text.red = 0.94;
+            gdk_text.green = 0.94;
+            gdk_text.blue = 0.92;
+            gdk_back.red = 0.16;
+            gdk_back.green = 0.16;
+            gdk_back.blue = 0.21;
+            break;
+        /* Custom */
         default:
             nochange = TRUE;
             break;
@@ -1370,7 +1370,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
  * This function is called if a different color scheme is selected from the combo box.
  */
 static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
-	DEBUG_FUNCTION("combo_palette_scheme_changed_cb");
+    DEBUG_FUNCTION("combo_palette_scheme_changed_cb");
     gint i;
     guint j;
     tilda_term *tt;
@@ -1427,7 +1427,7 @@ static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
  */
 static void colorbutton_palette_n_set_cb (GtkWidget *w, tilda_window *tw)
 {
-	DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
+    DEBUG_FUNCTION("colorbutton_palette_n_set_cb");
     const GtkWidget *combo_palette_scheme =
         GTK_WIDGET (gtk_builder_get_object (xml, "combo_palette_scheme"));
     const gchar* name = gtk_buildable_get_name(GTK_BUILDABLE(w));
@@ -1623,20 +1623,20 @@ static void button_reset_compatibility_options_clicked_cb (tilda_window *tw)
 }
 
 static void initialize_combo_choose_monitor(tilda_window *tw) {
-	/**
-	 * First we need to initialize the "combo_choose_monitor" widget,
-	 * with the numbers of each monitor attached to the system.
-	 */
-	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-	int num_monitors = gdk_screen_get_n_monitors(screen);
-	int monitor_number = find_monitor_number(tw);
+    /**
+     * First we need to initialize the "combo_choose_monitor" widget,
+     * with the numbers of each monitor attached to the system.
+     */
+    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+    int num_monitors = gdk_screen_get_n_monitors(screen);
+    int monitor_number = find_monitor_number(tw);
 
-	GtkComboBox* combo_choose_monitor =
-			GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
-	GtkListStore* monitor_model =
-			GTK_LIST_STORE(gtk_combo_box_get_model(combo_choose_monitor));
-	GtkTreeIter iter;
-	gint i;
+    GtkComboBox* combo_choose_monitor =
+            GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
+    GtkListStore* monitor_model =
+            GTK_LIST_STORE(gtk_combo_box_get_model(combo_choose_monitor));
+    GtkTreeIter iter;
+    gint i;
 
     gtk_list_store_clear(monitor_model);
 
@@ -1669,29 +1669,29 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
  */
 static void initialize_geometry_spinners(tilda_window *tw) {
     DEBUG_FUNCTION ("initialize_geometry_spinners");
-	GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-	int monitor = find_monitor_number(tw);
-	GdkRectangle rectangle;
-	gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
-	int monitor_height = rectangle.height;
-	int monitor_width = rectangle.width;
+    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
+    int monitor = find_monitor_number(tw);
+    GdkRectangle rectangle;
+    gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
+    int monitor_height = rectangle.height;
+    int monitor_width = rectangle.width;
 
     /* Update range and value of height spinners */
     gint height = config_getint("max_height");
-	SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
-	SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (monitor_height, config_getint ("max_height")));
+    SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
+    SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (monitor_height, config_getint ("max_height")));
     SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, monitor_height);
-	SPIN_BUTTON_SET_VALUE("spin_height_pixels", height);
+    SPIN_BUTTON_SET_VALUE("spin_height_pixels", height);
 
     /* Update range and value of width spinners */
     gint width = config_getint("max_width");
-	SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
-	SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (monitor_width, config_getint ("max_width")));
+    SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
+    SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (monitor_width, config_getint ("max_width")));
     SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, monitor_width);
-	SPIN_BUTTON_SET_VALUE("spin_width_pixels", width);
+    SPIN_BUTTON_SET_VALUE("spin_width_pixels", width);
 
-	CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");
-	CHECK_BUTTON("check_centered_vertically", "centered_vertically");
+    CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");
+    CHECK_BUTTON("check_centered_vertically", "centered_vertically");
     CHECK_BUTTON("check_start_fullscreen", "start_fullscreen");
 
     gint xpos = config_getint("x_pos");
@@ -1699,7 +1699,7 @@ static void initialize_geometry_spinners(tilda_window *tw) {
         xpos = rectangle.x;
         config_setint("x_pos", xpos);
     }
-	SPIN_BUTTON_SET_RANGE("spin_x_position", 0, gdk_screen_width());
+    SPIN_BUTTON_SET_RANGE("spin_x_position", 0, gdk_screen_width());
     SPIN_BUTTON_SET_VALUE("spin_x_position", xpos); /* TODO: Consider x in rectange.x for monitor displacement */
 
     gint ypos = config_getint("y_pos");
@@ -1712,10 +1712,10 @@ static void initialize_geometry_spinners(tilda_window *tw) {
 
     gtk_window_move(GTK_WINDOW(tw->window), xpos, ypos);
 
-	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
-	SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
-	SET_SENSITIVE_BY_CONFIG_NBOOL("spin_y_position", "centered_vertically");
-	SET_SENSITIVE_BY_CONFIG_NBOOL("label_y_position", "centered_vertically");
+    SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
+    SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
+    SET_SENSITIVE_BY_CONFIG_NBOOL("spin_y_position", "centered_vertically");
+    SET_SENSITIVE_BY_CONFIG_NBOOL("label_y_position", "centered_vertically");
 }
 
 /* Read all state from the config system, and put it into
@@ -1770,10 +1770,10 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     /* Appearance Tab */
     /* Initialize the monitor chooser combo box with the numbers of the monitor */
-	initialize_combo_choose_monitor(tw);
+    initialize_combo_choose_monitor(tw);
 
 
-	initialize_geometry_spinners(tw);
+    initialize_geometry_spinners(tw);
     CHECK_BUTTON ("check_enable_transparency", "enable_transparency");
     CHECK_BUTTON ("check_animated_pulldown", "animation");
     SPIN_BUTTON ("spin_animation_delay", "slide_sleep_usec");
