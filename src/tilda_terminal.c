@@ -604,7 +604,6 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     GdkRGBA fg, bg, cc;
     GdkRGBA *current_palette;
     gchar* word_chars;
-    gint i;
     gint cursor_shape;
 
     /** Colors & Palette **/
@@ -626,7 +625,7 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     current_palette = tilda_palettes_get_current_palette ();
 
-    for(i = 0; i < TILDA_COLOR_PALETTE_SIZE; i++) {
+    for(guint i = 0; i < TILDA_COLOR_PALETTE_SIZE; i++) {
         current_palette[i].red   = GUINT16_TO_FLOAT(config_getnint ("palette", i*3));
         current_palette[i].green = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+1));
         current_palette[i].blue  = GUINT16_TO_FLOAT(config_getnint ("palette", i*3+2));
