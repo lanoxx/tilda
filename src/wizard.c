@@ -1371,7 +1371,8 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
  */
 static void combo_palette_scheme_changed_cb (GtkWidget *w, tilda_window *tw) {
 	DEBUG_FUNCTION("combo_palette_scheme_changed_cb");
-    guint i, j;
+    gint i;
+    guint j;
     tilda_term *tt;
     GdkRGBA fg, bg;
     GtkWidget *color_button;
@@ -1721,7 +1722,7 @@ static void initialize_geometry_spinners(tilda_window *tw) {
  * its visual representation in the wizard. */
 static void set_wizard_state_from_config (tilda_window *tw) {
     GdkRGBA text_color, back_color, cursor_color;
-    gint i;
+    guint i;
     GdkRGBA *current_palette;
 
     /* General Tab */
