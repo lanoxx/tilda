@@ -78,8 +78,6 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("lines", 5000, CFGF_NONE),
     CFG_INT("max_width", 600, CFGF_NONE),
     CFG_INT("max_height", 150, CFGF_NONE),
-    CFG_INT("min_width", 1, CFGF_NONE),
-    CFG_INT("min_height", 1, CFGF_NONE),
     CFG_INT("x_pos", 0, CFGF_NONE),
     CFG_INT("y_pos", 0, CFGF_NONE),
     CFG_INT("tab_pos", 0, CFGF_NONE),
@@ -183,6 +181,9 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("scroll_background", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("use_image", FALSE, CFGF_NODEFAULT),
+
+    CFG_INT("min_width", 0, CFGF_NODEFAULT),
+    CFG_INT("min_height", 0, CFGF_NODEFAULT),
     /* End deprecated tilda options */
 
     CFG_END()
@@ -434,7 +435,9 @@ gint config_init (const gchar *config_file)
                                                       "image",
                                                       "transparency",
                                                       "scroll_background",
-                                                      "use_image"
+                                                      "use_image",
+                                                      "min_width",
+                                                      "min_height"
     };
     remove_deprecated_config_options(deprecated_tilda_config_options, G_N_ELEMENTS(deprecated_tilda_config_options));
 
