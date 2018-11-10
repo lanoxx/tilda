@@ -448,7 +448,7 @@ void remove_deprecated_config_options(const gchar *const *deprecated_config_opti
     for (guint i =0; i < size; i++) {
         opt = cfg_getopt(tc, deprecated_config_options[i]);
         if (opt->nvalues != 0) {
-            g_warning("Warning: %s is no longer a valid config option for the current version of Tilda.\n", deprecated_config_options[i]);
+            g_warning("Warning: %s is no longer a valid config option for the current version of Tilda.", deprecated_config_options[i]);
             cfg_free_value(opt);
         }
     }
