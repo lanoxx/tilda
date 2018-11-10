@@ -288,18 +288,6 @@ static int get_max_width() {
 /*               ALL static callback helpers are below                        */
 /******************************************************************************/
 
-static int percentage_dimension (int max_size, int current_size) {
-    DEBUG_FUNCTION ("percentage_dimension");
-
-    return (int) (((float) current_size) / ((float) max_size) * 100.0);
-}
-
-#define percentage_height(max_size, current_height) percentage_dimension(max_size, current_height)
-#define percentage_width(max_size, current_width)   percentage_dimension(max_size, current_width)
-
-#define pixels2percentage(max_size,pixels) percentage_dimension ((max_size), (pixels))
-#define percentage2pixels(max_size,percentage) (((percentage) / 100.0) * max_size)
-
 /**
  * Get the number of screens and load the monitor geometry for each screen,
  * then set the position of the window according to the x and y offset
@@ -338,8 +326,8 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
 
     //Save the new monitor value
     config_setstr("show_on_monitor", new_monitor_name);
-    GdkRectangle* current_rectangle = rect + new_monitor_number;
-    GdkRectangle* last_rectangle = rect + last_monitor;
+    GdkRectangle* current_monitor_rectangle = rect + new_monitor_number;
+    GdkRectangle* original_monitor_rectangle = rect + last_monitor;
     /* The dimensions of the monitor might have changed,
      * so we need to update the spinner widgets for height,
      * width, and their percentages as well as their ranges.
@@ -348,29 +336,38 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
      * the window before updating all the spinners.
      */
     gtk_widget_hide(tw->window);
-    if(current_rectangle->width != last_rectangle->width) {
-        int width_percent = SPIN_BUTTON_GET_VALUE ("spin_width_percentage");
-        int new_max_width = current_rectangle->width;
-        int width = percentage2pixels(new_max_width, width_percent);
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    if(current_monitor_rectangle->width != original_monitor_rectangle->width)
+    {
+        gint new_max_width = current_monitor_rectangle->width;
+
         SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
-        SPIN_BUTTON_SET_VALUE ("spin_width_pixels", width);
+        SPIN_BUTTON_SET_VALUE ("spin_width_pixels", rectangle.width);
 
-        gtk_window_resize (GTK_WINDOW(tw->window), width, config_getint("max_height"));
+        gtk_window_resize (GTK_WINDOW(tw->window),
+                           rectangle.width,
+                           rectangle.height);
     }
-    if(current_rectangle->height != last_rectangle->height) {
-        int height_percent = SPIN_BUTTON_GET_VALUE ("spin_height_percentage");
-        int new_max_height = current_rectangle->height;
-        int height = percentage2pixels(new_max_height, height_percent);
-        SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
-        SPIN_BUTTON_SET_VALUE ("spin_height_pixels", height);
 
-        gtk_window_resize (GTK_WINDOW(tw->window), config_getint("max_width"), height);
+    if(current_monitor_rectangle->height != original_monitor_rectangle->height)
+    {
+        int new_max_height = current_monitor_rectangle->height;
+
+        SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
+        SPIN_BUTTON_SET_VALUE ("spin_height_pixels", rectangle.height);
+
+        gtk_window_resize (GTK_WINDOW(tw->window),
+                           rectangle.width,
+                           rectangle.height);
     }
 
     SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
-    SPIN_BUTTON_SET_VALUE("spin_x_position", current_rectangle->x);
+    SPIN_BUTTON_SET_VALUE("spin_x_position", current_monitor_rectangle->x);
     SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
-    SPIN_BUTTON_SET_VALUE("spin_y_position", current_rectangle->y);
+    SPIN_BUTTON_SET_VALUE("spin_y_position", current_monitor_rectangle->y);
 
     gtk_widget_show(tw->window);
     free(rect);
@@ -424,7 +421,7 @@ static void window_title_change_all (tilda_window *tw)
 
 static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
                                                     void (*callback)(GtkWidget *w, tilda_window *tw),
-                                                    gint new_val,
+                                                    gdouble new_val,
                                                     tilda_window *tw)
 {
     g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), tw);
@@ -845,12 +842,16 @@ static int find_centering_coordinate (tilda_window *tw, enum dimensions dimensio
     gint monitor = find_monitor_number(tw);
     GdkRectangle rectangle;
     gdk_screen_get_monitor_workarea (gtk_widget_get_screen(tw->window), monitor, &rectangle);
+
+    GdkRectangle tilda_rectangle;
+    config_get_configured_window_size (&tilda_rectangle);
+
     if (dimension == HEIGHT) {
         monitor_dimension = rectangle.height;
-        tilda_dimension = config_getint("max_height");
+        tilda_dimension = tilda_rectangle.height;
     } else if (dimension == WIDTH) {
         monitor_dimension = rectangle.width;
-        tilda_dimension = config_getint("max_width");
+        tilda_dimension = tilda_rectangle.width;
     }
     const gdouble screen_center = monitor_dimension / 2.0;
     const gdouble tilda_center  = tilda_dimension  / 2.0;
@@ -877,21 +878,33 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw);
 static void initialize_scrollback_settings(void);
 static void initialize_set_as_desktop_checkbox (void);
 
-static void spin_height_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw)
+static void spin_height_percentage_value_changed_cb (GtkWidget *spin_height_percentage,
+                                                     tilda_window *tw)
 {
     const GtkWidget *spin_height_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
 
-    const gint h_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint h_pix = (int) percentage2pixels (get_max_height(), h_pct);
+    const gdouble height_percentage = gtk_spin_button_get_value (GTK_SPIN_BUTTON(spin_height_percentage)) / 100;
+    const gint height_pixels = pixels_ratio_to_absolute (get_max_height(), height_percentage);
 
-    config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels), &spin_height_pixels_value_changed_cb, h_pix, tw);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    config_setint ("height_percentage", GLONG_FROM_DOUBLE (height_percentage));
 
-    if (config_getbool ("centered_vertically")) {
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_pixels),
+                                            &spin_height_pixels_value_changed_cb,
+                                            height_pixels, tw);
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gtk_window_resize (GTK_WINDOW(tw->window), rectangle.width, height_pixels);
+
+    if (config_getbool ("centered_vertically"))
+    {
         config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+        gtk_window_move (GTK_WINDOW(tw->window),
+                         config_getint ("x_pos"),
+                         config_getint ("y_pos"));
     }
 
     /* Always regenerate animation positions when changing x or y position!
@@ -900,20 +913,32 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *w, tilda_window 
 }
 
 
-static void spin_height_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
+static void spin_height_pixels_value_changed_cb (GtkWidget *spin_height_pixels,
+                                                 tilda_window *tw)
 {
     const GtkWidget *spin_height_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_percentage"));
-    const gint h_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint h_pct = pixels2percentage (get_max_height(), h_pix);
+    const gint height_pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_height_pixels));
+    const gdouble height_percentage = pixels_absolute_to_ratio (get_max_height(), height_pixels);
 
-    config_setint ("max_height", h_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage), &spin_height_percentage_value_changed_cb, h_pct, tw);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    config_setint ("height_percentage", GLONG_FROM_DOUBLE (height_percentage));
 
-    if (config_getbool ("centered_vertically")) {
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_height_percentage),
+                                            &spin_height_percentage_value_changed_cb,
+                                            height_percentage * 100, tw);
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gtk_window_resize (GTK_WINDOW(tw->window), rectangle.width, height_pixels);
+
+    if (config_getbool ("centered_vertically"))
+    {
         config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+        gtk_window_move (GTK_WINDOW(tw->window),
+                         config_getint ("x_pos"),
+                         config_getint ("y_pos"));
     }
 
     /* Always regenerate animation positions when changing x or y position!
@@ -921,21 +946,33 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
     generate_animation_positions (tw);
 }
 
-static void spin_width_percentage_value_changed_cb (GtkWidget *w, tilda_window *tw)
+static void spin_width_percentage_value_changed_cb (GtkWidget *spin_width_percentage,
+                                                    tilda_window *tw)
 {
     const GtkWidget *spin_width_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
 
-    const gint w_pct = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint w_pix = (int) percentage2pixels (get_max_width(), w_pct);
+    const gdouble width_percentage = gtk_spin_button_get_value (GTK_SPIN_BUTTON(spin_width_percentage)) / 100;
+    const gint width_pixels = pixels_ratio_to_absolute (get_max_width(), width_percentage);
 
-    config_setint ("max_width", w_pix);
-    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels), &spin_width_pixels_value_changed_cb, w_pix, tw);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+    config_setint ("width_percentage", GLONG_FROM_DOUBLE(width_percentage));
 
-    if (config_getbool ("centered_horizontally")) {
+    set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_pixels),
+                                            &spin_width_pixels_value_changed_cb,
+                                            width_pixels, tw);
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gtk_window_resize (GTK_WINDOW(tw->window), width_pixels, rectangle.height);
+
+    if (config_getbool ("centered_horizontally"))
+    {
         config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+        gtk_window_move (GTK_WINDOW(tw->window),
+                         config_getint ("x_pos"),
+                         config_getint ("y_pos"));
     }
 
     /* Always regenerate animation positions when changing x or y position!
@@ -943,22 +980,32 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *w, tilda_window *
     generate_animation_positions (tw);
 }
 
-static void spin_width_pixels_value_changed_cb (GtkWidget *w, tilda_window *tw)
+static void spin_width_pixels_value_changed_cb (GtkWidget *spin_width_pixels, tilda_window *tw)
 {
     const GtkWidget *spin_width_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_percentage"));
 
-    const gint w_pix = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
-    const gint w_pct = pixels2percentage (get_max_width(), w_pix);
+    const gint width_pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_width_pixels));
+    const gdouble width_percentage = pixels_absolute_to_ratio (get_max_width(), width_pixels);
 
-    config_setint ("max_width", w_pix);
+    config_setint ("width_percentage", GLONG_FROM_DOUBLE(width_percentage));
+
     set_spin_value_while_blocking_callback (GTK_SPIN_BUTTON(spin_width_percentage),
-        &spin_width_percentage_value_changed_cb, w_pct, tw);
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+                                            &spin_width_percentage_value_changed_cb,
+                                            width_percentage * 100, tw);
 
-    if (config_getbool ("centered_horizontally")) {
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gtk_window_resize (GTK_WINDOW(tw->window), width_pixels, rectangle.height);
+
+    if (config_getbool ("centered_horizontally"))
+    {
         config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+
+        gtk_window_move (GTK_WINDOW(tw->window),
+                         config_getint ("x_pos"),
+                         config_getint ("y_pos"));
     }
 
     /* Always regenerate animation positions when changing x or y position!
@@ -1173,7 +1220,13 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w, tilda_window *tw)
      * than show and place the window. */
     if (!status)
     {
-        gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+        GdkRectangle rectangle;
+        config_get_configured_window_size (&rectangle);
+
+        guint width = rectangle.width;
+        guint height = rectangle.height;
+
+        gtk_window_resize (GTK_WINDOW(tw->window), width, height);
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
@@ -1677,16 +1730,26 @@ static void initialize_geometry_spinners(tilda_window *tw) {
     int monitor_width = rectangle.width;
 
     /* Update range and value of height spinners */
-    gint height = config_getint("max_height");
+    GdkRectangle tilda_rectangle;
+    config_get_configured_window_size (&tilda_rectangle);
+
+    gint width = tilda_rectangle.width;
+    gint height = tilda_rectangle.height;
+
+    gdouble height_percentage =
+            GLONG_TO_DOUBLE (config_getint("height_percentage")) * 100;
+
+    gdouble width_percentage =
+            GLONG_TO_DOUBLE (config_getint("width_percentage")) * 100;
+
     SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
-    SPIN_BUTTON_SET_VALUE ("spin_height_percentage", percentage_height (monitor_height, config_getint ("max_height")));
+    SPIN_BUTTON_SET_VALUE ("spin_height_percentage", height_percentage);
     SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, monitor_height);
     SPIN_BUTTON_SET_VALUE("spin_height_pixels", height);
 
     /* Update range and value of width spinners */
-    gint width = config_getint("max_width");
     SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
-    SPIN_BUTTON_SET_VALUE ("spin_width_percentage", percentage_width (monitor_width, config_getint ("max_width")));
+    SPIN_BUTTON_SET_VALUE ("spin_width_percentage", width_percentage);
     SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, monitor_width);
     SPIN_BUTTON_SET_VALUE("spin_width_pixels", width);
 

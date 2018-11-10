@@ -985,8 +985,18 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 
     /* Position the window */
     tw->current_state = STATE_UP;
-    gtk_window_set_default_size (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
-    gtk_window_resize (GTK_WINDOW(tw->window), config_getint ("max_width"), config_getint ("max_height"));
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gint width = rectangle.width;
+    gint height = rectangle.height;
+
+    gtk_window_set_default_size (GTK_WINDOW(tw->window),
+                                 width,
+                                 height);
+
+    gtk_window_resize (GTK_WINDOW(tw->window), width, height);
 
     /* Create GDK resources now, to prevent crashes later on */
     gtk_widget_realize (tw->window);

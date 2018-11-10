@@ -81,8 +81,12 @@ void generate_animation_positions (struct tilda_window_ *tw)
     gint i;
     gint last_pos_x = config_getint ("x_pos");
     gint last_pos_y = config_getint ("y_pos");
-    gint last_width = config_getint ("max_width");
-    gint last_height = config_getint ("max_height");
+
+    GdkRectangle rectangle;
+    config_get_configured_window_size (&rectangle);
+
+    gint last_width = rectangle.width;
+    gint last_height = rectangle.height;
     gint screen_width = gdk_screen_width();
     gint screen_height = gdk_screen_height();
 

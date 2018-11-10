@@ -1537,6 +1537,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="adjustment">adjustment2</property>
+                                <property name="digits">2</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -1726,6 +1727,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="adjustment">adjustment4</property>
+                                <property name="digits">2</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>

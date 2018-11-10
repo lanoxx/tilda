@@ -655,6 +655,11 @@ int main (int argc, char *argv[])
         config_file = get_config_file_name (lock.instance);
     }
 
+    /* Initialize GTK. Any code that interacts with GTK (e.g. creating a widget)
+     * should come after this call. Gtk initialization should happen before we
+     * initialize the config file. */
+    gtk_init (&argc, &argv);
+
     /* Start up the configuration system and load from file */
     gint config_init_result = config_init (config_file);
 
@@ -664,9 +669,6 @@ int main (int argc, char *argv[])
 
     /* We're about to startup X, so set the error handler. */
     XSetErrorHandler (xerror_handler);
-
-    /* Initialize GTK. Any code that interacts with GTK (e.g. creating a widget) should come after this call. */
-    gtk_init (&argc, &argv);
 
     /* This section shows a modal dialog to notify the user that something has gone wrong when loading the config.
      * Earlier version only used to print a message to stderr, but since tilda is usually not started from a
