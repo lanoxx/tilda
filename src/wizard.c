@@ -1831,7 +1831,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     TEXT_ENTRY ("entry_word_chars", "word_chars");
 
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(xml, ("spin_level_of_transparency"))), (100 - 100*GUINT16_TO_FLOAT(config_getint("back_alpha"))));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(xml, ("spin_level_of_transparency"))),
+                              (100 - 100*GUINT16_TO_FLOAT(config_getint("back_alpha"))));
 }
 
 static void initialize_scrollback_settings(void) {
