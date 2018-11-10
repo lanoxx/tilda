@@ -401,6 +401,8 @@ gint config_write (const gchar *config_file)
  */
 gint config_init (const gchar *config_file)
 {
+    DEBUG_FUNCTION ("config_init");
+
     gint ret = 0;
 
     // Can we use a more descriptive name than tc?
