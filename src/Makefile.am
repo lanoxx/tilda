@@ -88,6 +88,7 @@ src_tilda_LDADD = \
 		$(X11_LIBS) \
 		$(LTLIBINTL) \
 		$(LEXLIB) \
+		-lm \
 		$(NULL)
 
 EXTRA_DIST += \

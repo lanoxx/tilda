@@ -22,6 +22,7 @@
 #include "tilda_terminal.h"
 #include "key_grabber.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +42,12 @@ static gboolean show_confirmation_dialog (tilda_window *tw,
 
 static void tilda_window_apply_transparency (tilda_window *tw,
                                              gboolean status);
+
+static gboolean update_tilda_window_size (gpointer user_data);
+
+static GdkFilterReturn window_filter_function (GdkXEvent *xevent,
+                                               GdkEvent *event,
+                                               gpointer data);
 
 static void
 tilda_window_setup_alpha_mode (tilda_window *tw)
@@ -1005,6 +1012,20 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* Initialize wizard window reference to NULL */
     tw->wizard_window = NULL;
 
+    GdkScreen *screen;
+    GdkWindow *root;
+    GdkEventMask mask;
+
+    screen = gtk_widget_get_screen (GTK_WIDGET (tw->window));
+    root = gdk_screen_get_root_window (screen);
+
+    mask = gdk_window_get_events (root);
+    mask |= GDK_PROPERTY_CHANGE_MASK;
+
+    gdk_window_set_events (root, mask);
+
+    gdk_window_add_filter (root, window_filter_function, tw);
+
     return TRUE;
 }
 
@@ -1030,6 +1051,8 @@ gint tilda_window_free (tilda_window *tw)
     if (tw->gtk_builder != NULL) {
         g_object_unref (G_OBJECT(tw->gtk_builder));
     }
+
+    tw->size_update_event_source = 0;
 
     return 0;
 }
@@ -1178,4 +1201,92 @@ gint tilda_window_confirm_quit (tilda_window *tw)
     }
 
     return GDK_EVENT_STOP;
+}
+
+static gboolean update_tilda_window_size (gpointer user_data)
+{
+    tilda_window *tw = user_data;
+
+    g_debug ("Updating tilda window size in idle handler to "
+             "match new size of workarea.");
+
+    /* 1. Get current tilda window size */
+    int windowHeight = gtk_widget_get_allocated_height (GTK_WIDGET (tw->window));
+    int windowWidth = gtk_widget_get_allocated_width (GTK_WIDGET (tw->window));
+
+    gint newWidth = windowWidth;
+    gint newHeight = windowHeight;
+
+    /* 2. Get the desired size and update the tilda window size if necessary. */
+    GdkRectangle configured_geometry;
+    config_get_configured_window_size (&configured_geometry);
+
+    if (configured_geometry.width - windowWidth >= 1) {
+        newWidth = configured_geometry.width;
+    }
+
+    if (configured_geometry.height - windowHeight >= 1) {
+        newHeight = configured_geometry.height;
+    }
+
+    gtk_window_resize (GTK_WINDOW (tw->window),
+                       newWidth,
+                       newHeight);
+
+    /* 3. Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
+     * Thus, we need to reset the ID such that a new event source can be
+     * registered if the workarea changes again. */
+    tw->size_update_event_source = 0;
+
+    return G_SOURCE_REMOVE;
+}
+
+/**
+ * This function inspects the incoming XEvents to find property events that
+ * update the workarea and as a result queues an update function which updates
+ * the tilda window size in case the workarea has changed.
+ *
+ * The reason we need this function is that in the signal handlers of
+ * the signals GdkScreen::monitors-changed and GdkScreen::size-changed
+ * we cannot reliably get the updated workarea. This is because the workarea
+ * is computed and update by the window manager only after the monitor
+ * resolution has changed. Thus, if we call gdk_monitor_get_workarea
+ * from the monitors-changed or size-changed signal handlers we will
+ * not get the correct workarea because the window manager has not yet
+ * updated the corresponding XProperty.
+ */
+static GdkFilterReturn window_filter_function (GdkXEvent *gdk_xevent,
+                                               GdkEvent *event,
+                                               gpointer user_data)
+{
+    tilda_window *tw = user_data;
+
+    XEvent *xevent = (XEvent *) gdk_xevent;
+
+    switch (xevent->type)
+    {
+        case PropertyNotify:
+        {
+            XPropertyEvent *propertyEvent;
+
+            propertyEvent = xevent;
+
+            const Atom WORKAREA_ATOM = XInternAtom (propertyEvent->display,
+                                                    "_NET_WORKAREA", True);
+
+            if (propertyEvent->atom != WORKAREA_ATOM)
+                return GDK_FILTER_CONTINUE;
+
+            if (tw->size_update_event_source != 0)
+                return GDK_FILTER_CONTINUE;
+
+            tw->size_update_event_source = g_idle_add (update_tilda_window_size,
+                                                       user_data);
+
+            break;
+        }
+        default:break;
+    }
+
+    return GDK_FILTER_CONTINUE;
 }
