@@ -191,12 +191,12 @@ static cfg_opt_t config_opts[] = {
 /* Define these here, so that we can enable a non-threadsafe version
  * without changing the code below. */
 #ifndef NO_THREADSAFE
-	static GMutex mutex;
-	#define config_mutex_lock() g_mutex_lock (&mutex)
-	#define config_mutex_unlock() g_mutex_unlock (&mutex)
+    static GMutex mutex;
+    #define config_mutex_lock() g_mutex_lock (&mutex)
+    #define config_mutex_unlock() g_mutex_unlock (&mutex)
 #else
-	#define config_mutex_lock()
-	#define config_mutex_unlock()
+    #define config_mutex_lock()
+    #define config_mutex_unlock()
 #endif
 
 #define CONFIG1_OLDER -1
@@ -212,130 +212,130 @@ void remove_deprecated_config_options(const gchar *const *deprecated_config_opti
  * a file. */
 gint config_free (const gchar *config_file)
 {
-	gint ret = 0;
+    gint ret = 0;
 
-	if (config_file != NULL)
-		ret = config_write (config_file);
+    if (config_file != NULL)
+        ret = config_write (config_file);
 
-	cfg_free (tc);
+    cfg_free (tc);
 
-	return ret;
+    return ret;
 }
 
 gint config_setint (const gchar *key, const gint val)
 {
-	config_mutex_lock ();
-	cfg_setint (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setint (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setnint(const gchar *key, const gint val, const guint idx)
 {
-	config_mutex_lock ();
-	cfg_setnint (tc, key, val, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setnint (tc, key, val, idx);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setdouble (const gchar *key, const gdouble val) {
-	config_mutex_lock ();
-	cfg_setfloat (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setfloat (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setndouble (const gchar *key, const gdouble val, const guint idx) {
-	config_mutex_lock ();
-	cfg_setnfloat (tc, key, val, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setnfloat (tc, key, val, idx);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setstr (const gchar *key, const gchar *val)
 {
-	config_mutex_lock ();
-	cfg_setstr (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setstr (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_setbool(const gchar *key, const gboolean val)
 {
-	config_mutex_lock ();
-	cfg_setbool (tc, key, val);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    cfg_setbool (tc, key, val);
+    config_mutex_unlock ();
 
-	return 0;
+    return 0;
 }
 
 gint config_getint (const gchar *key)
 {
-	gint temp;
+    gint temp;
 
-	config_mutex_lock ();
-	temp = cfg_getint (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getint (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 glong config_getnint(const gchar *key, const guint idx)
 {
-	glong temp;
+    glong temp;
 
-	config_mutex_lock ();
-	temp = cfg_getnint (tc, key, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getnint (tc, key, idx);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gdouble config_getdouble (const gchar* key) {
-	gdouble temp;
+    gdouble temp;
 
-	config_mutex_lock ();
-	temp = cfg_getfloat (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getfloat (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gdouble config_getndouble (const gchar* key, const guint idx) {
-	gdouble temp;
+    gdouble temp;
 
-	config_mutex_lock ();
-	temp = cfg_getnfloat (tc, key, idx);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getnfloat (tc, key, idx);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gchar* config_getstr (const gchar *key)
 {
-	gchar *temp;
+    gchar *temp;
 
-	config_mutex_lock ();
-	temp = cfg_getstr (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getstr (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 gboolean config_getbool(const gchar *key)
 {
-	gboolean temp;
+    gboolean temp;
 
-	config_mutex_lock ();
-	temp = cfg_getbool (tc, key);
-	config_mutex_unlock ();
+    config_mutex_lock ();
+    temp = cfg_getbool (tc, key);
+    config_mutex_unlock ();
 
-	return temp;
+    return temp;
 }
 
 /* This will write out the current state of the config file to the disk.
@@ -401,25 +401,25 @@ gint config_write (const gchar *config_file)
  */
 gint config_init (const gchar *config_file)
 {
-	gint ret = 0;
+    gint ret = 0;
 
     // Can we use a more descriptive name than tc?
-	tc = cfg_init (config_opts, 0);
+    tc = cfg_init (config_opts, 0);
 
-	if (g_file_test (config_file,
+    if (g_file_test (config_file,
         G_FILE_TEST_IS_REGULAR))
     {
-		/* Read in the existing configuration options */
-		ret = cfg_parse (tc, config_file);
+        /* Read in the existing configuration options */
+        ret = cfg_parse (tc, config_file);
 
-		if (ret == CFG_PARSE_ERROR) {
-			DEBUG_ERROR ("Problem parsing config");
+        if (ret == CFG_PARSE_ERROR) {
+            DEBUG_ERROR ("Problem parsing config");
             return ret;
-		} else if (ret != CFG_SUCCESS) {
+        } else if (ret != CFG_SUCCESS) {
             DEBUG_ERROR ("Problem parsing config.");
             return ret;
         }
-	}
+    }
 
     /* Deprecate old config settings
      * This is a lame work around until we get a permanent solution to
@@ -440,7 +440,7 @@ gint config_init (const gchar *config_file)
         g_mutex_init(&mutex);
     #endif
 
-	return ret;
+    return ret;
 }
 
 void remove_deprecated_config_options(const gchar *const *deprecated_config_options, guint size) {
