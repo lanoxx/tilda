@@ -347,6 +347,8 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
     SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
     SPIN_BUTTON_SET_VALUE("spin_y_position", current_monitor_rectangle->y);
 
+    tilda_window_update_window_position (tw);
+
     gtk_widget_show(tw->window);
     free(rect);
     return TRUE; //callback was handled
