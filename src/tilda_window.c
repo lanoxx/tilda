@@ -1203,6 +1203,83 @@ gint tilda_window_confirm_quit (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
+gint tilda_window_find_monitor_number (tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_window_find_monitor_number");
+
+    GdkScreen *screen = gtk_widget_get_screen (tw->window);
+    gint n_monitors = gdk_screen_get_n_monitors (screen);
+
+    gchar *show_on_monitor = config_getstr("show_on_monitor");
+    for(int i = 0; i < n_monitors; ++i) {
+        gchar *monitor_name = gdk_screen_get_monitor_plug_name (screen, i);
+        if(0 == g_strcmp0 (show_on_monitor, monitor_name)) {
+            return i;
+        }
+    }
+
+    return gdk_screen_get_primary_monitor (screen);
+}
+
+gint tilda_window_find_centering_coordinate (tilda_window *tw,
+                                             enum dimensions dimension)
+{
+    DEBUG_FUNCTION ("tilda_window_find_centering_coordinate");
+
+    gdouble monitor_dimension = 0;
+    gdouble tilda_dimension = 0;
+    gint monitor = tilda_window_find_monitor_number (tw);
+    GdkRectangle rectangle;
+    gdk_screen_get_monitor_workarea (gtk_widget_get_screen(tw->window), monitor, &rectangle);
+
+    GdkRectangle tilda_rectangle;
+    config_get_configured_window_size (&tilda_rectangle);
+
+    if (dimension == HEIGHT) {
+        monitor_dimension = rectangle.height;
+        tilda_dimension = tilda_rectangle.height;
+    } else if (dimension == WIDTH) {
+        monitor_dimension = rectangle.width;
+        tilda_dimension = tilda_rectangle.width;
+    }
+    const gdouble screen_center = monitor_dimension / 2.0;
+    const gdouble tilda_center  = tilda_dimension  / 2.0;
+    gint center = (int) (screen_center - tilda_center);
+
+    if(dimension == HEIGHT) {
+        center += rectangle.y;
+    } else if (dimension == WIDTH) {
+        center += rectangle.x;
+    }
+    return center;
+}
+
+void
+tilda_window_update_window_position (tilda_window *tw)
+{
+    /**
+     * If the screen size changed we might also need to recenter the
+     * tilda window.
+     */
+    gint pos_x, pos_y;
+    gboolean centered_horizontally = config_getbool ("centered_horizontally");
+    gboolean centered_vertically = config_getbool ("centered_vertically");
+
+    if (centered_horizontally) {
+        pos_x = tilda_window_find_centering_coordinate (tw, WIDTH);
+        config_setint ("x_pos", pos_x);
+        pos_y = (gint) config_getint ("y_pos");
+        gtk_window_move (GTK_WINDOW (tw->window), pos_x, pos_y);
+    }
+
+    if (centered_vertically) {
+        pos_y = tilda_window_find_centering_coordinate (tw, HEIGHT);
+        config_setint ("y_pos", pos_y);
+        pos_x = (gint) config_getint ("x_pos");
+        gtk_window_move (GTK_WINDOW (tw->window), pos_x, pos_y);
+    }
+}
+
 static gboolean update_tilda_window_size (gpointer user_data)
 {
     tilda_window *tw = user_data;
@@ -1232,6 +1309,8 @@ static gboolean update_tilda_window_size (gpointer user_data)
     gtk_window_resize (GTK_WINDOW (tw->window),
                        newWidth,
                        newHeight);
+
+    tilda_window_update_window_position (tw);
 
     /* 3. Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
      * Thus, we need to reset the ID such that a new event source can be

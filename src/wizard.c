@@ -49,9 +49,6 @@ struct TildaWizard_
 
 typedef struct TildaWizard_ TildaWizard;
 
-/* For use in get_display_dimension() */
-enum dimensions { HEIGHT, WIDTH };
-
 /* This will hold the GtkBuilder representation of the .ui file.
  * We keep this global so that we can look up any element from any routine.
  *
@@ -65,26 +62,7 @@ static void set_wizard_state_from_config (tilda_window *tw);
 static void connect_wizard_signals (TildaWizard *wizard);
 static void init_palette_scheme_menu (void);
 static void update_palette_color_button(gint idx);
-static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
 static void initialize_geometry_spinners(tilda_window *tw);
-
-static gint find_monitor_number(tilda_window *tw)
-{
-    DEBUG_FUNCTION ("find_monitor_number");
-
-    GdkScreen *screen = gtk_widget_get_screen (tw->window);
-    gint n_monitors = gdk_screen_get_n_monitors (screen);
-
-    gchar *show_on_monitor = config_getstr("show_on_monitor");
-    for(int i = 0; i < n_monitors; ++i) {
-        gchar *monitor_name = gdk_screen_get_monitor_plug_name (screen, i);
-        if(0 == g_strcmp0 (show_on_monitor, monitor_name)) {
-            return i;
-        }
-    }
-
-    return gdk_screen_get_primary_monitor (screen);
-}
 
 /* Show the wizard. This will show the wizard, then exit immediately. */
 gint wizard (tilda_window *tw)
@@ -297,7 +275,7 @@ static int get_max_width() {
  */
 static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *tw) {
     // Get the monitor number on which the window is currently shown
-    int last_monitor = find_monitor_number(tw);
+    int last_monitor = tilda_window_find_monitor_number(tw);
     GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
     int num_monitors = gdk_screen_get_n_monitors(screen);
     GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
@@ -823,49 +801,6 @@ static void entry_word_chars_changed (GtkWidget *w, tilda_window *tw)
 }
 
 /*
- * Finds the coordinate that will center the tilda window in the screen.
- *
- * If you want to center the tilda window on the top or bottom of the screen,
- * pass the screen width into screen_dimension and the tilda window's width
- * into the tilda_dimension variable. The result will be the x coordinate that
- * should be used in order to have the tilda window centered on the screen.
- *
- * Centering based on y coordinate is similar, just use the screen height and
- * tilda window height.
- */
-static int find_centering_coordinate (tilda_window *tw, enum dimensions dimension)
-{
-    DEBUG_FUNCTION ("find_centering_coordinate");
-
-    gdouble monitor_dimension = 0;
-    gdouble tilda_dimension = 0;
-    gint monitor = find_monitor_number(tw);
-    GdkRectangle rectangle;
-    gdk_screen_get_monitor_workarea (gtk_widget_get_screen(tw->window), monitor, &rectangle);
-
-    GdkRectangle tilda_rectangle;
-    config_get_configured_window_size (&tilda_rectangle);
-
-    if (dimension == HEIGHT) {
-        monitor_dimension = rectangle.height;
-        tilda_dimension = tilda_rectangle.height;
-    } else if (dimension == WIDTH) {
-        monitor_dimension = rectangle.width;
-        tilda_dimension = tilda_rectangle.width;
-    }
-    const gdouble screen_center = monitor_dimension / 2.0;
-    const gdouble tilda_center  = tilda_dimension  / 2.0;
-    gint center = (int) (screen_center - tilda_center);
-
-    if(dimension == HEIGHT) {
-        center += rectangle.y;
-    } else if (dimension == WIDTH) {
-        center += rectangle.x;
-    }
-    return center;
-}
-
-/*
  * Prototypes for the next 4 functions.
  */
 //Both height functions depend on each other
@@ -900,7 +835,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *spin_height_perc
 
     if (config_getbool ("centered_vertically"))
     {
-        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
+        config_setint ("y_pos", tilda_window_find_centering_coordinate (tw, HEIGHT));
 
         gtk_window_move (GTK_WINDOW(tw->window),
                          config_getint ("x_pos"),
@@ -934,7 +869,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *spin_height_pixels,
 
     if (config_getbool ("centered_vertically"))
     {
-        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
+        config_setint ("y_pos", tilda_window_find_centering_coordinate (tw, HEIGHT));
 
         gtk_window_move (GTK_WINDOW(tw->window),
                          config_getint ("x_pos"),
@@ -968,7 +903,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *spin_width_percen
 
     if (config_getbool ("centered_horizontally"))
     {
-        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
+        config_setint ("x_pos", tilda_window_find_centering_coordinate (tw, WIDTH));
 
         gtk_window_move (GTK_WINDOW(tw->window),
                          config_getint ("x_pos"),
@@ -1001,7 +936,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *spin_width_pixels, ti
 
     if (config_getbool ("centered_horizontally"))
     {
-        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
+        config_setint ("x_pos", tilda_window_find_centering_coordinate (tw, WIDTH));
 
         gtk_window_move (GTK_WINDOW(tw->window),
                          config_getint ("x_pos"),
@@ -1024,7 +959,7 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w, tilda_window *
     config_setbool ("centered_horizontally", active);
 
     if (active)
-        config_setint ("x_pos", find_centering_coordinate (tw, WIDTH));
+        config_setint ("x_pos", tilda_window_find_centering_coordinate (tw, WIDTH));
     else
         config_setint ("x_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_x_position)));
 
@@ -1062,7 +997,7 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w, tilda_window *tw
     config_setbool ("centered_vertically", active);
 
     if (active)
-        config_setint ("y_pos", find_centering_coordinate (tw, HEIGHT));
+        config_setint ("y_pos", tilda_window_find_centering_coordinate (tw, HEIGHT));
     else
         config_setint ("y_pos", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_y_position)));
 
@@ -1682,7 +1617,7 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
      */
     GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
     int num_monitors = gdk_screen_get_n_monitors(screen);
-    int monitor_number = find_monitor_number(tw);
+    int monitor_number = tilda_window_find_monitor_number(tw);
 
     GtkComboBox* combo_choose_monitor =
             GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
@@ -1723,7 +1658,7 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
 static void initialize_geometry_spinners(tilda_window *tw) {
     DEBUG_FUNCTION ("initialize_geometry_spinners");
     GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-    int monitor = find_monitor_number(tw);
+    int monitor = tilda_window_find_monitor_number(tw);
     GdkRectangle rectangle;
     gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
     int monitor_height = rectangle.height;

@@ -95,6 +95,9 @@ struct tilda_window_
     guint size_update_event_source;
 };
 
+/* For use in get_display_dimension() */
+enum dimensions { HEIGHT, WIDTH };
+
 enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
 
 /**
@@ -201,6 +204,23 @@ void tilda_window_toggle_searchbar (tilda_window *tw);
  * Show confirm dialog before quitting (if enabled)
  */
 gint tilda_window_confirm_quit (tilda_window *tw);
+
+gint tilda_window_find_monitor_number(tilda_window *tw);
+
+/**
+ * Finds the coordinate that will center the tilda window in the screen.
+ *
+ * If you want to center the tilda window on the top or bottom of the screen,
+ * pass the screen width into screen_dimension and the tilda window's width
+ * into the tilda_dimension variable. The result will be the x coordinate that
+ * should be used in order to have the tilda window centered on the screen.
+ *
+ * Centering based on y coordinate is similar, just use the screen height and
+ * tilda window height.
+ */
+gint tilda_window_find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
+
+void tilda_window_update_window_position (tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
