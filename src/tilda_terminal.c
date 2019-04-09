@@ -32,6 +32,7 @@
 #include <string.h>
 
 #define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
+#define GOOGLE_MENU_TITLE_MAX_CHAR 15
 
 static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
 static gint tilda_term_config_defaults (tilda_term *tt);
@@ -50,6 +51,9 @@ static void maximize_window_cb (GtkWidget *widget, gpointer data);
 static void restore_window_cb (GtkWidget *widget, gpointer data);
 static void refresh_window_cb (GtkWidget *widget, gpointer data);
 static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
+static void open_browser(gchar *url);
+static void menu_google_cb (GtkMenuItem *menuitem, gpointer user_data);
+gchar * get_current_selection(tilda_term *tt);
 
 gint tilda_term_free (struct tilda_term_ *term)
 {
@@ -731,6 +735,7 @@ menu_copy_cb (GSimpleAction *action,
     vte_terminal_copy_clipboard (VTE_TERMINAL (tt->vte_term));
 }
 
+
 static void
 menu_paste_cb (GSimpleAction *action,
                GVariant      *parameter,
@@ -870,6 +875,37 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     gtk_menu_set_accel_group(GTK_MENU(menu), tw->accel_group);
     gtk_menu_set_accel_path(GTK_MENU(menu), "<tilda>/context");
 
+    /*
+     *  If we have selected text in terminal window, then append
+     *  an menu item for Google selected text.
+     */
+    gchar * current_selection = get_current_selection(tt);
+
+    if (current_selection != NULL) {
+        
+        gchar * cutted_selection = NULL;
+        int len = g_utf8_strlen(current_selection, -1);
+
+        if (len >= GOOGLE_MENU_TITLE_MAX_CHAR) {
+            gchar * tmp = g_malloc((GOOGLE_MENU_TITLE_MAX_CHAR+1) * sizeof(gchar));
+            g_utf8_strncpy(tmp, current_selection, 15);
+            cutted_selection = g_strdup_printf("%s...", tmp);
+        } else {
+            cutted_selection = g_malloc((len+1) * sizeof(gchar));
+            g_utf8_strncpy(cutted_selection, current_selection, len);
+        }
+
+        gchar * title = g_strdup_printf (_("Google: %s"), cutted_selection);
+        GtkWidget * item = gtk_menu_item_new_with_label (title);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        gtk_widget_show(item);
+        g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(menu_google_cb), tt);
+
+        g_free(current_selection);
+        g_free(cutted_selection);
+        g_free(title);
+    }
+
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
     g_signal_connect (G_OBJECT(menu), "unmap", G_CALLBACK(on_popup_hide), tw);
@@ -887,9 +923,6 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     tilda_term *tt;
     gchar *match;
     gint tag;
-    gchar *cmd;
-    gchar *web_browser_cmd;
-    gboolean ret = FALSE;
 
     tt = TILDA_TERM(data);
 
@@ -931,23 +964,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             if (match != NULL)
             {
                 g_debug ("Got a Left Click -- Matched: `%s' (%d)", match, tag);
-
-                web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
-                cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
-
-                g_debug ("Launching command: `%s'", cmd);
-
-                ret = g_spawn_command_line_async(cmd, NULL);
-
-                /* Check that the command launched */
-                if (!ret)
-                {
-                    g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
-                    TILDA_PERROR ();
-                }
-
-                g_free (web_browser_cmd);
-                g_free (cmd);
+                open_browser(match);
                 g_free (match);
             }
 
@@ -1023,3 +1040,56 @@ gchar *tilda_terminal_get_title (tilda_term *tt)
 
     return title;
 }
+
+static void open_browser(gchar *url) {
+    gchar *web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
+    gchar *cmd = g_strdup_printf ("%s '%s'", web_browser_cmd, url);
+
+    g_debug ("Launching command: `%s'", cmd);
+
+    gboolean ret = g_spawn_command_line_async(cmd, NULL);
+
+    /* Check that the command launched */
+    if (!ret)
+    {
+        g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
+        TILDA_PERROR ();
+    }
+    
+    g_free (web_browser_cmd);
+    g_free (cmd);
+}
+
+static void
+menu_google_cb (GtkMenuItem *menuitem,
+                gpointer     user_data)
+{
+    DEBUG_FUNCTION ("menu_google_cb");
+    DEBUG_ASSERT (user_data != NULL);
+
+    tilda_term *tt = TILDA_TERM(user_data);
+
+    if (vte_terminal_get_has_selection(VTE_TERMINAL (tt->vte_term))) {
+        GtkClipboard *clipboard = gtk_widget_get_clipboard (GTK_WIDGET (tt->vte_term), GDK_SELECTION_PRIMARY);
+        gchar *selected_text = gtk_clipboard_wait_for_text(clipboard);
+        gchar *google_url = g_strdup_printf ("http://www.google.com/search?ie=UTF-8&q=%s",  selected_text);
+        open_browser(google_url);
+        g_free (selected_text);
+        g_free (google_url);
+    }
+}
+
+gchar * get_current_selection(tilda_term *tt) 
+{
+    DEBUG_FUNCTION ("get_current_selection");
+    DEBUG_ASSERT (tt != NULL);
+
+    if (vte_terminal_get_has_selection(VTE_TERMINAL (tt->vte_term))) {
+        GtkClipboard *clipboard = gtk_widget_get_clipboard (GTK_WIDGET (tt->vte_term), GDK_SELECTION_PRIMARY);
+        return gtk_clipboard_wait_for_text(clipboard);
+    }
+
+    return NULL;
+}
+
+
