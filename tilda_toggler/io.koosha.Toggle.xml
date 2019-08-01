@@ -1,0 +1,5 @@
+<node>
+	<interface name="io.koosha.Toggle">
+		<method name="Hello" />
+	</interface>
+</node>

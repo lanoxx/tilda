@@ -74,6 +74,36 @@
 #include <vte/vte.h>
 #include <glib/gstdio.h>
 
+#define USE_DBUS true
+
+#ifdef USE_DBUS
+tilda_window *global_tw  = 0;
+#include "toggle.h"
+
+static gboolean on_handle_hello (Toggle *skeleton, GDBusMethodInvocation *invocation, const gint command, gpointer user_data)
+{
+  DEBUG_FUNCTION("on_handle_hello");
+  pull (global_tw, PULL_TOGGLE, FALSE);
+  toggle_complete_hello (skeleton, invocation);
+	return TRUE;
+}
+
+static void on_name_acquired(GDBusConnection *connection,
+                             const gchar *name,
+                             gpointer user_data) 
+{
+  DEBUG_FUNCTION("on_name_acquired");
+
+  Toggle *skeleton;
+	GError *error;
+
+  skeleton = toggle_skeleton_new(); 
+	g_signal_connect (skeleton, "handle-hello", G_CALLBACK (on_handle_hello), NULL);
+  error = NULL;
+  !g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton), connection, "/io/koosha/Toggle", &error);
+}
+#endif
+
 /**
 * If lock->pid is 0 then the file is not opened exclusively. Instead flock() must be used to obtain a lock.
 * Otherwise an exclusive lock file is created for the process.
@@ -727,6 +757,19 @@ int main (int argc, char *argv[])
 
         need_wizard = TRUE;
     }
+
+#ifdef USE_DBUS
+    /* Register on dbus */
+    global_tw = &tw;
+    g_bus_own_name(G_BUS_TYPE_SESSION,
+                  "io.koosha",
+                  G_BUS_NAME_OWNER_FLAGS_NONE,
+                  NULL,
+                  on_name_acquired,
+                  NULL,
+                  NULL,
+                  NULL);
+#endif
 
     /* Show the wizard if we need to.
      *

@@ -16,6 +16,11 @@ src/glade-resources.c src/glade-resources.h: \
     src/glade-resources.gresource.xml \
     $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(srcdir)/src/glade-resources.gresource.xml --sourcedir=$(srcdir)/src)
 
+# DBUS interface
+src/toggle.c src/toggle.h: \
+    src/io.koosha.Toggle.xml \
+    $(shell gdbus-codegen --pragma-once --interface-prefix 'io.koosha.' --generate-c-code 'toggle' --output-directory=src $(srcdir)/src/io.koosha.Toggle.xml && touch src/config.h)
+
 ENUM_TYPES = \
 	$(srcdir)/src/tilda-search-box.h \
 	$(NULL)
@@ -49,6 +54,7 @@ src_tilda_SOURCES = \
 		src/eggaccelerators.h src/eggaccelerators.c \
 		src/key_grabber.h src/key_grabber.c \
 		src/tilda.h src/tilda.c \
+		src/toggle.h src/toggle.c \
 		src/tilda-keybinding.c src/tilda-keybinding.h \
 		src/tilda-cli-options.c src/tilda-cli-options.h \
 		src/tilda-palettes.h src/tilda-palettes.c \
