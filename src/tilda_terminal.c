@@ -728,7 +728,7 @@ menu_copy_cb (GSimpleAction *action,
 
     tilda_term *tt = TILDA_TERM(user_data);
 
-    vte_terminal_copy_clipboard (VTE_TERMINAL (tt->vte_term));
+    vte_terminal_copy_clipboard_format (VTE_TERMINAL (tt->vte_term), VTE_FORMAT_TEXT);
 }
 
 static void

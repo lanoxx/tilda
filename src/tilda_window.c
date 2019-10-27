@@ -665,7 +665,8 @@ static gint ccopy (tilda_window *tw)
     if GTK_IS_SCROLLBAR(list->data) {
         list = list->next;
     }
-    vte_terminal_copy_clipboard (VTE_TERMINAL(list->data));
+
+    vte_terminal_copy_clipboard_format (VTE_TERMINAL(list->data), VTE_FORMAT_TEXT);
 
     return GDK_EVENT_STOP;
 }
