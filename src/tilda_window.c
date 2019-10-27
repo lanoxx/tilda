@@ -1351,7 +1351,7 @@ static GdkFilterReturn window_filter_function (GdkXEvent *gdk_xevent,
         {
             XPropertyEvent *propertyEvent;
 
-            propertyEvent = xevent;
+            propertyEvent = (XPropertyEvent *) xevent;
 
             const Atom WORKAREA_ATOM = XInternAtom (propertyEvent->display,
                                                     "_NET_WORKAREA", True);
