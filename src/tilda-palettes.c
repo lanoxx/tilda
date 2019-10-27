@@ -187,19 +187,19 @@ TildaColorScheme * tilda_palettes_get_palette_schemes ()
     return palette_schemes;
 }
 
-void tilda_palettes_set_current_palette (TildaColorPalette *palette)
+void tilda_palettes_set_current_palette (const GdkRGBA *palette)
 {
     memcpy (tilda_palettes_current_palette, palette,
-            sizeof(tilda_palettes_current_palette));
+            TILDA_COLOR_PALETTE_SIZE);
 }
 
-TildaColorPalette *tilda_palettes_get_current_palette ()
+GdkRGBA *tilda_palettes_get_current_palette ()
 {
     return tilda_palettes_current_palette;
 }
 
-GdkRGBA *tilda_palettes_get_palette_color (TildaColorPalette *palette,
-                                           int color_num)
+const GdkRGBA *tilda_palettes_get_palette_color (const GdkRGBA *palette,
+                                                 int color_num)
 {
     g_return_val_if_fail (color_num >= 0 && color_num < TILDA_COLOR_PALETTE_SIZE,
                           NULL);

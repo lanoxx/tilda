@@ -11,18 +11,13 @@ G_BEGIN_DECLS
 #define TILDA_COLOR_PALETTE_SIZE 16
 
 /**
- * A TildaColorPalette type is used to hold the colors of the palette.
- */
-typedef const GdkRGBA TildaColorPalette;
-
-/**
  * A color scheme links a color scheme name to its corresponding
  * color palette.
  */
 typedef struct _TildaColorPaletteScheme
 {
   const char *name;
-    TildaColorPalette *palette;
+  const GdkRGBA *palette;
 } TildaColorScheme;
 
 /**
@@ -45,16 +40,18 @@ gint tilda_palettes_get_n_palette_schemes (void);
 /**
  * Get the currently active color palette.
  *
- * @return A pointer to a color palette of size TILDA_COLOR_PALETTE_SIZE.
+ * @return A pointer to a color palette of size TILDA_COLOR_PALETTE_SIZE
+ *         with GdkRGBA colors. The color palette is owned by tilda
+ *         and must not be freed.
  */
-TildaColorPalette *tilda_palettes_get_current_palette (void);
+GdkRGBA *tilda_palettes_get_current_palette (void);
 
 /**
  * Sets the currently active color palette.
  *
  * @param palette A pointer to a color palette of size TILDA_COLOR_PALETTE_SIZE.
  */
-void tilda_palettes_set_current_palette (TildaColorPalette *palette);
+void tilda_palettes_set_current_palette (const GdkRGBA *palette);
 
 /**
  * Gets the color at the specified position from the palette.
@@ -63,8 +60,8 @@ void tilda_palettes_set_current_palette (TildaColorPalette *palette);
  * @param color_num Position of the color in the palette.
  * @return A pointer to a GdkRGBA color struct.
  */
-GdkRGBA *tilda_palettes_get_palette_color (TildaColorPalette *palette,
-                                           int color_num);
+const GdkRGBA *tilda_palettes_get_palette_color (const GdkRGBA *palette,
+                                                 int color_num);
 
 G_END_DECLS
 

@@ -2001,7 +2001,7 @@ static void init_palette_scheme_menu (void)
 
 static void update_palette_color_button(gint idx)
 {
-    TildaColorPalette * current_palette;
+    GdkRGBA * current_palette;
     char *s = g_strdup_printf ("colorbutton_palette_%d", idx);
     GtkWidget *color_button =
         GTK_WIDGET (gtk_builder_get_object (xml, s));
@@ -2010,7 +2010,7 @@ static void update_palette_color_button(gint idx)
 
     current_palette = tilda_palettes_get_current_palette ();
 
-    GdkRGBA *color = tilda_palettes_get_palette_color (current_palette, idx);
+    const GdkRGBA *color = tilda_palettes_get_palette_color (current_palette, idx);
     gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (color_button),
                                 color);
 }
