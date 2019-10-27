@@ -218,7 +218,7 @@ static void wizard_close_dialog (TildaWizard *wizard)
     gtk_builder_get_object (xml, (GLADE_NAME))), config_getbool ((CFG_BOOL)))
 #define COMBO_BOX(GLADE_NAME,CFG_INT) gtk_combo_box_set_active (GTK_COMBO_BOX( \
     gtk_builder_get_object (xml, (GLADE_NAME))), config_getint ((CFG_INT)))
-#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_button_set_font_name (GTK_FONT_BUTTON( \
+#define FONT_BUTTON(GLADE_NAME,CFG_STR) gtk_font_chooser_set_font (GTK_FONT_CHOOSER( \
     gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
 #define TEXT_ENTRY(GLADE_NAME,CFG_STR) gtk_entry_set_text (GTK_ENTRY( \
     gtk_builder_get_object (xml, (GLADE_NAME))), config_getstr ((CFG_STR)))
@@ -604,7 +604,7 @@ static void combo_non_focus_pull_up_behaviour_cb (GtkWidget *w, tilda_window *tw
 
 static void button_font_font_set_cb (GtkWidget *w, tilda_window *tw)
 {
-    const gchar *font = gtk_font_button_get_font_name (GTK_FONT_BUTTON (w));
+    const gchar *font = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (w));
     guint i;
     tilda_term *tt;
 
