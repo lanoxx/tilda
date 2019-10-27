@@ -148,7 +148,8 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 static gboolean
 do_grab_key (Binding *binding)
 {
-    GdkKeymap *keymap  = gdk_keymap_get_default ();
+    GdkDisplay *display = gdk_display_get_default ();
+    GdkKeymap *keymap  = gdk_keymap_get_for_display (display);
     GdkWindow *rootwin = gdk_get_default_root_window ();
 
     GdkModifierType virtual_mods = (GdkModifierType) 0;
@@ -313,7 +314,8 @@ keymap_changed (GdkKeymap *map)
 void
 tomboy_keybinder_init (void)
 {
-    GdkKeymap *keymap  = gdk_keymap_get_default ();
+    GdkDisplay *display = gdk_display_get_default ();
+    GdkKeymap *keymap  = gdk_keymap_get_for_display (display);
     GdkWindow *rootwin = gdk_get_default_root_window ();
 
     lookup_ignorable_modifiers (keymap);
