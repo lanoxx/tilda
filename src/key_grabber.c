@@ -196,13 +196,15 @@ void tilda_window_set_active (tilda_window *tw)
 /* Process all pending GTK events, without returning to the GTK mainloop */
 static void process_all_pending_gtk_events ()
 {
+    GdkDisplay *display = gdk_display_get_default ();
+
     while (gtk_events_pending ())
         gtk_main_iteration ();
 
     /* This is not strictly necessary, but I think it makes the animation
      * look a little smoother. However, it probably does increase the load
      * on the X server. */
-    gdk_flush ();
+    gdk_display_flush (display);
 }
 
 /**
