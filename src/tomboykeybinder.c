@@ -179,15 +179,15 @@ do_grab_key (Binding *binding)
     // mask out virtual modifiers so we get only the real modifiers
     binding->modifiers = mapped_modifiers & REAL_MODIFIER_MASK;
 
-    gdk_error_trap_push ();
+    gdk_x11_display_error_trap_push (display);
 
     grab_ungrab_with_ignorable_modifiers (rootwin,
                                           binding,
                                           TRUE /* grab */);
 
-    gdk_flush ();
+    gdk_display_flush (display);
 
-    if (gdk_error_trap_pop ()) {
+    if (gdk_x11_display_error_trap_pop (display)) {
         g_warning ("Binding '%s' failed!\n", binding->keystring);
         return FALSE;
     }
