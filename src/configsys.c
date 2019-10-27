@@ -92,7 +92,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("auto_hide_time", 2000, CFGF_NONE),
     CFG_INT("on_last_terminal_exit", 0, CFGF_NONE),
     CFG_BOOL("prompt_on_exit", FALSE, CFGF_NONE),
-    CFG_INT("palette_scheme", 0, CFGF_NONE),
+    CFG_INT("palette_scheme", 1, CFGF_NONE),
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
     CFG_INT("cursor_shape", 0, CFGF_NONE),
 
