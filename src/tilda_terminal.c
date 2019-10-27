@@ -579,6 +579,7 @@ static void child_exited_cb (GtkWidget *widget, gint status, gpointer data)
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
+
     gint index = gtk_notebook_page_num (GTK_NOTEBOOK(tt->tw->notebook), tt->hbox);
 
     /* Make sure we got a valid index */
