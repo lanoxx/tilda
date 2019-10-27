@@ -1204,22 +1204,24 @@ gint tilda_window_confirm_quit (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
-gint tilda_window_find_monitor_number (tilda_window *tw)
+GdkMonitor* tilda_window_find_monitor_number (tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_find_monitor_number");
 
-    GdkScreen *screen = gtk_widget_get_screen (tw->window);
-    gint n_monitors = gdk_screen_get_n_monitors (screen);
+    GdkDisplay *display = gdk_display_get_default ();
+    gint n_monitors = gdk_display_get_n_monitors (gdk_display_get_default ());
 
     gchar *show_on_monitor = config_getstr("show_on_monitor");
+
     for(int i = 0; i < n_monitors; ++i) {
-        gchar *monitor_name = gdk_screen_get_monitor_plug_name (screen, i);
+        GdkMonitor *monitor = gdk_display_get_monitor (display, i);
+        const gchar *monitor_name = gdk_monitor_get_model (monitor);
         if(0 == g_strcmp0 (show_on_monitor, monitor_name)) {
-            return i;
+            return monitor;
         }
     }
 
-    return gdk_screen_get_primary_monitor (screen);
+    return gdk_display_get_primary_monitor (display);
 }
 
 gint tilda_window_find_centering_coordinate (tilda_window *tw,
@@ -1229,9 +1231,9 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw,
 
     gdouble monitor_dimension = 0;
     gdouble tilda_dimension = 0;
-    gint monitor = tilda_window_find_monitor_number (tw);
+    GdkMonitor *monitor = tilda_window_find_monitor_number (tw);
     GdkRectangle rectangle;
-    gdk_screen_get_monitor_workarea (gtk_widget_get_screen(tw->window), monitor, &rectangle);
+    gdk_monitor_get_workarea (monitor, &rectangle);
 
     GdkRectangle tilda_rectangle;
     config_get_configured_window_size (&tilda_rectangle);

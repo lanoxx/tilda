@@ -205,7 +205,7 @@ void tilda_window_toggle_searchbar (tilda_window *tw);
  */
 gint tilda_window_confirm_quit (tilda_window *tw);
 
-gint tilda_window_find_monitor_number(tilda_window *tw);
+GdkMonitor* tilda_window_find_monitor_number(tilda_window *tw);
 
 /**
  * Finds the coordinate that will center the tilda window in the screen.

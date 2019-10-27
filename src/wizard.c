@@ -273,17 +273,17 @@ static int get_max_width() {
  * but only changes the value of the spin buttons. The moving and resizing
  * is then done by the callback functions of the respective widgets.
  */
-static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *tw) {
-    // Get the monitor number on which the window is currently shown
-    int last_monitor = tilda_window_find_monitor_number(tw);
-    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-    int num_monitors = gdk_screen_get_n_monitors(screen);
-    GdkRectangle* rect = malloc(sizeof(GdkRectangle) * num_monitors);
-    int i;
-    for(i=0; i<num_monitors; i++) {
-        GdkRectangle* current_rectangle = rect+i;
-        gdk_screen_get_monitor_workarea(screen, i, current_rectangle);
-    }
+static int
+combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
+{
+    GdkDisplay *display          = gdk_display_get_default ();
+    GdkMonitor *original_monitor = tilda_window_find_monitor_number (tw);
+    GdkMonitor *new_monitor;
+
+    GdkRectangle original_monitor_rectangle;
+    GdkRectangle selected_monitor_rectangle;
+
+    gdk_monitor_get_workarea (original_monitor, &original_monitor_rectangle);
 
     GtkTreeIter active_iter;
 
@@ -302,10 +302,12 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
                        1, &new_monitor_number,
                        -1);
 
+    new_monitor = gdk_display_get_monitor (display, new_monitor_number);
+    gdk_monitor_get_workarea (new_monitor, &selected_monitor_rectangle);
+
     //Save the new monitor value
     config_setstr("show_on_monitor", new_monitor_name);
-    GdkRectangle* current_monitor_rectangle = rect + new_monitor_number;
-    GdkRectangle* original_monitor_rectangle = rect + last_monitor;
+
     /* The dimensions of the monitor might have changed,
      * so we need to update the spinner widgets for height,
      * width, and their percentages as well as their ranges.
@@ -318,9 +320,9 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
     GdkRectangle rectangle;
     config_get_configured_window_size (&rectangle);
 
-    if(current_monitor_rectangle->width != original_monitor_rectangle->width)
+    if(selected_monitor_rectangle.width != original_monitor_rectangle.width)
     {
-        gint new_max_width = current_monitor_rectangle->width;
+        gint new_max_width = selected_monitor_rectangle.width;
 
         SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
         SPIN_BUTTON_SET_VALUE ("spin_width_pixels", rectangle.width);
@@ -330,9 +332,9 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
                            rectangle.height);
     }
 
-    if(current_monitor_rectangle->height != original_monitor_rectangle->height)
+    if(selected_monitor_rectangle.height != original_monitor_rectangle.height)
     {
-        int new_max_height = current_monitor_rectangle->height;
+        int new_max_height = selected_monitor_rectangle.height;
 
         SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
         SPIN_BUTTON_SET_VALUE ("spin_height_pixels", rectangle.height);
@@ -350,8 +352,8 @@ static int combo_monitor_selection_changed_cb(GtkWidget* widget, tilda_window *t
     tilda_window_update_window_position (tw);
 
     gtk_widget_show(tw->window);
-    free(rect);
-    return TRUE; //callback was handled
+
+    return GDK_EVENT_STOP;
 }
 
 static void window_title_change_all (tilda_window *tw)
@@ -1617,9 +1619,9 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
      * First we need to initialize the "combo_choose_monitor" widget,
      * with the numbers of each monitor attached to the system.
      */
-    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-    int num_monitors = gdk_screen_get_n_monitors(screen);
-    int monitor_number = tilda_window_find_monitor_number(tw);
+    GdkDisplay *display = gdk_display_get_default ();
+    int num_monitors = gdk_display_get_n_monitors (display);
+    GdkMonitor *active_monitor = tilda_window_find_monitor_number(tw);
 
     GtkComboBox* combo_choose_monitor =
             GTK_COMBO_BOX(gtk_builder_get_object(xml,"combo_choose_monitor"));
@@ -1631,21 +1633,24 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
     gtk_list_store_clear(monitor_model);
 
     for (i = 0; i < num_monitors; i++) {
+        GdkMonitor *monitor;
+
         gtk_list_store_append(monitor_model, &iter);
-        gchar *monitor_plug_name = gdk_screen_get_monitor_plug_name(screen, i);
-        gchar *display_name = g_strdup_printf("%d    <i>(%s)</i>", i, monitor_plug_name);
+        monitor = gdk_display_get_monitor (display, i);
+
+        const gchar *monitor_model_name = gdk_monitor_get_model (monitor);
+        gchar *display_name = g_strdup_printf ("%d    <i>(%s)</i>", i, monitor_model_name);
 
         gtk_list_store_set(monitor_model, &iter,
-                           0, monitor_plug_name,
+                           0, monitor_model_name,
                            1, i,
                            2, display_name,
                            -1);
 
-        if(i == monitor_number) {
+        if(monitor == active_monitor) {
           gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
         }
 
-        g_free (monitor_plug_name);
         g_free (display_name);
     }
 }
@@ -1659,10 +1664,11 @@ static void initialize_combo_choose_monitor(tilda_window *tw) {
  */
 static void initialize_geometry_spinners(tilda_window *tw) {
     DEBUG_FUNCTION ("initialize_geometry_spinners");
-    GdkScreen* screen = gtk_window_get_screen(GTK_WINDOW(tw->window));
-    int monitor = tilda_window_find_monitor_number(tw);
+
+    GdkMonitor *monitor = tilda_window_find_monitor_number(tw);
     GdkRectangle rectangle;
-    gdk_screen_get_monitor_workarea(screen, monitor, &rectangle);
+
+    gdk_monitor_get_workarea (monitor, &rectangle);
     int monitor_height = rectangle.height;
     int monitor_width = rectangle.width;
 
