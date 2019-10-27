@@ -23,6 +23,7 @@
 #include "wizard.h"
 #include "key_grabber.h"
 #include "configsys.h"
+#include "screen-size.h"
 #include "tilda-palettes.h"
 #include "tilda_window.h"
 #include "tilda-keybinding.h"
@@ -344,10 +345,12 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
                            rectangle.height);
     }
 
-    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, gdk_screen_width());
-    SPIN_BUTTON_SET_VALUE("spin_x_position", current_monitor_rectangle->x);
-    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, gdk_screen_height());
-    SPIN_BUTTON_SET_VALUE("spin_y_position", current_monitor_rectangle->y);
+    gint screen_width, screen_height;
+    screen_size_get_dimensions (&screen_width, &screen_height);
+    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, screen_width);
+    SPIN_BUTTON_SET_VALUE("spin_x_position", selected_monitor_rectangle.x);
+    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, screen_height);
+    SPIN_BUTTON_SET_VALUE("spin_y_position", selected_monitor_rectangle.y);
 
     tilda_window_update_window_position (tw);
 
@@ -1705,7 +1708,10 @@ static void initialize_geometry_spinners(tilda_window *tw) {
         xpos = rectangle.x;
         config_setint("x_pos", xpos);
     }
-    SPIN_BUTTON_SET_RANGE("spin_x_position", 0, gdk_screen_width());
+
+    gint screen_width, screen_height;
+    screen_size_get_dimensions (&screen_width, &screen_height);
+    SPIN_BUTTON_SET_RANGE("spin_x_position", 0, screen_width);
     SPIN_BUTTON_SET_VALUE("spin_x_position", xpos); /* TODO: Consider x in rectange.x for monitor displacement */
 
     gint ypos = config_getint("y_pos");
@@ -1713,7 +1719,7 @@ static void initialize_geometry_spinners(tilda_window *tw) {
         ypos = rectangle.y;
         config_setint("y_pos", ypos);
     }
-    SPIN_BUTTON_SET_RANGE("spin_y_position", 0, gdk_screen_height());
+    SPIN_BUTTON_SET_RANGE("spin_y_position", 0, screen_height);
     SPIN_BUTTON_SET_VALUE("spin_y_position", ypos);
 
     gtk_window_move(GTK_WINDOW(tw->window), xpos, ypos);

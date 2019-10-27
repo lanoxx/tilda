@@ -48,6 +48,7 @@ src_tilda_SOURCES = \
 		src/debug.h \
 		src/eggaccelerators.h src/eggaccelerators.c \
 		src/key_grabber.h src/key_grabber.c \
+		src/screen-size.h src/screen-size.c \
 		src/tilda.h src/tilda.c \
 		src/tilda-keybinding.c src/tilda-keybinding.h \
 		src/tilda-cli-options.c src/tilda-cli-options.h \

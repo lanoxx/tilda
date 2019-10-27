@@ -20,6 +20,7 @@
 
 #include "debug.h"
 #include "key_grabber.h"
+#include "screen-size.h"
 #include "tilda.h"
 #include "xerror.h"
 #include <glib.h>
@@ -87,8 +88,9 @@ void generate_animation_positions (struct tilda_window_ *tw)
 
     gint last_width = rectangle.width;
     gint last_height = rectangle.height;
-    gint screen_width = gdk_screen_width();
-    gint screen_height = gdk_screen_height();
+    gint screen_width;
+    gint screen_height;
+    screen_size_get_dimensions (&screen_width, &screen_height);
 
     for (i=0; i<32; i++)
     {
