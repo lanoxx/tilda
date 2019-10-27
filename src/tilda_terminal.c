@@ -820,7 +820,8 @@ static void on_popup_hide (GtkWidget *widget, tilda_window *tw)
     tw->disable_auto_hide = FALSE;
 }
 
-static void popup_menu (tilda_window *tw, tilda_term *tt)
+static void
+popup_menu (tilda_window *tw, tilda_term *tt, GdkEvent * event)
 {
     DEBUG_FUNCTION ("popup_menu");
     DEBUG_ASSERT (tw != NULL);
@@ -874,8 +875,7 @@ static void popup_menu (tilda_window *tw, tilda_term *tt)
     tw->disable_auto_hide = TRUE;
     g_signal_connect (G_OBJECT(menu), "unmap", G_CALLBACK(on_popup_hide), tw);
 
-    /* Display the menu */
-    gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
+    gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
 }
 
 static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -902,7 +902,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             tilda_window_prev_tab (tt->tw);
             break;
         case 3: /* Right Click */
-            popup_menu (tt->tw, tt);
+            popup_menu (tt->tw, tt, (GdkEvent *) event);
             break;
         case 2: /* Middle Click */
             break;
@@ -966,7 +966,7 @@ gboolean key_press_cb (GtkWidget *widget,
     if(event->type == GDK_KEY_PRESS) {
         GdkEventKey *keyevent = (GdkEventKey*) event;
         if(keyevent->keyval == GDK_KEY_Menu) {
-            popup_menu(terminal->tw, terminal);
+            popup_menu(terminal->tw, terminal, event);
         }
     }
     return GDK_EVENT_PROPAGATE;
