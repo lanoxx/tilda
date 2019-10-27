@@ -27,7 +27,7 @@ struct tilda_cli_options {
  * a pointer to a newly allocated tilda_cli_options structure, we
  * should be freed when no longer needed.
  */
-tilda_cli_options *tilda_cli_options_new ();
+tilda_cli_options *tilda_cli_options_new (void);
 
 /**
  * Parse all of the Command-Line Options given to tilda.
