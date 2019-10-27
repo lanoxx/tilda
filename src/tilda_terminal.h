@@ -37,6 +37,7 @@ struct tilda_term_
      * exit the program.
      */
     gboolean dropped_to_default_shell;
+    gchar *initial_working_dir;
 
     struct tilda_window_ *tw;
 };

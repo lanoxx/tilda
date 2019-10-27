@@ -33,11 +33,11 @@
 
 #define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?$%&/=_~#.,:;+]*"
 
-static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir);
+static void start_shell (tilda_term *tt, gboolean ignore_custom_command);
+static void start_default_shell (tilda_term *tt);
+
 static gint tilda_term_config_defaults (tilda_term *tt);
 
-static void eof_cb (GtkWidget *widget, gpointer data);
-/* VTE 2.91 introduced a new status argument to the "child-exited" signal */
 static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
@@ -51,10 +51,15 @@ static void restore_window_cb (GtkWidget *widget, gpointer data);
 static void refresh_window_cb (GtkWidget *widget, gpointer data);
 static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
 
-gint tilda_term_free (struct tilda_term_ *term)
+static gchar *get_default_command (void);
+gchar *get_working_directory (tilda_term *terminal);
+
+gint tilda_term_free (tilda_term *term)
 {
     DEBUG_FUNCTION ("tilda_term_free");
     DEBUG_ASSERT (term != NULL);
+
+    g_free (term->initial_working_dir);
 
     g_free (term);
 
@@ -89,9 +94,8 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     GError *error = NULL;
     tilda_term *current_tt;
     gint current_tt_index;
-    char *current_tt_dir = NULL;
 
-    term = g_malloc (sizeof (struct tilda_term_));
+    term = g_new0 (tilda_term, 1);
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
     tw->terms = g_list_append (tw->terms, term);
@@ -140,10 +144,6 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(child_exited_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "window-title-changed",
                       G_CALLBACK(window_title_changed_cb), term);
-
-    g_signal_connect (G_OBJECT(term->vte_term), "eof",
-                      G_CALLBACK(eof_cb), term);
-
     g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
                       G_CALLBACK(button_press_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "key-press-event",
@@ -183,22 +183,13 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     current_tt = g_list_nth_data (tw->terms, current_tt_index);
     if (current_tt != NULL)
     {
-        current_tt_dir = tilda_term_get_cwd(current_tt);
+        term->initial_working_dir = tilda_term_get_cwd (current_tt);
     }
 
     /* Fork the appropriate command into the terminal */
-    ret = start_shell (term, FALSE, current_tt_dir);
-
-    g_free(current_tt_dir);
-
-    if (ret)
-        goto err_fork;
+    start_shell (term, FALSE);
 
     return term;
-
-err_fork:
-    g_free (term);
-    return NULL;
 }
 
 void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos)
@@ -403,14 +394,43 @@ char* tilda_term_get_cwd(struct tilda_term_* tt)
     return cwd;
 }
 
+static void
+shell_spawned_cb (VteTerminal *terminal,
+                  GPid pid,
+                  GError *error,
+                  gpointer user_data)
+{
+    DEBUG_FUNCTION ("shell_spawned_cb");
+
+    tilda_term *tt;
+
+    tt = user_data;
+
+    if (error)
+    {
+        if (tt->dropped_to_default_shell)
+        {
+            g_printerr (_("Unable to launch default shell: %s\n"), get_default_command ());
+        } else {
+            g_printerr (_("Unable to launch custom command: %s\n"), config_getstr ("command"));
+            g_printerr (_("Launching custom command failed with error: %s\n"), error->message);
+            g_printerr (_("Launching default shell instead\n"));
+
+            start_default_shell (tt);
+            tt->dropped_to_default_shell = TRUE;
+        }
+
+        return;
+    }
+
+    tt->pid = pid;
+}
+
 /* Fork a shell into the VTE Terminal
  *
  * @param tt the tilda_term to fork into
- *
- * SUCCESS: return 0
- * FAILURE: return non-zero
  */
-static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command, const char* working_dir)
+static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
 {
     DEBUG_FUNCTION ("start_shell");
     DEBUG_ASSERT (tt != NULL);
@@ -419,13 +439,6 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
     gint argc;
     gchar **argv;
     GError *error = NULL;
-
-    gchar *default_command;
-
-    if (working_dir == NULL || config_getbool ("inherit_working_dir") == FALSE)
-    {
-        working_dir = config_getstr ("working_dir");
-    }
 
     if (config_getbool ("run_command") && !ignore_custom_command)
     {
@@ -438,42 +451,43 @@ static gint start_shell (struct tilda_term_ *tt, gboolean ignore_custom_command,
             g_printerr (_("Launching default shell instead\n"));
 
             g_error_free (error);
-            goto launch_default_shell;
+
+            start_default_shell (tt);
         }
+
+        gchar *working_dir = get_working_directory (tt);
+        gint command_timeout = config_getint ("command_timeout_ms");
 
         char **envv = malloc(2*sizeof(void *));
         envv[0] = getenv("PATH");
         envv[1] = NULL;
 
-        ret = vte_terminal_spawn_sync (VTE_TERMINAL (tt->vte_term),
-            VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-            working_dir, /* const char *working_directory */
-            argv, /* char **argv */
-            envv, /* char **envv */
-            G_SPAWN_SEARCH_PATH,    /* GSpawnFlags spawn_flags */
-            NULL, /* GSpawnChildSetupFunc child_setup */
-            NULL, /* gpointer child_setup_data */
-            &tt->pid, /* GPid *child_pid */
-            NULL, /* GCancellable * cancellable, */
-            NULL  /* GError **error */
-        );
+        vte_terminal_spawn_async (VTE_TERMINAL (tt->vte_term),
+                                  VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
+                                  working_dir, /* const char *working_directory */
+                                  argv, /* char **argv */
+                                  envv, /* char **envv */
+                                  G_SPAWN_SEARCH_PATH,    /* GSpawnFlags spawn_flags */
+                                  NULL, /* GSpawnChildSetupFunc child_setup */
+                                  NULL, /* gpointer child_setup_data */
+                                  NULL, /* GDestroyNotify child_setup_data_destroy */
+                                  command_timeout, /* timeout in ms */
+                                  NULL, /* GCancellable * cancellable, */
+                                  shell_spawned_cb,  /* VteTerminalSpawnAsyncCallback callback */
+                                  tt);   /* user_data */
 
         g_strfreev (argv);
         g_free (envv);
-
-        /* Check for error */
-        if (ret == FALSE)
-        {
-            g_printerr (_("Unable to launch custom command: %s\n"), config_getstr ("command"));
-            g_printerr (_("Launching default shell instead\n"));
-
-            goto launch_default_shell;
-        }
-
-        return 0; /* SUCCESS: the early way out */
+    } else {
+        start_default_shell (tt);
     }
+}
 
-launch_default_shell:
+static void
+start_default_shell (tilda_term *tt)
+{
+    gchar  **argv;
+
 
     /* If we have dropped to the default shell before, then this time, we
      * do not spawn a new shell, but instead close the current shell. This will
@@ -483,18 +497,13 @@ launch_default_shell:
         gint index = gtk_notebook_page_num (GTK_NOTEBOOK(tt->tw->notebook),
             tt->hbox);
         tilda_window_close_tab (tt->tw, index, FALSE);
-        return 0;
-    }
-    if (ignore_custom_command) {
-        tt->dropped_to_default_shell = TRUE;
+
+        return;
     }
 
-    /* No custom command, get it from the environment */
-    default_command = (gchar *) g_getenv ("SHELL");
-
-    /* Check for error */
-    if (default_command == NULL)
-        default_command = "/bin/sh";
+    gchar *default_command = get_default_command ();
+    gchar *working_dir = get_working_directory (tt);
+    gint command_timeout = config_getint ("command_timeout_ms");
 
     /* We need to create a NULL terminated list of arguments.
      * The first item is the command to execute in the shell, in this
@@ -518,37 +527,49 @@ launch_default_shell:
         argv[1] = NULL;
     }
 
-    ret = vte_terminal_spawn_sync (VTE_TERMINAL (tt->vte_term),
-        VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
-        working_dir, /* const char *working_directory */
-        argv, /* char **argv */
-        NULL, /* char **envv */
-        flags,    /* GSpawnFlags spawn_flags */
-        NULL, /* GSpawnChildSetupFunc child_setup */
-        NULL, /* gpointer child_setup_data */
-        &tt->pid, /* GPid *child_pid */
-        NULL, /* GCancellable *cancellable */
-        NULL  /* GError **error */
-    );
+    vte_terminal_spawn_async (VTE_TERMINAL (tt->vte_term),
+                              VTE_PTY_DEFAULT, /* VtePtyFlags pty_flags */
+                              working_dir, /* const char *working_directory */
+                              argv, /* char **argv */
+                              NULL, /* char **envv */
+                              flags,    /* GSpawnFlags spawn_flags */
+                              NULL, /* GSpawnChildSetupFunc child_setup */
+                              NULL, /* gpointer child_setup_data */
+                              NULL, /* GDestroyNotify child_setup_data_destroy */
+                              command_timeout, /* timeout in ms */
+                              NULL, /* GCancellable * cancellable, */
+                              shell_spawned_cb,  /* VteTerminalSpawnAsyncCallback callback */
+                              tt);   /* user_data */
 
     g_free(argv1);
     g_free (argv);
-
-    if (ret == -1)
-    {
-        g_printerr (_("Unable to launch default shell: %s\n"), default_command);
-        return ret;
-    }
-
-    return 0;
 }
 
-static void eof_cb (GtkWidget *widget, gpointer data) {
-    DEBUG_FUNCTION ("eof_cb");
-    DEBUG_ASSERT (widget != NULL);
-    DEBUG_ASSERT (data != NULL);
+gchar *
+get_default_command ()
+{
+    /* No custom command, get it from the environment */
+    gchar *default_command = (gchar *) g_getenv ("SHELL");
 
-    child_exited_cb (widget, 0, data);
+    /* Check for error */
+    if (default_command == NULL)
+        default_command = "/bin/sh";
+
+    return default_command;
+}
+
+gchar *get_working_directory (tilda_term *terminal)
+{
+    gchar *working_dir;
+
+    working_dir = terminal->initial_working_dir;
+
+    if (working_dir == NULL || config_getbool ("inherit_working_dir") == FALSE)
+    {
+        working_dir = config_getstr ("working_dir");
+    }
+
+    return working_dir;
 }
 
 static void child_exited_cb (GtkWidget *widget, gint status, gpointer data)
@@ -580,10 +601,13 @@ static void child_exited_cb (GtkWidget *widget, gint status, gpointer data)
             break;
         case RESTART_COMMAND:
             vte_terminal_feed (VTE_TERMINAL(tt->vte_term), "\r\n\r\n", 4);
-            start_shell (tt, FALSE, NULL);
+            start_shell (tt, FALSE);
             break;
         case DROP_TO_DEFAULT_SHELL:
-            start_shell (tt, TRUE, NULL);
+            tt->initial_working_dir = NULL;
+            start_default_shell (tt);
+            tt->dropped_to_default_shell = TRUE;
+            break;
         default:
             break;
     }

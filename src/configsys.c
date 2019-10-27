@@ -85,6 +85,8 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("delete_key", 1, CFGF_NONE),
     CFG_INT("d_set_title", 3, CFGF_NONE),
     CFG_INT("command_exit", 2, CFGF_NONE),
+    /* Timeout in milliseconds to spawn a shell or command */
+    CFG_INT("command_timeout_ms", 3000, CFGF_NONE),
     CFG_INT("scheme", 3, CFGF_NONE),
     CFG_INT("slide_sleep_usec", 20000, CFGF_NONE),
     CFG_INT("animation_orientation", 0, CFGF_NONE),
