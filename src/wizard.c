@@ -313,11 +313,8 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
      * so we need to update the spinner widgets for height,
      * width, and their percentages as well as their ranges.
      * Keep in mind that we use the max range of the pixel spinners
-     * to store the size of the screen. This only works well if we hide
-     * the window before updating all the spinners.
+     * to store the size of the screen.
      */
-    gtk_widget_hide(tw->window);
-
     GdkRectangle rectangle;
     config_get_configured_window_size (&rectangle);
 
@@ -353,8 +350,6 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
     SPIN_BUTTON_SET_VALUE("spin_y_position", selected_monitor_rectangle.y);
 
     tilda_window_update_window_position (tw);
-
-    gtk_widget_show(tw->window);
 
     return GDK_EVENT_STOP;
 }
