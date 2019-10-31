@@ -1741,8 +1741,6 @@ static void initialize_geometry_spinners(tilda_window *tw) {
     SPIN_BUTTON_SET_RANGE("spin_y_position", 0, screen_height);
     SPIN_BUTTON_SET_VALUE("spin_y_position", ypos);
 
-    gtk_window_move(GTK_WINDOW(tw->window), xpos, ypos);
-
     SET_SENSITIVE_BY_CONFIG_NBOOL("spin_x_position", "centered_horizontally");
     SET_SENSITIVE_BY_CONFIG_NBOOL("label_x_position", "centered_horizontally");
     SET_SENSITIVE_BY_CONFIG_NBOOL("spin_y_position", "centered_vertically");
