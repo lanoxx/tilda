@@ -277,6 +277,8 @@ static int get_max_width() {
 static int
 combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("combo_monitor_selection_changed_cb");
+
     GdkDisplay *display          = gdk_display_get_default ();
     GdkMonitor *original_monitor = tilda_window_find_monitor_number (tw);
     GdkMonitor *new_monitor;
@@ -404,6 +406,8 @@ static void set_spin_value_while_blocking_callback (GtkSpinButton *spin,
                                                     gdouble new_val,
                                                     tilda_window *tw)
 {
+    DEBUG_FUNCTION ("set_spin_value_while_blocking_callback");
+
     g_signal_handlers_block_by_func (spin, G_CALLBACK(*callback), tw);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON(spin), new_val);
     g_signal_handlers_unblock_by_func (spin, G_CALLBACK(*callback), tw);
@@ -818,6 +822,8 @@ static void initialize_set_as_desktop_checkbox (void);
 static void spin_height_percentage_value_changed_cb (GtkWidget *spin_height_percentage,
                                                      tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_height_percentage_value_changed_cb");
+
     const GtkWidget *spin_height_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_pixels"));
 
@@ -853,6 +859,8 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *spin_height_perc
 static void spin_height_pixels_value_changed_cb (GtkWidget *spin_height_pixels,
                                                  tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_height_pixels_value_changed_cb");
+
     const GtkWidget *spin_height_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_height_percentage"));
     const gint height_pixels = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spin_height_pixels));
@@ -886,6 +894,8 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *spin_height_pixels,
 static void spin_width_percentage_value_changed_cb (GtkWidget *spin_width_percentage,
                                                     tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_width_percentage_value_changed_cb");
+
     const GtkWidget *spin_width_pixels =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_pixels"));
 
@@ -919,6 +929,8 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *spin_width_percen
 
 static void spin_width_pixels_value_changed_cb (GtkWidget *spin_width_pixels, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_width_pixels_value_changed_cb");
+
     const GtkWidget *spin_width_percentage =
         GTK_WIDGET (gtk_builder_get_object (xml, "spin_width_percentage"));
 
@@ -952,6 +964,8 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *spin_width_pixels, ti
 
 static void check_centered_horizontally_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("check_centered_horizontally_toggled_cb");
+
     const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_x_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_x_position"));
@@ -977,6 +991,8 @@ static void check_centered_horizontally_toggled_cb (GtkWidget *w, tilda_window *
 
 static void spin_x_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_x_position_value_changed_cb");
+
     const gint x_pos = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
     const gint y_pos = config_getint ("y_pos");
 
@@ -990,6 +1006,8 @@ static void spin_x_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 
 static void check_centered_vertically_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("check_centered_vertically_toggled_cb");
+
     const gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
     const GtkWidget *label_y_position =
         GTK_WIDGET (gtk_builder_get_object (xml, "label_y_position"));
@@ -1015,6 +1033,8 @@ static void check_centered_vertically_toggled_cb (GtkWidget *w, tilda_window *tw
 
 static void spin_y_position_value_changed_cb (GtkWidget *w, tilda_window *tw)
 {
+    DEBUG_FUNCTION ("spin_y_position_value_changed_cb");
+
     const gint x_pos = config_getint ("x_pos");
     const gint y_pos = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
 
@@ -1612,7 +1632,11 @@ static void button_reset_compatibility_options_clicked_cb (tilda_window *tw)
     gtk_combo_box_set_active (GTK_COMBO_BOX(combo_delete_binding), 1);
 }
 
-static void initialize_combo_choose_monitor(tilda_window *tw) {
+static void
+initialize_combo_choose_monitor(tilda_window *tw)
+{
+    DEBUG_FUNCTION ("initialize_combo_choose_monitor");
+
     /**
      * First we need to initialize the "combo_choose_monitor" widget,
      * with the numbers of each monitor attached to the system.

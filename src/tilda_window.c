@@ -1260,6 +1260,7 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw,
 void
 tilda_window_update_window_position (tilda_window *tw)
 {
+    DEBUG_FUNCTION ("tilda_window_update_window_position");
     /**
      * If the screen size changed we might also need to recenter the
      * tilda window.
