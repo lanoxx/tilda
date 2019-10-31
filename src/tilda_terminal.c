@@ -688,8 +688,6 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), FALSE); /* TODO: make this configurable */
 
     /** Text Properties **/
-    vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), config_getbool ("bold"));
-
     PangoFontDescription *description =
         pango_font_description_from_string (config_getstr ("font"));
     vte_terminal_set_font (VTE_TERMINAL (tt->vte_term), description);

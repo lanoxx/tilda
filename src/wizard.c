@@ -550,20 +550,6 @@ static void check_auto_hide_on_mouse_leave_toggled_cb (GtkWidget *w, tilda_windo
     tw->auto_hide_on_mouse_leave = status;
 }
 
-static void check_allow_bold_text_toggled_cb (GtkWidget *w, tilda_window *tw)
-{
-    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
-    guint i;
-    tilda_term *tt;
-
-    config_setbool ("bold", status);
-
-    for (i=0; i<g_list_length (tw->terms); i++) {
-        tt = g_list_nth_data (tw->terms, i);
-        vte_terminal_set_allow_bold (VTE_TERMINAL(tt->vte_term), status);
-    }
-}
-
 static void combo_cursor_shape_changed_cb(GtkWidget *w, tilda_window *tw)
 {
     guint i;
@@ -1767,7 +1753,6 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
     COMBO_BOX ("vte_cursor_shape", "cursor_shape");
 
-    CHECK_BUTTON ("check_allow_bold_text", "bold");
     FONT_BUTTON ("button_font", "font");
 
     SPIN_BUTTON_SET_RANGE ("spin_auto_hide_time", 0, 99999);
@@ -1925,7 +1910,6 @@ static void connect_wizard_signals (TildaWizard *wizard)
 
     CONNECT_SIGNAL ("check_start_fullscreen", "toggled", check_start_fullscreen_cb, tw);
 
-    CONNECT_SIGNAL ("check_allow_bold_text","toggled",check_allow_bold_text_toggled_cb, tw);
     CONNECT_SIGNAL ("button_font","font-set",button_font_font_set_cb, tw);
 
     CONNECT_SIGNAL ("spin_auto_hide_time","value-changed",spin_auto_hide_time_value_changed_cb, tw);

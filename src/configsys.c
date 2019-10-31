@@ -148,7 +148,6 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("grab_focus", TRUE, CFGF_NONE),
     CFG_BOOL("above", TRUE, CFGF_NONE),
     CFG_BOOL("notaskbar", TRUE, CFGF_NONE),
-    CFG_BOOL("bold", TRUE, CFGF_NONE),
     CFG_BOOL("blinks", TRUE, CFGF_NONE),
     CFG_BOOL("scroll_on_key", TRUE, CFGF_NONE),
     CFG_BOOL("bell", FALSE, CFGF_NONE),
@@ -189,6 +188,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
     CFG_INT("transparency", 0, CFGF_NODEFAULT),
 
+    CFG_BOOL("bold", TRUE, CFGF_NONE),
     CFG_BOOL("title_max_length_flag", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("antialias", TRUE, CFGF_NODEFAULT),
     CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
@@ -445,6 +445,7 @@ gint config_init (const gchar *config_file)
      * libconfuse lacking for this functionality
      */
     const gchar *deprecated_tilda_config_options[] = {"show_on_monitor_number",
+                                                      "bold",
                                                       "title_max_length_flag",
                                                       "double_buffer",
                                                       "antialias",
