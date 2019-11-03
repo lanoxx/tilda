@@ -554,9 +554,6 @@ static void load_custom_css_file () {
 
 int main (int argc, char *argv[])
 {
-    DEBUG_FUNCTION_MESSAGE ("main", "Using libvte version: %i.%i.%i\n",
-                            VTE_MAJOR_VERSION, VTE_MINOR_VERSION, VTE_MICRO_VERSION);
-
 #ifdef DEBUG
     /**
      * This enables the tilda log domain while we are in debug mode. This
@@ -566,6 +563,9 @@ int main (int argc, char *argv[])
 
     g_setenv ("G_MESSAGES_DEBUG", "tilda", FALSE);
 #endif
+
+    DEBUG_FUNCTION_MESSAGE ("main", "Using libvte version: %i.%i.%i",
+                            VTE_MAJOR_VERSION, VTE_MINOR_VERSION, VTE_MICRO_VERSION);
 
     /* Set supported backend to X11 */
     gdk_set_allowed_backends ("x11");
