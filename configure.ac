@@ -139,6 +139,11 @@ if test x$GLIB_COMPILE_RESOURCES = xno; then
   AC_MSG_ERROR(Could not find a glib-compile-resources in your PATH)
 fi
 
+AC_PATH_PROG(GDBUS_CODEGEN, gdbus-codegen, no)
+if test x$GDBUS_CODEGEN = xno; then
+  AC_MSG_ERROR(Could not find a glib-codegen binary in your PATH)
+fi
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O

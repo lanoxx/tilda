@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node name="/">
+    <interface name="com.github.lanoxx.tilda.Actions">
+        <method name="Toggle" />
+    </interface>
+</node>
