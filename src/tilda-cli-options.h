@@ -18,6 +18,7 @@ struct tilda_cli_options {
     gboolean show_config;
     gboolean version;
     gboolean hidden;
+    gboolean enable_dbus;
 };
 
 /**

@@ -34,6 +34,7 @@ gboolean tilda_cli_options_parse_options (tilda_cli_options *cli_options,
             { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &(cli_options->y_pos),             N_("Y Position"), NULL },
             { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &(cli_options->back_alpha),        N_("Opaqueness: 0-100%"), NULL },
             { "config",             'C', 0, G_OPTION_ARG_NONE,      &(cli_options->show_config),       N_("Show Configuration Wizard"), NULL },
+            { "dbus",               0, 0, G_OPTION_ARG_NONE,        &(cli_options->enable_dbus),       N_("Enable D-Bus interface for this instance"), NULL },
             { NULL }
     };
 

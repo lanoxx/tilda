@@ -280,7 +280,6 @@ int main (int argc, char *argv[])
 
     /* Set up possible overridden config options */
     setup_config_from_cli_options(cli_options);
-    g_free(cli_options);
 
     if (config_init_result > 0) {
         show_startup_dialog (config_init_result);
@@ -332,7 +331,21 @@ int main (int argc, char *argv[])
         }
     }
 
-    guint bus_identifier = tilda_dbus_actions_init (&tw);
+    guint bus_identifier = 0;
+
+    if (cli_options->enable_dbus) {
+
+        gchar *bus_name = tilda_dbus_actions_get_bus_name (&tw);
+
+        g_print ("Activating D-Bus interface on bus name: %s\n",
+                 bus_name);
+
+        g_free (bus_name);
+
+        bus_identifier = tilda_dbus_actions_init (&tw);
+    }
+
+    g_free(cli_options);
 
     pull (&tw, config_getbool ("hidden") ? PULL_UP : PULL_DOWN, FALSE);
 
@@ -341,7 +354,9 @@ int main (int argc, char *argv[])
     /* Whew! We're finally all set up and ready to run GTK ... */
     gtk_main();
 
-    tilda_dbus_actions_finish (bus_identifier);
+    if (bus_identifier != 0) {
+        tilda_dbus_actions_finish (bus_identifier);
+    }
 
 initialization_failed:
     tilda_window_free(&tw);
