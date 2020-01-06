@@ -59,6 +59,7 @@ src_tilda_SOURCES = \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
 		src/wizard.h src/wizard.c \
 		src/xerror.h src/xerror.c \
+		src/vte-util.h \
 		$(NULL)
 
 src_tilda_CFLAGS = \
