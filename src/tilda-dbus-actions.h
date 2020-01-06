@@ -3,8 +3,10 @@
 
 #include "tilda_window.h"
 
-guint tilda_dbus_actions_init (tilda_window *window);
+guint  tilda_dbus_actions_init (tilda_window *window);
 
-void tilda_dbus_actions_finish (guint bus_identifier);
+gchar *tilda_dbus_actions_get_bus_name (tilda_window *window);
+
+void   tilda_dbus_actions_finish (guint bus_identifier);
 
 #endif
