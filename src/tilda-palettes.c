@@ -172,8 +172,8 @@ static TildaColorScheme palette_schemes[] = {
         { N_("XTerm"), terminal_palette_xterm },
         { N_("Rxvt"), terminal_palette_rxvt },
         { N_("Zenburn"), terminal_palette_zenburn },
-        { N_("Solarized Light"), terminal_palette_solarizedL },
-        { N_("Solarized Dark"), terminal_palette_solarizedD },
+        { N_("Solarized Light (deprecated)"), terminal_palette_solarizedL },
+        { N_("Solarized"), terminal_palette_solarizedD },
         { N_("Snazzy"), terminal_palette_snazzy }
 };
 
