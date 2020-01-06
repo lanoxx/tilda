@@ -188,7 +188,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("show_on_monitor_number", 0, CFGF_NODEFAULT),
     CFG_INT("transparency", 0, CFGF_NODEFAULT),
 
-    CFG_BOOL("bold", TRUE, CFGF_NONE),
+    CFG_BOOL("bold", TRUE, CFGF_NODEFAULT),
     CFG_BOOL("title_max_length_flag", FALSE, CFGF_NODEFAULT),
     CFG_BOOL("antialias", TRUE, CFGF_NODEFAULT),
     CFG_BOOL("double_buffer", FALSE, CFGF_NODEFAULT),
