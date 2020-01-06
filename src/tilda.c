@@ -732,7 +732,7 @@ int main (int argc, char *argv[])
      *
      * Note that the key will be bound upon exiting the wizard */
     if (need_wizard) {
-        g_print ("Starting the wizard to configure tilda options.");
+        g_print ("Starting the wizard to configure tilda options.\n");
         wizard (&tw);
     } else {
         gint ret = tilda_keygrabber_bind (config_getstr ("key"), &tw);
