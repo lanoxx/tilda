@@ -225,14 +225,18 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
+
     /* We need to check if the widget that received the title change is the currently
      * active tab. If not we should not update the window title. */
     gint page = gtk_notebook_get_current_page (GTK_NOTEBOOK (tt->tw->notebook));
-    tilda_term *currente_term;
-    gboolean active = FALSE;
-    if (page > 0) {
+
+    gboolean active;
+    if (page >= 0) {
+        tilda_term *currente_term;
         currente_term = g_list_nth_data (tt->tw->terms, (guint) page);
         active = widget == currente_term->vte_term;
+    } else {
+        active = TRUE;
     }
 
     guint length = (guint) config_getint ("title_max_length");
