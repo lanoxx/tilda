@@ -221,7 +221,8 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
     DEBUG_ASSERT (data != NULL);
 
     tilda_term *tt = TILDA_TERM(data);
-    gchar *title = tilda_terminal_get_title (data);
+    gchar * title = tilda_terminal_get_title (tt);
+    gchar * full_title = tilda_terminal_get_full_title (tt);
     GtkWidget *label;
 
     label = gtk_notebook_get_tab_label (GTK_NOTEBOOK (tt->tw->notebook), tt->hbox);
@@ -239,30 +240,14 @@ static void window_title_changed_cb (GtkWidget *widget, gpointer data)
         active = TRUE;
     }
 
-    guint length = (guint) config_getint ("title_max_length");
-    guint title_behaviour = config_getint("title_behaviour");
-    if(title_behaviour && strlen(title) > length) {
-        gchar *shortTitle = NULL;
-        if(title_behaviour == 1) {
-            shortTitle = g_strdup_printf ("%.*s...", length, title);
-        }
-        else {
-            gchar *titleOffset = title + strlen(title) - length;
-            shortTitle = g_strdup_printf ("...%s", titleOffset);
-        }
-        gtk_label_set_text (GTK_LABEL(label), shortTitle);
-        if (active) {
-            gtk_window_set_title (GTK_WINDOW (tt->tw->window), shortTitle);
-        }
-        g_free(shortTitle);
-    } else {
-        gtk_label_set_text (GTK_LABEL(label), title);
-        if (active) {
-            gtk_window_set_title (GTK_WINDOW (tt->tw->window), title);
-        }
+    gtk_label_set_text (GTK_LABEL(label), title);
+
+    if (active) {
+        gtk_window_set_title (GTK_WINDOW (tt->tw->window), title);
     }
+
     if(config_getbool("show_title_tooltip"))
-      gtk_widget_set_tooltip_text(label, title);
+      gtk_widget_set_tooltip_text(label, full_title);
     else
       gtk_widget_set_tooltip_text(label, "");
 
@@ -1005,12 +990,9 @@ gboolean key_press_cb (GtkWidget *widget,
     return GDK_EVENT_PROPAGATE;
 }
 
-/* vim: set ts=4 sts=4 sw=4 expandtab: */
-
-gchar *tilda_terminal_get_title (tilda_term *tt)
+gchar * tilda_terminal_get_full_title (tilda_term *tt)
 {
-    DEBUG_FUNCTION ("get_window_title");
-    DEBUG_ASSERT (tt != NULL);
+    DEBUG_FUNCTION ("tilda_terminal_get_title");
 
     const gchar *vte_title;
     gchar *window_title;
@@ -1055,4 +1037,41 @@ gchar *tilda_terminal_get_title (tilda_term *tt)
     g_free (initial);
 
     return title;
+}
+
+gchar *tilda_terminal_get_title (tilda_term *tt)
+{
+    DEBUG_FUNCTION ("tilda_terminal_get_title");
+    DEBUG_ASSERT (tt != NULL);
+
+    gchar * title;
+    gchar * final_title;
+
+    title = tilda_terminal_get_full_title (tt);
+
+    /* These are not needed anywhere else. If they ever are, move them to a header file */
+    enum { SHOW_FULL_TITLE, SHOW_FIRST_N_CHARS, SHOW_LAST_N_CHARS };
+
+    guint max_length = (guint) config_getint ("title_max_length");
+    guint title_behaviour = config_getint("title_behaviour");
+
+    if (strlen (title) > max_length) {
+        if (title_behaviour == SHOW_FULL_TITLE) {
+            final_title = g_strdup (title);
+        } else if (title_behaviour == SHOW_FIRST_N_CHARS) {
+            final_title = g_strdup_printf ("%.*s...", max_length, title);
+        } else if (title_behaviour == SHOW_LAST_N_CHARS) {
+            gchar *titleOffset = title + strlen(title) - max_length;
+            final_title = g_strdup_printf ("...%s", titleOffset);
+        } else {
+            g_printerr ("Bad value for \"title_behaviour\" in config file.\n");
+            final_title = g_strdup (title);
+        }
+    } else {
+        final_title = g_strdup (title);
+    }
+
+    g_free (title);
+
+    return final_title;
 }

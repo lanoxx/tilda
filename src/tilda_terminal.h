@@ -81,6 +81,7 @@ char* tilda_term_get_cwd(tilda_term* tt);
 /* Adjust the font-size scale for the terminal */
 void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale);
 
+gchar * tilda_terminal_get_full_title (tilda_term *tt);
 gchar * tilda_terminal_get_title (tilda_term *tt);
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
