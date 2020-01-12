@@ -80,8 +80,14 @@ static void tilda_terminal_switch_page_cb (GtkNotebook *notebook,
         }
         counter++;
     }
-    const char* current_title = vte_terminal_get_window_title (VTE_TERMINAL (term->vte_term));
-    gtk_window_set_title (GTK_WINDOW (tw->window), current_title);
+
+    char * current_title = tilda_terminal_get_title (term);
+
+    if (current_title != NULL) {
+        gtk_window_set_title (GTK_WINDOW (tw->window), current_title);
+    }
+
+    g_free (current_title);
 }
 
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
