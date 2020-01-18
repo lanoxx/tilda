@@ -58,7 +58,7 @@ gboolean tilda_cli_options_parse_options (tilda_cli_options *cli_options,
     {
         g_print ("%s\n\n", PACKAGE_STRING);
 
-        g_print ("Copyright (c) 2012-2013 Sebastian Geiger (lanoxx@gmx.net)\n");
+        g_print ("Copyright (c) 2012-2020 Sebastian Geiger (lanoxx@gmx.net)\n");
         g_print ("Copyright (c) 2005-2009 Tristan Sloughter (sloutri@iit.edu)\n");
         g_print ("Copyright (c) 2005-2009 Ira W. Snyder (tilda@irasnyder.com)\n\n");
 
