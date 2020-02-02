@@ -1266,12 +1266,13 @@ static GdkMonitor * get_monitor_for_cursor (tilda_window *tw, GdkScreen *screen)
     return gdk_display_get_monitor_at_point (display, mouse_x, mouse_y);
 }
 
-gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen)
+void tilda_window_move_to_mouse_monitor (tilda_window *tw)
 {
     GdkMonitor * current_monitor;
+    GdkMonitor * config_monitor;
     GdkMonitor * mouse_monitor;
 
-    mouse_monitor = get_monitor_for_cursor(tw, screen);
+    mouse_monitor = get_monitor_for_cursor(tw, gdk_screen_get_default ());
 
     /* Get the monitor on which the window is currently shown
      * Idea: get the configured window position relatively to the
@@ -1283,6 +1284,8 @@ gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen
 
     current_monitor = gdk_display_get_monitor_at_point (gdk_display_get_default (),
                                                         window_current_x, window_current_y);
+
+    config_monitor = tilda_window_find_monitor_number (tw);
 
     if (current_monitor != mouse_monitor) {
         gint window_x, window_y;
@@ -1302,11 +1305,25 @@ gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen
         gtk_window_move (GTK_WINDOW(tw->window), window_x, window_y);
 
         tilda_window_update_window_size (tw);
+    } else {
+        gint window_x, window_y;
+        GdkRectangle config_monitor_rect;
+        GdkRectangle mouse_monitor_rect;
 
-        return TRUE;
+        gdk_monitor_get_workarea (config_monitor, &config_monitor_rect);
+        gdk_monitor_get_workarea (mouse_monitor, &mouse_monitor_rect);
+
+        gint x_offset,y_offset;
+        x_offset = config_getint ("x_pos") - config_monitor_rect.x;
+        y_offset = config_getint ("y_pos") - config_monitor_rect.y;
+
+        window_x = mouse_monitor_rect.x + x_offset;
+        window_y = mouse_monitor_rect.y + y_offset;
+
+        gtk_window_move (GTK_WINDOW(tw->window), window_x, window_y);
+
+        tilda_window_update_window_size (tw);
     }
-
-    return FALSE;
 }
 
 

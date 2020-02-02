@@ -164,7 +164,7 @@ void tilda_window_set_active (tilda_window *tw)
     long mask = SubstructureRedirectMask | SubstructureNotifyMask;
 
     if (config_getbool("show_on_mouse_monitor")) {
-        tilda_window_move_to_mouse_monitor (tw, screen);
+        tilda_window_move_to_mouse_monitor (tw);
     } else {
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }

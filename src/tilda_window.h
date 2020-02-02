@@ -226,7 +226,7 @@ void tilda_window_update_window_size (tilda_window * tw);
 /**
  * Move the tilda window to the monitor the mouse cursor is located on.
  */
-gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen);
+void tilda_window_move_to_mouse_monitor (tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
 
