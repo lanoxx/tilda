@@ -221,6 +221,8 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw, enum dimensions d
 
 void tilda_window_update_window_position (tilda_window *tw);
 
+void tilda_window_update_window_size (tilda_window * tw);
+
 /**
  * Move the tilda window to the monitor the mouse cursor is located on.
  */
