@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2018-03-19 12:38+0800\n"
+"POT-Creation-Date: 2020-02-02 18:01+0100\n"
 "PO-Revision-Date: 2017-07-18 00:31+0800\n"
 "Last-Translator: Kuang-Lin Pan <andypan@ntuosc.org>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -143,7 +143,7 @@ msgstr "重新執行指令"
 msgid "Exit the terminal"
 msgstr "離開終端機"
 
-#: src/tilda.ui:214 src/tilda.ui:246 src/wizard.c:218
+#: src/tilda.ui:214 src/tilda.ui:246
 msgid "Custom"
 msgstr "自訂"
 
@@ -159,19 +159,19 @@ msgstr "白底黑字"
 msgid "White on Black"
 msgstr "黑底白字"
 
-#: src/tilda.ui:226 src/wizard.c:223
+#: src/tilda.ui:226
 msgid "Zenburn"
 msgstr "Zenburn"
 
-#: src/tilda.ui:229 src/wizard.c:224
+#: src/tilda.ui:229
 msgid "Solarized Light"
 msgstr "Solarized Light"
 
-#: src/tilda.ui:232 src/wizard.c:225
+#: src/tilda.ui:232
 msgid "Solarized Dark"
 msgstr "Solarized Dark"
 
-#: src/tilda.ui:235 src/wizard.c:226
+#: src/tilda.ui:235
 msgid "Snazzy"
 msgstr ""
 
@@ -203,166 +203,162 @@ msgstr "Control-H"
 msgid "Tilda Config"
 msgstr "Tilda 設定值"
 
-#: src/tilda.ui:392 src/tilda.c:328
+#: src/tilda.ui:395
 msgid "Start Tilda hidden"
 msgstr "啟動 Tilda 時隱藏"
 
-#: src/tilda.ui:406
+#: src/tilda.ui:409
 msgid "Always on top"
 msgstr "永遠顯示在最上層"
 
-#: src/tilda.ui:420
+#: src/tilda.ui:423
 msgid "Display on all workspaces"
 msgstr "顯示在所有工作區"
 
-#: src/tilda.ui:434
+#: src/tilda.ui:437
 msgid "Do not show in taskbar"
 msgstr "不要顯示在工作列中"
 
-#: src/tilda.ui:448
+#: src/tilda.ui:451
 msgid "Show Notebook Border"
 msgstr "顯示邊框"
 
-#: src/tilda.ui:462
+#: src/tilda.ui:465
 msgid "Set as Desktop window"
 msgstr "設定為桌面視窗"
 
-#: src/tilda.ui:477
+#: src/tilda.ui:480
 msgid "Start in fullscreen"
 msgstr "以全螢幕啟動"
 
-#: src/tilda.ui:506
+#: src/tilda.ui:509
 msgid "Non-focus Pull Up Behaviour:"
 msgstr "未取得焦點時的拉起行為："
 
-#: src/tilda.ui:557
+#: src/tilda.ui:560
 msgid "<b>Window Display</b>"
 msgstr "<b>視窗顯示</b>"
 
-#: src/tilda.ui:595
+#: src/tilda.ui:598
 msgid "Cursor Blinks"
 msgstr "閃爍游標"
 
-#: src/tilda.ui:609
+#: src/tilda.ui:612
 msgid "Audible Terminal Bell"
 msgstr "終端機會發出響聲"
 
-#: src/tilda.ui:625
+#: src/tilda.ui:628
 msgid "Cursor Shape: "
 msgstr "游標形狀："
 
-#: src/tilda.ui:660
+#: src/tilda.ui:663
 msgid "<b>Terminal Display</b>"
 msgstr "<b>終端機顯示</b>"
 
-#: src/tilda.ui:698
-msgid "Allow Bold Text"
-msgstr "允許粗體字"
-
-#: src/tilda.ui:728
+#: src/tilda.ui:703
 msgid "Font:"
 msgstr "字型："
 
-#: src/tilda.ui:747
+#: src/tilda.ui:733
 msgid "<b>Font</b>"
 msgstr "<b>字型</b>"
 
-#: src/tilda.ui:796
+#: src/tilda.ui:782
 msgid "Hide Tilda when mouse leaves it"
 msgstr "滑鼠離開時隱藏 Tilda"
 
-#: src/tilda.ui:813
+#: src/tilda.ui:799
 msgid "Auto Hide Delay:"
 msgstr "自動隱藏延遲："
 
-#: src/tilda.ui:823
+#: src/tilda.ui:809
 msgid "Hide when Tilda loses focus"
 msgstr "在 Tilda 失去焦點時隱藏"
 
-#: src/tilda.ui:843
+#: src/tilda.ui:829
 msgid "<b>Auto Hide</b>"
 msgstr "<b>自動隱藏</b>"
 
-#: src/tilda.ui:882
+#: src/tilda.ui:868
 msgid "When last terminal is closed:"
 msgstr "當最後一個終端機被關閉："
 
-#: src/tilda.ui:909
+#: src/tilda.ui:895
 #, fuzzy
 msgid "Always prompt on exit"
 msgstr "永遠顯示在最上層"
 
-#: src/tilda.ui:932
+#: src/tilda.ui:918
 msgid "<b>Program Exit</b>"
 msgstr "<b>程式離開</b>"
 
-#: src/tilda.ui:950
+#: src/tilda.ui:936
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr "<small><i><b>注意：</b>有些選項需要重新啟動 tilda。</i></small>"
 
-#: src/tilda.ui:967
+#: src/tilda.ui:953
 msgid "General"
 msgstr "一般"
 
-#: src/tilda.ui:1012
+#: src/tilda.ui:998
 msgid "Word Characters:"
 msgstr "視為單字的字元："
 
-#: src/tilda.ui:1040
+#: src/tilda.ui:1026
 msgid "<b>Select by Word</b>"
 msgstr "<b>以單字為單位選取</b>"
 
-#: src/tilda.ui:1090
+#: src/tilda.ui:1076
 msgid "Web Browser *:"
 msgstr "網頁瀏覽器 *："
 
-#: src/tilda.ui:1107
+#: src/tilda.ui:1093
 msgid "<b>URL Handling</b>"
 msgstr "<b>URL 處理方式</b>"
 
-#: src/tilda.ui:1142
+#: src/tilda.ui:1128
 msgid "Initial Title:"
 msgstr "初始標題："
 
-#: src/tilda.ui:1164
+#: src/tilda.ui:1150
 msgid "Title Max Length:"
 msgstr ""
 
-#: src/tilda.ui:1205
+#: src/tilda.ui:1191
 msgid "Dynamically-set Title:"
 msgstr "動態設定標題："
 
-#: src/tilda.ui:1217
+#: src/tilda.ui:1203
 msgid "Title Behaviour:"
 msgstr ""
 
-#: src/tilda.ui:1250
+#: src/tilda.ui:1236
 msgid "<b>Title</b>"
 msgstr "<b>標題</b>"
 
-#: src/tilda.ui:1311
+#: src/tilda.ui:1297
 msgid "Run a custom command instead of the shell"
 msgstr "執行自訂的指令而不是執行命令解釋器"
 
-#: src/tilda.ui:1327
+#: src/tilda.ui:1313
 msgid "Custom Command:"
 msgstr "自訂指令："
 
-#: src/tilda.ui:1339
+#: src/tilda.ui:1325
 msgid "When Command Exits:"
 msgstr "當指令結束後："
 
-#: src/tilda.ui:1349
+#: src/tilda.ui:1335
 msgid "Use a login shell"
 msgstr "使用登入的命令解釋器"
 
-#: src/tilda.ui:1375
+#: src/tilda.ui:1361
 msgid "<b>Command</b>"
 msgstr "<b>指令</b>"
 
-#: src/tilda.ui:1402
+#: src/tilda.ui:1388
 msgid ""
 "* A valid command that can open a browser must be entered here. It is "
 "possible to use the name of a specific browser such as 'firefox' and 'google-"
@@ -373,252 +369,256 @@ msgstr ""
 "'firefox'、'google-chrome'，或使用通用的指令 'x-www-browser'、'xdg-open'。最"
 "適合的指令視作業系統而定。"
 
-#: src/tilda.ui:1439
+#: src/tilda.ui:1425
 msgid "Show confirmation dialog when closing tab"
 msgstr ""
 
-#: src/tilda.ui:1459
+#: src/tilda.ui:1445
 #, fuzzy
 msgid "Close Action"
 msgstr "關閉 Tilda"
 
-#: src/tilda.ui:1480
+#: src/tilda.ui:1466
 msgid "Title and Command"
 msgstr "標題及指令"
 
-#: src/tilda.ui:1524 src/tilda.ui:1701
+#: src/tilda.ui:1510 src/tilda.ui:1688
 msgid "Percentage"
 msgstr "百分比"
 
-#: src/tilda.ui:1547 src/tilda.ui:1713
+#: src/tilda.ui:1534 src/tilda.ui:1700
 msgid "In Pixels"
 msgstr "以像素為單位"
 
-#: src/tilda.ui:1574
+#: src/tilda.ui:1561
 msgid "<b>Height</b>"
 msgstr "<b>高度</b>"
 
-#: src/tilda.ui:1610
+#: src/tilda.ui:1597
 msgid "Monitor:"
 msgstr "螢幕："
 
-#: src/tilda.ui:1665
+#: src/tilda.ui:1652
 msgid "<b>Select monitor</b>"
 msgstr "<b>選擇螢幕</b>"
 
-#: src/tilda.ui:1751
+#: src/tilda.ui:1739
 msgid "<b>Width</b>"
 msgstr "<b>寬度</b>"
 
-#: src/tilda.ui:1787
+#: src/tilda.ui:1775
 msgid "Centered Horizontally"
 msgstr "水平置中"
 
-#: src/tilda.ui:1805 src/tilda.c:336
+#: src/tilda.ui:1793
 msgid "Y Position"
 msgstr "Y 座標位置"
 
-#: src/tilda.ui:1839 src/tilda.c:335
+#: src/tilda.ui:1827
 msgid "X Position"
 msgstr "X 座標位置"
 
-#: src/tilda.ui:1849
+#: src/tilda.ui:1837
 msgid "Centered Vertically"
 msgstr "垂直置中"
 
-#: src/tilda.ui:1877
+#: src/tilda.ui:1865
 msgid "<b>Position</b>"
 msgstr "<b>位置</b>"
 
-#: src/tilda.ui:1915
+#: src/tilda.ui:1903
 msgid "Position of Tabs:"
 msgstr "頁籤位置："
 
-#: src/tilda.ui:1942
+#: src/tilda.ui:1930
 msgid "Expand Tabs"
 msgstr ""
 
-#: src/tilda.ui:1956
+#: src/tilda.ui:1944
 msgid "Show single Tab"
 msgstr ""
 
-#: src/tilda.ui:1976
+#: src/tilda.ui:1958
+msgid "Display Title in Tooltip"
+msgstr ""
+
+#: src/tilda.ui:1981
 #, fuzzy
 msgid "<b>Tabs</b>"
 msgstr "<b>額外選項</b>"
 
-#: src/tilda.ui:2025
+#: src/tilda.ui:2030
 msgid "Animation Delay (usec)"
 msgstr "動畫延遲 (微秒)"
 
-#: src/tilda.ui:2037
+#: src/tilda.ui:2042
 msgid "Animation Orientation"
 msgstr "動畫起始點"
 
-#: src/tilda.ui:2075
+#: src/tilda.ui:2080
 msgid "Animated Pulldown"
 msgstr "動畫"
 
-#: src/tilda.ui:2091
+#: src/tilda.ui:2096
 msgid "Level of Transparency"
 msgstr "透明等級"
 
-#: src/tilda.ui:2101
+#: src/tilda.ui:2106
 msgid "Enable Transparency"
 msgstr "啟用透明度"
 
-#: src/tilda.ui:2124
+#: src/tilda.ui:2129
 msgid "<b>Extras</b>"
 msgstr "<b>額外選項</b>"
 
-#: src/tilda.ui:2143
+#: src/tilda.ui:2148
 msgid "Appearance"
 msgstr "外觀"
 
-#: src/tilda.ui:2212
+#: src/tilda.ui:2217
 msgid "Cursor Color"
 msgstr "游標顏色"
 
-#: src/tilda.ui:2260
+#: src/tilda.ui:2265
 msgid "Text Color"
 msgstr "文字色彩"
 
-#: src/tilda.ui:2272
+#: src/tilda.ui:2277
 msgid "Background Color"
 msgstr "背景顏色"
 
-#: src/tilda.ui:2284
+#: src/tilda.ui:2289
 msgid "Built-in Schemes"
 msgstr "內建佈景"
 
-#: src/tilda.ui:2298
+#: src/tilda.ui:2303
 msgid "<b>Foreground and Background Colors</b>"
 msgstr "<b>前景和背景顏色</b>"
 
-#: src/tilda.ui:2330
+#: src/tilda.ui:2335
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
 "<small><i><b>注意：</b>終端機應用程式會使用以下提供的顏色。</i></small>"
 
-#: src/tilda.ui:2373
+#: src/tilda.ui:2378
 msgid "Choose Color 14"
 msgstr "選擇顏色 14"
 
-#: src/tilda.ui:2386
+#: src/tilda.ui:2391
 msgid "Choose Color 13"
 msgstr "選擇顏色 13"
 
-#: src/tilda.ui:2399
+#: src/tilda.ui:2404
 msgid "Choose Color 15"
 msgstr "選擇顏色 15"
 
-#: src/tilda.ui:2412
+#: src/tilda.ui:2417
 msgid "Choose Color 12"
 msgstr "選擇顏色 12"
 
-#: src/tilda.ui:2425
+#: src/tilda.ui:2430
 msgid "Choose Color 10"
 msgstr "選擇顏色 10"
 
-#: src/tilda.ui:2438
+#: src/tilda.ui:2443
 msgid "Choose Color 11"
 msgstr "選擇顏色 11"
 
-#: src/tilda.ui:2451
+#: src/tilda.ui:2456
 msgid "Choose Color 9"
 msgstr "選擇顏色 9"
 
-#: src/tilda.ui:2464
+#: src/tilda.ui:2469
 msgid "Choose Color 7"
 msgstr "選擇顏色 7"
 
-#: src/tilda.ui:2477
+#: src/tilda.ui:2482
 msgid "Choose Color 6"
 msgstr "選擇顏色 6"
 
-#: src/tilda.ui:2490
+#: src/tilda.ui:2495
 msgid "Choose Color 5"
 msgstr "選擇顏色 5"
 
-#: src/tilda.ui:2503
+#: src/tilda.ui:2508
 msgid "Choose Color 4"
 msgstr "選擇顏色 4"
 
-#: src/tilda.ui:2516
+#: src/tilda.ui:2521
 msgid "Choose Color 3"
 msgstr "選擇顏色 3"
 
-#: src/tilda.ui:2529
+#: src/tilda.ui:2534
 msgid "Choose Color 2"
 msgstr "選擇顏色 2"
 
-#: src/tilda.ui:2542
+#: src/tilda.ui:2547
 msgid "Choose Color 1"
 msgstr "選擇顏色 1"
 
-#: src/tilda.ui:2555
+#: src/tilda.ui:2560
 msgid "Choose Color 0"
 msgstr "Choose Color 0"
 
-#: src/tilda.ui:2569
+#: src/tilda.ui:2574
 msgid "Choose Color 8"
 msgstr "Choose Color 8"
 
-#: src/tilda.ui:2586
+#: src/tilda.ui:2591
 msgid "Built-in schemes:"
 msgstr "內建佈景："
 
-#: src/tilda.ui:2601
+#: src/tilda.ui:2606
 msgid "Color palette:"
 msgstr "調色盤："
 
-#: src/tilda.ui:2617
+#: src/tilda.ui:2622
 msgid "<b>Palette</b>"
 msgstr "<b>調色盤</b>"
 
-#: src/tilda.ui:2636
+#: src/tilda.ui:2641
 msgid "Colors"
 msgstr "色彩"
 
-#: src/tilda.ui:2693
+#: src/tilda.ui:2698
 msgid "Scrollbar is:"
 msgstr "捲軸在："
 
-#: src/tilda.ui:2702
+#: src/tilda.ui:2707
 msgid "Limit scrollback to:"
 msgstr "限制回捲行數："
 
-#: src/tilda.ui:2706
+#: src/tilda.ui:2711
 msgid "Unselect for unlimited scrollback."
 msgstr "取消選擇視為無限制回捲行數。"
 
-#: src/tilda.ui:2718
+#: src/tilda.ui:2723
 msgid "Scroll on Output"
 msgstr "輸出時捲動"
 
-#: src/tilda.ui:2732
+#: src/tilda.ui:2737
 msgid "Scroll on Keystroke"
 msgstr "打字時捲動"
 
-#: src/tilda.ui:2754
+#: src/tilda.ui:2759
 msgid "0"
 msgstr "0"
 
-#: src/tilda.ui:2766
+#: src/tilda.ui:2771
 msgid "lines"
 msgstr "行"
 
-#: src/tilda.ui:2792
+#: src/tilda.ui:2797
 msgid "<b>Scrolling</b>"
 msgstr "<b>捲動</b>"
 
-#: src/tilda.ui:2813
+#: src/tilda.ui:2818
 msgid "Scrolling"
 msgstr "捲動方式"
 
-#: src/tilda.ui:2852
+#: src/tilda.ui:2857
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
@@ -629,169 +629,77 @@ msgstr ""
 "某些應用程式及作業系統需要不同的終端機運作方式時，提供暫時的解決方法。</i></"
 "small>"
 
-#: src/tilda.ui:2868
+#: src/tilda.ui:2873
 msgid "_Backspace key generates:"
 msgstr "後退鍵會產生(_B)："
 
-#: src/tilda.ui:2882
+#: src/tilda.ui:2887
 msgid "_Delete key generates:"
 msgstr "刪除鍵會產生(_D)："
 
-#: src/tilda.ui:2894
+#: src/tilda.ui:2899
 msgid "_Reset Compatibility Options to Defaults"
 msgstr "將有關相容性的選項重設為預設值(_R)"
 
-#: src/tilda.ui:2948
+#: src/tilda.ui:2953
 msgid "<b>Compatibility</b>"
 msgstr "<b>相容性</b>"
 
-#: src/tilda.ui:2967
+#: src/tilda.ui:2972
 msgid "Compatibility"
 msgstr "相容性"
 
-#: src/tilda.ui:3019
+#: src/tilda.ui:3024
 msgid "<b>Keybindings</b>"
 msgstr "<b>按鍵對應</b>"
 
-#: src/tilda.ui:3038
+#: src/tilda.ui:3043
 msgid "Keybindings"
 msgstr "按鍵對應"
 
-#: src/tilda.ui:3070
-msgid ""
-"Search term not found, search again to continue the search at the beginning."
-msgstr "找不到搜尋詞，再次搜尋來繼續從起始位置搜尋。"
-
-#: src/tilda.ui:3104
-msgid "_Next"
-msgstr "下一個 (_N)"
-
-#: src/tilda.ui:3119
-msgid "_Prev"
-msgstr "上一個 (_P)"
-
-#: src/tilda.ui:3134
-msgid "_Match Case"
-msgstr "比對大小寫 (_M)"
-
-#: src/tilda.ui:3151
-msgid "_Regex"
-msgstr "使用正規表示式 (_R)"
-
-#: src/configsys.c:365
+#: src/configsys.c:384
 msgid "Unable to sync the config file to disk\n"
 msgstr "無法將設定檔案同步至磁碟\n"
 
-#: src/configsys.c:375
+#: src/configsys.c:394
 msgid "Unable to close the config file\n"
 msgstr "無法關閉設定檔案\n"
 
-#: src/configsys.c:388
+#: src/configsys.c:407
 #, c-format
 msgid "Unable to write the config file to %s\n"
 msgstr "無法將設定檔寫至 %s\n"
 
-#: src/tilda.c:237
+#: src/tilda.c:239
 #, c-format
 msgid "Unable to run command: `%s'\n"
 msgstr "無法執行指令：`%s'\n"
 
-#: src/tilda.c:276 src/tilda.c:545
+#: src/tilda.c:278 src/tilda.c:453
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "無法開啟鎖定的目錄：%s\n"
 
-#: src/tilda.c:326
-msgid "Set the background color"
-msgstr "設定背景顏色"
-
-#: src/tilda.c:327
-msgid "Run a command at startup"
-msgstr "啟動時執行指令"
-
-#: src/tilda.c:329
-msgid "Set the font to the following string"
-msgstr "將字型設定至以下字串"
-
-#: src/tilda.c:330
-msgid "Configuration file"
-msgstr "設定檔"
-
-#: src/tilda.c:331
-msgid "Scrollback Lines"
-msgstr "回捲行數"
-
-#: src/tilda.c:332
-msgid "Use Scrollbar"
-msgstr "使用捲軸"
-
-#: src/tilda.c:333
-msgid "Print the version, then exit"
-msgstr "列印版本號，然後離開"
-
-#: src/tilda.c:334
-msgid "Set Initial Working Directory"
-msgstr "設定初始工作目錄"
-
-#: src/tilda.c:337
-msgid "Opaqueness: 0-100%"
-msgstr "不透明度：0-100%"
-
-#: src/tilda.c:338
-msgid "Show Configuration Wizard"
-msgstr "顯示設定精靈"
-
-#: src/tilda.c:352
-#, c-format
-msgid ""
-"Error parsing command-line options. Try \"tilda --help\"\n"
-"to see all possible options.\n"
-"\n"
-"Error message: %s\n"
-msgstr ""
-"解析命令列選項失敗。嘗試 \"tilda --help\"\n"
-"來顯示所有可能的選項。\n"
-"\n"
-"錯誤訊息：%s\n"
-
 #: src/tilda.c:390
-#, c-format
-msgid ""
-"Error parsing Glib and GTK specific command-line options. Try \"tilda --help-"
-"all\"\n"
-"to see all possible options.\n"
-"\n"
-"Error message: %s\n"
-msgstr ""
-"解析用於 Glib 或 GTK 命令列選項失敗。嘗試 \"tilda --help-all\"\n"
-"來顯示所有可能的選項。\n"
-"\n"
-"錯誤訊息：%s\n"
-
-#: src/tilda.c:409
-msgid "Error allocating memory for a new tilda_cli_options structure.\n"
-msgstr "取得記憶體用於新的 tilda_cli_options 結構時發生錯誤。\n"
-
-#: src/tilda.c:498
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr "建立目錄：'%s'\n"
 
-#: src/tilda.c:641
+#: src/tilda.c:549
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr "在使用者的設定目錄中發現 style.css，套用使用者樣式中。\n"
 
-#: src/tilda.c:703
+#: src/tilda.c:604
 msgid "Migrating old config path to XDG folders\n"
 msgstr "正在將舊的設定檔搬移至 XDG 目錄\n"
 
-#: src/tilda.c:766
+#: src/tilda.c:667
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
 msgstr "指定的設定檔 '%s' 不存在。改採用預設的路徑。\n"
 
-#: src/tilda.c:857 src/tilda-keybinding.c:409
+#: src/tilda.c:760 src/tilda-keybinding.c:409
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -815,97 +723,174 @@ msgstr ""
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr "你選擇的「拉下終端機」快捷鍵無效。請選擇別的。"
 
-#: src/tilda_terminal.c:397
+#: src/tilda_terminal.c:385
 #, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "跟隨符號連結 %s 失敗：%s\n"
 
-#: src/tilda_terminal.c:435
-#, c-format
-msgid "Problem parsing custom command: %s\n"
-msgstr "解析自訂指令失敗：%s\n"
-
-#: src/tilda_terminal.c:436 src/tilda_terminal.c:466
-msgid "Launching default shell instead\n"
-msgstr "作為替代，啟動預設的命令解釋器\n"
-
-#: src/tilda_terminal.c:465
-#, c-format
-msgid "Unable to launch custom command: %s\n"
-msgstr "無法啟動自訂指令：%s\n"
-
-#: src/tilda_terminal.c:537
+#: src/tilda_terminal.c:408
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "無法啟動預設的命令解釋器：%s\n"
 
-#: src/tilda_terminal.c:940
+#: src/tilda_terminal.c:410
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "無法啟動自訂指令：%s\n"
+
+#: src/tilda_terminal.c:411
+#, fuzzy, c-format
+msgid "Launching custom command failed with error: %s\n"
+msgstr "執行自訂的指令而不是執行命令解釋器"
+
+#: src/tilda_terminal.c:412 src/tilda_terminal.c:446
+msgid "Launching default shell instead\n"
+msgstr "作為替代，啟動預設的命令解釋器\n"
+
+#: src/tilda_terminal.c:445
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "解析自訂指令失敗：%s\n"
+
+#: src/tilda_terminal.c:963
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "無法啟動網頁瀏覽器。用到的指令是 `%s'\n"
 
-#: src/tilda_terminal.c:993
+#: src/tilda_terminal.c:1013
 msgid "Untitled"
 msgstr "無標題"
 
-#: src/tilda_terminal.c:1011
+#: src/tilda_terminal.c:1031
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "設定檔裡 \"d_set_title\" 的值不正確\n"
 
-#: src/tilda_window.c:101
+#: src/tilda_window.c:109
 msgid "Are you sure you want to close this tab?"
 msgstr ""
 
-#: src/tilda_window.c:148
+#: src/tilda_window.c:156
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "設定檔裡有個錯的定位點\n"
 
-#: src/tilda_window.c:808
+#: src/tilda_window.c:811
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "無法設定 Tilda 的圖示為：%s\n"
 
-#: src/tilda_window.c:1125
+#: src/tilda_window.c:1105
 msgid "Out of memory, cannot create tab\n"
 msgstr "記憶體不足。無法建立分頁\n"
 
-#: src/tilda_window.c:1245
+#: src/tilda_window.c:1225
 msgid "Are you sure you want to Quit?"
 msgstr ""
 
-#: src/wizard.c:219
-msgid "Tango"
-msgstr "Tango"
-
-#: src/wizard.c:220
-msgid "Linux console"
-msgstr "Linux console"
-
-#: src/wizard.c:221
-msgid "XTerm"
-msgstr "XTerm"
-
-#: src/wizard.c:222
-msgid "Rxvt"
-msgstr "Rxvt"
-
-#: src/wizard.c:336
+#: src/wizard.c:138
 #, c-format
 msgid "Tilda %d Config"
 msgstr "Tilda %d 設定值"
 
-#: src/wizard.c:767
+#: src/wizard.c:561
 #, fuzzy
 msgid "Invalid Cursor Type, resetting to default\n"
 msgstr "無效的游標類型，已重設為預設\n"
 
-#: src/wizard.c:785
+#: src/wizard.c:579
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
 msgstr "無效的未取得焦點拉起行為，已忽略\n"
 
-#: src/wizard.c:1221
+#: src/wizard.c:1046
 msgid "Invalid tab position setting, ignoring\n"
 msgstr "無效的 Tab 順序，已忽略\n"
+
+#~ msgid "Allow Bold Text"
+#~ msgstr "允許粗體字"
+
+#~ msgid ""
+#~ "Search term not found, search again to continue the search at the "
+#~ "beginning."
+#~ msgstr "找不到搜尋詞，再次搜尋來繼續從起始位置搜尋。"
+
+#~ msgid "_Next"
+#~ msgstr "下一個 (_N)"
+
+#~ msgid "_Prev"
+#~ msgstr "上一個 (_P)"
+
+#~ msgid "_Match Case"
+#~ msgstr "比對大小寫 (_M)"
+
+#~ msgid "_Regex"
+#~ msgstr "使用正規表示式 (_R)"
+
+#~ msgid "Set the background color"
+#~ msgstr "設定背景顏色"
+
+#~ msgid "Run a command at startup"
+#~ msgstr "啟動時執行指令"
+
+#~ msgid "Set the font to the following string"
+#~ msgstr "將字型設定至以下字串"
+
+#~ msgid "Configuration file"
+#~ msgstr "設定檔"
+
+#~ msgid "Scrollback Lines"
+#~ msgstr "回捲行數"
+
+#~ msgid "Use Scrollbar"
+#~ msgstr "使用捲軸"
+
+#~ msgid "Print the version, then exit"
+#~ msgstr "列印版本號，然後離開"
+
+#~ msgid "Set Initial Working Directory"
+#~ msgstr "設定初始工作目錄"
+
+#~ msgid "Opaqueness: 0-100%"
+#~ msgstr "不透明度：0-100%"
+
+#~ msgid "Show Configuration Wizard"
+#~ msgstr "顯示設定精靈"
+
+#~ msgid ""
+#~ "Error parsing command-line options. Try \"tilda --help\"\n"
+#~ "to see all possible options.\n"
+#~ "\n"
+#~ "Error message: %s\n"
+#~ msgstr ""
+#~ "解析命令列選項失敗。嘗試 \"tilda --help\"\n"
+#~ "來顯示所有可能的選項。\n"
+#~ "\n"
+#~ "錯誤訊息：%s\n"
+
+#~ msgid ""
+#~ "Error parsing Glib and GTK specific command-line options. Try \"tilda --"
+#~ "help-all\"\n"
+#~ "to see all possible options.\n"
+#~ "\n"
+#~ "Error message: %s\n"
+#~ msgstr ""
+#~ "解析用於 Glib 或 GTK 命令列選項失敗。嘗試 \"tilda --help-all\"\n"
+#~ "來顯示所有可能的選項。\n"
+#~ "\n"
+#~ "錯誤訊息：%s\n"
+
+#~ msgid "Error allocating memory for a new tilda_cli_options structure.\n"
+#~ msgstr "取得記憶體用於新的 tilda_cli_options 結構時發生錯誤。\n"
+
+#~ msgid "Tango"
+#~ msgstr "Tango"
+
+#~ msgid "Linux console"
+#~ msgstr "Linux console"
+
+#~ msgid "XTerm"
+#~ msgstr "XTerm"
+
+#~ msgid "Rxvt"
+#~ msgstr "Rxvt"
 
 #~ msgid "Enable Antialiasing"
 #~ msgstr "啟用抗鋸齒"
