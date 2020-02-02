@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 /*
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by
@@ -395,6 +396,22 @@ static gchar *get_config_file_name (gint instance)
 
     config_file = g_strdup_printf ("%s%d", config_file_prefix, instance);
     g_free (config_file_prefix);
+
+    /* resolve possible symlink pointing to a different location. */
+    gchar * resolved_config_file = realpath (config_file, NULL);
+
+    if (g_strcmp0 (config_file, resolved_config_file) != 0) {
+        g_debug ("Config file at '%s' points to '%s'", config_file, resolved_config_file);
+    }
+
+    if (resolved_config_file != NULL) {
+        g_free (config_file);
+        /* resolved_config_file must be freed with free(3) so we duplicate the
+         * string to ensure that what ever we return from this function can be
+         * freed with g_free(). */
+        config_file = g_strdup (resolved_config_file);
+        free (resolved_config_file);
+    }
 
     return config_file;
 }
