@@ -384,8 +384,6 @@ static void pull_down (struct tilda_window_ *tw) {
                              XA_ATOM, 32, PropModeReplace,
                              (guchar *) &atom, 1);
         }
-    } else {
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
     /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
