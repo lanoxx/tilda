@@ -1268,20 +1268,28 @@ static GdkMonitor * get_monitor_for_cursor (tilda_window *tw, GdkScreen *screen)
 
 gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen)
 {
-    GdkMonitor * mouse_monitor = get_monitor_for_cursor(tw, screen);
+    GdkMonitor * current_monitor;
+    GdkMonitor * mouse_monitor;
+
+    mouse_monitor = get_monitor_for_cursor(tw, screen);
 
     /* Get the monitor on which the window is currently shown
      * Idea: get the configured window position relatively to the
      * configured monitor on which Tilda usually appears, and apply the
      * same position on the monitor the mouse cursor is currently on */
-    GdkMonitor * configured_monitor = tilda_window_find_monitor_number (tw);
+    int window_current_x, window_current_y;
+    gtk_window_get_position (GTK_WINDOW (tw->window),
+                             &window_current_x, &window_current_y);
 
-    if (configured_monitor != mouse_monitor) {
+    current_monitor = gdk_display_get_monitor_at_point (gdk_display_get_default (),
+                                                        window_current_x, window_current_y);
+
+    if (current_monitor != mouse_monitor) {
         gint window_x, window_y;
         GdkRectangle config_monitor_rect;
         GdkRectangle mouse_monitor_rect;
 
-        gdk_monitor_get_workarea (configured_monitor, &config_monitor_rect);
+        gdk_monitor_get_workarea (current_monitor, &config_monitor_rect);
         gdk_monitor_get_workarea (mouse_monitor, &mouse_monitor_rect);
 
         gint x_offset,y_offset;
