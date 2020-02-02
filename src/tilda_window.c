@@ -1293,6 +1293,8 @@ gboolean tilda_window_move_to_mouse_monitor (tilda_window *tw, GdkScreen *screen
 
         gtk_window_move (GTK_WINDOW(tw->window), window_x, window_y);
 
+        tilda_window_update_window_size (tw);
+
         return TRUE;
     }
 
