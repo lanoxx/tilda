@@ -79,6 +79,11 @@ Replace '#' with the number of the current minor release.
 
         git archive --prefix=tilda-1.2.#/ -o ../tilda_1.2.#.orig.tar.gz HEAD
 
+ 6. Checkout the [packaging files for tilda][1] and update the change log at
+    `debian/changelog` such that it contains an entry for the latest version
+    of tilda. Note: the `debian/changelog` should not contain information about
+    tilda specific changes but about changes related to the Debian packaging.
+
 # Building a package
 
 With the above `git archive` command you get a tarball
@@ -97,8 +102,6 @@ run `debuild` inside the **pbuilder** environment (see **pdebuild(1)**).
  2. `cd tilda-1.2.#`
  3. Checkout the `tilda-debian` repository from Github and copy the `debian/` folder
     to `tilda-1.2.#/`.
- 4. Update the Debian specific change log at `debian/changelog`, 
-    such that it contains the latest version that you are building.
  5. To build the source package you need to run **debuild**. You can use one of
     the following two methods to do this:
     * Run **debuild** inside a change root by using `pdebuild`:
@@ -120,3 +123,5 @@ run `debuild` inside the **pbuilder** environment (see **pdebuild(1)**).
     upload the package to mentors:
 
         dput mentors tilda_1.#.#-1_amd64.changes
+
+[1]: https://salsa.debian.org/debian/tilda/
