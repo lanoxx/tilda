@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-02 18:01+0100\n"
+"POT-Creation-Date: 2020-02-08 23:45+0100\n"
 "PO-Revision-Date: 2018-03-19 12:53+0800\n"
 "Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
@@ -671,31 +671,31 @@ msgstr "无法将配置文件写入%s\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "无法执行命令：`%s'\n"
 
-#: src/tilda.c:278 src/tilda.c:453
+#: src/tilda.c:284 src/tilda.c:459
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "无法打开锁定的目录：%s\n"
 
-#: src/tilda.c:390
+#: src/tilda.c:396
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr "正在创建目录：“%s”\n"
 
-#: src/tilda.c:549
+#: src/tilda.c:555
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr "在用户配置目录中找到了 style.css，将应用用户 css 风格。\n"
 
-#: src/tilda.c:604
+#: src/tilda.c:610
 msgid "Migrating old config path to XDG folders\n"
 msgstr "正在将旧的配置路径迁移至 XDG 文件夹中\n"
 
-#: src/tilda.c:667
+#: src/tilda.c:673
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
 msgstr "指定的配置文件“%s”不存在。回退到默认路径。\n"
 
-#: src/tilda.c:760 src/tilda-keybinding.c:409
+#: src/tilda.c:766 src/tilda-keybinding.c:409
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -718,45 +718,45 @@ msgstr "输入键盘快捷键"
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr "您为“%s”所选择的键绑定无效。请重新选择。"
 
-#: src/tilda_terminal.c:385
+#: src/tilda_terminal.c:398
 #, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "读取链接 %s 时出错：%s\n"
 
-#: src/tilda_terminal.c:408
+#: src/tilda_terminal.c:421
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "无法启动默认 shell：%s\n"
 
-#: src/tilda_terminal.c:410
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "无法执行自定义命令：%s\n"
 
-#: src/tilda_terminal.c:411
+#: src/tilda_terminal.c:424
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "运行一个自定义命令而非 shell"
 
-#: src/tilda_terminal.c:412 src/tilda_terminal.c:446
+#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
 msgid "Launching default shell instead\n"
 msgstr "运行默认shell作为替代\n"
 
-#: src/tilda_terminal.c:445
+#: src/tilda_terminal.c:458
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "解析自定义命令错误：%s\n"
 
-#: src/tilda_terminal.c:963
+#: src/tilda_terminal.c:976
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "无法运行 web 浏览器。命令是“%s”\n"
 
-#: src/tilda_terminal.c:1013
+#: src/tilda_terminal.c:1026
 msgid "Untitled"
 msgstr "未命名"
 
-#: src/tilda_terminal.c:1031
+#: src/tilda_terminal.c:1044
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "配置文件中“d_set_title”的值有误\n"
 

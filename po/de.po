@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-02 18:01+0100\n"
+"POT-Creation-Date: 2020-02-08 23:45+0100\n"
 "PO-Revision-Date: 2013-07-13 11:12+0000\n"
 "Last-Translator: Christian Weber <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
@@ -685,32 +685,32 @@ msgstr "Kann die Konfigurationsdatei nicht nach %s schreiben\n"
 msgid "Unable to run command: `%s'\n"
 msgstr "Kann Befehl nicht ausführen: `%s'\n"
 
-#: src/tilda.c:278 src/tilda.c:453
+#: src/tilda.c:284 src/tilda.c:459
 #, c-format
 msgid "Unable to open lock directory: %s\n"
 msgstr "Kann Lock-Verzeichnis nicht öffnen: %s\n"
 
-#: src/tilda.c:390
+#: src/tilda.c:396
 #, c-format
 msgid "Creating directory:'%s'\n"
 msgstr "Erstelle Verzeichnis: '%s'\n"
 
-#: src/tilda.c:549
+#: src/tilda.c:555
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
 "style.css in Nutzer Config-Verzeichnis gefunden, nutze Nutzer css style.\n"
 
-#: src/tilda.c:604
+#: src/tilda.c:610
 msgid "Migrating old config path to XDG folders\n"
 msgstr "Verschiebe altes Konfigurationsverzeichnis in XDG-Verzeichnisse\n"
 
-#: src/tilda.c:667
+#: src/tilda.c:673
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
 msgstr ""
 
-#: src/tilda.c:760 src/tilda-keybinding.c:409
+#: src/tilda.c:766 src/tilda-keybinding.c:409
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
@@ -738,45 +738,45 @@ msgstr ""
 "Das von Ihnen gewählte Tastenkürzel für \"Einfügen\" ist ungültig. Bitte "
 "wählen Sie ein Anderes."
 
-#: src/tilda_terminal.c:385
+#: src/tilda_terminal.c:398
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Problem beim Lesen eines benutzerdefinierten Befehls: %s\n"
 
-#: src/tilda_terminal.c:408
+#: src/tilda_terminal.c:421
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Konnte die Standard-Shell nicht öffnen: %s\n"
 
-#: src/tilda_terminal.c:410
+#: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Konnte benutzerdefinierten Befehl nicht ausführen: %s\n"
 
-#: src/tilda_terminal.c:411
+#: src/tilda_terminal.c:424
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Führe benutzerdefinierten Befehl anstelle der Shell aus"
 
-#: src/tilda_terminal.c:412 src/tilda_terminal.c:446
+#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
 msgid "Launching default shell instead\n"
 msgstr "Öffne stattdessen die Standard-Shell\n"
 
-#: src/tilda_terminal.c:445
+#: src/tilda_terminal.c:458
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problem beim Lesen eines benutzerdefinierten Befehls: %s\n"
 
-#: src/tilda_terminal.c:963
+#: src/tilda_terminal.c:976
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Konnte Webbrowser nicht starten. Der Befehl lautete `%s'\n"
 
-#: src/tilda_terminal.c:1013
+#: src/tilda_terminal.c:1026
 msgid "Untitled"
 msgstr "Unbenannt"
 
-#: src/tilda_terminal.c:1031
+#: src/tilda_terminal.c:1044
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Ungültiger Wert für \"d_set_title\" in der Konfigurationsdatei\n"
 
