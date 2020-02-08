@@ -270,6 +270,12 @@ static gint remove_stale_lock_files ()
     gchar *filename;
     GDir *dir;
 
+    /* if the lock dir does not exist then there are no stale lock files to remove. */
+    if (!g_file_test (lock_dir, G_FILE_TEST_EXISTS)) {
+        g_free (lock_dir);
+        return 0;
+    }
+
     /* Open the lock directory for reading */
     dir = g_dir_open (lock_dir, 0, NULL);
 
