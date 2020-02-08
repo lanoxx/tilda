@@ -93,7 +93,7 @@ static cfg_opt_t config_opts[] = {
     CFG_INT("timer_resolution", 200, CFGF_NONE),
     CFG_INT("auto_hide_time", 2000, CFGF_NONE),
     CFG_INT("on_last_terminal_exit", 0, CFGF_NONE),
-    CFG_BOOL("prompt_on_exit", FALSE, CFGF_NONE),
+    CFG_BOOL("prompt_on_exit", TRUE, CFGF_NONE),
     CFG_INT("palette_scheme", 1, CFGF_NONE),
     CFG_INT("non_focus_pull_up_behaviour", 0, CFGF_NONE),
     CFG_INT("cursor_shape", 0, CFGF_NONE),
@@ -168,7 +168,7 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
     CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
     /* Whether closing a tab shows a confirmation dialog. */
-    CFG_BOOL("confirm_close_tab", FALSE, CFGF_NONE),
+    CFG_BOOL("confirm_close_tab", TRUE, CFGF_NONE),
 
     CFG_INT("back_alpha", 0xffff, CFGF_NONE),
 
