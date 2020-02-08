@@ -422,8 +422,8 @@ static gchar *get_config_file_name (gint instance)
     return config_file;
 }
 
-static gint _cmp_locks(gint a, gint b) {
-  return a - b;
+static gint _cmp_locks(gconstpointer a, gconstpointer b, gpointer userdata) {
+  return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
 }
 
 /**
@@ -470,7 +470,7 @@ static gint get_instance_number ()
 
         if (lock != NULL)
         {
-            g_sequence_insert_sorted(seq, GINT_TO_POINTER(lock->instance), (GCompareDataFunc)_cmp_locks, NULL);
+            g_sequence_insert_sorted(seq, GINT_TO_POINTER(lock->instance), _cmp_locks, NULL);
             g_free (lock);
         }
     }
