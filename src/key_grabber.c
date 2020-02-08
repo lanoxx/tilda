@@ -224,8 +224,7 @@ void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hid
             && !force_hide
             && !tw->hide_non_focused;
 
-    if (action == PULL_TOGGLE && tw->last_action == PULL_UP
-        && g_get_monotonic_time() - tw->last_action_time < 150 * G_TIME_SPAN_MILLISECOND) {
+    if (g_get_monotonic_time() - tw->last_action_time < 150 * G_TIME_SPAN_MILLISECOND) {
         /* this is to prevent crazy toggling, with 150ms prevention time */
         return;
     }
