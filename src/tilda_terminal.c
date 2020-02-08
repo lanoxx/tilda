@@ -61,6 +61,16 @@ gint tilda_term_free (tilda_term *term)
 
     g_free (term->initial_working_dir);
 
+    g_signal_handlers_disconnect_by_func (term->vte_term, child_exited_cb, term);
+
+    g_clear_object (&term->hbox);
+    g_clear_object (&term->scrollbar);
+    g_clear_object (&term->vte_term);
+
+    g_regex_unref (term->http_regexp);
+
+    term->http_regexp = NULL;
+
     g_free (term);
 
     return 0;
@@ -118,13 +128,16 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 
     /* Create a non-homogenous hbox, with 0px spacing between members */
     term->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    g_object_ref (term->hbox);
 
     /* Create the terminal */
     term->vte_term = vte_terminal_new ();
+    g_object_ref (term->vte_term);
 
     /* Create the scrollbar for the terminal */
     term->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL,
         gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (VTE_TERMINAL(term->vte_term))));
+    g_object_ref (term->scrollbar);
 
     gtk_widget_set_no_show_all (term->scrollbar, TRUE);
 
