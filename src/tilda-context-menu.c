@@ -53,6 +53,23 @@ menu_paste_cb (GSimpleAction *action,
 }
 
 static void
+menu_copy_link_cb (GSimpleAction * action,
+                   GVariant      * parameter,
+                   gpointer        user_data)
+{
+    DEBUG_FUNCTION ("menu_copy_link_cb");
+    DEBUG_ASSERT (user_data != NULL);
+
+    char * link = user_data;
+
+    GtkClipboard * clipBoard = gtk_clipboard_get_default (gdk_display_get_default ());
+
+    gtk_clipboard_set_text (clipBoard, link, -1);
+
+    g_free (link);
+}
+
+static void
 menu_fullscreen_cb (GSimpleAction *action,
                     GVariant      *parameter,
                     gpointer       user_data)
@@ -142,10 +159,27 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
             { .name="paste", menu_paste_cb}
     };
 
+    GActionEntry entries_for_regex [] = {
+            {.name="copy-link", menu_copy_link_cb}
+    };
+
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
                                      entries_for_tilda_window, G_N_ELEMENTS (entries_for_tilda_window), tw);
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
                                      entries_for_tilda_terminal, G_N_ELEMENTS (entries_for_tilda_terminal), tt);
+
+    char * match = vte_terminal_match_check_event (VTE_TERMINAL (tt->vte_term), event, NULL);
+
+    g_action_map_add_action_entries (G_ACTION_MAP (action_group),
+                                     entries_for_regex, G_N_ELEMENTS (entries_for_regex), match);
+
+    GAction *copyAction;
+
+    copyAction = g_action_map_lookup_action (G_ACTION_MAP (action_group), "copy-link");
+
+    if (match == NULL) {
+        g_simple_action_set_enabled (G_SIMPLE_ACTION (copyAction), FALSE);
+    }
 
     gtk_widget_insert_action_group (tw->window, "window", G_ACTION_GROUP (action_group));
 

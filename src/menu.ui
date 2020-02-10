@@ -20,6 +20,10 @@
         <attribute name="label" translatable="yes">_Paste</attribute>
         <attribute name="action">window.paste</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Copy Link</attribute>
+        <attribute name="action">window.copy-link</attribute>
+      </item>
     </section> 
     <section>
       <item>
