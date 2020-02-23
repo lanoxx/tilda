@@ -45,7 +45,7 @@ static gint tilda_term_config_defaults (tilda_term *tt);
 
 static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
-static int button_press_cb (GtkWidget *widget, GdkEventButton *event, gpointer data);
+static gboolean button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term *terminal);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
@@ -58,6 +58,10 @@ static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
 
 static gchar *get_default_command (void);
 gchar *get_working_directory (tilda_term *terminal);
+
+static void handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
+                              GdkEvent *event,
+                              tilda_term *terminal);
 
 static void spawn_browser_for_match (tilda_term * terminal,
                                      const gchar *match);
@@ -755,76 +759,82 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     return 0;
 }
 
-static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, gpointer data)
+static gboolean
+button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term * terminal)
 {
     DEBUG_FUNCTION ("button_press_cb");
-    DEBUG_ASSERT (data != NULL);
+    DEBUG_ASSERT (terminal != NULL);
 
+    handle_gdk_event (widget, event, terminal);
+
+    return GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
+key_press_cb (GtkWidget *widget,
+              GdkEvent  *event,
+              tilda_term *terminal)
+{
+    DEBUG_ASSERT (terminal != NULL);
+
+    handle_gdk_event (widget, event, terminal);
+
+    return GDK_EVENT_PROPAGATE;
+}
+
+static void
+handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
+                  GdkEvent *event,
+                  tilda_term *tt)
+{
     VteTerminal *terminal;
-    tilda_term *tt;
     gchar *match;
+    gchar *link;
     gint tag;
-
-    tt = TILDA_TERM(data);
 
     terminal  = VTE_TERMINAL(tt->vte_term);
 
     match = vte_terminal_match_check_event (terminal,
-                                            (GdkEvent *) event,
+                                            event,
                                             &tag);
 
-    switch (event->button)
+    if (event->type == GDK_BUTTON_PRESS)
     {
-        case 9:
-            tilda_window_next_tab (tt->tw);
-            break;
-        case 8:
-            tilda_window_prev_tab (tt->tw);
-            break;
-        case 3: /* Right Click */
+        GdkEventButton * button_event = (GdkEventButton *) event;
+        switch (button_event->button)
         {
-            GtkWidget *menu = tilda_context_menu_popup (tt->tw, tt, match);
-            gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent *) event);
-
-            break;
+            case 9:
+                tilda_window_next_tab (tt->tw);
+                break;
+            case 8:
+                tilda_window_prev_tab (tt->tw);
+                break;
+            case 3: /* Right Click */
+            {
+                GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, link);
+                gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
+                break;
+            }
+            case 2: /* Middle Click */
+                break;
+            case 1: /* Left Click */
+                /* Check if we can launch a web browser, and do so if possible */
+                spawn_browser_for_match (tt, match);
+                break;
+            default:
+                break;
         }
-        case 2: /* Middle Click */
-            break;
-        case 1: /* Left Click */
-            /* Check if we can launch a web browser, and do so if possible */
-            spawn_browser_for_match (tt, match);
-
-            break;
-        default:
-            break;
+    }
+    else if(event->type == GDK_KEY_PRESS)
+    {
+        GdkEventKey *keyevent = (GdkEventKey*) event;
+        if(keyevent->keyval == GDK_KEY_Menu) {
+            GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, link);
+            gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
+        }
     }
 
     g_free (match);
-
-    return FALSE;
-}
-
-gboolean key_press_cb (GtkWidget *widget,
-                       GdkEvent  *event,
-                       tilda_term *terminal)
-{
-    if(event->type == GDK_KEY_PRESS) {
-        GdkEventKey *keyevent = (GdkEventKey*) event;
-        if(keyevent->keyval == GDK_KEY_Menu) {
-
-            VteTerminal *vte_terminal = VTE_TERMINAL (terminal->vte_term);
-
-            char *match = vte_terminal_match_check_event (vte_terminal,
-                                                          event,
-                                                          NULL);
-
-            GtkWidget *menu = tilda_context_menu_popup (terminal->tw, terminal, match);
-            gtk_menu_popup_at_pointer(GTK_MENU (menu), event);
-
-            g_free (match);
-        }
-    }
-    return GDK_EVENT_PROPAGATE;
 }
 
 void spawn_browser_for_match (tilda_term * terminal,
