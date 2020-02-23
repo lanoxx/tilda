@@ -20,6 +20,7 @@
 #include "tilda-palettes.h"
 
 #include <gtk/gtk.h>
+#include <vte/vte.h>
 
 G_BEGIN_DECLS
 
@@ -31,6 +32,7 @@ struct tilda_term_
     GtkWidget *hbox;
     GtkWidget *scrollbar;
     GRegex *http_regexp;
+    VteRegex *vte_regexp;
     GPid pid;
     /* We remember if we have already dropped to the default
      * shell before, if so, then we know that this time we can
