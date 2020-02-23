@@ -21,6 +21,7 @@
 #include "tilda_terminal.h"
 #include "configsys.h"
 #include "wizard.h" /* wizard */
+#include "vte-util.h"
 
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
@@ -30,6 +31,9 @@
 #include <glib/gi18n.h>
 #include <vte/vte.h>
 #include <string.h>
+
+#define PCRE2_CODE_UNIT_WIDTH 0
+#include <pcre2.h>
 
 #define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?!$%&/=_~#.,:;+]*"
 
@@ -67,9 +71,16 @@ gint tilda_term_free (tilda_term *term)
     g_clear_object (&term->scrollbar);
     g_clear_object (&term->vte_term);
 
-    g_regex_unref (term->http_regexp);
+    if (term->http_regexp != NULL) {
+        g_regex_unref (term->http_regexp);
+    }
+
+    if (term->vte_regexp != NULL) {
+        vte_regex_unref (term->vte_regexp);
+    }
 
     term->http_regexp = NULL;
+    term->vte_regexp = NULL;
 
     g_free (term);
 
@@ -189,8 +200,19 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK (tilda_terminal_switch_page_cb), tw);
 
     /* Match URL's, etc */
-    term->http_regexp=g_regex_new(HTTP_REGEXP, G_REGEX_CASELESS, G_REGEX_MATCH_NOTEMPTY, &error);
-    ret = vte_terminal_match_add_gregex(VTE_TERMINAL(term->vte_term), term->http_regexp,0);
+    if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
+        term->vte_regexp = vte_regex_new_for_match (HTTP_REGEXP, -1,
+                                                    PCRE2_CASELESS, &error);
+
+        ret = vte_terminal_match_add_regex (VTE_TERMINAL(term->vte_term), term->vte_regexp,
+                                            PCRE2_NOTEMPTY);
+    } else {
+        term->http_regexp = g_regex_new (HTTP_REGEXP, G_REGEX_CASELESS,
+                                         G_REGEX_MATCH_NOTEMPTY, &error);
+        ret = vte_terminal_match_add_gregex (VTE_TERMINAL(term->vte_term),
+                                             term->http_regexp, 0);
+    }
+
     vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
 
     /* Show the child widgets */
