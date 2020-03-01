@@ -56,7 +56,7 @@ typedef struct _Binding {
 } Binding;
 
 static GSList   *bindings        = NULL;
-static guint32  last_event_time  = 0;
+static Time  last_event_time  = 0;
 static gboolean processing_event = FALSE;
 
 /**
@@ -243,9 +243,9 @@ filter_func (GdkXEvent *gdk_xevent, G_GNUC_UNUSED GdkEvent *event,
              * windows to avoid anti-focus-stealing code.
              */
             processing_event = TRUE;
-            last_event_time  = (guint32) xevent->xkey.time;
+            last_event_time  = xevent->xkey.time;
 
-            g_debug ("Current event time %d", last_event_time);
+            g_debug ("Current event time %ld", last_event_time);
 
             event_mods = xevent->xkey.state & ~(num_lock_mask |
                                                 caps_lock_mask |
