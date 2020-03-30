@@ -17,7 +17,7 @@
 #define _POSIX_SOURCE /* feature test macro for fileno */
 #define _XOPEN_SOURCE /* feature test macro for fsync */
 
-#include <tilda-config.h>
+#include "config.h"
 #include "debug.h"
 
 #include <confuse.h>

@@ -16,7 +16,7 @@ MAINTAINERCLEANFILES = \
 		compile \
 		INSTALL \
 		m4/*.m4 \
-		tilda-config.h \
+		config.h \
 		config.guess \
 		config.rpath \
 		config.sub \
@@ -33,8 +33,8 @@ MAINTAINERCLEANFILES = \
 		po/quot.sed \
 		po/remove-potcdate.sin \
 		po/tilda.pot \
-		tilda-config.h.in \
-		tilda-config.h.in~
+		config.h.in \
+		config.h.in~
 
 Applicationsdir = ${datadir}/applications
 Applications_DATA = tilda.desktop

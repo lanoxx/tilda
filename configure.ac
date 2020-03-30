@@ -19,7 +19,7 @@ AC_INIT([Tilda],
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/tilda.c])
-AC_CONFIG_HEADERS([tilda-config.h:tilda-config.h.in])
+AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 

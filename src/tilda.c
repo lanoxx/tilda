@@ -37,7 +37,7 @@
     "or otherwise unreadable. Tilda will now start with a default configuration."
 
 
-#include <tilda-config.h>
+#include "config.h"
 
 #include "debug.h"
 #include "tilda.h"
