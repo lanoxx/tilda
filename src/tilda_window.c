@@ -849,6 +849,31 @@ static void page_reordered_cb (GtkNotebook  *notebook,
     }
 }
 
+static void switch_page_cb (GtkNotebook *notebook,
+                            GtkWidget   *page,
+                            guint        page_num,
+                            tilda_window *tw)
+{
+    DEBUG_FUNCTION ("tilda_terminal_switch_page_cb");
+    guint counter = 0;
+    tilda_term *term = NULL;
+    for(GList *item=tw->terms; item != NULL; item=item->next) {
+        if(counter == page_num) {
+            term = (tilda_term*) item->data;
+        }
+        counter++;
+    }
+
+    char * current_title = tilda_terminal_get_title (term);
+
+    if (current_title != NULL) {
+        gtk_window_set_title (GTK_WINDOW (tw->window), current_title);
+    }
+
+    g_free (current_title);
+}
+
+
 gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_init");
@@ -994,6 +1019,8 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* We need this signal to detect changes in the order of tabs so that we can keep the order
      * of tilda_terms in the tw->terms structure in sync with the order of tabs. */
     g_signal_connect (G_OBJECT(tw->notebook), "page-reordered", G_CALLBACK (page_reordered_cb), tw);
+
+    g_signal_connect (G_OBJECT (tw->notebook), "switch-page", G_CALLBACK (switch_page_cb), tw);
 
     /* Setup the tilda window. The tilda window consists of a top level window that contains the following widgets:
      *   * The main_box holds a GtkNotebook with all the terminal tabs

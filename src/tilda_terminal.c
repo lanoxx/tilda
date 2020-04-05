@@ -88,30 +88,6 @@ gint tilda_term_free (tilda_term *term)
     return 0;
 }
 
-static void tilda_terminal_switch_page_cb (GtkNotebook *notebook,
-                                           GtkWidget   *page,
-                                           guint        page_num,
-                                           tilda_window *tw)
-{
-    DEBUG_FUNCTION ("tilda_terminal_switch_page_cb");
-    guint counter = 0;
-    tilda_term *term = NULL;
-    for(GList *item=tw->terms; item != NULL; item=item->next) {
-        if(counter == page_num) {
-            term = (tilda_term*) item->data;
-        }
-        counter++;
-    }
-
-    char * current_title = tilda_terminal_get_title (term);
-
-    if (current_title != NULL) {
-        gtk_window_set_title (GTK_WINDOW (tw->window), current_title);
-    }
-
-    g_free (current_title);
-}
-
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 {
     DEBUG_FUNCTION ("tilda_term_init");
@@ -197,8 +173,6 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(refresh_window_cb), tw->window);
     g_signal_connect (G_OBJECT(term->vte_term), "move-window",
                       G_CALLBACK(move_window_cb), tw->window);
-    g_signal_connect (G_OBJECT (tw->notebook), "switch-page",
-                      G_CALLBACK (tilda_terminal_switch_page_cb), tw);
 
     /* Match URL's, etc */
     if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
