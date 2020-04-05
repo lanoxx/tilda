@@ -122,6 +122,14 @@ static void on_popup_hide (GtkWidget *widget, tilda_window *tw)
     tw->disable_auto_hide = FALSE;
 }
 
+static void
+on_selection_done (GtkWidget *widget, tilda_window *tw)
+{
+    DEBUG_FUNCTION ("on_selection_done");
+
+    gtk_menu_detach (GTK_MENU (widget));
+}
+
 void
 tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
 {
@@ -185,6 +193,7 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
 
     GMenuModel *menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
     GtkWidget *menu = gtk_menu_new_from_model (menu_model);
+
     gtk_menu_attach_to_widget (GTK_MENU (menu), tw->window, NULL);
 
     gtk_menu_set_accel_group (GTK_MENU (menu), tw->accel_group);
@@ -193,6 +202,10 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
     /* Disable auto hide */
     tw->disable_auto_hide = TRUE;
     g_signal_connect (G_OBJECT (menu), "unmap", G_CALLBACK (on_popup_hide), tw);
+    g_signal_connect (G_OBJECT (menu), "selection-done", G_CALLBACK (on_selection_done), tw);
 
     gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
+
+    g_object_unref (action_group);
+    g_object_unref (builder);
 }
