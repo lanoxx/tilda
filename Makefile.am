@@ -55,7 +55,9 @@ tilda.desktop: tilda.desktop.in
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 
-bin_PROGRAMS = 
+bin_PROGRAMS =
 
+man1_MANS =
+
+include data/Makefile.am
 include src/Makefile.am
-

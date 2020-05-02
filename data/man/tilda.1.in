@@ -1,0 +1,81 @@
+.TH "TILDA" "1" "Feb 2020" "tilda @VERSION@" "User Commands"
+.SH "NAME"
+tilda \- a highly configurable terminal emulator
+.SH "DESCRIPTION"
+\fBTilda\fR is a terminal emulator which is highly configurable. The main distinguishing feature of tilda is that it
+uses a configurable shortcut to show and hide the tilda window. This allows users to quickly switch between tilda
+and other windows only through keyboard shortcuts. When tilda is hidden it will move
+outside of the screen until a shortcut is pressed again to show the tilda window. The behaviour of
+tilda can be configured using the preferences dialog that is available via the context menu. A subset of the options
+can also be configured from the command line as documented below.
+.PP
+Please note that currently command line options override the settings in the configuration file and
+are persisted into the configuration file.
+.PP
+Tilda is currently not officially supported on Wayland. Starting with Tilda 1.5.0 it will be able to start
+under Wayland but the pull hotkey will only work from other X11 windows but not when a native Wayland
+window has the focus.
+.SS "Usage:"
+.IP
+tilda [OPTION...]
+.SS "Help Options:"
+.TP
+\fB\-?\fR, \fB\-\-help\fR
+Show help options
+.SS "Application Options:"
+.TP
+\fB\-b\fR, \fB\-\-background\-color\fR
+Set the background color
+.TP
+\fB\-c\fR, \fB\-\-command\fR
+Run a command at startup
+.TP
+\fB\-h\fR, \fB\-\-hidden\fR
+Start Tilda hidden
+.TP
+\fB\-f\fR, \fB\-\-font\fR
+Set the font to the following string
+.TP
+\fB\-l\fR, \fB\-\-lines\fR
+Scrollback Lines
+.TP
+\fB\-s\fR, \fB\-\-scrollbar\fR
+Use Scrollbar
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print the version, then exit
+.TP
+\fB\-w\fR, \fB\-\-working\-dir\fR
+Set Initial Working Directory
+.TP
+\fB\-x\fR, \fB\-\-x\-pos\fR
+X Position
+.TP
+\fB\-y\fR, \fB\-\-y\-pos\fR
+Y Position
+.TP
+\fB\-t\fR, \fB\-\-background-alpha\fR
+Opaqueness: 0\-100%
+.TP
+\fB\-C\fR, \fB\-\-config\fR
+Show Configuration Wizard
+.TP
+\fB\-\-display\fR=\fIDISPLAY\fR
+X display to use
+.SH "COPYRIGHT"
+Copyright \(co 2012,2020 Sebastian Geiger (lanoxx@gmx.net)
+.br
+Copyright \(co 2005,2008 Tristan Sloughter (sloutri@iit.edu)
+.br
+Copyright \(co 2005,2008 Ira W. Snyder (tilda@irasnyder.com)
+.br
+Copyright \(co 2007,2008 Ken Dreyer (kdreyer@chicagolug.org)
+.PP
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. See the file COPYING for details.
+.SH "BUGS"
+Please report bugs via Github at https://github.com/lanoxx/tilda/issues
+.SH "AUTHOR"
+This man page was originally written by Davide Truffa <davide@catoblepa.org>
+and is currently being maintained by Sebastian Geiger <lanoxx@gmx.net>.
