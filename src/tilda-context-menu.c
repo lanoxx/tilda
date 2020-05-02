@@ -144,8 +144,8 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
     /* Create the action group */
     GSimpleActionGroup *action_group = g_simple_action_group_new ();
 
-    /* We need two different lists of entries because the
-     * because the actions have different scope, some concern the
+    /* We need different lists of entries because the
+     * actions have different scope, some concern the
      * tilda_window and others concern the current terminal, so
      * when we add them to the action_group we need to pass different
      * user_data (tw or tt).
