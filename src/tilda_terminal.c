@@ -36,7 +36,7 @@
 #define PCRE2_CODE_UNIT_WIDTH 0
 #include <pcre2.h>
 
-#define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?!$%&/=_~#.,:;+]*"
+#define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?@!$%&/=_~#.,:;+]*"
 
 static void start_shell (tilda_term *tt, gboolean ignore_custom_command);
 static void start_default_shell (tilda_term *tt);
