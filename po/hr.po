@@ -1,0 +1,816 @@
+# Croatian translation for Tilda
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the Tilda package.
+#
+# Translators:
+# Milo Ivir <mail@milotype.de>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"PO-Revision-Date: 2020-05-04 19:07+0200\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Language-Team: \n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#: src/menu.ui:6
+msgid "_New Tab"
+msgstr "_Nova kartica"
+
+#: src/menu.ui:10
+msgid "_Close Tab"
+msgstr "_Zatvori karticu"
+
+#: src/menu.ui:16
+msgid "_Copy"
+msgstr "_Kopiraj"
+
+#: src/menu.ui:20
+msgid "_Paste"
+msgstr "_Umetni"
+
+#: src/menu.ui:26
+msgid "_Toggle Fullscreen"
+msgstr "U_ključi/isključi cjeloekranski prikaz"
+
+#: src/menu.ui:30
+msgid "_Toggle Searchbar"
+msgstr "U_ključi/isključi traku pretrage"
+
+#: src/menu.ui:36
+msgid "_Preferences"
+msgstr "_Osobitosti"
+
+#: src/menu.ui:42
+msgid "_Quit"
+msgstr "_Zatvori program"
+
+#: src/tilda.ui:69
+msgid "Close Tilda"
+msgstr "Zatvori Tilda"
+
+#: src/tilda.ui:72
+msgid "Open a new terminal"
+msgstr "Otvori novi terminal"
+
+#: src/tilda.ui:75
+msgid "Open a new terminal and hide"
+msgstr "Otvori novi terminal i sakrij ga"
+
+#: src/tilda.ui:86 src/tilda.ui:194
+msgid "Top"
+msgstr "Gore"
+
+#: src/tilda.ui:89 src/tilda.ui:197
+msgid "Bottom"
+msgstr "Dolje"
+
+#: src/tilda.ui:92 src/tilda.ui:200
+msgid "Left"
+msgstr "Lijevo"
+
+#: src/tilda.ui:95 src/tilda.ui:203
+msgid "Right"
+msgstr "Desno"
+
+#: src/tilda.ui:98
+msgid "Hidden"
+msgstr "Skriveno"
+
+#: src/tilda.ui:109
+msgid "Focus Terminal"
+msgstr "Fokusiraj terminal"
+
+#: src/tilda.ui:112
+msgid "Hide Terminal"
+msgstr "Sakrij terminal"
+
+#: src/tilda.ui:123
+msgid "Block Cursor"
+msgstr "Pokazivač kao pravokutnik"
+
+#: src/tilda.ui:126
+msgid "IBeam Cursor"
+msgstr "Pokazivač kao okomita crta"
+
+#: src/tilda.ui:129
+msgid "Underline Cursor"
+msgstr "Pokazivač kao podcrtano"
+
+#: src/tilda.ui:140
+msgid "Show whole tab title"
+msgstr "Prikaži potpuni naslov kartice"
+
+#: src/tilda.ui:143
+msgid "Show first n chars of title"
+msgstr "Prikaži prvih x-znakova naslova"
+
+#: src/tilda.ui:146
+msgid "Show last n chars of title"
+msgstr "Prikaži zadnjih x-znakova naslova"
+
+#: src/tilda.ui:157
+msgid "Isn't displayed"
+msgstr "Ne prikazuje se"
+
+#: src/tilda.ui:160
+msgid "Goes after initial title"
+msgstr "Dodaje se iza izvornog naslova"
+
+#: src/tilda.ui:163
+msgid "Goes before initial title"
+msgstr "Dodaje se ispred izvornog naslova"
+
+#: src/tilda.ui:166
+msgid "Replace initial title"
+msgstr "Zamijeni izvorni naslov"
+
+#: src/tilda.ui:177
+msgid "Drop to the default shell"
+msgstr "Ispusti na standardnoj ljusci"
+
+#: src/tilda.ui:180
+msgid "Restart the command"
+msgstr "Ponovo pokreni naredbu"
+
+#: src/tilda.ui:183
+msgid "Exit the terminal"
+msgstr "Zatvori terminal"
+
+#: src/tilda.ui:214 src/tilda.ui:246
+msgid "Custom"
+msgstr "Prilagođeno"
+
+#: src/tilda.ui:217
+msgid "Green on Black"
+msgstr "Zelena na crnoj"
+
+#: src/tilda.ui:220
+msgid "Black on White"
+msgstr "Crna na bijeloj"
+
+#: src/tilda.ui:223
+msgid "White on Black"
+msgstr "Bijela na crnoj"
+
+#: src/tilda.ui:226
+msgid "Zenburn"
+msgstr "Zenburn"
+
+#: src/tilda.ui:229
+msgid "Solarized Light"
+msgstr "Solarized, svijetlo"
+
+#: src/tilda.ui:232
+msgid "Solarized Dark"
+msgstr "Solarized, tamno"
+
+#: src/tilda.ui:235
+msgid "Snazzy"
+msgstr "Snazzy"
+
+#: src/tilda.ui:257
+msgid "On the Left"
+msgstr "Na lijevoj strani"
+
+#: src/tilda.ui:260
+msgid "On the Right"
+msgstr "Na desnoj strani"
+
+#: src/tilda.ui:263
+msgid "Disabled"
+msgstr "Deaktivirano"
+
+#: src/tilda.ui:274 src/tilda.ui:291
+msgid "ASCII DEL"
+msgstr "ASCII DEL"
+
+#: src/tilda.ui:277 src/tilda.ui:294
+msgid "Escape sequence"
+msgstr "Escape niz"
+
+#: src/tilda.ui:280 src/tilda.ui:297
+msgid "Control-H"
+msgstr "Control-H"
+
+#: src/tilda.ui:314
+msgid "Tilda Config"
+msgstr "Tilda konfiguracija"
+
+#: src/tilda.ui:395
+msgid "Start Tilda hidden"
+msgstr "Pokreni Tilda skriveno"
+
+#: src/tilda.ui:409
+msgid "Always on top"
+msgstr "Uvijek ispred ostalih prozora"
+
+#: src/tilda.ui:423
+msgid "Display on all workspaces"
+msgstr "Prikaži na svim radnim prostorima"
+
+#: src/tilda.ui:437
+msgid "Do not show in taskbar"
+msgstr "Ne prikazuj u programskoj traci"
+
+#: src/tilda.ui:451
+msgid "Show Notebook Border"
+msgstr "Prikaži rub notebooka"
+
+#: src/tilda.ui:465
+msgid "Set as Desktop window"
+msgstr "Postavi kao desktop prozor"
+
+#: src/tilda.ui:480
+msgid "Start in fullscreen"
+msgstr "Pokreni u cjeloekranskom prikazu"
+
+#: src/tilda.ui:509
+msgid "Non-focus Pull Up Behaviour:"
+msgstr "Ponašanje sklapanja terminala bez fokusiranja:"
+
+#: src/tilda.ui:560
+msgid "<b>Window Display</b>"
+msgstr "<b>Prikaz prozora</b>"
+
+#: src/tilda.ui:598
+msgid "Cursor Blinks"
+msgstr "Pokazivač treperi"
+
+#: src/tilda.ui:612
+msgid "Audible Terminal Bell"
+msgstr "Terminalovo zvono"
+
+#: src/tilda.ui:628
+msgid "Cursor Shape: "
+msgstr "Oblik pokazivača: "
+
+#: src/tilda.ui:663
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Prikaz terminala</b>"
+
+#: src/tilda.ui:703
+msgid "Font:"
+msgstr "Font:"
+
+#: src/tilda.ui:733
+msgid "<b>Font</b>"
+msgstr "<b>Font</b>"
+
+#: src/tilda.ui:782
+msgid "Hide Tilda when mouse leaves it"
+msgstr "Sakrij Tilda kad ga miš napusti"
+
+#: src/tilda.ui:799
+msgid "Auto Hide Delay:"
+msgstr "Zadrška za automatsko skrivanje:"
+
+#: src/tilda.ui:809
+msgid "Hide when Tilda loses focus"
+msgstr "Sakrij kad Tilda izgubi fokus"
+
+#: src/tilda.ui:829
+msgid "<b>Auto Hide</b>"
+msgstr "<b>Automatsko skrivanje</b>"
+
+#: src/tilda.ui:868
+msgid "When last terminal is closed:"
+msgstr "Kad se zatvori zadnji terminal:"
+
+#: src/tilda.ui:895
+msgid "Always prompt on exit"
+msgstr "Uvijek pitaj pri zatvaranju programa"
+
+#: src/tilda.ui:918
+msgid "<b>Program Exit</b>"
+msgstr "<b>Zatvaranje programa</b>"
+
+#: src/tilda.ui:936
+msgid ""
+"<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
+"small>"
+msgstr ""
+"<small><i><b>Napomena:</b> Za neke opcije je potrebno ponovo pokrenuti Tilda."
+"</i></small>"
+
+#: src/tilda.ui:953
+msgid "General"
+msgstr "Opće"
+
+#: src/tilda.ui:998
+msgid "Word Characters:"
+msgstr "Znakovi riječi:"
+
+#: src/tilda.ui:1026
+msgid "<b>Select by Word</b>"
+msgstr "<b>Odaberi po riječima</b>"
+
+#: src/tilda.ui:1076
+msgid "Web Browser *:"
+msgstr "Web preglednik *:"
+
+#: src/tilda.ui:1093
+msgid "<b>URL Handling</b>"
+msgstr "<b>Baratanje URL-ima</b>"
+
+#: src/tilda.ui:1128
+msgid "Initial Title:"
+msgstr "Izvorni naslov"
+
+#: src/tilda.ui:1150
+msgid "Title Max Length:"
+msgstr "Maks. duljina naslova:"
+
+#: src/tilda.ui:1191
+msgid "Dynamically-set Title:"
+msgstr "Dinamičko postavljanje naslova:"
+
+#: src/tilda.ui:1203
+msgid "Title Behaviour:"
+msgstr "Ponašanje naslova:"
+
+#: src/tilda.ui:1236
+msgid "<b>Title</b>"
+msgstr "<b>Naslov</b>"
+
+#: src/tilda.ui:1297
+msgid "Run a custom command instead of the shell"
+msgstr "Pokreni prilalagođenu naredbu umjesto ljuske"
+
+#: src/tilda.ui:1313
+msgid "Custom Command:"
+msgstr "Prilagođena naredba:"
+
+#: src/tilda.ui:1325
+msgid "When Command Exits:"
+msgstr "Kada naredba završi:"
+
+#: src/tilda.ui:1335
+msgid "Use a login shell"
+msgstr "Koristi ljusku prijave"
+
+#: src/tilda.ui:1361
+msgid "<b>Command</b>"
+msgstr "<b>Naredba</b>"
+
+#: src/tilda.ui:1388
+msgid ""
+"* A valid command that can open a browser must be entered here. It is "
+"possible to use the name of a specific browser such as 'firefox' and 'google-"
+"chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The "
+"best command may be different depending on the system."
+msgstr ""
+"* Ovdje se mora upisati valjana naredba koja otvara preglednik. Moguće je "
+"koristiti ime određenog preglednika kao što je „firefox” i „google-chrome” "
+"ili koristiti generičke naredbe „x-www-browser” i „xdg-open”. Najbolja "
+"naredba ovisi o sustavu."
+
+#: src/tilda.ui:1425
+msgid "Show confirmation dialog when closing tab"
+msgstr "Prikaži dijalog za potvrdu prilikom zatvaranja kartice"
+
+#: src/tilda.ui:1445
+msgid "Close Action"
+msgstr "Radnja pri zatvaranju"
+
+#: src/tilda.ui:1466
+msgid "Title and Command"
+msgstr "Naslov i naredba"
+
+#: src/tilda.ui:1510 src/tilda.ui:1688
+msgid "Percentage"
+msgstr "Postotak"
+
+#: src/tilda.ui:1534 src/tilda.ui:1700
+msgid "In Pixels"
+msgstr "U pikselima"
+
+#: src/tilda.ui:1561
+msgid "<b>Height</b>"
+msgstr "<b>Visina</b>"
+
+#: src/tilda.ui:1597
+msgid "Monitor:"
+msgstr "Monitor:"
+
+#: src/tilda.ui:1652
+msgid "<b>Select monitor</b>"
+msgstr "<b>Odaberi monitor</b>"
+
+#: src/tilda.ui:1739
+msgid "<b>Width</b>"
+msgstr "<b>Širina</b>"
+
+#: src/tilda.ui:1775
+msgid "Centered Horizontally"
+msgstr "Vodoravno centrirano"
+
+#: src/tilda.ui:1793
+msgid "Y Position"
+msgstr "Y položaj"
+
+#: src/tilda.ui:1827
+msgid "X Position"
+msgstr "X položaj"
+
+#: src/tilda.ui:1837
+msgid "Centered Vertically"
+msgstr "Okomito centrirano"
+
+#: src/tilda.ui:1865
+msgid "<b>Position</b>"
+msgstr "<b>Položaj</b>"
+
+#: src/tilda.ui:1903
+msgid "Position of Tabs:"
+msgstr "Položaj kartica:"
+
+#: src/tilda.ui:1930
+msgid "Expand Tabs"
+msgstr "Proširi kartice"
+
+#: src/tilda.ui:1944
+msgid "Show single Tab"
+msgstr "Prikaži kartice pojedinačno"
+
+#: src/tilda.ui:1958
+msgid "Display Title in Tooltip"
+msgstr "Prikaži naslov u oblačiću"
+
+#: src/tilda.ui:1981
+msgid "<b>Tabs</b>"
+msgstr "<b>Kartice</b>"
+
+#: src/tilda.ui:2030
+msgid "Animation Delay (usec)"
+msgstr "Zadrška za animaciju (usec)"
+
+#: src/tilda.ui:2042
+msgid "Animation Orientation"
+msgstr "Smjer animacije"
+
+#: src/tilda.ui:2080
+msgid "Animated Pulldown"
+msgstr "Animirano rasklapanje terminala"
+
+#: src/tilda.ui:2096
+msgid "Level of Transparency"
+msgstr "Razina prozirnosti"
+
+#: src/tilda.ui:2106
+msgid "Enable Transparency"
+msgstr "Aktiviraj prozirnost"
+
+#: src/tilda.ui:2129
+msgid "<b>Extras</b>"
+msgstr "<b>Dodatne postavke</b>"
+
+#: src/tilda.ui:2148
+msgid "Appearance"
+msgstr "Izgled"
+
+#: src/tilda.ui:2217
+msgid "Cursor Color"
+msgstr "Boja pokazivača"
+
+#: src/tilda.ui:2265
+msgid "Text Color"
+msgstr "Boja teksta"
+
+#: src/tilda.ui:2277
+msgid "Background Color"
+msgstr "Boja pozadine"
+
+#: src/tilda.ui:2289
+msgid "Built-in Schemes"
+msgstr "Ugrađene sheme"
+
+#: src/tilda.ui:2303
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Prednje i stražnje boje</b>"
+
+#: src/tilda.ui:2335
+msgid ""
+"<small><i><b>Note:</b> Terminal applications have these colors available to "
+"them.</i></small>"
+msgstr ""
+"<small><i><b>Napomena:</b> Programi terminala raspolažu ovim bojama.</i></"
+"small>"
+
+#: src/tilda.ui:2378
+msgid "Choose Color 14"
+msgstr "Odaberi boju 14"
+
+#: src/tilda.ui:2391
+msgid "Choose Color 13"
+msgstr "Odaberi boju 13"
+
+#: src/tilda.ui:2404
+msgid "Choose Color 15"
+msgstr "Odaberi boju 15"
+
+#: src/tilda.ui:2417
+msgid "Choose Color 12"
+msgstr "Odaberi boju 12"
+
+#: src/tilda.ui:2430
+msgid "Choose Color 10"
+msgstr "Odaberi boju 10"
+
+#: src/tilda.ui:2443
+msgid "Choose Color 11"
+msgstr "Odaberi boju 11"
+
+#: src/tilda.ui:2456
+msgid "Choose Color 9"
+msgstr "Odaberi boju 9"
+
+#: src/tilda.ui:2469
+msgid "Choose Color 7"
+msgstr "Odaberi boju 7"
+
+#: src/tilda.ui:2482
+msgid "Choose Color 6"
+msgstr "Odaberi boju 6"
+
+#: src/tilda.ui:2495
+msgid "Choose Color 5"
+msgstr "Odaberi boju 5"
+
+#: src/tilda.ui:2508
+msgid "Choose Color 4"
+msgstr "Odaberi boju 4"
+
+#: src/tilda.ui:2521
+msgid "Choose Color 3"
+msgstr "Odaberi boju 3"
+
+#: src/tilda.ui:2534
+msgid "Choose Color 2"
+msgstr "Odaberi boju 2"
+
+#: src/tilda.ui:2547
+msgid "Choose Color 1"
+msgstr "Odaberi boju 1"
+
+#: src/tilda.ui:2560
+msgid "Choose Color 0"
+msgstr "Odaberi boju 0"
+
+#: src/tilda.ui:2574
+msgid "Choose Color 8"
+msgstr "Odaberi boju 8"
+
+#: src/tilda.ui:2591
+msgid "Built-in schemes:"
+msgstr "Ugrađene sheme:"
+
+#: src/tilda.ui:2606
+msgid "Color palette:"
+msgstr "Paleta boja:"
+
+#: src/tilda.ui:2622
+msgid "<b>Palette</b>"
+msgstr "<b>Paleta</b>"
+
+#: src/tilda.ui:2641
+msgid "Colors"
+msgstr "Boje"
+
+#: src/tilda.ui:2698
+msgid "Scrollbar is:"
+msgstr "Klizna traka je:"
+
+#: src/tilda.ui:2707
+msgid "Limit scrollback to:"
+msgstr "Ograniči kliznu traku na:"
+
+#: src/tilda.ui:2711
+msgid "Unselect for unlimited scrollback."
+msgstr "Odznači za neograničeno klizanje unatrag."
+
+#: src/tilda.ui:2723
+msgid "Scroll on Output"
+msgstr "Kliži pri rezultatu"
+
+#: src/tilda.ui:2737
+msgid "Scroll on Keystroke"
+msgstr "Kliži pri pritiskanju tipke"
+
+#: src/tilda.ui:2759
+msgid "0"
+msgstr "0"
+
+#: src/tilda.ui:2771
+msgid "lines"
+msgstr "redaka"
+
+#: src/tilda.ui:2797
+msgid "<b>Scrolling</b>"
+msgstr "<b>Klizanje</b>"
+
+#: src/tilda.ui:2818
+msgid "Scrolling"
+msgstr "Klizanje"
+
+#: src/tilda.ui:2857
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b>Napomena:</b> Ove opcije mogu prouzrokovati neispravno "
+"ponašanje nekih programa. Nalaze se ovdje, samo kako bi se zaobišli problemi "
+"s određenim programima i operacijskim sustavima, koji očekuju drugačije "
+"ponašanje terminala.</i></small>"
+
+#: src/tilda.ui:2873
+msgid "_Backspace key generates:"
+msgstr "_Backspace tipka generira:"
+
+#: src/tilda.ui:2887
+msgid "_Delete key generates:"
+msgstr "_Delete tipka generira:"
+
+#: src/tilda.ui:2899
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Postavi opcije kompatibilnosti na standardne vrijednosti"
+
+#: src/tilda.ui:2953
+msgid "<b>Compatibility</b>"
+msgstr "<b>Кompatibilnost</b>"
+
+#: src/tilda.ui:2972
+msgid "Compatibility"
+msgstr "Kompatibilnost"
+
+#: src/tilda.ui:3024
+msgid "<b>Keybindings</b>"
+msgstr "<b>Tipkovne funkcije</b>"
+
+#: src/tilda.ui:3043
+msgid "Keybindings"
+msgstr "Tipkovne funkcije"
+
+#: src/configsys.c:384
+msgid "Unable to sync the config file to disk\n"
+msgstr "Nije moguće sinkronizirati datoteku konfiguracije na disk\n"
+
+#: src/configsys.c:394
+msgid "Unable to close the config file\n"
+msgstr "Nije moguće zatvoriti datoteku konfiguracije\n"
+
+#: src/configsys.c:407
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Nije moguće zapisati datoteku konfiguracije na %s\n"
+
+#: src/tilda.c:239
+#, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "Nije moguće pokrenuti naredbu: „%s”\n"
+
+#: src/tilda.c:284 src/tilda.c:459
+#, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "Nije moguće otvoriti zaključanu mapu: %s\n"
+
+#: src/tilda.c:396
+#, c-format
+msgid "Creating directory:'%s'\n"
+msgstr "Izrada mape: „%s”\n"
+
+#: src/tilda.c:555
+msgid ""
+"Found style.css in the user config directory, applying user css style.\n"
+msgstr ""
+"Pronađena je datoteka style.css u korisničkoj mapi konfiguracije, "
+"primjenjuje se css stil korisnika.\n"
+
+#: src/tilda.c:610
+msgid "Migrating old config path to XDG folders\n"
+msgstr "Preseljavanje staze stare konfiguracije u XDG mape\n"
+
+#: src/tilda.c:673
+#, c-format
+msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
+msgstr ""
+"Navedena datoteka konfiguracije „%s” ne postoji. Postavlja se standardna "
+"staza.\n"
+
+#: src/tilda.c:766 src/tilda-keybinding.c:409
+msgid ""
+"The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
+"choose another."
+msgstr ""
+"Odabrana tipkovna funkcija za „Rasklopi terminal” nije ispravna. Odaberi "
+"jednu drugu."
+
+#: src/tilda-keybinding.c:115
+msgid "Action"
+msgstr "Radnja"
+
+#: src/tilda-keybinding.c:121
+msgid "Shortcut"
+msgstr "Prečac"
+
+#: src/tilda-keybinding.c:306
+msgid "Enter keyboard shortcut"
+msgstr "Upiši tipkovnički prečac"
+
+#: src/tilda-keybinding.c:417
+#, c-format
+msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
+msgstr "Odabrana tipkovna funkcija za „%s” nije ispravna. Odaberi jednu drugu."
+
+#: src/tilda_terminal.c:398
+#, c-format
+msgid "Problem reading link %s: %s\n"
+msgstr "Problem pri čitanju poveznice %s: %s\n"
+
+#: src/tilda_terminal.c:421
+#, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Nije moguće pokrenuti standardnu ljusku: %s\n"
+
+#: src/tilda_terminal.c:423
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Nije moguće pokrenuti prilagođenu naredbu: %s\n"
+
+#: src/tilda_terminal.c:424
+#, c-format
+msgid "Launching custom command failed with error: %s\n"
+msgstr "Pokretanje prilagođene naredbe je prekinulo s greškom: %s\n"
+
+#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+msgid "Launching default shell instead\n"
+msgstr "Umjesto toga se pokeće standardna ljuska\n"
+
+#: src/tilda_terminal.c:458
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Problem pri pri obradi prilagođene naredbe: %s\n"
+
+#: src/tilda_terminal.c:976
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+"Neuspjelo pokretanje standardnog web preglednika. Naredba je bila „%s”\n"
+
+#: src/tilda_terminal.c:1026
+msgid "Untitled"
+msgstr "Bezimeno"
+
+#: src/tilda_terminal.c:1044
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Loša vrijednost za „d_set_title” u datoteci konfiguracije\n"
+
+#: src/tilda_window.c:109
+msgid "Are you sure you want to close this tab?"
+msgstr "Stvarno zatvoriti ovu karticu?"
+
+#: src/tilda_window.c:156
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "U datoteci konfiguracije postoji loša vrijednost za tab_pos\n"
+
+#: src/tilda_window.c:811
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Nije moguće postaviti ikonu za Tilda: %s\n"
+
+#: src/tilda_window.c:1105
+msgid "Out of memory, cannot create tab\n"
+msgstr "Nedovoljno memorije, kartica se ne može stvoriti\n"
+
+#: src/tilda_window.c:1225
+msgid "Are you sure you want to Quit?"
+msgstr "Stvarno zatvoriti program?"
+
+#: src/wizard.c:138
+#, c-format
+msgid "Tilda %d Config"
+msgstr "Tilda %d konfiguracija"
+
+#: src/wizard.c:561
+msgid "Invalid Cursor Type, resetting to default\n"
+msgstr "Nevaljana vrsta pokazivača, postavlja se standardni pokazivač\n"
+
+#: src/wizard.c:579
+msgid "Invalid non-focus pull up behaviour, ignoring\n"
+msgstr ""
+"Nevaljano ponašanje sklapanja terminala bez fokusiranja, zanemaruje se\n"
+
+#: src/wizard.c:1046
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Nevaljana postavka položaja kartice, zanemaruje se\n"
