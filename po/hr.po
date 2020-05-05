@@ -774,7 +774,7 @@ msgstr "Bezimeno"
 
 #: src/tilda_terminal.c:1044
 msgid "Bad value for \"d_set_title\" in config file\n"
-msgstr "Loša virijednost za „d_set_title” u datoteci konfiguracije\n"
+msgstr "Loša vrijednost za „d_set_title” u datoteci konfiguracije\n"
 
 #: src/tilda_window.c:109
 msgid "Are you sure you want to close this tab?"
