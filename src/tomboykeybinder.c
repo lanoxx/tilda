@@ -66,14 +66,6 @@ static gboolean processing_event = FALSE;
 static GdkModifierType num_lock_mask, caps_lock_mask, scroll_lock_mask;
 
 /**
- * Join virtual modifiers into a printable string separated by ' | '.
- *
- * @param virtual_modifiers
- * @return A string containing the string representation of all virtual modifiers separated by ' | '.
- */
-static gchar *virtual_modifiers_as_string (GdkModifierType virtual_modifiers);
-
-/**
  * Gdk does not allow us to determine the real modifiers for some
  * special virtual modifiers such as num lock and scroll look.
  * Therefore we will need to determine these our self.
@@ -89,7 +81,7 @@ lookup_ignorable_modifiers (GdkKeymap *keymap)
                                           EGG_VIRTUAL_LOCK_MASK,
                                           &caps_lock_mask);
 
-    string = virtual_modifiers_as_string (caps_lock_mask);
+    string = g_flags_to_string (GDK_TYPE_MODIFIER_TYPE, caps_lock_mask);
     g_debug ("Virtual modifier for 'caps_lock_mask' set to: %s", string);
     g_free (string);
 
@@ -97,7 +89,7 @@ lookup_ignorable_modifiers (GdkKeymap *keymap)
                                           EGG_VIRTUAL_NUM_LOCK_MASK,
                                           &num_lock_mask);
 
-    string = virtual_modifiers_as_string (num_lock_mask);
+    string = g_flags_to_string (GDK_TYPE_MODIFIER_TYPE, num_lock_mask);
     g_debug ("Virtual modifier for 'num_lock_mask' set to: %s", string);
     g_free (string);
 
@@ -105,7 +97,7 @@ lookup_ignorable_modifiers (GdkKeymap *keymap)
                                           EGG_VIRTUAL_SCROLL_LOCK_MASK,
                                           &scroll_lock_mask);
 
-    string = virtual_modifiers_as_string (scroll_lock_mask);
+    string = g_flags_to_string (GDK_TYPE_MODIFIER_TYPE, scroll_lock_mask);
     g_debug ("Virtual modifier for 'scroll_lock_mask' set to: %s", string);
     g_free (string);
 }
@@ -196,7 +188,8 @@ do_grab_key (Binding *binding)
         return FALSE;
     }
 
-    gchar *virtual_modifier_string = virtual_modifiers_as_string (virtual_mods);
+    gchar *virtual_modifier_string = g_flags_to_string (GDK_TYPE_MODIFIER_TYPE,
+                                                        virtual_mods);
     g_debug ("Resolved accelerator: %s. KeySymbol: %d, Virtual Modifiers: %s",
              binding->keystring,
              keysym,
@@ -205,7 +198,7 @@ do_grab_key (Binding *binding)
 
     g_debug ("Binding to keycode %d", binding->keycode);
 
-    gchar *real_modifiers_as_string = virtual_modifiers_as_string (
+    gchar *real_modifiers_as_string = g_flags_to_string (GDK_TYPE_MODIFIER_TYPE,
             (GdkModifierType) binding->modifiers);
     g_debug ("Binding to real modifier mask %d (%s)", binding->modifiers,
              real_modifiers_as_string);
@@ -393,52 +386,4 @@ tomboy_keybinder_get_current_event_time (void)
         return last_event_time;
     else
         return GDK_CURRENT_TIME;
-}
-
-/**
- * Join virtual modifiers into a printable string separated by ' | '.
- *
- * Glib has added a similar function called: `g_flags_to_string` in version 2.54.
- * At some point when it is reasonable to bump our glib dependency to 2.54 we
- * can replace this function with the glib version.
- *
- * @param virtual_modifiers
- * @return A string containing the string representation of all virtual modifiers separated by ' | '.
- */
-static gchar *virtual_modifiers_as_string (GdkModifierType virtual_modifiers)
-{
-    int modifier = 1;
-    int index    = 0;
-
-    GFlagsClass *flags_class;
-    GFlagsValue *enum_value;
-
-    g_return_val_if_fail (G_TYPE_IS_FLAGS (GDK_TYPE_MODIFIER_TYPE), NULL);
-
-    flags_class = g_type_class_ref (GDK_TYPE_MODIFIER_TYPE);
-
-    const char **modifierStrings = g_malloc0_n (sizeof (char *),
-                                                flags_class->n_values);
-
-    while (modifier < GDK_RELEASE_MASK) {
-        enum_value = g_flags_get_first_value (G_FLAGS_CLASS (flags_class),
-                                              virtual_modifiers & modifier);
-
-        if (enum_value) {
-            modifierStrings[index] = enum_value->value_name;
-        }
-
-        if (modifierStrings[index]) {
-            index++;
-        }
-
-        modifier = modifier << 1;
-    }
-
-    char *result = g_strjoinv (" | ", (gchar **) modifierStrings);
-
-    g_free (modifierStrings);
-    g_type_class_unref (flags_class);
-
-    return result;
 }
