@@ -177,7 +177,8 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     /* Match URL's, etc */
     if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
         term->vte_regexp = vte_regex_new_for_match (HTTP_REGEXP, -1,
-                                                    PCRE2_CASELESS, &error);
+                                                    PCRE2_CASELESS | PCRE2_MULTILINE,
+                                                    &error);
 
         ret = vte_terminal_match_add_regex (VTE_TERMINAL(term->vte_term), term->vte_regexp,
                                             PCRE2_NOTEMPTY);
