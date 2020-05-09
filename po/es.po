@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2014-09-07 12:19+0200\n"
 "Last-Translator: micrococo <micrococo@gmx.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
@@ -741,45 +741,45 @@ msgstr ""
 "El atajo de teclado que ha elegido para \"Pegar\" es inválido. Seleccione "
 "otro, por favor."
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Problema procesando el comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "No se puede ejecutar la terminal predeterminada: %s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "No se puede ejecutar el comando personalizado %s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Ejecutar un comando personalizado en lugar de la terminal"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "Ejecutando la terminal predeterminada en su lugar\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problema procesando el comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Fallo al ejecutar el navegador web. El comando era '%s'\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "Sin título"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Valor erróneo para \"d_set_title\" en el fichero de configuración\n"
 
@@ -796,11 +796,11 @@ msgstr "Tiene un tab_pos erróneo en su archivo de configuración\n"
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "No se puede establecer el icono de Tilda: %s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "No hay memoria disponible, no se puede crear la pestaña\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 

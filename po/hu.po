@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2008-03-05 00:28+0000\n"
 "Last-Translator: Pittmann Tamás <zaivaldi@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -738,45 +738,45 @@ msgstr ""
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr "A választott gyorsbillentyű érvénytelen. Válasszon másikat."
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Parancs értelmezési hiba: %s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Nem tudom elindítani az alapértelmezett héjat: %s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nem tudom elindítani a megadott felhasználói parancsot: %s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Héj helyett saját parancs futtatása"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "Helyette indítom az alapértelmezett héjat.\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Parancs értelmezési hiba: %s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Nem tudtam elindítani a böngészőt, parancs: %s\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "Névtelen"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Hibás érték a konfigfájlban itt: \"d_set_title\"\n"
 
@@ -793,11 +793,11 @@ msgstr "A konfigfájlban hibás a fülek pozíciója\n"
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Nem tudom a tilda ikonját beállítani: %s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "Elfogyott a memória. a fül nem hozható létre\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 

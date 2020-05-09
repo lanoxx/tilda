@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2014-07-30 22:44+0000\n"
 "Last-Translator: Anton Antonov <syndbe@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -739,45 +739,45 @@ msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr ""
 "Клавишната комбинация, която избрахте е невалидна. Моля изберете друга."
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Проблем при разчитане на : %s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Не може да пусне shell по подразбиране: %s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Не може да пусне командата по избор: %s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Пусни произволна команда вместо shell"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "Пускам вместо това shell по подразбиране\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, fuzzy, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Проблем при разчитане на : %s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Не успя да пусне уеб брайзъра. Командата беше `%s'\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "Неозаглавен"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Невалидна стойност за \"d_set_title\" в конфигурационният файл\n"
 
@@ -794,11 +794,11 @@ msgstr "Вие имате невалидна tab_pos във вашият кон�
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Не може да зададе икона на tilda: %s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "Недостиг на памет, не може да създаде подпрозорец\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 

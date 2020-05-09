@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2017-07-18 00:31+0800\n"
 "Last-Translator: Kuang-Lin Pan <andypan@ntuosc.org>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -723,45 +723,45 @@ msgstr ""
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr "你選擇的「拉下終端機」快捷鍵無效。請選擇別的。"
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "跟隨符號連結 %s 失敗：%s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "無法啟動預設的命令解釋器：%s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "無法啟動自訂指令：%s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "執行自訂的指令而不是執行命令解釋器"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "作為替代，啟動預設的命令解釋器\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "解析自訂指令失敗：%s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "無法啟動網頁瀏覽器。用到的指令是 `%s'\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "無標題"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "設定檔裡 \"d_set_title\" 的值不正確\n"
 
@@ -778,11 +778,11 @@ msgstr "設定檔裡有個錯的定位點\n"
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "無法設定 Tilda 的圖示為：%s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "記憶體不足。無法建立分頁\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 

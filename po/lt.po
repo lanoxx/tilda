@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2014-06-16 09:53+0200\n"
 "Last-Translator: Algimantas Margevičius <algimantas@margevicius.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -734,45 +734,45 @@ msgstr ""
 "Jūsų pasirinktas klavišų susiejimas skirtas „Įklijuoti“ yra netinkamas. "
 "Pasirinkite kitą."
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Klaida analizuojant komandą: %s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Negalima paleisti numatytosios konsolės: %s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nepavyko paleisti komandos: %s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Paleisti komandą vietoj Shell'o"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "Paleisti numatytąją konsolę vietoj\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Klaida analizuojant komandą: %s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Nepavyko paleisti interneto naršyklės. Komanda buvo `%s'\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "Be pavadinimo"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Bloga reikšmė \"d_set_title\" konfigūracijos faile\n"
 
@@ -789,11 +789,11 @@ msgstr "Jūs turite blogai nustatytą tab_pos konfigūracijos faile\n"
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Negalima nustatyti Tildos piktogramos: %s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "Trūksta atminties, negalima sukurti kortelės\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 

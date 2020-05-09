@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2020-02-08 23:45+0100\n"
+"POT-Creation-Date: 2020-05-09 12:39+0200\n"
 "PO-Revision-Date: 2008-04-19 11:22+0000\n"
 "Last-Translator: João Santos <twocool.pt@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -741,45 +741,45 @@ msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr ""
 "A combinação de teclas que escolheu é inválida. Por favor escolha outra."
 
-#: src/tilda_terminal.c:398
+#: src/tilda_terminal.c:395
 #, fuzzy, c-format
 msgid "Problem reading link %s: %s\n"
 msgstr "Problema ao analisar o comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:421
+#: src/tilda_terminal.c:418
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Incapaz de carregar o shell padrão: %s\n"
 
-#: src/tilda_terminal.c:423
+#: src/tilda_terminal.c:420
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Incapaz de carregar o comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:424
+#: src/tilda_terminal.c:421
 #, fuzzy, c-format
 msgid "Launching custom command failed with error: %s\n"
 msgstr "Correr um comando personalizado em vez da shell"
 
-#: src/tilda_terminal.c:425 src/tilda_terminal.c:459
+#: src/tilda_terminal.c:422 src/tilda_terminal.c:456
 msgid "Launching default shell instead\n"
 msgstr "Carregando antes a shell padrão\n"
 
-#: src/tilda_terminal.c:458
+#: src/tilda_terminal.c:455
 #, c-format
 msgid "Problem parsing custom command: %s\n"
 msgstr "Problema ao analisar o comando personalizado: %s\n"
 
-#: src/tilda_terminal.c:976
+#: src/tilda_terminal.c:985
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
 msgstr "Falha ao carregar o navegador web. O comando foi `%s'\n"
 
-#: src/tilda_terminal.c:1026
+#: src/tilda_terminal.c:1035
 msgid "Untitled"
 msgstr "Sem título"
 
-#: src/tilda_terminal.c:1044
+#: src/tilda_terminal.c:1053
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Valor inválido para \"d_set_title\" no ficheiro de configuração\n"
 
@@ -796,11 +796,11 @@ msgstr "Tem um tab_pos errado no seu ficheiro de configuração\n"
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Não foi possível mudar o ícone do tilda: %s\n"
 
-#: src/tilda_window.c:1105
+#: src/tilda_window.c:1132
 msgid "Out of memory, cannot create tab\n"
 msgstr "Memória Insuficiente, não é possível criar aba\n"
 
-#: src/tilda_window.c:1225
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr ""
 
