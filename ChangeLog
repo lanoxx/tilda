@@ -1,3 +1,23 @@
+version 1.5.2 (2020-05-09):
+	* Fixed an issue in the URL matching code that caused a VTE warning
+	  about a missing multiline flag to be emitted at runtime.
+
+version 1.5.1 (2020-05-03):
+	* Fixed an issue that could cause the tilda window to appear behind
+	  panels in fullscreen mode (Sebastian Geiger).
+	* Fixed matching of URLs on VTE versions 0.56.1 or later
+	  (Sebastian Geiger).
+	* Fixed an issue that can cause the close-tab confirmation dialog to
+	  appear twice (Sebastian Geiger).
+	* Fixed a leak in the signal handling code that caused the
+	  "switch-tab" signal handler to be readded every time a tab was
+	  opened (Sebastian Geiger).
+	* Support matching the '@' character in URLs.
+	* Due to a problem in the release process this release was skipped.
+	  We tagged the release in git, but forgot to update the changelog
+	  and to update the version in the build system. Users should switch
+	  directly to 1.5.2.
+
 version 1.5.0 (2020-02-02):
 	* Search is now backwards by default (Sebastian Geiger).
 	* Tilda now handles monitor changes and adjusts its size automatically.
