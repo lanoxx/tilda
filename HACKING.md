@@ -10,55 +10,64 @@
 
 On Ubuntu based system install dependencies with:
 
-    sudo apt-get install git dh-autoreconf autotools-dev debhelper libconfuse-dev libgtk-3-dev libpcre2-dev libvte-2.91-dev pkg-config
+    sudo apt-get install git dh-autoreconf autotools-dev debhelper \
+      libconfuse-dev libgtk-3-dev libpcre2-dev libvte-2.91-dev pkg-config
 
-You possibly need other packages such as `gettext`, `automake`, `autoconf`, `autopoint`, and X11 development libraries.
+You possibly need other packages such as `gettext`, `automake`, 
+`autoconf`, `autopoint`, and X11 development libraries.
 
 On Fedora:
 
     # This may be outdated (see Ubuntu example above, for a more thorough list)
-    sudo yum install git automake libconfuse-devel vte3-devel gtk3-devel glib-devel gettext-devel
+    sudo yum install git automake libconfuse-devel vte3-devel gtk3-devel \
+      glib-devel gettext-devel
 
-The dependencies section above is complete but the sample command may not be complete, depending on your system you may need to
-install additional packages. Please carefully read the output of the `autogen.sh` (see below) for more information of what
-you need to install.
+The dependencies section above is complete but the sample command may not be
+complete, depending on your system you may need to install additional packages.
+Please carefully read the output of the `autogen.sh` (see below) for more
+information of what you need to install.
 
 ## Compiling
 
-Generally if you have installed the development packages (e.g. *-dev or *-devel) of
-the dependencies above and the autotools suite then it should be possible to compile with:
+Generally if you have installed the development packages (e.g. `*-dev` or
+`*-devel`) of the dependencies above and the autotools suite then it should
+be possible to compile with:
 
     mkdir build
     cd build
     ../autogen.sh --prefix=/usr
     make --silent
 
-Changing to `build/` and calling autogen.sh relative from there
-makes sure that we perform an out-of-tree build and all generated files are
-stored inside `build/`. This way build artifacts will not clutter the
-source directory.
+Changing to `build/` and calling `autogen.sh` relative from there makes sure
+that we perform an out-of-tree build and all generated files are stored inside
+`build/`. This way build artifacts will not clutter the source directory.
 
-If you get the following error message, then you are missing the autopoint binary which is part of the autotools suite. On Ubuntu the
-`dh-autoreconf` package installs it along with automake, autoconf and autoreconf.
+If you get the following error message, then you are missing the `autopoint`
+binary which is part of the autotools suite. On Ubuntu the `dh-autoreconf`
+package installs it along with automake, autoconf and autoreconf.
 
-    Can't exec "autopoint": No such file or directory at /usr/share/autoconf/Autom4te/FileUtils.pm line 345.
+    Can't exec "autopoint": No such file or directory at [\]
+      /usr/share/autoconf/Autom4te/FileUtils.pm line 345.
 
-You do not need the `--silent` option, but I prefer to use it to reduce the output a bit. If you experience any problem during build,
-then drop the `--silent` option.
+You do not need the `--silent` option, but I prefer to use it to reduce the
+output a bit. If you experience any problem during build, then drop the
+`--silent` option.
 
 ## Installing
 
-After you have compiled the package run the following command to install tilda to the prefix that you have chosen
-before:
+After you have compiled the package run the following command to install tilda
+to the prefix that you have chosen before:
 
     sudo make install
 
-If you don't want to install to the `/usr` prefix, choose some other prefix when you run the `autogen.sh` script,
-such as `/opt/tilda` and add it to your path.
+If you don't want to install to the `/usr` prefix, choose some other prefix
+when you run the `autogen.sh` script, such as `/opt/tilda` and add it to your
+path.
 
 # Packaging for Debian
 
-This section explains how to package Tilda for Debian and Debian derived distributions.
+This section explains how to package Tilda for Debian and Debian derived
+distributions.
 
 ## Preparation before building the package
 
@@ -127,8 +136,9 @@ separate folder such as `tilda-releases`:
           sudo pdebuild --use-pdebuild-internal \
             -- --basetgz ~/pbuilder/unstable-base.tgz
     * Run `debuild` directly from the current folder (e.g. from `tilda-1.#.#/`)
- 6. If `debuild` finishes without a problem next run `pbuilder`, this will verify that
-    the package is buildable (without warnings or errors) in a clean environment:
+ 6. If `debuild` finishes without a problem next run `pbuilder`, this will
+    verify that the package is buildable (without warnings or errors) in a clean
+    environment:
 
         sudo pbuilder --build --basetgz ~/pbuilder/unstable-base.tgz \
           tilda_1.#.#-1.dsc
