@@ -32,10 +32,13 @@ gint xerror_handler(Display *d, XErrorEvent *e)
 
     gchar errtxt[128];
 
-    if (e->error_code != BadWindow)
+    /* https://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html */
+    if ((e->error_code != BadWindow) &&
+        /* https://www.x.org/releases/X11R7.7/doc/xproto/x11protocol.html#requests:SetInputFocus */
+        ((e->request_code != 42 /* SetInputFocus */) || (e->error_code != BadMatch)))
     {
         XGetErrorText(d, e->error_code, errtxt, 127);
-        g_error(_("X Error: %s"), errtxt);
+        g_error(_("X Error [opcode %d]: %s"), e->request_code, errtxt);
     }
 
     return 0;
