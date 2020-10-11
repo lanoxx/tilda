@@ -465,7 +465,11 @@ static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
         gint command_timeout = config_getint ("command_timeout_ms");
 
         char **envv = malloc(2*sizeof(void *));
-        envv[0] = getenv("PATH");
+        char *path_value = getenv("PATH");
+
+        gchar *path_prefixed = g_strconcat("PATH=", path_value, NULL);
+
+        envv[0] = path_prefixed;
         envv[1] = NULL;
 
         vte_terminal_spawn_async (VTE_TERMINAL (tt->vte_term),
@@ -484,6 +488,7 @@ static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
 
         g_strfreev (argv);
         g_free (envv);
+        g_free(path_prefixed);
     } else {
         start_default_shell (tt);
     }
