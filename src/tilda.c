@@ -519,27 +519,6 @@ static void migrate_config_files(char *old_config_path) {
     g_free(new_config_dir);
 }
 
-static void load_application_css () {
-    GtkCssProvider *provider;
-    const gchar* style;
-    GError *error;
-
-    provider = gtk_css_provider_new ();
-
-    gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                               GTK_STYLE_PROVIDER (provider),
-                                               GTK_STYLE_PROVIDER_PRIORITY_USER);
-
-    style = "#search{background:#fff;}";
-    error = NULL;
-    gtk_css_provider_load_from_data (provider, style, -1, &error);
-
-    if (error) {
-        g_print ("Error %s\n", error->message);
-        g_error_free (error);
-    }
-}
-
 static void load_custom_css_file () {
     GtkCssProvider *provider;
     GFile *file;
@@ -712,7 +691,6 @@ int main (int argc, char *argv[])
         gtk_widget_destroy(dialog);
     }
 
-    load_application_css ();
     load_custom_css_file ();
 
     /* create new tilda_window */

@@ -1029,6 +1029,9 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     GtkWidget *main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     tw->search = tilda_search_box_new ();
 
+    GtkStyleContext *context = gtk_widget_get_style_context(main_box);
+    gtk_style_context_add_class(context, GTK_STYLE_CLASS_BACKGROUND);
+
     gtk_container_add (GTK_CONTAINER(tw->window), main_box);
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (main_box), tw->search, FALSE, TRUE, 0);
