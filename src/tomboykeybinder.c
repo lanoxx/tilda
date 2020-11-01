@@ -382,7 +382,7 @@ tomboy_keybinder_unbind (const char *keystring,
     }
 }
 
-guint32
+Time
 tomboy_keybinder_get_current_event_time (void)
 {
     if (processing_event)
