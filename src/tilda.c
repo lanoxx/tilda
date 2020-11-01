@@ -45,7 +45,6 @@
 #include "tilda_window.h"
 #include "key_grabber.h" /* for pull */
 #include "wizard.h"
-#include "xerror.h"
 #include "tomboykeybinder.h"
 #include "tilda-keybinding.h"
 #include "tilda-cli-options.h"
@@ -668,9 +667,6 @@ int main (int argc, char *argv[])
     /* Set up possible overridden config options */
     setup_config_from_cli_options(cli_options);
     g_free(cli_options);
-
-    /* We're about to startup X, so set the error handler. */
-    XSetErrorHandler (xerror_handler);
 
     /* This section shows a modal dialog to notify the user that something has gone wrong when loading the config.
      * Earlier version only used to print a message to stderr, but since tilda is usually not started from a

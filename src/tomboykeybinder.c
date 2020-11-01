@@ -129,6 +129,7 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
 
     for (i = 0; i < G_N_ELEMENTS (mod_masks); i++) {
         if (grab) {
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
             XGrabKey (GDK_WINDOW_XDISPLAY (rootwin),
                       binding->keycode,
                       binding->modifiers | mod_masks[i],
@@ -136,11 +137,14 @@ grab_ungrab_with_ignorable_modifiers (GdkWindow *rootwin,
                       False,
                       GrabModeAsync,
                       GrabModeAsync);
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         } else {
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
             XUngrabKey (GDK_WINDOW_XDISPLAY (rootwin),
                         binding->keycode,
                         binding->modifiers | mod_masks[i],
                         GDK_WINDOW_XID (rootwin));
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         }
     }
 }

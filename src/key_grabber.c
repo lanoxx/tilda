@@ -22,7 +22,6 @@
 #include "key_grabber.h"
 #include "screen-size.h"
 #include "tilda.h"
-#include "xerror.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include "configsys.h"
@@ -183,7 +182,9 @@ void tilda_window_set_active (tilda_window *tw)
         event.xclient.data.l[3] = 0;
         event.xclient.data.l[4] = 0;
 
+        gdk_x11_display_error_trap_push(gdk_display_get_default());
         XSendEvent (x11_display, x11_root_window, False, mask, &event);
+        gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
     }
     else
     {
@@ -191,7 +192,9 @@ void tilda_window_set_active (tilda_window *tw)
          * try this, though it probably won't work... */
         g_printerr (_("WARNING: Window manager (%s) does not support EWMH hints\n"),
                     gdk_x11_screen_get_window_manager_name (screen));
+        gdk_x11_display_error_trap_push(gdk_display_get_default());
         XRaiseWindow (x11_display, x11_window);
+        gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
     }
 }
 
@@ -270,10 +273,14 @@ static void pull_up (struct tilda_window_ *tw) {
             x11window = gtk_widget_get_window (tw->window);
             display = gdk_window_get_display (x11window);
             atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DOCK");
+
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
             XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
                              gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
                              XA_ATOM, 32, PropModeReplace,
                              (guchar *) &atom, 1);
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
+
             process_all_pending_gtk_events ();
         }
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
@@ -294,10 +301,13 @@ static void pull_up (struct tilda_window_ *tw) {
             } else {
                 atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_NORMAL");
             }
+
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
             XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
                              gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
                              XA_ATOM, 32, PropModeReplace,
                              (guchar *) &atom, 1);
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         }
     }
 
@@ -347,11 +357,14 @@ static void pull_down (struct tilda_window_ *tw) {
             x11window = gtk_widget_get_window (tw->window);
             display = gdk_window_get_display (x11window);
             atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_DOCK");
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
+
             XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
                              gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
                              XA_ATOM, 32, PropModeReplace,
                              (guchar *) &atom, 1);
             process_all_pending_gtk_events ();
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         }
         gint slide_sleep_usec = config_getint ("slide_sleep_usec");
         for (guint i=0; i<32; i++) {
@@ -371,10 +384,13 @@ static void pull_down (struct tilda_window_ *tw) {
             } else {
                 atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE_NORMAL");
             }
+
+            gdk_x11_display_error_trap_push(gdk_display_get_default());
             XChangeProperty (GDK_DISPLAY_XDISPLAY (display), GDK_WINDOW_XID (x11window),
                              gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE"),
                              XA_ATOM, 32, PropModeReplace,
                              (guchar *) &atom, 1);
+            gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         }
     } else {
         gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
