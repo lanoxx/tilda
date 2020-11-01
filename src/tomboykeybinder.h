@@ -25,6 +25,7 @@
 #define __TOMBOY_KEY_BINDER_H__
 
 #include <glib.h>
+#include <X11/X.h>
 
 G_BEGIN_DECLS
 
@@ -41,7 +42,7 @@ void tomboy_keybinder_unbind (const char *keystring,
 
 gboolean tomboy_keybinder_is_modifier (guint keycode);
 
-guint32 tomboy_keybinder_get_current_event_time (void);
+Time tomboy_keybinder_get_current_event_time (void);
 
 G_END_DECLS
 
