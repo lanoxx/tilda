@@ -1,3 +1,8 @@
+version 1.5.3 (2020-11-01):
+	* Fixed an issue that could cause tilda to crash due to a BadMatch X11
+	  error in certain situations (such as when using the Marco
+		window manager of the Mate Desktop 1.24.1) (Emanuele F.).
+
 version 1.5.2 (2020-05-09):
 	* Fixed an issue in the URL matching code that caused a VTE warning
 	  about a missing multiline flag to be emitted at runtime.
