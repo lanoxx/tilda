@@ -783,23 +783,9 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
         case 1: /* Left Click */
             terminal  = VTE_TERMINAL(tt->vte_term);
 
-#if VTE_CHECK_VERSION(0, 38, 0)
             match = vte_terminal_match_check_event (terminal,
                                                     (GdkEvent *) event,
                                                     &tag);
-#else
-            gint ypad = gtk_widget_get_margin_bottom(GTK_WIDGET(terminal));
-
-            glong column = (glong) ((event->x - ypad) /
-                                    vte_terminal_get_char_width (terminal));
-            glong row = (glong) ((event->y - ypad) /
-                                 vte_terminal_get_char_height (terminal));
-
-            match = vte_terminal_match_check (terminal,
-                                              column,
-                                              row,
-                                              &tag);
-#endif
 
             /* Check if we can launch a web browser, and do so if possible */
             if (match != NULL)
