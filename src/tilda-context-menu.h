@@ -6,7 +6,7 @@
 #include "tilda_terminal.h"
 #include "tilda_window.h"
 
-void
-tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event);
+GtkWidget *
+tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match);
 
 #endif

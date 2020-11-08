@@ -142,8 +142,8 @@ on_selection_done (GtkWidget *widget, TildaContextMenu * context_menu)
     tilda_context_menu_free (context_menu);
 }
 
-void
-tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
+GtkWidget *
+tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
 {
     DEBUG_FUNCTION ("popup_menu");
     DEBUG_ASSERT (tw != NULL);
@@ -152,6 +152,7 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
     TildaContextMenu * context_menu = g_new0 (TildaContextMenu, 1);
     context_menu->tw = tw;
     context_menu->tt = tt;
+    context_menu->match = g_strdup (match);
 
     GtkBuilder *builder = gtk_builder_new ();
 
@@ -192,9 +193,6 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
                                      entries_for_tilda_terminal, G_N_ELEMENTS (entries_for_tilda_terminal), tt);
 
-    char * match = vte_terminal_match_check_event (VTE_TERMINAL (tt->vte_term), event, NULL);
-    context_menu->match = g_strdup (match);
-
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
                                      entries_for_regex, G_N_ELEMENTS (entries_for_regex), context_menu->match);
 
@@ -221,10 +219,10 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, GdkEvent * event)
     g_signal_connect (G_OBJECT (menu), "unmap", G_CALLBACK (on_popup_hide), context_menu);
     g_signal_connect (G_OBJECT (menu), "selection-done", G_CALLBACK (on_selection_done), context_menu);
 
-    gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
-
     g_object_unref (action_group);
     g_object_unref (builder);
+
+    return menu;
 }
 
 static void

@@ -767,6 +767,12 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
 
     tt = TILDA_TERM(data);
 
+    terminal  = VTE_TERMINAL(tt->vte_term);
+
+    match = vte_terminal_match_check_event (terminal,
+                                            (GdkEvent *) event,
+                                            &tag);
+
     switch (event->button)
     {
         case 9:
@@ -776,17 +782,15 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             tilda_window_prev_tab (tt->tw);
             break;
         case 3: /* Right Click */
-            tilda_context_menu_popup (tt->tw, tt, (GdkEvent *) event);
+        {
+            GtkWidget *menu = tilda_context_menu_popup (tt->tw, tt, match);
+            gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent *) event);
+
             break;
+        }
         case 2: /* Middle Click */
             break;
         case 1: /* Left Click */
-            terminal  = VTE_TERMINAL(tt->vte_term);
-
-            match = vte_terminal_match_check_event (terminal,
-                                                    (GdkEvent *) event,
-                                                    &tag);
-
             /* Check if we can launch a web browser, and do so if possible */
             if (match != NULL)
             {
@@ -808,13 +812,14 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
 
                 g_free (web_browser_cmd);
                 g_free (cmd);
-                g_free (match);
             }
 
             break;
         default:
             break;
     }
+
+    g_free (match);
 
     return FALSE;
 }
@@ -826,7 +831,17 @@ gboolean key_press_cb (GtkWidget *widget,
     if(event->type == GDK_KEY_PRESS) {
         GdkEventKey *keyevent = (GdkEventKey*) event;
         if(keyevent->keyval == GDK_KEY_Menu) {
-            tilda_context_menu_popup (terminal->tw, terminal, event);
+
+            VteTerminal *vte_terminal = VTE_TERMINAL (terminal->vte_term);
+
+            char *match = vte_terminal_match_check_event (vte_terminal,
+                                                          event,
+                                                          NULL);
+
+            GtkWidget *menu = tilda_context_menu_popup (terminal->tw, terminal, match);
+            gtk_menu_popup_at_pointer(GTK_MENU (menu), event);
+
+            g_free (match);
         }
     }
     return GDK_EVENT_PROPAGATE;
