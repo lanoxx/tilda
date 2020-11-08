@@ -154,3 +154,8 @@ is something there that you would like to do.
 
 Feel free to mail the developers if you have questions about the
 tilda source code or if you are unsure how something works.
+
+# License
+
+The majority of tilda source code is licensed under GPLv2 or later, but
+individual source files may be licensed under GPLv3 or later.
