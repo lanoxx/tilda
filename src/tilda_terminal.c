@@ -33,11 +33,6 @@
 #include <vte/vte.h>
 #include <string.h>
 
-#define PCRE2_CODE_UNIT_WIDTH 0
-#include <pcre2.h>
-
-#define HTTP_REGEXP "(ftp|http)s?://[\\[\\]-a-zA-Z0-9.?@!$%&/=_~#.,:;+]*"
-
 static void start_shell (tilda_term *tt, gboolean ignore_custom_command);
 static void start_default_shell (tilda_term *tt);
 
@@ -49,7 +44,8 @@ static gboolean button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term 
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
 static void handle_left_button_click (tilda_term * terminal,
                                       GdkEventButton * button_event,
-                                      const gchar * match);
+                                      const char * link,
+                                      TildaMatchRegistryEntry * entry);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
 static void raise_window_cb (GtkWidget *widget, gpointer data);
@@ -67,7 +63,8 @@ static void handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
                               tilda_term *terminal);
 
 static void spawn_browser_for_match (tilda_term * terminal,
-                                     const gchar *match);
+                                     const gchar *match,
+                                     TildaMatchRegistryFlavor flavor);
 
 gint tilda_term_free (tilda_term *term)
 {
@@ -93,9 +90,28 @@ gint tilda_term_free (tilda_term *term)
     term->http_regexp = NULL;
     term->vte_regexp = NULL;
 
+    if (term->registry) {
+        tilda_match_registry_free(term->registry);
+        term->registry = NULL;
+    }
+
     g_free (term);
 
     return 0;
+}
+
+static int
+register_match (VteRegex * regex,
+                gpointer user_data)
+{
+    tilda_term * term = user_data;
+    int tag;
+
+    tag = vte_terminal_match_add_regex (VTE_TERMINAL (term->vte_term), regex, 0);
+
+    vte_terminal_match_set_cursor_name (VTE_TERMINAL (term->vte_term), tag, "pointer");
+
+    return tag;
 }
 
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
@@ -103,9 +119,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     DEBUG_FUNCTION ("tilda_term_init");
     DEBUG_ASSERT (tw != NULL);
 
-    int ret;
     struct tilda_term_ *term;
-    GError *error = NULL;
     tilda_term *current_tt;
     gint current_tt_index;
 
@@ -184,22 +198,11 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     g_signal_connect (G_OBJECT(term->vte_term), "move-window",
                       G_CALLBACK(move_window_cb), tw->window);
 
-    /* Match URL's, etc */
-    if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
-        term->vte_regexp = vte_regex_new_for_match (HTTP_REGEXP, -1,
-                                                    PCRE2_CASELESS | PCRE2_MULTILINE,
-                                                    &error);
+    TildaMatchRegistry * registry = tilda_match_registry_new ();
 
-        ret = vte_terminal_match_add_regex (VTE_TERMINAL(term->vte_term), term->vte_regexp,
-                                            PCRE2_NOTEMPTY);
-    } else {
-        term->http_regexp = g_regex_new (HTTP_REGEXP, G_REGEX_CASELESS,
-                                         G_REGEX_MATCH_NOTEMPTY, &error);
-        ret = vte_terminal_match_add_gregex (VTE_TERMINAL(term->vte_term),
-                                             term->http_regexp, 0);
-    }
+    tilda_match_registry_for_each (registry, register_match, term);
 
-    vte_terminal_match_set_cursor_name (VTE_TERMINAL (term->vte_term), ret, "pointer");
+    term->registry = registry;
 
     /* Show the child widgets */
     gtk_widget_show (term->vte_term);
@@ -794,13 +797,27 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
 {
     VteTerminal *terminal;
     gchar *match;
+    TildaMatchRegistryEntry * match_entry;
+    gchar *hyperlink;
     gint tag;
 
     terminal  = VTE_TERMINAL(tt->vte_term);
 
-    match = vte_terminal_match_check_event (terminal,
-                                            event,
-                                            &tag);
+    // see https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+    // for more details about OSC 8 hyperlinks.
+    hyperlink = vte_terminal_hyperlink_check_event (terminal, event);
+
+    if (hyperlink != NULL) {
+        match = hyperlink;
+        match_entry = tilda_match_registry_get_hyperlink_entry (tt->registry);
+    } else {
+        match = vte_terminal_match_check_event (terminal,
+                                                event,
+                                                &tag);
+
+        match_entry = tilda_match_registry_lookup_by_tag (tt->registry,
+                                                          tag);
+    }
 
     if (event->type == GDK_BUTTON_PRESS)
     {
@@ -822,7 +839,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
             case 2: /* Middle Click */
                 break;
             case 1: /* Left Click */
-                handle_left_button_click (tt, button_event, match);
+                handle_left_button_click (tt, button_event, match, match_entry);
                 break;
             default:
                 break;
@@ -842,28 +859,35 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
 
 static void handle_left_button_click (tilda_term * terminal,
                                       GdkEventButton * button_event,
-                                      const gchar * match)
+                                      const char *link,
+                                      TildaMatchRegistryEntry * match_entry)
 {
     gboolean activate_with_control = config_getbool("control_activates_match");
 
     if (!activate_with_control || button_event->state & GDK_CONTROL_MASK) {
+        TildaMatchRegistryFlavor flavor;
+
+        flavor = tilda_match_registry_entry_get_flavor(match_entry);
+
         /* Check if we can launch a web browser, and do so if possible */
-        spawn_browser_for_match(terminal, match);
+        spawn_browser_for_match(terminal, link, flavor);
     } else {
         g_debug ("Match activation skipped.");
     }
 }
 
 void spawn_browser_for_match (tilda_term * terminal,
-                              const gchar * match)
+                              const gchar * match,
+                              TildaMatchRegistryFlavor flavor)
 {
     gchar * cmd;
     gchar * web_browser_cmd;
     gboolean result;
 
-    if (match != NULL)
+    if (match != NULL && (flavor == TILDA_MATCH_FLAVOR_URL ||
+                          flavor == TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP))
     {
-        g_debug ("Got a Left Click -- Matched: `%s'", match);
+        g_debug ("Got a Left Click -- Matched: `%s' (flavor %d)", match, flavor);
 
         web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
         cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);

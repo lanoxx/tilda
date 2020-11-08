@@ -18,6 +18,7 @@
 
 #include "tilda_window.h"
 #include "tilda-palettes.h"
+#include "tilda-match-registry.h"
 
 #include <gtk/gtk.h>
 #include <vte/vte.h>
@@ -33,6 +34,7 @@ struct tilda_term_
     GtkWidget *scrollbar;
     GRegex *http_regexp;
     VteRegex *vte_regexp;
+    TildaMatchRegistry * registry;
     GPid pid;
     /* We remember if we have already dropped to the default
      * shell before, if so, then we know that this time we can
