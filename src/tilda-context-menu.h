@@ -7,6 +7,6 @@
 #include "tilda_window.h"
 
 GtkWidget *
-tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match);
+tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match, TildaMatchRegistryEntry * entry);
 
 #endif

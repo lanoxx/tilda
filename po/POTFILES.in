@@ -1,6 +1,5 @@
 # List of source files which contain translatable strings.
 
-src/menu.ui
 src/tilda.ui
 src/configsys.c
 src/tilda.c

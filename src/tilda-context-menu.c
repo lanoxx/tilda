@@ -2,12 +2,16 @@
 
 #include "debug.h"
 #include "wizard.h"
+#include "tilda-url-spawner.h"
+
 #include <vte/vte.h>
+#include <glib/gi18n.h>
 
 typedef struct {
     tilda_window * tw;
     tilda_term * tt;
     char * match;
+    TildaMatchRegistryEntry * match_entry;
 } TildaContextMenu;
 
 static void
@@ -62,18 +66,35 @@ menu_paste_cb (GSimpleAction *action,
 }
 
 static void
-menu_copy_link_cb (GSimpleAction * action,
-                   GVariant      * parameter,
-                   gpointer        user_data)
+menu_copy_match_cb (GSimpleAction * action,
+                    GVariant      * parameter,
+                    gpointer        user_data)
 {
-    DEBUG_FUNCTION ("menu_copy_link_cb");
+    DEBUG_FUNCTION ("menu_copy_match_cb");
     DEBUG_ASSERT (user_data != NULL);
 
-    char * link = user_data;
+    char * match = user_data;
 
     GtkClipboard * clipBoard = gtk_clipboard_get_default (gdk_display_get_default ());
 
-    gtk_clipboard_set_text (clipBoard, link, -1);
+    gtk_clipboard_set_text (clipBoard, match, -1);
+}
+
+static void
+menu_open_match_cb (GSimpleAction * action,
+                    GVariant      * parameter,
+                    gpointer        user_data)
+{
+    DEBUG_FUNCTION("menu_open_match_cb");
+
+    TildaContextMenu *context_menu = user_data;
+    GtkWindow * parent;
+
+    parent = GTK_WINDOW (context_menu->tw->window);
+
+    tilda_url_spawner_spawn_browser_for_match (parent,
+                                               context_menu->match,
+                                               context_menu->match_entry);
 }
 
 static void
@@ -142,8 +163,70 @@ on_selection_done (GtkWidget *widget, TildaContextMenu * context_menu)
     tilda_context_menu_free (context_menu);
 }
 
+static GMenuModel *
+create_menu_model (TildaContextMenu * context_menu)
+{
+    GMenu * menu = g_menu_new();
+
+    // tab section
+
+    GMenu *tab_section = g_menu_new ();
+    g_menu_append (tab_section, _("_New Tab"), "window.new-tab");
+    g_menu_append (tab_section, _("_Close Tab"), "window.close-tab");
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (tab_section));
+
+    // copy section
+
+    GMenu *match_section = g_menu_new ();
+    g_menu_append (match_section, _("_Copy"), "window.copy");
+    g_menu_append (match_section, _("_Paste"), "window.paste");
+
+    if (context_menu->match_entry != NULL)
+    {
+        char * copy_label;
+        char * open_label;
+
+        copy_label = tilda_match_registry_entry_get_copy_label (
+                context_menu->match_entry);
+        g_menu_append (match_section, copy_label, "window.copy-match");
+
+        open_label = tilda_match_registry_entry_get_action_label (
+                context_menu->match_entry);
+
+        if (open_label != NULL) {
+            g_menu_append (match_section, open_label, "window.open-match");
+        }
+
+        g_free (open_label);
+        g_free (copy_label);
+    }
+
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (match_section));
+
+    // toggle section
+
+    GMenu *toggle_section = g_menu_new ();
+    g_menu_append (toggle_section, _("_Toggle Fullscreen"), "window.fullscreen");
+    g_menu_append (toggle_section, _("_Toggle Searchbar"), "window.searchbar");
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (toggle_section));
+
+    // preferences section
+
+    GMenu *preferences_section = g_menu_new ();
+    g_menu_append (preferences_section, _("_Preferences"), "window.preferences");
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (preferences_section));
+
+    // quit section
+
+    GMenu *quit_section = g_menu_new ();
+    g_menu_append (quit_section, _("_Quit"), "window.quit");
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (quit_section));
+
+    return G_MENU_MODEL (menu);
+}
+
 GtkWidget *
-tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
+tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char * match, TildaMatchRegistryEntry * entry)
 {
     DEBUG_FUNCTION ("tilda_context_menu_popup");
     DEBUG_ASSERT (tw != NULL);
@@ -153,6 +236,7 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
     context_menu->tw = tw;
     context_menu->tt = tt;
     context_menu->match = g_strdup (match);
+    context_menu->match_entry = entry;
 
     GtkBuilder *builder = gtk_builder_new ();
 
@@ -184,8 +268,12 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
             { .name="paste", menu_paste_cb}
     };
 
-    GActionEntry entries_for_regex [] = {
-            {.name="copy-link", menu_copy_link_cb}
+    GActionEntry entries_for_match_copy [] = {
+            {.name="copy-match", menu_copy_match_cb}
+    };
+
+    GActionEntry entries_for_match_open [] = {
+            {.name="open-match", menu_open_match_cb}
     };
 
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
@@ -194,19 +282,14 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
                                      entries_for_tilda_terminal, G_N_ELEMENTS (entries_for_tilda_terminal), tt);
 
     g_action_map_add_action_entries (G_ACTION_MAP (action_group),
-                                     entries_for_regex, G_N_ELEMENTS (entries_for_regex), context_menu->match);
+                                     entries_for_match_copy, G_N_ELEMENTS (entries_for_match_copy), context_menu->match);
 
-    GAction *copyAction;
-
-    copyAction = g_action_map_lookup_action (G_ACTION_MAP (action_group), "copy-link");
-
-    if (context_menu->match == NULL) {
-        g_simple_action_set_enabled (G_SIMPLE_ACTION (copyAction), FALSE);
-    }
+    g_action_map_add_action_entries (G_ACTION_MAP (action_group),
+                                     entries_for_match_open, G_N_ELEMENTS (entries_for_match_open), context_menu);
 
     gtk_widget_insert_action_group (tw->window, "window", G_ACTION_GROUP (action_group));
 
-    GMenuModel *menu_model = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
+    GMenuModel *menu_model = create_menu_model (context_menu);
     GtkWidget *menu = gtk_menu_new_from_model (menu_model);
 
     gtk_menu_attach_to_widget (GTK_MENU (menu), tw->window, NULL);

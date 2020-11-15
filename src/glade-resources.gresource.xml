@@ -2,7 +2,6 @@
 <gresources>
  <gresource prefix="/org/tilda">
   <file compressed="true">tilda.ui</file>
-  <file compressed="true">menu.ui</file>
   <file compressed="true">tilda-search-box.ui</file>
  </gresource>
 </gresources>
