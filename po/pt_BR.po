@@ -8,12 +8,15 @@ msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2020-02-08 23:45+0100\n"
-"PO-Revision-Date: 2014-08-04 22:29+0000\n"
-"Last-Translator: NatanJMai <natan.mai@hotmail.com>\n"
+"PO-Revision-Date: 2020-11-23 09:47-0300\n"
+"Last-Translator: Gustavo Costa <gusta@null.net>\n"
 "Language: pt_BR\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2008-04-28 05:36+0000\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: src/menu.ui:6
 msgid "_New Tab"
@@ -25,27 +28,27 @@ msgstr "_Fechar Aba"
 
 #: src/menu.ui:16
 msgid "_Copy"
-msgstr ""
+msgstr "_Copiar"
 
 #: src/menu.ui:20
 msgid "_Paste"
-msgstr ""
+msgstr "_Colar"
 
 #: src/menu.ui:26
 msgid "_Toggle Fullscreen"
-msgstr ""
+msgstr "_Alternar para o modo tela cheia"
 
 #: src/menu.ui:30
 msgid "_Toggle Searchbar"
-msgstr ""
+msgstr "_Alternar para barra de pesquisa"
 
 #: src/menu.ui:36
 msgid "_Preferences"
-msgstr ""
+msgstr "_Preferências"
 
 #: src/menu.ui:42
 msgid "_Quit"
-msgstr ""
+msgstr "_Sair"
 
 #: src/tilda.ui:69
 msgid "Close Tilda"
@@ -57,11 +60,11 @@ msgstr "Abrir um novo terminal"
 
 #: src/tilda.ui:75
 msgid "Open a new terminal and hide"
-msgstr "Abrir um novo terminal e esconder"
+msgstr "Abrir um novo terminal e ocultar"
 
 #: src/tilda.ui:86 src/tilda.ui:194
 msgid "Top"
-msgstr "Topo"
+msgstr "Superior"
 
 #: src/tilda.ui:89 src/tilda.ui:197
 msgid "Bottom"
@@ -77,40 +80,39 @@ msgstr "Direita"
 
 #: src/tilda.ui:98
 msgid "Hidden"
-msgstr ""
+msgstr "Oculto"
 
 #: src/tilda.ui:109
 msgid "Focus Terminal"
-msgstr ""
+msgstr "Focar terminal"
 
 #: src/tilda.ui:112
-#, fuzzy
 msgid "Hide Terminal"
-msgstr "Fechar o terminal"
+msgstr "Ocultar terminal"
 
 #: src/tilda.ui:123
 msgid "Block Cursor"
-msgstr ""
+msgstr "Cursor bloco"
 
 #: src/tilda.ui:126
 msgid "IBeam Cursor"
-msgstr ""
+msgstr "Cursor IBeam"
 
 #: src/tilda.ui:129
 msgid "Underline Cursor"
-msgstr ""
+msgstr "Cursor sublinhado"
 
 #: src/tilda.ui:140
 msgid "Show whole tab title"
-msgstr ""
+msgstr "Mostrar o título completo da aba"
 
 #: src/tilda.ui:143
 msgid "Show first n chars of title"
-msgstr ""
+msgstr "Mostrar os primeiros n caracteres do título"
 
 #: src/tilda.ui:146
 msgid "Show last n chars of title"
-msgstr ""
+msgstr "Mostrar os últimos n caracteres do título"
 
 #: src/tilda.ui:157
 msgid "Isn't displayed"
@@ -170,7 +172,7 @@ msgstr "Escuro solarizado"
 
 #: src/tilda.ui:235
 msgid "Snazzy"
-msgstr ""
+msgstr "Elegante"
 
 #: src/tilda.ui:257
 msgid "On the Left"
@@ -182,7 +184,7 @@ msgstr "À direita"
 
 #: src/tilda.ui:263
 msgid "Disabled"
-msgstr "Inválido"
+msgstr "Desativado"
 
 #: src/tilda.ui:274 src/tilda.ui:291
 msgid "ASCII DEL"
@@ -190,7 +192,7 @@ msgstr "ASCII DEL"
 
 #: src/tilda.ui:277 src/tilda.ui:294
 msgid "Escape sequence"
-msgstr ""
+msgstr "Sequência de escape"
 
 #: src/tilda.ui:280 src/tilda.ui:297
 msgid "Control-H"
@@ -198,11 +200,11 @@ msgstr "Control-H"
 
 #: src/tilda.ui:314
 msgid "Tilda Config"
-msgstr "Configurações Tilda"
+msgstr "Config. do Tilda"
 
 #: src/tilda.ui:395
 msgid "Start Tilda hidden"
-msgstr "Iniciar escondido"
+msgstr "Iniciar Tilda ocultado"
 
 #: src/tilda.ui:409
 msgid "Always on top"
@@ -222,23 +224,23 @@ msgstr "Mostrar borda do notebook"
 
 #: src/tilda.ui:465
 msgid "Set as Desktop window"
-msgstr ""
+msgstr "Definir como janela de área de trabalho"
 
 #: src/tilda.ui:480
 msgid "Start in fullscreen"
-msgstr ""
+msgstr "Iniciar em tela cheia"
 
 #: src/tilda.ui:509
 msgid "Non-focus Pull Up Behaviour:"
-msgstr ""
+msgstr "Comportamento de subir sem foco:"
 
 #: src/tilda.ui:560
 msgid "<b>Window Display</b>"
-msgstr "Vitrine"
+msgstr "<b>Exibição da janela</b>"
 
 #: src/tilda.ui:598
 msgid "Cursor Blinks"
-msgstr "Efeito do cursor"
+msgstr "Piscar cursor"
 
 #: src/tilda.ui:612
 msgid "Audible Terminal Bell"
@@ -246,11 +248,11 @@ msgstr "Som do terminal"
 
 #: src/tilda.ui:628
 msgid "Cursor Shape: "
-msgstr ""
+msgstr "Forma do cursor: "
 
 #: src/tilda.ui:663
 msgid "<b>Terminal Display</b>"
-msgstr "<b>Visor do terminal</b>"
+msgstr "<b>Exibição do terminal</b>"
 
 #: src/tilda.ui:703
 msgid "Font:"
@@ -262,39 +264,38 @@ msgstr "<b>Fonte</b>"
 
 #: src/tilda.ui:782
 msgid "Hide Tilda when mouse leaves it"
-msgstr "Ocultar Tilda quando mouse sair"
+msgstr "Ocultar Tilda quando o mouse sair"
 
 #: src/tilda.ui:799
 msgid "Auto Hide Delay:"
-msgstr "Tempo para esconder automaticamente"
+msgstr "Atraso da ocultação automática:"
 
 #: src/tilda.ui:809
 msgid "Hide when Tilda loses focus"
-msgstr "Esconder Tilda quando perder o foco"
+msgstr "Ocultar Tilda quando perder o foco"
 
 #: src/tilda.ui:829
 msgid "<b>Auto Hide</b>"
-msgstr "<b>Esconder Automaticamente</b>"
+msgstr "<b>Ocultar automaticamente</b>"
 
 #: src/tilda.ui:868
 msgid "When last terminal is closed:"
 msgstr "Quando o último terminal é fechado:"
 
 #: src/tilda.ui:895
-#, fuzzy
 msgid "Always prompt on exit"
-msgstr "Sempre no topo"
+msgstr "Sempre avisar ao sair"
 
 #: src/tilda.ui:918
 msgid "<b>Program Exit</b>"
-msgstr "<b>Sair do Programa</b>"
+msgstr "<b>Saída do programa</b>"
 
 #: src/tilda.ui:936
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr ""
-"<small><i><b>Note:</b> Algumas opções requerem que o Tilda seja reiniciado.</"
+"<small><i><b>Nota:</b> algumas opções requerem que o Tilda seja reiniciado.</"
 "i></small>"
 
 #: src/tilda.ui:953
@@ -303,11 +304,11 @@ msgstr "Geral"
 
 #: src/tilda.ui:998
 msgid "Word Characters:"
-msgstr "Caracteres:"
+msgstr "Caracteres de palavras:"
 
 #: src/tilda.ui:1026
 msgid "<b>Select by Word</b>"
-msgstr "<b>Selecione por palavra</b>"
+msgstr "<b>Selecionar por palavra</b>"
 
 #: src/tilda.ui:1076
 msgid "Web Browser *:"
@@ -315,7 +316,7 @@ msgstr "Navegador *:"
 
 #: src/tilda.ui:1093
 msgid "<b>URL Handling</b>"
-msgstr ""
+msgstr "<b>Tratamento de URL</b>"
 
 #: src/tilda.ui:1128
 msgid "Initial Title:"
@@ -323,15 +324,15 @@ msgstr "Título Inicial:"
 
 #: src/tilda.ui:1150
 msgid "Title Max Length:"
-msgstr ""
+msgstr "Comprimento máx. do título:"
 
 #: src/tilda.ui:1191
 msgid "Dynamically-set Title:"
-msgstr ""
+msgstr "Título definido dinamicamente:"
 
 #: src/tilda.ui:1203
 msgid "Title Behaviour:"
-msgstr ""
+msgstr "Comportamento do título:"
 
 #: src/tilda.ui:1236
 msgid "<b>Title</b>"
@@ -347,11 +348,11 @@ msgstr "Comando personalizado:"
 
 #: src/tilda.ui:1325
 msgid "When Command Exits:"
-msgstr "Quando o comando sair:"
+msgstr "Quando o comando terminar:"
 
 #: src/tilda.ui:1335
 msgid "Use a login shell"
-msgstr ""
+msgstr "Usar um shell de login"
 
 #: src/tilda.ui:1361
 msgid "<b>Command</b>"
@@ -364,15 +365,18 @@ msgid ""
 "chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The "
 "best command may be different depending on the system."
 msgstr ""
+"* Um comando válido que pode abrir um navegador deve ser inserido aqui. É "
+"possível usar o nome de um navegador específico, como 'firefox' e 'google-"
+"chrome' ou usar os comandos genéricos 'x-www-browser' e 'xdg-open'. O melhor "
+"comando pode ser diferente dependendo do sistema."
 
 #: src/tilda.ui:1425
 msgid "Show confirmation dialog when closing tab"
-msgstr ""
+msgstr "Mostrar janela de confirmação ao fechar a aba"
 
 #: src/tilda.ui:1445
-#, fuzzy
 msgid "Close Action"
-msgstr "Fechar Tilda"
+msgstr "Ação ao fechar"
 
 #: src/tilda.ui:1466
 msgid "Title and Command"
@@ -384,7 +388,7 @@ msgstr "Percentual"
 
 #: src/tilda.ui:1534 src/tilda.ui:1700
 msgid "In Pixels"
-msgstr "Em Pixels"
+msgstr "Em pixels"
 
 #: src/tilda.ui:1561
 msgid "<b>Height</b>"
@@ -396,7 +400,7 @@ msgstr "Monitor:"
 
 #: src/tilda.ui:1652
 msgid "<b>Select monitor</b>"
-msgstr "<b>Selecione o monitor</b>"
+msgstr "<b>Selecionar monitor</b>"
 
 #: src/tilda.ui:1739
 msgid "<b>Width</b>"
@@ -404,7 +408,7 @@ msgstr "<b>Largura</b>"
 
 #: src/tilda.ui:1775
 msgid "Centered Horizontally"
-msgstr "Centralizado Horizontalmente"
+msgstr "Centralizado horizontalmente"
 
 #: src/tilda.ui:1793
 msgid "Y Position"
@@ -416,7 +420,7 @@ msgstr "Posição X"
 
 #: src/tilda.ui:1837
 msgid "Centered Vertically"
-msgstr "Centralizado Verticalmente"
+msgstr "Centralizado verticalmente"
 
 #: src/tilda.ui:1865
 msgid "<b>Position</b>"
@@ -424,44 +428,43 @@ msgstr "<b>Posição</b>"
 
 #: src/tilda.ui:1903
 msgid "Position of Tabs:"
-msgstr "Posições das abas"
+msgstr "Posição das abas:"
 
 #: src/tilda.ui:1930
 msgid "Expand Tabs"
-msgstr ""
+msgstr "Expandir abas"
 
 #: src/tilda.ui:1944
 msgid "Show single Tab"
-msgstr ""
+msgstr "Mostrar aba única"
 
 #: src/tilda.ui:1958
 msgid "Display Title in Tooltip"
-msgstr ""
+msgstr "Exibir título na dica de ferramenta"
 
 #: src/tilda.ui:1981
-#, fuzzy
 msgid "<b>Tabs</b>"
-msgstr "<b>Adicionar Aba</b>"
+msgstr "<b>Abas</b>"
 
 #: src/tilda.ui:2030
 msgid "Animation Delay (usec)"
-msgstr "Tempo de animação"
+msgstr "Tempo de animação (microssegundos)"
 
 #: src/tilda.ui:2042
 msgid "Animation Orientation"
-msgstr "Orientação da Animação"
+msgstr "Orientação de animação"
 
 #: src/tilda.ui:2080
 msgid "Animated Pulldown"
-msgstr "Animar a descida"
+msgstr "Descida animada"
 
 #: src/tilda.ui:2096
 msgid "Level of Transparency"
-msgstr "Nível de Transparência"
+msgstr "Nível de transparência"
 
 #: src/tilda.ui:2106
 msgid "Enable Transparency"
-msgstr "Habilitar Transparência"
+msgstr "Habilitar transparência"
 
 #: src/tilda.ui:2129
 msgid "<b>Extras</b>"
@@ -472,13 +475,12 @@ msgid "Appearance"
 msgstr "Aparência"
 
 #: src/tilda.ui:2217
-#, fuzzy
 msgid "Cursor Color"
-msgstr "Efeito do cursor"
+msgstr "Cor do cursor"
 
 #: src/tilda.ui:2265
 msgid "Text Color"
-msgstr "Cor do Texto"
+msgstr "Cor do texto"
 
 #: src/tilda.ui:2277
 msgid "Background Color"
@@ -490,81 +492,83 @@ msgstr "Esquemas embutidos"
 
 #: src/tilda.ui:2303
 msgid "<b>Foreground and Background Colors</b>"
-msgstr ""
+msgstr "<b>Cores de texto e plano de fundo</b>"
 
 #: src/tilda.ui:2335
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
+"<small><i><b>Nota:</b> os aplicativos de terminal têm essas cores "
+"disponíveis.</i></small>"
 
 #: src/tilda.ui:2378
 msgid "Choose Color 14"
-msgstr ""
+msgstr "Escolher a cor 14"
 
 #: src/tilda.ui:2391
 msgid "Choose Color 13"
-msgstr ""
+msgstr "Escolher a cor 13"
 
 #: src/tilda.ui:2404
 msgid "Choose Color 15"
-msgstr ""
+msgstr "Escolher a cor 15"
 
 #: src/tilda.ui:2417
 msgid "Choose Color 12"
-msgstr ""
+msgstr "Escolher a cor 12"
 
 #: src/tilda.ui:2430
 msgid "Choose Color 10"
-msgstr ""
+msgstr "Escolher a cor 10"
 
 #: src/tilda.ui:2443
 msgid "Choose Color 11"
-msgstr ""
+msgstr "Escolher a cor 11"
 
 #: src/tilda.ui:2456
 msgid "Choose Color 9"
-msgstr ""
+msgstr "Escolher a cor 9"
 
 #: src/tilda.ui:2469
 msgid "Choose Color 7"
-msgstr ""
+msgstr "Escolher a cor 7"
 
 #: src/tilda.ui:2482
 msgid "Choose Color 6"
-msgstr ""
+msgstr "Escolher a cor 6"
 
 #: src/tilda.ui:2495
 msgid "Choose Color 5"
-msgstr ""
+msgstr "Escolher a cor 5"
 
 #: src/tilda.ui:2508
 msgid "Choose Color 4"
-msgstr ""
+msgstr "Escolher a cor 4"
 
 #: src/tilda.ui:2521
 msgid "Choose Color 3"
-msgstr ""
+msgstr "Escolher a cor 3"
 
 #: src/tilda.ui:2534
 msgid "Choose Color 2"
-msgstr ""
+msgstr "Escolher a cor 2"
 
 #: src/tilda.ui:2547
 msgid "Choose Color 1"
-msgstr ""
+msgstr "Escolher a cor 1"
 
 #: src/tilda.ui:2560
 msgid "Choose Color 0"
-msgstr ""
+msgstr "Escolher a cor 0"
 
 #: src/tilda.ui:2574
 msgid "Choose Color 8"
-msgstr ""
+msgstr "Escolher a cor 8"
 
 #: src/tilda.ui:2591
 msgid "Built-in schemes:"
-msgstr "Esquemas Embutidos:"
+msgstr "Esquemas embutidos:"
 
 #: src/tilda.ui:2606
 msgid "Color palette:"
@@ -580,23 +584,23 @@ msgstr "Cores"
 
 #: src/tilda.ui:2698
 msgid "Scrollbar is:"
-msgstr ""
+msgstr "Barra de rolagem é:"
 
 #: src/tilda.ui:2707
 msgid "Limit scrollback to:"
-msgstr ""
+msgstr "Limitar rolagem para trás a:"
 
 #: src/tilda.ui:2711
 msgid "Unselect for unlimited scrollback."
-msgstr ""
+msgstr "Desmarque para rolagem para trás ilimitada."
 
 #: src/tilda.ui:2723
 msgid "Scroll on Output"
-msgstr ""
+msgstr "Rolar com alguma saída"
 
 #: src/tilda.ui:2737
 msgid "Scroll on Keystroke"
-msgstr ""
+msgstr "Rolar ao pressionar tecla"
 
 #: src/tilda.ui:2759
 msgid "0"
@@ -604,15 +608,15 @@ msgstr "0"
 
 #: src/tilda.ui:2771
 msgid "lines"
-msgstr "Linhas"
+msgstr "linhas"
 
 #: src/tilda.ui:2797
 msgid "<b>Scrolling</b>"
-msgstr ""
+msgstr "<b>Rolagem</b>"
 
 #: src/tilda.ui:2818
 msgid "Scrolling"
-msgstr ""
+msgstr "Rolagem"
 
 #: src/tilda.ui:2857
 msgid ""
@@ -621,18 +625,22 @@ msgid ""
 "applications and operating systems that expect different terminal behavior.</"
 "i></small>"
 msgstr ""
+"<small><i><b>Nota:</b> essas opções podem fazer com que alguns aplicativos "
+"se comportem incorretamente. Eles estão aqui apenas para permitir que você "
+"trabalhe em certos aplicativos e sistemas operacionais que esperam um "
+"comportamento de terminal diferente.</i></small>"
 
 #: src/tilda.ui:2873
 msgid "_Backspace key generates:"
-msgstr ""
+msgstr "_Tecla Backspace gera:"
 
 #: src/tilda.ui:2887
 msgid "_Delete key generates:"
-msgstr ""
+msgstr "_Tecla Delete gera:"
 
 #: src/tilda.ui:2899
 msgid "_Reset Compatibility Options to Defaults"
-msgstr "Voltar opções padrões de compatibilidade"
+msgstr "_Restaurar padrões para as opções de compatibilidade"
 
 #: src/tilda.ui:2953
 msgid "<b>Compatibility</b>"
@@ -643,36 +651,35 @@ msgid "Compatibility"
 msgstr "Compatibilidade"
 
 #: src/tilda.ui:3024
-#, fuzzy
 msgid "<b>Keybindings</b>"
-msgstr "<b>Altura</b>"
+msgstr "<b>Atalhos de teclado</b>"
 
 #: src/tilda.ui:3043
 msgid "Keybindings"
-msgstr ""
+msgstr "Atalhos de teclado"
 
 #: src/configsys.c:384
 msgid "Unable to sync the config file to disk\n"
-msgstr ""
+msgstr "Não é possível sincronizar o arquivo de configuração com o disco\n"
 
 #: src/configsys.c:394
 msgid "Unable to close the config file\n"
-msgstr ""
+msgstr "Não foi possível fechar o arquivo de configuração\n"
 
 #: src/configsys.c:407
 #, c-format
 msgid "Unable to write the config file to %s\n"
-msgstr ""
+msgstr "Não foi possível gravar o arquivo de configuração em %s\n"
 
 #: src/tilda.c:239
 #, c-format
 msgid "Unable to run command: `%s'\n"
-msgstr ""
+msgstr "Não foi possível executar o comando: `%s '\n"
 
 #: src/tilda.c:284 src/tilda.c:459
 #, c-format
 msgid "Unable to open lock directory: %s\n"
-msgstr ""
+msgstr "Não foi possível abrir o diretório de bloqueio: %s\n"
 
 #: src/tilda.c:396
 #, c-format
@@ -683,30 +690,35 @@ msgstr "Criando diretório:'%s'\n"
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
+"O style.css  foi encontrado no diretório de configuração do usuário, "
+"aplicando o estilo css do usuário.\n"
 
 #: src/tilda.c:610
 msgid "Migrating old config path to XDG folders\n"
-msgstr ""
+msgstr "Migrando caminho de configuração antigo para pastas XDG\n"
 
 #: src/tilda.c:673
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
 msgstr ""
+"O arquivo de config. especificado '%s' não existe. Revertendo para o caminho "
+"padrão.\n"
 
 #: src/tilda.c:766 src/tilda-keybinding.c:409
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
 msgstr ""
+"O atalho de teclado que você escolheu para \"Descer terminal\" é inválido. "
+"Por favor escolha outro."
 
 #: src/tilda-keybinding.c:115
-#, fuzzy
 msgid "Action"
-msgstr "Fechar Tilda"
+msgstr "Ação"
 
 #: src/tilda-keybinding.c:121
 msgid "Shortcut"
-msgstr ""
+msgstr "Atalho"
 
 #: src/tilda-keybinding.c:306
 msgid "Enter keyboard shortcut"
@@ -716,40 +728,42 @@ msgstr "Adicione um atalho de teclado"
 #, c-format
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr ""
+"O atalho de teclado que você escolheu para \"%s\" é inválido. Por favor "
+"escolha outro."
 
 #: src/tilda_terminal.c:398
 #, c-format
 msgid "Problem reading link %s: %s\n"
-msgstr ""
+msgstr "Problema ao ler o link %s: %s\n"
 
 #: src/tilda_terminal.c:421
 #, c-format
 msgid "Unable to launch default shell: %s\n"
-msgstr ""
+msgstr "Não foi possível iniciar o shell padrão: %s\n"
 
 #: src/tilda_terminal.c:423
 #, c-format
 msgid "Unable to launch custom command: %s\n"
-msgstr ""
+msgstr "Não foi possível iniciar o comando personalizado: %s\n"
 
 #: src/tilda_terminal.c:424
-#, fuzzy, c-format
+#, c-format
 msgid "Launching custom command failed with error: %s\n"
-msgstr "Executar um comando personalizado em vez do shell"
+msgstr "Falha ao iniciar o comando personalizado com o erro: %s\n"
 
 #: src/tilda_terminal.c:425 src/tilda_terminal.c:459
 msgid "Launching default shell instead\n"
-msgstr ""
+msgstr "Iniciando o shell padrão\n"
 
 #: src/tilda_terminal.c:458
 #, c-format
 msgid "Problem parsing custom command: %s\n"
-msgstr ""
+msgstr "Problema ao analisar o comando personalizado: %s\n"
 
 #: src/tilda_terminal.c:976
 #, c-format
 msgid "Failed to launch the web browser. The command was `%s'\n"
-msgstr ""
+msgstr "Falha ao iniciar o navegador. O comando foi `%s'\n"
 
 #: src/tilda_terminal.c:1026
 msgid "Untitled"
@@ -757,45 +771,45 @@ msgstr "Sem título"
 
 #: src/tilda_terminal.c:1044
 msgid "Bad value for \"d_set_title\" in config file\n"
-msgstr ""
+msgstr "Valor inválido para \"d_set_title\" no arquivo de configuração\n"
 
 #: src/tilda_window.c:109
 msgid "Are you sure you want to close this tab?"
-msgstr ""
+msgstr "Tem certeza de que deseja fechar esta aba?"
 
 #: src/tilda_window.c:156
 msgid "You have a bad tab_pos in your configuration file\n"
-msgstr ""
+msgstr "Você tem um tab_pos inválido em seu arquivo de configuração\n"
 
 #: src/tilda_window.c:811
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
-msgstr ""
+msgstr "Não foi possível definir o ícone de tilda: %s\n"
 
 #: src/tilda_window.c:1105
 msgid "Out of memory, cannot create tab\n"
-msgstr ""
+msgstr "Sem memória, não é possível criar aba\n"
 
 #: src/tilda_window.c:1225
 msgid "Are you sure you want to Quit?"
-msgstr ""
+msgstr "Você tem certeza que quer sair?"
 
 #: src/wizard.c:138
 #, c-format
 msgid "Tilda %d Config"
-msgstr ""
+msgstr "Config. do Tilda %d"
 
 #: src/wizard.c:561
 msgid "Invalid Cursor Type, resetting to default\n"
-msgstr ""
+msgstr "Tipo de cursor inválido, redefinindo para o padrão\n"
 
 #: src/wizard.c:579
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
-msgstr ""
+msgstr "Comportamento de subir sem foco inválido, ignorando\n"
 
 #: src/wizard.c:1046
 msgid "Invalid tab position setting, ignoring\n"
-msgstr ""
+msgstr "Configuração de posição de aba inválida, ignorando\n"
 
 #~ msgid "Allow Bold Text"
 #~ msgstr "Permitir texto em negrito"
