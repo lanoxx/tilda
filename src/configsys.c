@@ -178,6 +178,17 @@ static cfg_opt_t config_opts[] = {
     /* Whether match activation with mouse click requires CTRL to be pressed */
     CFG_BOOL("control_activates_match", TRUE, CFGF_NONE),
 
+    /* Whether to enable regular expressions to match
+     * certain types of tokens: */
+    CFG_BOOL("match_web_uris", TRUE, CFGF_NONE),
+    CFG_BOOL("match_file_uris", TRUE, CFGF_NONE),
+    CFG_BOOL("match_email_addresses", TRUE, CFGF_NONE),
+    CFG_BOOL("match_numbers", TRUE, CFGF_NONE),
+
+    /* if set to TRUE, tilda will fall back to open
+     * URIs with the 'web_browser' option. */
+    CFG_BOOL("use_custom_web_browser", FALSE, CFGF_NONE),
+
     /**
      * Deprecated tilda options. These options be commented out in the
      * configuration file and will not be initialized with default values

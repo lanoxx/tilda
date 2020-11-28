@@ -158,7 +158,7 @@ void tilda_match_registry_for_each (TildaMatchRegistry * registry,
             g_error_free (error);
         }
 
-        gint tag = callback (regex, user_data);
+        gint tag = callback (regex, pattern_item->flavor, user_data);
 
         if (tag == TILDA_MATCH_REGISTRY_IGNORE) {
             continue;

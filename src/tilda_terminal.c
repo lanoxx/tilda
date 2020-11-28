@@ -96,12 +96,38 @@ gint tilda_term_free (tilda_term *term)
     return 0;
 }
 
+static gboolean check_flavor_enabled (TildaMatchRegistryFlavor flavor) {
+
+    switch (flavor) {
+        case TILDA_MATCH_FLAVOR_EMAIL:
+            return config_getbool("match_email_addresses");
+        case TILDA_MATCH_FLAVOR_NUMBER:
+            return config_getbool("match_numbers");
+        case TILDA_MATCH_FLAVOR_FILE:
+            return config_getbool("match_file_uris");
+        case TILDA_MATCH_FLAVOR_URL:
+        case TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP:
+            return config_getbool("match_web_uris");
+        default:
+            g_assert_not_reached();
+    }
+}
+
 static int
 register_match (VteRegex * regex,
+                TildaMatchRegistryFlavor flavor,
                 gpointer user_data)
 {
     tilda_term * term = user_data;
     int tag;
+
+    gboolean flavor_enabled = FALSE;
+
+    flavor_enabled = check_flavor_enabled(flavor);
+
+    if (!flavor_enabled) {
+        return TILDA_MATCH_REGISTRY_IGNORE;
+    }
 
     tag = vte_terminal_match_add_regex (VTE_TERMINAL (term->vte_term), regex, 0);
 
@@ -195,10 +221,9 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                       G_CALLBACK(move_window_cb), tw->window);
 
     TildaMatchRegistry * registry = tilda_match_registry_new ();
-
-    tilda_match_registry_for_each (registry, register_match, term);
-
     term->registry = registry;
+
+    tilda_match_registry_for_each (term->registry, register_match, term);
 
     /* Show the child widgets */
     gtk_widget_show (term->vte_term);
@@ -216,6 +241,13 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     start_shell (term, FALSE);
 
     return term;
+}
+
+void tilda_terminal_update_matches (tilda_term *tt) {
+
+    vte_terminal_match_remove_all (VTE_TERMINAL (tt->vte_term));
+
+    tilda_match_registry_for_each (tt->registry, register_match, tt);
 }
 
 void tilda_term_set_scrollbar_position (tilda_term *tt, enum tilda_term_scrollbar_positions pos)

@@ -37,8 +37,16 @@ void tilda_url_spawner_spawn_browser_for_match (GtkWindow * parent,
     if (flavor == TILDA_MATCH_FLAVOR_URL ||
         flavor == TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP)
     {
-        launch_configured_web_browser (match);
-        return;
+        /* Starting with version 1.6 and above by default tilda uses
+         * the gtk_show_uri function family to open URIs, this option
+         * allows to go back to the legacy behavior and use a configured
+         * command to spawn a browser. We will eventually remove this option. */
+        gboolean use_custom_web_browser = config_getbool("use_custom_web_browser");
+
+        if (use_custom_web_browser) {
+            launch_configured_web_browser (match);
+            return;
+        }
     }
 
     if (!tilda_match_registry_flavor_is_uri(entry)) {

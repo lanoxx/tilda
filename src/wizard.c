@@ -746,6 +746,84 @@ static void check_control_activates_match_cb (GtkWidget *w, tilda_window *tw) {
     config_setbool("control_activates_match", active);
 }
 
+static void update_custom_web_browser_sensitivity () {
+    gboolean match_web_uris = config_getbool("match_web_uris");
+    gboolean use_custom_web_browser = config_getbool("use_custom_web_browser");
+    gboolean sensitive = FALSE;
+
+    GtkWidget * check_custom_web_browser;
+    GtkWidget * label_web_browser;
+    GtkWidget * entry_web_browser;
+
+    check_custom_web_browser =
+            GTK_WIDGET (gtk_builder_get_object (xml, "check_custom_web_browser"));
+    label_web_browser =
+            GTK_WIDGET (gtk_builder_get_object (xml, "label_web_browser"));
+    entry_web_browser =
+            GTK_WIDGET (gtk_builder_get_object (xml, "entry_web_browser"));
+
+    gtk_widget_set_sensitive(check_custom_web_browser, match_web_uris);
+
+    sensitive = match_web_uris && use_custom_web_browser;
+
+    gtk_widget_set_sensitive (label_web_browser, sensitive);
+    gtk_widget_set_sensitive (entry_web_browser, sensitive);
+}
+
+static void check_match_web_uris_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("match_web_uris", active);
+
+    update_custom_web_browser_sensitivity ();
+
+    for (guint i=0; i < g_list_length (tw->terms); i++) {
+        tilda_term * tt = g_list_nth_data (tw->terms, i);
+        tilda_terminal_update_matches(tt);
+    }
+}
+
+static void check_custom_web_browser_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("use_custom_web_browser", active);
+
+    update_custom_web_browser_sensitivity ();
+}
+
+static void check_match_file_uris_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("match_file_uris", active);
+
+    for (guint i=0; i < g_list_length (tw->terms); i++) {
+        tilda_term * tt = g_list_nth_data (tw->terms, i);
+        tilda_terminal_update_matches(tt);
+    }
+}
+
+static void check_match_email_addresses_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("match_email_addresses", active);
+
+    for (guint i=0; i < g_list_length (tw->terms); i++) {
+        tilda_term * tt = g_list_nth_data (tw->terms, i);
+        tilda_terminal_update_matches(tt);
+    }
+}
+
+static void check_match_numbers_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("match_numbers", active);
+
+    for (guint i=0; i < g_list_length (tw->terms); i++) {
+        tilda_term * tt = g_list_nth_data (tw->terms, i);
+        tilda_terminal_update_matches(tt);
+    }
+}
+
 static void check_start_fullscreen_cb(GtkWidget *w, tilda_window *tw) {
     const gboolean start_fullscreen = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 
@@ -1781,6 +1859,13 @@ static void set_wizard_state_from_config (tilda_window *tw) {
 
     CHECK_BUTTON ("check_control_activates_match", "control_activates_match");
 
+    CHECK_BUTTON ("check_match_web_uris", "match_web_uris");
+    CHECK_BUTTON ("check_custom_web_browser", "use_custom_web_browser");
+
+    CHECK_BUTTON ("check_match_file_uris", "match_file_uris");
+    CHECK_BUTTON ("check_match_email_addresses", "match_email_addresses");
+    CHECK_BUTTON ("check_match_numbers", "match_numbers");
+
     COMBO_BOX ("combo_command_exit", "command_exit");
     COMBO_BOX ("combo_on_last_terminal_exit", "on_last_terminal_exit");
     CHECK_BUTTON ("check_prompt_on_exit", "prompt_on_exit");
@@ -1788,6 +1873,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_custom_command", "run_command");
 
     TEXT_ENTRY ("entry_web_browser", "web_browser");
+
+    update_custom_web_browser_sensitivity ();
 
     CHECK_BUTTON ("check_confirm_close_tab", "confirm_close_tab");
 
@@ -1940,6 +2027,13 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_command_login_shell", "toggled", check_command_login_shell_cb, tw);
 
     CONNECT_SIGNAL ("check_control_activates_match", "toggled", check_control_activates_match_cb, tw);
+
+    CONNECT_SIGNAL ("check_match_web_uris", "toggled", check_match_web_uris_cb, tw);
+    CONNECT_SIGNAL ("check_custom_web_browser", "toggled", check_custom_web_browser_cb, tw);
+
+    CONNECT_SIGNAL ("check_match_file_uris", "toggled", check_match_file_uris_cb, tw);
+    CONNECT_SIGNAL ("check_match_email_addresses", "toggled", check_match_email_addresses_cb, tw);
+    CONNECT_SIGNAL ("check_match_numbers", "toggled", check_match_numbers_cb, tw);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed, tw);
     CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb, tw);

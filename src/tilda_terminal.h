@@ -88,6 +88,8 @@ void tilda_term_adjust_font_scale(tilda_term *term, gdouble scale);
 gchar * tilda_terminal_get_full_title (tilda_term *tt);
 gchar * tilda_terminal_get_title (tilda_term *tt);
 
+void tilda_terminal_update_matches (tilda_term *tt);
+
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 
 G_END_DECLS

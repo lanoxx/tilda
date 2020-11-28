@@ -32,7 +32,7 @@ typedef struct TildaMatchRegistry_ TildaMatchRegistry;
 
 typedef struct TildaMatchRegistryEntry_ TildaMatchRegistryEntry;
 
-typedef int (*TildaMatchHookFunc)(VteRegex * regex, gpointer user_data);
+typedef int (*TildaMatchHookFunc)(VteRegex * regex, TildaMatchRegistryFlavor flavor, gpointer user_data);
 
 #define TILDA_MATCH_REGISTRY_IGNORE -1
 
