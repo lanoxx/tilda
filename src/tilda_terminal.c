@@ -789,7 +789,6 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
 {
     VteTerminal *terminal;
     gchar *match;
-    gchar *link;
     gint tag;
 
     terminal  = VTE_TERMINAL(tt->vte_term);
@@ -811,7 +810,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
                 break;
             case 3: /* Right Click */
             {
-                GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, link);
+                GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, match);
                 gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
                 break;
             }
@@ -829,7 +828,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
     {
         GdkEventKey *keyevent = (GdkEventKey*) event;
         if(keyevent->keyval == GDK_KEY_Menu) {
-            GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, link);
+            GtkWidget * menu = tilda_context_menu_popup (tt->tw, tt, match);
             gtk_menu_popup_at_pointer (GTK_MENU (menu), event);
         }
     }
