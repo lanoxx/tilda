@@ -705,6 +705,8 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     /** Mouse **/
     vte_terminal_set_mouse_autohide (VTE_TERMINAL(tt->vte_term), FALSE); /* TODO: make this configurable */
 
+    vte_terminal_set_allow_hyperlink(VTE_TERMINAL(tt->vte_term), TRUE);
+
     /** Text Properties **/
     PangoFontDescription *description =
         pango_font_description_from_string (config_getstr ("font"));
