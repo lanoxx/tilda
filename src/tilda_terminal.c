@@ -59,6 +59,9 @@ static void move_window_cb (GtkWidget *widget, guint x, guint y, gpointer data);
 static gchar *get_default_command (void);
 gchar *get_working_directory (tilda_term *terminal);
 
+static void spawn_browser_for_match (tilda_term * terminal,
+                                     const gchar *match);
+
 gint tilda_term_free (tilda_term *term)
 {
     DEBUG_FUNCTION ("tilda_term_free");
@@ -761,9 +764,6 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
     tilda_term *tt;
     gchar *match;
     gint tag;
-    gchar *cmd;
-    gchar *web_browser_cmd;
-    gboolean ret = FALSE;
 
     tt = TILDA_TERM(data);
 
@@ -792,27 +792,7 @@ static int button_press_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *eve
             break;
         case 1: /* Left Click */
             /* Check if we can launch a web browser, and do so if possible */
-            if (match != NULL)
-            {
-                g_debug ("Got a Left Click -- Matched: `%s' (%d)", match, tag);
-
-                web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
-                cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
-
-                g_debug ("Launching command: `%s'", cmd);
-
-                ret = g_spawn_command_line_async(cmd, NULL);
-
-                /* Check that the command launched */
-                if (!ret)
-                {
-                    g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
-                    TILDA_PERROR ();
-                }
-
-                g_free (web_browser_cmd);
-                g_free (cmd);
-            }
+            spawn_browser_for_match (tt, match);
 
             break;
         default:
@@ -845,6 +825,36 @@ gboolean key_press_cb (GtkWidget *widget,
         }
     }
     return GDK_EVENT_PROPAGATE;
+}
+
+void spawn_browser_for_match (tilda_term * terminal,
+                              const gchar * match)
+{
+    gchar * cmd;
+    gchar * web_browser_cmd;
+    gboolean result;
+
+    if (match != NULL)
+    {
+        g_debug ("Got a Left Click -- Matched: `%s'", match);
+
+        web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
+        cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
+
+        g_debug ("Launching command: `%s'", cmd);
+
+        result = g_spawn_command_line_async (cmd, NULL);
+
+        /* Check that the command launched */
+        if (!result)
+        {
+            g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
+            TILDA_PERROR ();
+        }
+
+        g_free (web_browser_cmd);
+        g_free (cmd);
+    }
 }
 
 gchar * tilda_terminal_get_full_title (tilda_term *tt)
