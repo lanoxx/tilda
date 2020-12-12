@@ -145,7 +145,7 @@ on_selection_done (GtkWidget *widget, TildaContextMenu * context_menu)
 GtkWidget *
 tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char *match)
 {
-    DEBUG_FUNCTION ("popup_menu");
+    DEBUG_FUNCTION ("tilda_context_menu_popup");
     DEBUG_ASSERT (tw != NULL);
     DEBUG_ASSERT (tt != NULL);
 
