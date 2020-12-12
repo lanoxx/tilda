@@ -23,8 +23,8 @@
 #include "configsys.h"
 #include "wizard.h" /* wizard */
 #include "vte-util.h"
-
 #include <stdio.h>
+#include "tilda-url-spawner.h"
 #include <stdlib.h> /* malloc */
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -42,7 +42,7 @@ static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static gboolean button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term *terminal);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
-static void handle_left_button_click (tilda_term * terminal,
+static void handle_left_button_click (GtkWidget * window,
                                       GdkEventButton * button_event,
                                       const char * link,
                                       TildaMatchRegistryEntry * entry);
@@ -61,10 +61,6 @@ gchar *get_working_directory (tilda_term *terminal);
 static void handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
                               GdkEvent *event,
                               tilda_term *terminal);
-
-static void spawn_browser_for_match (tilda_term * terminal,
-                                     const gchar *match,
-                                     TildaMatchRegistryFlavor flavor);
 
 gint tilda_term_free (tilda_term *term)
 {
@@ -800,6 +796,9 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
     TildaMatchRegistryEntry * match_entry;
     gchar *hyperlink;
     gint tag;
+    GtkWidget * window;
+
+    window = tt->tw->window;
 
     terminal  = VTE_TERMINAL(tt->vte_term);
 
@@ -839,7 +838,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
             case 2: /* Middle Click */
                 break;
             case 1: /* Left Click */
-                handle_left_button_click (tt, button_event, match, match_entry);
+                handle_left_button_click (window, button_event, match, match_entry);
                 break;
             default:
                 break;
@@ -857,7 +856,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
     g_free (match);
 }
 
-static void handle_left_button_click (tilda_term * terminal,
+static void handle_left_button_click (GtkWidget * window,
                                       GdkEventButton * button_event,
                                       const char *link,
                                       TildaMatchRegistryEntry * match_entry)
@@ -865,46 +864,12 @@ static void handle_left_button_click (tilda_term * terminal,
     gboolean activate_with_control = config_getbool("control_activates_match");
 
     if (!activate_with_control || button_event->state & GDK_CONTROL_MASK) {
-        TildaMatchRegistryFlavor flavor;
-
-        flavor = tilda_match_registry_entry_get_flavor(match_entry);
-
-        /* Check if we can launch a web browser, and do so if possible */
-        spawn_browser_for_match(terminal, link, flavor);
+        /* Check if we can open the matched token, and do so if possible */
+        tilda_url_spawner_spawn_browser_for_match (GTK_WINDOW (window),
+                                                   link,
+                                                   match_entry);
     } else {
         g_debug ("Match activation skipped.");
-    }
-}
-
-void spawn_browser_for_match (tilda_term * terminal,
-                              const gchar * match,
-                              TildaMatchRegistryFlavor flavor)
-{
-    gchar * cmd;
-    gchar * web_browser_cmd;
-    gboolean result;
-
-    if (match != NULL && (flavor == TILDA_MATCH_FLAVOR_URL ||
-                          flavor == TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP))
-    {
-        g_debug ("Got a Left Click -- Matched: `%s' (flavor %d)", match, flavor);
-
-        web_browser_cmd = g_strescape (config_getstr ("web_browser"), NULL);
-        cmd = g_strdup_printf ("%s %s", web_browser_cmd, match);
-
-        g_debug ("Launching command: `%s'", cmd);
-
-        result = g_spawn_command_line_async (cmd, NULL);
-
-        /* Check that the command launched */
-        if (!result)
-        {
-            g_critical (_("Failed to launch the web browser. The command was `%s'\n"), cmd);
-            TILDA_PERROR ();
-        }
-
-        g_free (web_browser_cmd);
-        g_free (cmd);
     }
 }
 

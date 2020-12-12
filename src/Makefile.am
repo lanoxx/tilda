@@ -58,6 +58,7 @@ src_tilda_SOURCES = \
 		src/tilda-regex.h \
 		src/tilda-search-box.c src/tilda-search-box.h \
 		src/tilda_terminal.h src/tilda_terminal.c \
+		src/tilda-url-spawner.h src/tilda-url-spawner.c \
 		src/tilda_window.h src/tilda_window.c \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
 		src/wizard.h src/wizard.c \
