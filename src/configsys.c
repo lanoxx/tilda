@@ -175,6 +175,9 @@ static cfg_opt_t config_opts[] = {
     /* Whether to show the full tab title as a tooltip */
     CFG_BOOL("show_title_tooltip", FALSE, CFGF_NONE),
 
+    /* Whether match activation with mouse click requires CTRL to be pressed */
+    CFG_BOOL("control_activates_match", TRUE, CFGF_NONE),
+
     /**
      * Deprecated tilda options. These options be commented out in the
      * configuration file and will not be initialized with default values

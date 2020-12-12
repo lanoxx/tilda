@@ -47,6 +47,9 @@ static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static gboolean button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term *terminal);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
+void handle_left_button_click (tilda_term * terminal,
+                               GdkEventButton * button_event,
+                               const gchar * match);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
 static void raise_window_cb (GtkWidget *widget, gpointer data);
@@ -819,8 +822,7 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
             case 2: /* Middle Click */
                 break;
             case 1: /* Left Click */
-                /* Check if we can launch a web browser, and do so if possible */
-                spawn_browser_for_match (tt, match);
+                handle_left_button_click (tt, button_event, match);
                 break;
             default:
                 break;
@@ -836,6 +838,20 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
     }
 
     g_free (match);
+}
+
+void handle_left_button_click (tilda_term * terminal,
+                               GdkEventButton * button_event,
+                               const gchar * match)
+{
+    gboolean activate_with_control = config_getbool("control_activates_match");
+
+    if (!activate_with_control || button_event->state & GDK_CONTROL_MASK) {
+        /* Check if we can launch a web browser, and do so if possible */
+        spawn_browser_for_match(terminal, match);
+    } else {
+        g_debug ("Match activation skipped.");
+    }
 }
 
 void spawn_browser_for_match (tilda_term * terminal,

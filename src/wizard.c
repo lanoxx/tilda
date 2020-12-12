@@ -740,6 +740,12 @@ static void check_command_login_shell_cb (GtkWidget *w, tilda_window *tw) {
     config_setbool("command_login_shell", active);
 }
 
+static void check_control_activates_match_cb (GtkWidget *w, tilda_window *tw) {
+    const gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("control_activates_match", active);
+}
+
 static void check_start_fullscreen_cb(GtkWidget *w, tilda_window *tw) {
     const gboolean start_fullscreen = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
 
@@ -1772,6 +1778,9 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_run_custom_command", "run_command");
     TEXT_ENTRY ("entry_custom_command", "command");
     CHECK_BUTTON ("check_command_login_shell", "command_login_shell");
+
+    CHECK_BUTTON ("check_control_activates_match", "control_activates_match");
+
     COMBO_BOX ("combo_command_exit", "command_exit");
     COMBO_BOX ("combo_on_last_terminal_exit", "on_last_terminal_exit");
     CHECK_BUTTON ("check_prompt_on_exit", "prompt_on_exit");
@@ -1929,6 +1938,8 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("entry_custom_command","focus-out-event", validate_executable_command_cb, tw);
     CONNECT_SIGNAL ("combo_command_exit","changed",combo_command_exit_changed_cb, tw);
     CONNECT_SIGNAL ("check_command_login_shell", "toggled", check_command_login_shell_cb, tw);
+
+    CONNECT_SIGNAL ("check_control_activates_match", "toggled", check_control_activates_match_cb, tw);
 
     CONNECT_SIGNAL ("entry_web_browser","changed",entry_web_browser_changed, tw);
     CONNECT_SIGNAL ("entry_web_browser","focus-out-event", validate_executable_command_cb, tw);
