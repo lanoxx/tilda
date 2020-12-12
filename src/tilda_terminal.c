@@ -199,7 +199,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
                                              term->http_regexp, 0);
     }
 
-    vte_terminal_match_set_cursor_type (VTE_TERMINAL(term->vte_term), ret, GDK_HAND2);
+    vte_terminal_match_set_cursor_name (VTE_TERMINAL (term->vte_term), ret, "pointer");
 
     /* Show the child widgets */
     gtk_widget_show (term->vte_term);
