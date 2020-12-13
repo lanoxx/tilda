@@ -47,9 +47,9 @@ static void child_exited_cb (GtkWidget *widget, gint status, gpointer data);
 static void window_title_changed_cb (GtkWidget *widget, gpointer data);
 static gboolean button_press_cb (GtkWidget *widget, GdkEvent *event, tilda_term *terminal);
 static gboolean key_press_cb (GtkWidget *widget, GdkEvent  *event, tilda_term *terminal);
-void handle_left_button_click (tilda_term * terminal,
-                               GdkEventButton * button_event,
-                               const gchar * match);
+static void handle_left_button_click (tilda_term * terminal,
+                                      GdkEventButton * button_event,
+                                      const gchar * match);
 static void iconify_window_cb (GtkWidget *widget, gpointer data);
 static void deiconify_window_cb (GtkWidget *widget, gpointer data);
 static void raise_window_cb (GtkWidget *widget, gpointer data);
@@ -840,9 +840,9 @@ handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
     g_free (match);
 }
 
-void handle_left_button_click (tilda_term * terminal,
-                               GdkEventButton * button_event,
-                               const gchar * match)
+static void handle_left_button_click (tilda_term * terminal,
+                                      GdkEventButton * button_event,
+                                      const gchar * match)
 {
     gboolean activate_with_control = config_getbool("control_activates_match");
 
