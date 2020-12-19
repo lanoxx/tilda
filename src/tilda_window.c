@@ -723,6 +723,8 @@ static gint tilda_add_config_accelerator_by_path(const gchar* key, const gchar* 
     GdkModifierType accel_mods;
     GClosure *temp;
 
+    if (strcmp(key, "NULL") == 0) return TRUE;
+
     gtk_accelerator_parse (config_getstr(key), &accel_key, &accel_mods);
     if (! ((accel_key == 0) && (accel_mods == 0)) )  // make sure it parsed properly
     {

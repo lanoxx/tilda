@@ -8,25 +8,54 @@
 enum keybinding_columns
 {
     KB_TREE_ACTION,
+
+    /**
+     * This stores the actual shortcut that the user enter and which we persist
+     * in the config file. When a shortcut is unset the special string "NULL"
+     * is used. Note. that libconfuse does not support empty strings in the
+     * configuration so we use "NULL" (as a string, not a literal) to unset
+     * the shortcut.
+     */
     KB_TREE_SHORTCUT,
+
+    /**
+     * This stores the string of the shortcut that will be shown in the tree
+     * view widget. In most cases this will be identical to the shortcut itself
+     * but when the shortcut is set to the special value "NULL", then we use
+     * this value to show an empty string.
+     */
+    KB_TREE_SHORTCUT_DISPLAY,
+
+    /**
+     * The name of the config option which stores the shortcut.
+     */
     KB_TREE_CONFIG_NAME,
     KB_NUM_COLUMNS
 };
 
 struct _TildaKeybindingTreeView {
     GtkWidget    *tree_view;
+    GtkWidget    *clear_button;
     GtkListStore *list_store;
     GtkBuilder   *builder;
 
     /* Stores the signal handler id for the 'button-press-event'
      * of the tree view. */
     gulong handler_id;
+
+    /* Stores the signal handler id for the 'clicked' event
+     * of the clear button. */
+    gulong clear_handler_id;
 };
 
 static gboolean
 keybinding_button_press_event_cb (GtkWidget *tree_view,
                                   GdkEventButton *event,
                                   TildaKeybindingTreeView *keybindings);
+
+static gboolean
+clear_button_clicked_event_cb (GtkWidget * button,
+                               TildaKeybindingTreeView * keybindings);
 
 static gboolean
 keybinding_dialog_key_press_event_cb (GtkWidget *dialog,
@@ -91,19 +120,25 @@ tilda_keybinding_init (GtkBuilder *builder)
             g_malloc (sizeof (TildaKeybindingTreeView));
 
     GtkWidget *tree_view;
+    GtkWidget *clear_button;
     GtkListStore *list_store;
 
     tree_view = GTK_WIDGET (gtk_builder_get_object (builder,
                                                     "tree_view_keybindings"));
 
+    clear_button = GTK_WIDGET (gtk_builder_get_object (builder,
+                                                      "button_clear_keybinding"));
+
     list_store = gtk_list_store_new (KB_NUM_COLUMNS,
+                                     G_TYPE_STRING,
                                      G_TYPE_STRING,
                                      G_TYPE_STRING,
                                      G_TYPE_STRING);
 
-    keybindings->list_store = list_store;
-    keybindings->tree_view = tree_view;
-    keybindings->builder = builder;
+    keybindings->list_store = g_object_ref(list_store);
+    keybindings->tree_view = g_object_ref(tree_view);
+    keybindings->clear_button = g_object_ref(clear_button);
+    keybindings->builder = g_object_ref (builder);
 
     gtk_tree_view_set_model (GTK_TREE_VIEW (tree_view),
                              GTK_TREE_MODEL (list_store));
@@ -119,7 +154,7 @@ tilda_keybinding_init (GtkBuilder *builder)
     gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
 
     column = gtk_tree_view_column_new_with_attributes (_("Shortcut"), renderer,
-                                                       "text", KB_TREE_SHORTCUT,
+                                                       "text", KB_TREE_SHORTCUT_DISPLAY,
                                                        NULL);
 
     gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
@@ -131,6 +166,11 @@ tilda_keybinding_init (GtkBuilder *builder)
                               G_CALLBACK (keybinding_button_press_event_cb),
                               keybindings);
 
+    keybindings->clear_handler_id =
+            g_signal_connect (clear_button, "clicked",
+                              G_CALLBACK (clear_button_clicked_event_cb),
+                              keybindings);
+
     return keybindings;
 }
 
@@ -140,9 +180,13 @@ tilda_keybinding_free (TildaKeybindingTreeView *keybinding)
     g_signal_handler_disconnect (keybinding->tree_view,
                                  keybinding->handler_id);
 
-    keybinding->builder = NULL;
-    keybinding->list_store = NULL;
-    keybinding->tree_view = NULL;
+    g_signal_handler_disconnect (keybinding->clear_button,
+                                 keybinding->clear_handler_id);
+
+    g_clear_object (&keybinding->builder);
+    g_clear_object (&keybinding->list_store);
+    g_clear_object (&keybinding->tree_view);
+    g_clear_object (&keybinding->clear_button);
 
     g_free (keybinding);
 }
@@ -231,10 +275,18 @@ init_bindings_from_config (GtkListStore *list_store, GtkTreeIter *iter)
         gtk_list_store_append (list_store, iter);
 
         gchar *shortcut = config_getstr (binding->config_name);
+        gchar *shortcut_display;
+
+        if (g_strcmp0(shortcut, "NULL") == 0) {
+            shortcut_display = "";
+        } else {
+            shortcut_display = shortcut;
+        }
 
         gtk_list_store_set (list_store, iter,
                             KB_TREE_ACTION, binding->action,
                             KB_TREE_SHORTCUT, shortcut,
+                            KB_TREE_SHORTCUT_DISPLAY, shortcut_display,
                             KB_TREE_CONFIG_NAME, binding->config_name,
                             -1);
 
@@ -262,10 +314,18 @@ init_bindings_from_config (GtkListStore *list_store, GtkTreeIter *iter)
         gtk_list_store_append (list_store, iter);
 
         gchar *shortcut = config_getstr (binding->config_name);
+        gchar *shortcut_display;
+
+        if (g_strcmp0(shortcut, "NULL") == 0) {
+            shortcut_display = "";
+        } else {
+            shortcut_display = shortcut;
+        }
 
         gtk_list_store_set (list_store, iter,
                             KB_TREE_ACTION, binding->action,
                             KB_TREE_SHORTCUT, shortcut,
+                            KB_TREE_SHORTCUT_DISPLAY, shortcut_display,
                             KB_TREE_CONFIG_NAME, binding->config_name,
                             -1);
 
@@ -322,6 +382,33 @@ keybinding_button_press_event_cb (GtkWidget *tree_view,
     return GDK_EVENT_PROPAGATE;
 }
 
+static gboolean
+clear_button_clicked_event_cb (GtkWidget * button,
+                               TildaKeybindingTreeView * keybinding) {
+    GtkTreeIter iter;
+    GtkTreeSelection *selection;
+    GtkWidget *tree_view = keybinding->tree_view;
+    GtkListStore *listStore = keybinding->list_store;
+    char * keybinding_config_name;
+
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+
+    if (!gtk_tree_selection_get_selected (selection, NULL, &iter)) {
+        return GDK_EVENT_PROPAGATE;
+    }
+
+    gtk_tree_model_get (GTK_TREE_MODEL (listStore), &iter,
+                        KB_TREE_CONFIG_NAME, &keybinding_config_name, -1);
+
+    gtk_list_store_set (listStore, &iter,
+                        KB_TREE_SHORTCUT, "NULL",
+                        KB_TREE_SHORTCUT_DISPLAY, "",
+                        -1);
+
+    config_setstr (keybinding_config_name, "NULL");
+
+    return GDK_EVENT_PROPAGATE;
+}
 
 /*
  * This function gets called once per key that is pressed. This means we have to
@@ -370,7 +457,9 @@ keybinding_dialog_key_press_event_cb (GtkWidget *dialog,
                                     (GdkModifierType) event->state);
 
         gtk_list_store_set (listStore, &iter,
-                            KB_TREE_SHORTCUT, key, -1);
+                            KB_TREE_SHORTCUT, key,
+                            KB_TREE_SHORTCUT_DISPLAY, key,
+                            -1);
 
         gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
@@ -459,6 +548,8 @@ validate_keybinding (const gchar* accel,
 {
     guint accel_key;
     GdkModifierType accel_mods;
+
+    if (strcmp(accel, "NULL") == 0) return TRUE;
 
     /* Parse the accelerator string. If it parses improperly, both values will be 0.*/
     gtk_accelerator_parse (accel, &accel_key, &accel_mods);
