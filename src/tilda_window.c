@@ -236,30 +236,6 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
 }
 
 static gboolean
-search_gregex_cb (TildaSearchBox       *search,
-                  GRegex               *regex,
-                  TildaSearchDirection  direction,
-                  gboolean              wrap_on_search,
-                  tilda_window         *tw)
-{
-    VteTerminal *vte_terminal;
-    tilda_term *term;
-
-    term = tilda_window_get_current_terminal (tw);
-
-    vte_terminal = VTE_TERMINAL (term->vte_term);
-
-    vte_terminal_search_set_gregex (vte_terminal, regex, (GRegexMatchFlags) 0);
-
-    vte_terminal_search_set_wrap_around (vte_terminal, wrap_on_search);
-
-    if (direction == SEARCH_BACKWARD)
-        return vte_terminal_search_find_previous (vte_terminal);
-    else
-        return vte_terminal_search_find_next (vte_terminal);
-}
-
-static gboolean
 search_cb (TildaSearchBox       *search,
            VteRegex             *regex,
            TildaSearchDirection  direction,
@@ -1038,13 +1014,9 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     gtk_box_pack_start (GTK_BOX (main_box), tw->notebook, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (main_box), tw->search, FALSE, TRUE, 0);
 
-    if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
-        g_signal_connect (tw->search, "search",
-                          G_CALLBACK (search_cb), tw);
-    } else {
-        g_signal_connect (tw->search, "search-gregex",
-                          G_CALLBACK (search_gregex_cb), tw);
-    }
+    g_signal_connect (tw->search, "search",
+                      G_CALLBACK (search_cb), tw);
+
     g_signal_connect (tw->search, "focus-out",
                       G_CALLBACK (search_focus_out_cb), tw);
 
