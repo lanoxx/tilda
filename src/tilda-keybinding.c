@@ -80,44 +80,12 @@ static void
 init_bindings_from_config (GtkListStore *list_store,
                            GtkTreeIter *iter);
 
-void
-tilda_keybinding_apply (TildaKeybindingTreeView *keybinding)
-{
-    GtkListStore *list_store;
-    GtkTreeIter iter;
-    gboolean valid;
-
-    list_store = keybinding->list_store;
-
-    valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store),
-                                           &iter);
-
-    while (valid) {
-        gchar * action, *config_name, *shortcut, *path;
-
-        gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
-                            KB_TREE_ACTION, &action,
-                            KB_TREE_CONFIG_NAME, &config_name,
-                            KB_TREE_SHORTCUT, &shortcut,
-                            -1);
-
-        path = g_strdup_printf ("<tilda>/context/%s", action);
-
-        tilda_window_update_keyboard_accelerators (path,
-                                                   config_getstr (config_name));
-
-        g_free (path);
-
-        valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store),
-                                          &iter);
-    }
-}
-
 TildaKeybindingTreeView*
 tilda_keybinding_init (GtkBuilder *builder)
 {
-    TildaKeybindingTreeView *keybindings =
-            g_malloc (sizeof (TildaKeybindingTreeView));
+    TildaKeybindingTreeView *keybindings;
+
+    keybindings = g_malloc (sizeof (TildaKeybindingTreeView));
 
     GtkWidget *tree_view;
     GtkWidget *clear_button;
@@ -127,7 +95,7 @@ tilda_keybinding_init (GtkBuilder *builder)
                                                     "tree_view_keybindings"));
 
     clear_button = GTK_WIDGET (gtk_builder_get_object (builder,
-                                                      "button_clear_keybinding"));
+                                                       "button_clear_keybinding"));
 
     list_store = gtk_list_store_new (KB_NUM_COLUMNS,
                                      G_TYPE_STRING,
@@ -175,20 +143,36 @@ tilda_keybinding_init (GtkBuilder *builder)
 }
 
 void
-tilda_keybinding_free (TildaKeybindingTreeView *keybinding)
+tilda_keybinding_apply (TildaKeybindingTreeView *keybinding)
 {
-    g_signal_handler_disconnect (keybinding->tree_view,
-                                 keybinding->handler_id);
+    GtkListStore *list_store;
+    GtkTreeIter iter;
+    gboolean valid;
 
-    g_signal_handler_disconnect (keybinding->clear_button,
-                                 keybinding->clear_handler_id);
+    list_store = keybinding->list_store;
 
-    g_clear_object (&keybinding->builder);
-    g_clear_object (&keybinding->list_store);
-    g_clear_object (&keybinding->tree_view);
-    g_clear_object (&keybinding->clear_button);
+    valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store),
+                                           &iter);
 
-    g_free (keybinding);
+    while (valid) {
+        gchar * action, *config_name, *shortcut, *path;
+
+        gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
+                            KB_TREE_ACTION, &action,
+                            KB_TREE_CONFIG_NAME, &config_name,
+                            KB_TREE_SHORTCUT, &shortcut,
+                            -1);
+
+        path = g_strdup_printf ("<tilda>/context/%s", action);
+
+        tilda_window_update_keyboard_accelerators (path,
+                                                   config_getstr (config_name));
+
+        g_free (path);
+
+        valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store),
+                                          &iter);
+    }
 }
 
 gboolean
@@ -240,6 +224,23 @@ tilda_keybinding_show_invalid_keybinding_dialog (GtkWindow *parent_window,
     gtk_window_set_keep_above (GTK_WINDOW(dialog), TRUE);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
+}
+
+void
+tilda_keybinding_free (TildaKeybindingTreeView *keybinding)
+{
+    g_signal_handler_disconnect (keybinding->tree_view,
+                                 keybinding->handler_id);
+
+    g_signal_handler_disconnect (keybinding->clear_button,
+                                 keybinding->clear_handler_id);
+
+    g_clear_object (&keybinding->builder);
+    g_clear_object (&keybinding->list_store);
+    g_clear_object (&keybinding->tree_view);
+    g_clear_object (&keybinding->clear_button);
+
+    g_free (keybinding);
 }
 
 static void
