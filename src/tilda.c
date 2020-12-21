@@ -149,42 +149,6 @@ static struct lock_info *islockfile (const gchar *filename)
     if (lock == NULL)
         return NULL;
 
-#ifdef USE_GLIB_2_14
-    GRegex *regex;
-    GMatchInfo *match_info;
-    gboolean matched;
-    gchar *temp;
-
-    regex = g_regex_new ("^lock_(\d+)_(\d+)$", 0, 0, NULL);
-    matched = g_regex_match (regex, filename, 0, &match_info);
-
-    if (!matched)
-    {
-        g_free (lock);
-        lock = NULL;
-        goto nomatch;
-    }
-
-    /* Get the lock pid */
-    temp = g_match_info_fetch (match_info, 0);
-    lock->pid = atoi (temp);
-    g_free (temp);
-
-    /* Get the configuration number */
-    temp = g_match_info_fetch (match_info, 1);
-    lock->instance = atoi (temp);
-    g_free (temp);
-
-nomatch:
-    if (match_info)
-        g_match_info_free (match_info);
-
-    g_regex_unref (regex);
-
-    return matched;
-
-#else /* Glib version is <2.14 */
-
     gboolean matches = g_str_has_prefix (filename, "lock_");
     gboolean islock = FALSE;
     gchar *pid_s, *instance_s;
@@ -222,7 +186,6 @@ nomatch:
     }
 
     return lock;
-#endif
 }
 
 /**
