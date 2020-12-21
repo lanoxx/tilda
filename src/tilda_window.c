@@ -196,6 +196,16 @@ gint toggle_fullscreen_cb (tilda_window *tw)
     return GDK_EVENT_STOP;
 }
 
+void tilda_window_set_dbus_enabled (tilda_window *tw, gboolean enabled)
+{
+    tw->dbus_enabled = enabled;
+}
+
+gboolean tilda_window_get_dbus_enabled (tilda_window *tw)
+{
+    return tw->dbus_enabled;
+}
+
 static gint toggle_transparency_cb (tilda_window *tw)
 {
     DEBUG_FUNCTION ("toggle_transparency");

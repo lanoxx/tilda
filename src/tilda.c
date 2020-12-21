@@ -320,26 +320,6 @@ int main (int argc, char *argv[])
         need_wizard = TRUE;
     }
 
-    /* Show the wizard if we need to.
-     *
-     * Note that the key will be bound upon exiting the wizard */
-    if (need_wizard) {
-        g_print ("Starting the wizard to configure tilda options.\n");
-        wizard (&tw);
-    } else {
-        gint ret = tilda_keygrabber_bind (config_getstr ("key"), &tw);
-
-        if (!ret)
-        {
-            /* The key was unbindable, so we need to show the wizard */
-            const char *message = _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.");
-
-            tilda_keybinding_show_invalid_keybinding_dialog (NULL,
-                                                             message);
-            wizard (&tw);
-        }
-    }
-
     guint bus_identifier = 0;
 
     if (cli_options->enable_dbus) {
@@ -352,6 +332,30 @@ int main (int argc, char *argv[])
         g_free (bus_name);
 
         bus_identifier = tilda_dbus_actions_init (&tw);
+
+        tilda_window_set_dbus_enabled (&tw, TRUE);
+    }
+
+    /* Show the wizard if we need to.
+     *
+     * Note that the key will be bound upon exiting the wizard */
+    if (need_wizard) {
+        g_print ("Starting the wizard to configure tilda options.\n");
+        wizard (&tw);
+    } else {
+        if (!cli_options->enable_dbus) {
+            gint ret = tilda_keygrabber_bind (config_getstr ("key"), &tw);
+
+            if (!ret)
+            {
+                /* The key was unbindable, so we need to show the wizard */
+                const char *message = _("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.");
+
+                tilda_keybinding_show_invalid_keybinding_dialog (NULL,
+                                                                 message);
+                wizard (&tw);
+            }
+        }
     }
 
     g_free(cli_options);

@@ -77,6 +77,9 @@ struct tilda_window_
 
     gboolean fullscreen;
 
+    /* If tilda was started with D-Bus support */
+    gboolean dbus_enabled;
+
     /* This field MUST be set before calling pull()! */
     enum tilda_animation_state current_state;
 
@@ -167,6 +170,20 @@ void tilda_window_set_fullscreen(tilda_window *tw);
  * as a GCallback in order to be invoked after some user action.
  */
 gint toggle_fullscreen_cb (tilda_window *tw);
+
+/**
+ * Set the D-Bus state in the tilda window, to indicate if D-Bus is enabled.
+ * @param tw An instance of a tilda_window struct.
+ * @param enabled TRUE if D-Bus is enabled for this instance, false otherwise.
+ */
+void tilda_window_set_dbus_enabled (tilda_window *tw, gboolean enabled);
+
+/**
+ * Get the D-Bus state in the tilda window.
+ * @param tw An instance of a tilda_window struct.q
+ * @return Returns TRUE if D-Bus is enabled, FALSE otherwise.
+ */
+gboolean tilda_window_get_dbus_enabled (tilda_window *tw);
 
 /**
  * This controls where the tabs are positions (e.g. top, left, bottom or

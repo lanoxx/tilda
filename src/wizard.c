@@ -113,7 +113,8 @@ gint wizard (tilda_window *tw)
     /* Copy the current program state into the wizard */
     set_wizard_state_from_config (tw);
 
-    wizard->keybinding = tilda_keybinding_init (wizard->builder);
+    wizard->keybinding = tilda_keybinding_init (wizard->builder,
+                                                tilda_window_get_dbus_enabled (tw));
 
     /* Connect all signal handlers. We do this after copying the state into
      * the wizard so that all of the handlers don't get called as we copy in

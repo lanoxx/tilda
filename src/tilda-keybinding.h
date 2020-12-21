@@ -23,7 +23,8 @@
 typedef struct TildaKeybindingTreeView_ TildaKeybindingTreeView;
 
 TildaKeybindingTreeView *
-tilda_keybinding_init (GtkBuilder *builder);
+tilda_keybinding_init (GtkBuilder *builder,
+                       gboolean allow_empty_pull_shortcut);
 
 void
 tilda_keybinding_apply (TildaKeybindingTreeView *keybinding);

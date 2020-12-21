@@ -90,6 +90,8 @@ struct TildaKeybindingTreeView_ {
     GtkListStore *list_store;
     GtkBuilder   *builder;
 
+    gboolean allow_empty_pull_shortcut;
+
     /* Stores the signal handler id for the 'button-press-event'
      * of the tree view. */
     gulong handler_id;
@@ -120,7 +122,8 @@ validate_keybindings (TildaKeybindingTreeView *keybindings,
 static gboolean
 validate_pulldown_keybinding (const gchar* accel,
                               tilda_window* tw,
-                              const gchar* message);
+                              const gchar* message,
+                              gboolean allow_empty_pull_shortcut);
 
 static gboolean
 validate_keybinding (const gchar* accel,
@@ -133,7 +136,8 @@ init_bindings_from_config (GtkListStore * list_store,
                            const Keybinding * bindings);
 
 TildaKeybindingTreeView*
-tilda_keybinding_init (GtkBuilder *builder)
+tilda_keybinding_init (GtkBuilder *builder,
+                       gboolean allow_empty_pull_shortcut)
 {
     TildaKeybindingTreeView *keybindings;
 
@@ -159,6 +163,7 @@ tilda_keybinding_init (GtkBuilder *builder)
     keybindings->tree_view = g_object_ref(tree_view);
     keybindings->clear_button = g_object_ref(clear_button);
     keybindings->builder = g_object_ref (builder);
+    keybindings->allow_empty_pull_shortcut = allow_empty_pull_shortcut;
 
     gtk_tree_view_set_model (GTK_TREE_VIEW (tree_view),
                              GTK_TREE_MODEL (list_store));
@@ -477,8 +482,10 @@ validate_keybindings (TildaKeybindingTreeView *keybindings,
     gboolean changed;
 
     GtkListStore *list_store;
+    gboolean allow_empty_pull_shortcut;
 
     list_store = keybindings->list_store;
+    allow_empty_pull_shortcut = keybindings->allow_empty_pull_shortcut;
 
     changed = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store),
                                              &iter);
@@ -495,8 +502,7 @@ validate_keybindings (TildaKeybindingTreeView *keybindings,
         if (0 == g_strcmp0 ("key", config_name)) {
             const char *message = _ ("The keybinding you chose for \"Pull Down Terminal\" is invalid. Please choose another.");
 
-            if (!validate_pulldown_keybinding (shortcut, tw,
-                                               message))
+            if (!validate_pulldown_keybinding (shortcut, tw, message, allow_empty_pull_shortcut))
                 return FALSE;
         }
         else {
@@ -522,8 +528,19 @@ validate_keybindings (TildaKeybindingTreeView *keybindings,
 static gboolean
 validate_pulldown_keybinding (const gchar* accel,
                               tilda_window* tw,
-                              const gchar* message)
+                              const gchar* message,
+                              gboolean allow_empty_pull_shortcut)
 {
+    /**
+     * When we have D-Bus active, we want to be able to clear the
+     * pull shortcut, to avoid a potential race-condition between
+     * the Xorg shortcut and the D-Bus action.
+     */
+    if (allow_empty_pull_shortcut && g_strcmp0 (accel, "NULL") == 0)
+    {
+        return TRUE;
+    }
+
     /* Try to grab the key. This is a good way to validate it :) */
     gboolean key_is_valid = tilda_keygrabber_bind (accel, tw);
 
