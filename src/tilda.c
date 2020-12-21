@@ -13,8 +13,6 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 #define _DEFAULT_SOURCE
-#define _POSIX_SOURCE /* feature test macro for signal functions */
-#define _XOPEN_SOURCE /* feature test macro for popen */
 
 /*
  * This message is shown in a modal dialog when tilda starts and there is a problem parsing the configuration file.
@@ -36,44 +34,31 @@
     "The default configuration will be used instead. This error can occur if the configuration file is corrupted" \
     "or otherwise unreadable. Tilda will now start with a default configuration."
 
+#include "tilda.h"
 
 #include "config.h"
-
-#include "debug.h"
-#include "tilda.h"
 #include "configsys.h"
-#include "tilda_window.h"
+#include "debug.h"
 #include "key_grabber.h" /* for pull */
-#include "wizard.h"
-#include "tomboykeybinder.h"
-#include "tilda-keybinding.h"
 #include "tilda-cli-options.h"
+#include "tilda-keybinding.h"
 #include "tilda-lock-files.h"
+#include "tilda_window.h"
+#include "tomboykeybinder.h"
+#include "wizard.h"
 
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/file.h>
-#include <errno.h>
-#include <sys/dir.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <gtk/gtk.h>
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <locale.h>
-#include <stdio.h>
 #include <signal.h>
-#include <pwd.h>
-
-#include <X11/Xlib.h>
-#include <X11/Xlibint.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <vte/vte.h>
-#include <glib/gstdio.h>
 
 /**
  * Set values in the config from command-line parameters
