@@ -459,28 +459,6 @@ static void termination_handler (G_GNUC_UNUSED gint signum) {
     gtk_main_quit ();
 }
 
-/*
- * This is to do the migration of config files from ~/.tilda to the
- * XDG_*_HOME folders
- */
-static void migrate_config_files(char *old_config_path) {
-    gchar* old_lock_dir = g_build_filename(old_config_path, "locks", NULL);
-    gchar* new_lock_dir = g_build_filename(g_get_user_cache_dir (), "tilda", "locks", NULL);
-    gchar* new_config_dir = g_build_filename(g_get_user_config_dir (), "tilda", NULL);
-
-    if(!g_file_test(new_lock_dir, G_FILE_TEST_IS_DIR)) {
-           g_mkdir_with_parents(new_lock_dir, 0700);
-    }
-
-    //we basically need to move the files from old_config_path to config and cache
-    g_rename(old_lock_dir, new_lock_dir);
-    //we must move the config files after we have moved the locks directory, otherwise it gets moved aswell
-    g_rename(old_config_path, new_config_dir);
-    g_free(old_lock_dir);
-    g_free(new_lock_dir);
-    g_free(new_config_dir);
-}
-
 static void load_custom_css_file () {
     GtkCssProvider *provider;
     GFile *file;
@@ -541,17 +519,7 @@ int main (int argc, char *argv[])
     struct sigaction sa;
     struct lock_info lock;
     gboolean need_wizard = FALSE;
-    gchar *config_file, *lock_file, *old_config_path;
-
-    /*
-     * Migration code to move old files to new XDG folders
-     */
-    old_config_path = g_build_filename(g_get_home_dir (), ".tilda", NULL);
-    if (g_file_test(old_config_path, G_FILE_TEST_IS_DIR)) {
-        g_print (_("Migrating old config path to XDG folders\n"));
-        migrate_config_files(old_config_path);
-        g_free(old_config_path);
-    }
+    gchar *config_file, *lock_file;
 
     /* Remove stale lock files */
     remove_stale_lock_files ();
