@@ -13,22 +13,22 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
+#include "tilda_terminal.h"
 
+#include "config.h"
+#include "configsys.h"
 #include "debug.h"
 #include "tilda.h"
 #include "tilda-context-menu.h"
-#include "tilda_window.h"
-#include "tilda_terminal.h"
-#include "configsys.h"
-#include "wizard.h" /* wizard */
-#include <stdio.h>
 #include "tilda-url-spawner.h"
+#include "tilda_window.h"
+
+#include <stdio.h>
 #include <stdlib.h> /* malloc */
-#include <gtk/gtk.h>
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <vte/vte.h>
 #include <string.h>
 
