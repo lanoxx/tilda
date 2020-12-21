@@ -51,6 +51,7 @@ src_tilda_SOURCES = \
 		src/screen-size.h src/screen-size.c \
 		src/tilda.h src/tilda.c \
 		src/tilda-keybinding.c src/tilda-keybinding.h \
+		src/tilda-lock-files.c src/tilda-lock-files.h \
 		src/tilda-cli-options.c src/tilda-cli-options.h \
 		src/tilda-context-menu.c src/tilda-context-menu.h \
 		src/tilda-match-registry.c src/tilda-match-registry.h \
