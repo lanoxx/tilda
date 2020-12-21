@@ -22,7 +22,6 @@
 #include "tilda_terminal.h"
 #include "configsys.h"
 #include "wizard.h" /* wizard */
-#include "vte-util.h"
 #include <stdio.h>
 #include "tilda-url-spawner.h"
 #include <stdlib.h> /* malloc */

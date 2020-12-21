@@ -21,7 +21,6 @@
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 #include "key_grabber.h"
-#include "vte-util.h"
 
 #include <math.h>
 #include <stdio.h>

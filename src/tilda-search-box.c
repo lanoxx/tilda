@@ -17,7 +17,6 @@
 
 #include "tilda-search-box.h"
 #include "tilda-enum-types.h"
-#include "vte-util.h"
 
 #define PCRE2_CODE_UNIT_WIDTH 0
 #include <pcre2.h>
@@ -51,75 +50,6 @@ enum
 static guint signals[LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (TildaSearchBox, tilda_search_box, GTK_TYPE_BOX)
-
-static void
-search_gregex (TildaSearchBox       *search,
-               TildaSearchDirection  direction)
-{
-    GtkEntry *entry;
-    GtkEntryBuffer *buffer;
-    GtkToggleButton *toggle_button;
-
-    GRegexCompileFlags compile_flags;
-    gboolean wrap_on_search;
-    gboolean is_regex;
-    const gchar *text;
-    gchar *pattern;
-    gboolean search_result;
-
-    GError *error;
-    GRegex *regex;
-
-    compile_flags = G_REGEX_OPTIMIZE;
-    wrap_on_search = FALSE;
-    toggle_button = GTK_TOGGLE_BUTTON (search->check_regex);
-    is_regex = gtk_toggle_button_get_active (toggle_button);
-    entry = GTK_ENTRY (search->entry);
-    buffer = GTK_ENTRY_BUFFER (gtk_entry_get_buffer (entry));
-    text = gtk_entry_buffer_get_text (buffer);
-
-    if (!search->last_search_successful)
-        wrap_on_search = TRUE;
-
-    if (is_regex)
-    {
-        compile_flags |= G_REGEX_MULTILINE;
-        pattern = g_strdup (text);
-    }
-    else
-        pattern = g_regex_escape_string (text, -1);
-
-    toggle_button = GTK_TOGGLE_BUTTON (search->check_match_case);
-    if (!gtk_toggle_button_get_active (toggle_button))
-    {
-        compile_flags |= G_REGEX_CASELESS;
-    }
-
-    error = NULL;
-    regex = g_regex_new (pattern, compile_flags,
-                         G_REGEX_MATCH_NEWLINE_ANY,
-                         &error);
-    g_free (pattern);
-
-    if (error)
-    {
-        GtkLabel *label = GTK_LABEL (search->label);
-        gtk_label_set_text (label, error->message);
-        gtk_widget_set_visible (search->label, TRUE);
-        g_error_free (error);
-        return;
-    }
-
-    g_signal_emit (search, signals[SIGNAL_SEARCH_GREGEX], 0,
-                   regex, direction, wrap_on_search, &search_result);
-
-    search->last_direction = direction;
-
-    gtk_widget_set_visible (search->label, !search_result);
-    search->last_search_successful = search_result;
-
-    g_regex_unref(regex);
-}
 
 static void
 search_vte_regex (TildaSearchBox       *search,
@@ -202,11 +132,7 @@ static void
 search (TildaSearchBox       *search,
         TildaSearchDirection  direction)
 {
-    if (VTE_CHECK_VERSION_RUMTIME (0, 56, 1)) {
-        search_vte_regex (search, direction);
-    } else {
-        search_gregex (search, direction);
-    }
+    search_vte_regex (search, direction);
 }
 
 static gboolean
