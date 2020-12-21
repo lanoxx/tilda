@@ -20,7 +20,7 @@
 
 #include "tilda_window.h"
 
-typedef struct _TildaKeybindingTreeView TildaKeybindingTreeView;
+typedef struct TildaKeybindingTreeView_ TildaKeybindingTreeView;
 
 TildaKeybindingTreeView *
 tilda_keybinding_init (GtkBuilder *builder);

@@ -48,7 +48,7 @@ enum keybinding_columns
     KB_NUM_COLUMNS
 };
 
-struct _TildaKeybindingTreeView {
+struct TildaKeybindingTreeView_ {
     GtkWidget    *tree_view;
     GtkWidget    *clear_button;
     GtkListStore *list_store;
