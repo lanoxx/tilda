@@ -59,7 +59,7 @@ gchar *get_working_directory (tilda_term *terminal);
 
 static void handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
                               GdkEvent *event,
-                              tilda_term *terminal);
+                              tilda_term *tt);
 
 gint tilda_term_free (tilda_term *term)
 {
