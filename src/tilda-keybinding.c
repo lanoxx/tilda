@@ -20,6 +20,42 @@
 #include "key_grabber.h"
 #include "tilda-keybinding.h"
 
+typedef struct keybinding {
+    gchar *action;
+    gchar *config_name;
+} Keybinding;
+
+const Keybinding common_bindings[] = {
+         {"Pull Down Terminal",  "key"},
+         {"Quit",                "quit_key"},
+         {"Add Tab",             "addtab_key"},
+         {"Close Tab",           "closetab_key"},
+         {"Copy",                "copy_key"},
+         {"Paste",               "paste_key"},
+         {"Go To Next Tab",      "nexttab_key"},
+         {"Go To Previous Tab",  "prevtab_key"},
+         {"Move Tab Left",       "movetableft_key"},
+         {"Move Tab Right",      "movetabright_key"},
+         {"Toggle Fullscreen",   "fullscreen_key"},
+         {"Toggle Transparency", "toggle_transparency_key"},
+         {"Toggle Searchbar",    "toggle_searchbar_key"},
+         {NULL, NULL}
+ };
+
+const Keybinding gototabBindings[] = {
+        {"Go To Tab 1",  "gototab_1_key"},
+        {"Go To Tab 2",  "gototab_2_key"},
+        {"Go To Tab 3",  "gototab_3_key"},
+        {"Go To Tab 4",  "gototab_4_key"},
+        {"Go To Tab 5",  "gototab_5_key"},
+        {"Go To Tab 6",  "gototab_6_key"},
+        {"Go To Tab 7",  "gototab_7_key"},
+        {"Go To Tab 8",  "gototab_8_key"},
+        {"Go To Tab 9",  "gototab_9_key"},
+        {"Go To Tab 10", "gototab_10_key"},
+        {NULL, NULL}
+};
+
 enum keybinding_columns
 {
     KB_TREE_ACTION,
@@ -92,8 +128,9 @@ validate_keybinding (const gchar* accel,
                      const gchar* message);
 
 static void
-init_bindings_from_config (GtkListStore *list_store,
-                           GtkTreeIter *iter);
+init_bindings_from_config (GtkListStore * list_store,
+                           GtkTreeIter * iter,
+                           const Keybinding * bindings);
 
 TildaKeybindingTreeView*
 tilda_keybinding_init (GtkBuilder *builder)
@@ -142,7 +179,8 @@ tilda_keybinding_init (GtkBuilder *builder)
 
     gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
 
-    init_bindings_from_config (list_store, &iter);
+    init_bindings_from_config (list_store, &iter, common_bindings);
+    init_bindings_from_config (list_store, &iter, gototabBindings);
 
     keybindings->handler_id =
             g_signal_connect (tree_view, "button-press-event",
@@ -259,73 +297,17 @@ tilda_keybinding_free (TildaKeybindingTreeView *keybinding)
 }
 
 static void
-init_bindings_from_config (GtkListStore *list_store, GtkTreeIter *iter)
+init_bindings_from_config (GtkListStore * list_store,
+                           GtkTreeIter * iter,
+                           const Keybinding * bindings)
 {
-    typedef struct keybinding {
-        gchar *action;
-        gchar *config_name;
-    } Keybinding;
-
-    const Keybinding bindings[] =
-            {
-                    {"Pull Down Terminal",  "key"},
-                    {"Quit",                "quit_key"},
-                    {"Add Tab",             "addtab_key"},
-                    {"Close Tab",           "closetab_key"},
-                    {"Copy",                "copy_key"},
-                    {"Paste",               "paste_key"},
-                    {"Go To Next Tab",      "nexttab_key"},
-                    {"Go To Previous Tab",  "prevtab_key"},
-                    {"Move Tab Left",       "movetableft_key"},
-                    {"Move Tab Right",      "movetabright_key"},
-                    {"Toggle Fullscreen",   "fullscreen_key"},
-                    {"Toggle Transparency", "toggle_transparency_key"},
-                    {"Toggle Searchbar",    "toggle_searchbar_key"},
-                    {NULL, NULL}
-            };
-
     const Keybinding *binding = bindings;
 
-    while (binding->action)
-    {
-        gtk_list_store_append (list_store, iter);
-
-        gchar *shortcut = config_getstr (binding->config_name);
-        gchar *shortcut_display;
-
-        if (g_strcmp0(shortcut, "NULL") == 0) {
-            shortcut_display = "";
-        } else {
-            shortcut_display = shortcut;
-        }
-
-        gtk_list_store_set (list_store, iter,
-                            KB_TREE_ACTION, binding->action,
-                            KB_TREE_SHORTCUT, shortcut,
-                            KB_TREE_SHORTCUT_DISPLAY, shortcut_display,
-                            KB_TREE_CONFIG_NAME, binding->config_name,
-                            -1);
-
-        ++binding;
+    if (!binding) {
+        return;
     }
 
-    const Keybinding gototabBindings[] = {
-        {"Go To Tab 1",  "gototab_1_key"},
-        {"Go To Tab 2",  "gototab_2_key"},
-        {"Go To Tab 3",  "gototab_3_key"},
-        {"Go To Tab 4",  "gototab_4_key"},
-        {"Go To Tab 5",  "gototab_5_key"},
-        {"Go To Tab 6",  "gototab_6_key"},
-        {"Go To Tab 7",  "gototab_7_key"},
-        {"Go To Tab 8",  "gototab_8_key"},
-        {"Go To Tab 9",  "gototab_9_key"},
-        {"Go To Tab 10", "gototab_10_key"},
-        {NULL, NULL}
-    };
-
-    binding = gototabBindings;
-
-    while (binding->action)
+    while (binding && binding->action)
     {
         gtk_list_store_append (list_store, iter);
 
