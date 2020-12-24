@@ -1,3 +1,10 @@
+version 1.5.4 (2020-12-24):
+	* Fixed an issue that occurs with newer tilda versions which prevents
+	  custom commands from working correctly in newer VTE versions.
+		Fixes #435, #436, #440 (Jimun Batty).
+	* Fixes an incorrect usage of 32bit data type for X11 time, which
+	  should be 64bit instead (Sebastian Geiger).
+
 version 1.5.3 (2020-11-01):
 	* Fixed an issue that could cause tilda to crash due to a BadMatch X11
 	  error in certain situations (such as when using the Marco
