@@ -933,6 +933,9 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     /* Create the notebook */
     tw->notebook = gtk_notebook_new ();
 
+    /* Adding widget title for CSS selection */
+    gtk_widget_set_name (GTK_WIDGET(tw->window), "Main");
+
     /* Here we setup the CSS settings for the GtkNotebook.
      * If the option "Show notebook border" in the preferences is not
      * checked. Then we disable the border. Otherwise nothing is changed.
