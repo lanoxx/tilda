@@ -60,6 +60,8 @@
 #include <unistd.h>
 #include <vte/vte.h>
 
+static void setup_signal_handlers (void);
+
 /**
  * Set values in the config from command-line parameters
  *
@@ -233,7 +235,6 @@ int main (int argc, char *argv[])
     /* NULL set the tw pointers so we can get a clean exit on initialization failure */
     memset(&tw, 0, sizeof(tilda_window));
 
-    struct sigaction sa;
     struct lock_info lock;
     gboolean need_wizard = FALSE;
     gchar *config_file;
@@ -314,16 +315,7 @@ int main (int argc, char *argv[])
     /* Initialize and set up the keybinding to toggle tilda's visibility. */
     tomboy_keybinder_init ();
 
-    /* Hook up signal handlers */
-    sa.sa_handler = termination_handler;
-    sigemptyset (&sa.sa_mask);
-    sa.sa_flags = 0;
-
-    sigaction (SIGINT,  &sa, NULL);
-    sigaction (SIGQUIT, &sa, NULL);
-    sigaction (SIGABRT, &sa, NULL);
-    sigaction (SIGTERM, &sa, NULL);
-    sigaction (SIGKILL, &sa, NULL);
+    setup_signal_handlers ();
 
     /* If the config file doesn't exist open up the wizard */
     if (access (tw.config_file, R_OK) == -1)
@@ -375,4 +367,20 @@ initialization_failed:
 
     g_free (config_file);
     return 0;
+}
+
+static void
+setup_signal_handlers () {
+
+    struct sigaction sa;
+    /* Hook up signal handlers */
+    sa.sa_handler = termination_handler;
+    sigemptyset (&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    sigaction (SIGINT,  &sa, NULL);
+    sigaction (SIGQUIT, &sa, NULL);
+    sigaction (SIGABRT, &sa, NULL);
+    sigaction (SIGTERM, &sa, NULL);
+    sigaction (SIGKILL, &sa, NULL);
 }
