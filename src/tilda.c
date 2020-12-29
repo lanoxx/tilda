@@ -61,6 +61,7 @@
 #include <vte/vte.h>
 
 static void setup_signal_handlers (void);
+static void show_startup_dialog (int config_init_result);
 
 /**
  * Set values in the config from command-line parameters
@@ -280,23 +281,8 @@ int main (int argc, char *argv[])
     setup_config_from_cli_options(cli_options);
     g_free(cli_options);
 
-    /* This section shows a modal dialog to notify the user that something has gone wrong when loading the config.
-     * Earlier version only used to print a message to stderr, but since tilda is usually not started from a
-     * console this message would have been lost and a message dialog is much more user friedly.
-     */
-    GtkWidget *dialog = NULL;
-    if(config_init_result == 1) {
-        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
-                                        TILDA_CONFIG_PARSE_ERROR);
-    } else if (config_init_result != 0) {
-        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
-                                        TILDA_CONFIG_OTHER_ERROR);
-    }
-
-    if(dialog) {
-        g_message("Running Dialog");
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+    if (config_init_result > 0) {
+        show_startup_dialog (config_init_result);
     }
 
     load_custom_css_file ();
@@ -383,4 +369,28 @@ setup_signal_handlers () {
     sigaction (SIGABRT, &sa, NULL);
     sigaction (SIGTERM, &sa, NULL);
     sigaction (SIGKILL, &sa, NULL);
+}
+
+static void
+show_startup_dialog (int config_init_result)
+{
+    /* This section shows a modal dialog to notify the user that something has gone wrong when loading the config.
+     * Earlier version only used to print a message to stderr, but since tilda is usually not started from a
+     * console this message would have been lost and a message dialog is much more user friendly.
+     */
+    GtkWidget *dialog = NULL;
+
+    if(config_init_result == 1) {
+        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+                                                    TILDA_CONFIG_PARSE_ERROR);
+    } else if (config_init_result != 0) {
+        dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+                                                    TILDA_CONFIG_OTHER_ERROR);
+    }
+
+    if(dialog) {
+        g_message("Running Dialog");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
 }
