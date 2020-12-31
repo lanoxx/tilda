@@ -1,0 +1,517 @@
+# Occitan (post 1500) translation for tilda
+# Copyright (c) 2020 Rosetta Contributors and Canonical Ltd 2020
+# This file is distributed under the same license as the tilda package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-01-30 19:35-0800\n"
+"PO-Revision-Date: 2020-12-31 20:19+0100\n"
+"Last-Translator: Quentin PAGÈS\n"
+"Language-Team: Occitan (post 1500) <oc@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2020-12-29 17:48+0000\n"
+"X-Generator: Poedit 2.4.2\n"
+"Language: oc\n"
+
+#: tilda.glade:7
+msgid "Tilda Config"
+msgstr "Configuracion de Tilda"
+
+#: tilda.glade:42
+msgid "Display on all workspaces"
+msgstr "Visualizar sus totes los espacis de trabalh"
+
+#: tilda.glade:55
+msgid "Always on top"
+msgstr "Totjorn visible"
+
+#: tilda.glade:70
+msgid "Do not show in taskbar"
+msgstr "Afichar pas a la barra de prètzfaches"
+
+#: tilda.glade:85 src/tilda.c:303
+msgid "Start Tilda hidden"
+msgstr "Aviar Tilda en mòde amagat"
+
+#: tilda.glade:102
+msgid "Show Notebook Border"
+msgstr "Afichar la bordadura"
+
+#: tilda.glade:117
+#, fuzzy
+msgid "Enable Double Buffering"
+msgstr "Inibir per aver un doble tampon per logicial."
+
+#: tilda.glade:138
+msgid "<b>Window Display</b>"
+msgstr "<b>Afichatge de la fenèstra</b>"
+
+#: tilda.glade:169
+msgid "Audible Terminal Bell"
+msgstr "Bip sistèma audible"
+
+#: tilda.glade:182
+#, fuzzy
+msgid "Cursor Blinks"
+msgstr "Especificatz se òc o non lo cursor de tèxte cluqueteja"
+
+#: tilda.glade:201
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Afichatge del terminal</b>"
+
+#: tilda.glade:234
+msgid "Enable Antialiasing"
+msgstr "Activar l'anticrenelatge"
+
+#: tilda.glade:247
+msgid "Allow Bold Text"
+msgstr "Permetre lo tèxte en gras"
+
+#: tilda.glade:262
+msgid "Position of Tabs:"
+msgstr "Posicion dels onglets :"
+
+#: tilda.glade:275 tilda.glade:1084
+#, fuzzy
+msgid ""
+"Top\n"
+"Bottom\n"
+"Left\n"
+"Right"
+msgstr ""
+"L'orientacion del tablèu de bòrd. Las quatre valors possiblas son : « top "
+"» (naut), « bottom » (bas), « left » (esquèrra) e « right » (drecha). En "
+"mòde espandit, la clau indica sus quin costat de l'ecran plaçar lo tablèu "
+"de bòrd. En mòde pas espandit, la diferéncia entre « top » e « bottom » es "
+"mens importanta - los dos indican qu'es un tablèu de bòrd orizontal - mas "
+"dona çaquelà una indicacion utila sul biais que certans elements de tablèu "
+"de bòrd se devon comportar. Per exemple, sus un tablèu de bòrd « top », un "
+"boton de menú aficha lo menú jol tablèu de bòrd, mentre qu'amb un tablèu "
+"de bòrd « bottom » lo menú es afichat en dessús del tablèu de bòrd."
+
+#: tilda.glade:315
+msgid "Font:"
+msgstr "Poliça :"
+
+#: tilda.glade:334
+msgid "<b>Font</b>"
+msgstr "<b>Poliça</b>"
+
+#: tilda.glade:358
+msgid "General"
+msgstr "General"
+
+#: tilda.glade:404
+msgid "Web Browser"
+msgstr "Navegadors Web"
+
+#: tilda.glade:419
+msgid "<b>URL Handling</b>"
+msgstr "<b>Gestion de las URL</b>"
+
+#: tilda.glade:451
+msgid "Initial Title:"
+msgstr "Títol inicial :"
+
+#: tilda.glade:461
+#, fuzzy
+msgid "Dynamically-set Title:"
+msgstr "Títol modificat _dinamicament :"
+
+#: tilda.glade:484
+msgid ""
+"Isn't displayed\n"
+"Goes after initial title\n"
+"Goes before initial title\n"
+"Replace initial title"
+msgstr ""
+
+#: tilda.glade:505
+msgid "<b>Title</b>"
+msgstr "<b>Títol</b>"
+
+#: tilda.glade:538
+#, fuzzy
+msgid "Run a custom command instead of the shell"
+msgstr ""
+"Indica se cal executar una comanda personalizada a la plaça del shell"
+
+#: tilda.glade:550
+msgid "Custom Command:"
+msgstr "Comanda personalizada :"
+
+#: tilda.glade:562
+msgid "When Command Exits:"
+msgstr "Quand la comanda sortís :"
+
+#: tilda.glade:574
+msgid ""
+"Hold the terminal open\n"
+"Restart the command\n"
+"Exit the terminal"
+msgstr ""
+
+#: tilda.glade:607
+msgid "<b>Command</b>"
+msgstr "<b>Comanda</b>"
+
+#: tilda.glade:632
+msgid "Title and Command"
+msgstr "Títol e comanda"
+
+#: tilda.glade:662 tilda.glade:748
+msgid "Percentage"
+msgstr "Percentatge"
+
+#: tilda.glade:687 tilda.glade:759
+msgid "In Pixels"
+msgstr "en pixèls"
+
+#: tilda.glade:718
+msgid "<b>Height</b>"
+msgstr "<b>Nautor</b>"
+
+#: tilda.glade:804
+msgid "<b>Width</b>"
+msgstr "<b>Largor</b>"
+
+#: tilda.glade:836
+msgid "Centered Horizontally"
+msgstr "Centrat orizontalament"
+
+#: tilda.glade:852
+msgid "Centered Vertically"
+msgstr "Centrar verticalament"
+
+#: tilda.glade:869 src/tilda.c:310
+msgid "X Position"
+msgstr "Posicion X"
+
+#: tilda.glade:882 src/tilda.c:311
+msgid "Y Position"
+msgstr "Posicion Y"
+
+#: tilda.glade:933
+msgid "<b>Position</b>"
+msgstr "<b>Posicion</b>"
+
+#: tilda.glade:968
+msgid "Enable Transparency"
+msgstr "Activar la transparéncia"
+
+#: tilda.glade:981
+#, fuzzy
+msgid "Level of Transparency"
+msgstr "Nivèl que la plena transparéncia deu representar"
+
+#: tilda.glade:1008
+msgid "Animated Pulldown"
+msgstr "Menú animat"
+
+#: tilda.glade:1023
+msgid "Use Image for Background"
+msgstr "Utilizar coma imatge de fons"
+
+#: tilda.glade:1038
+msgid "Animation Delay (usec)"
+msgstr "Delai animacion (usec)"
+
+#: tilda.glade:1053
+msgid "Animation Orientation"
+msgstr "Orientacion animacion"
+
+#: tilda.glade:1120
+msgid "<b>Extras</b>"
+msgstr "<b>Demai</b>"
+
+#: tilda.glade:1145
+msgid "Appearance"
+msgstr "Aparéncia"
+
+#: tilda.glade:1187
+msgid "Built-in Schemes"
+msgstr "Esquèmas predefinits"
+
+#: tilda.glade:1197
+msgid ""
+"Custom\n"
+"Green on Black\n"
+"Black on White\n"
+"White on Black"
+msgstr ""
+
+#: tilda.glade:1212
+msgid "Text Color"
+msgstr "Color de tèxt"
+
+#: tilda.glade:1224
+msgid "Background Color"
+msgstr "Color de fons"
+
+#: tilda.glade:1270
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Colors de primièr e rèire plan</b>"
+
+#: tilda.glade:1293
+msgid "Colors"
+msgstr "Colors"
+
+#: tilda.glade:1323
+#, fuzzy
+msgid "Scroll on Output"
+msgstr "Desfilament sus la sortida"
+
+#: tilda.glade:1338
+#, fuzzy
+msgid "Scroll on Keystroke"
+msgstr "Desfilament sus pression d'una tòca"
+
+#: tilda.glade:1353
+msgid "Scroll Background"
+msgstr "Fons de la bara de desfilament"
+
+#: tilda.glade:1381
+msgid "lines"
+msgstr "linhas"
+
+#: tilda.glade:1399
+msgid ""
+"On the Left\n"
+"On the Right\n"
+"Disabled"
+msgstr ""
+"A man esquèrra\n"
+"A man drecha\n"
+"Desactivat"
+
+#: tilda.glade:1413
+msgid "Scrollback:"
+msgstr ""
+
+#: tilda.glade:1426
+msgid "Scrollbar is:"
+msgstr "La barra de desfilament es :"
+
+#: tilda.glade:1441
+msgid "<b>Scrolling</b>"
+msgstr "<b>Desfilament</b>"
+
+#: tilda.glade:1464
+msgid "Scrolling"
+msgstr "Desfilament"
+
+#: tilda.glade:1482
+msgid "<b>Compatibility</b>"
+msgstr "<b>Compatibilitat</b>"
+
+#: tilda.glade:1496
+msgid "    "
+msgstr "    "
+
+#: tilda.glade:1512
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior."
+"</i></small>"
+msgstr ""
+
+#: tilda.glade:1531
+msgid "_Delete key generates:"
+msgstr "La tòca _Suprimir fa :"
+
+#: tilda.glade:1546
+msgid "_Backspace key generates:"
+msgstr "La tòca « _Retorn arrièr » fa :"
+
+#: tilda.glade:1558 tilda.glade:1571
+msgid ""
+"ASCII DEL\n"
+"Escape sequence\n"
+"Control-H"
+msgstr ""
+
+#: tilda.glade:1599
+#, fuzzy
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "Reïn_icializar las opcions de compatibilitat a las valors per defaut"
+
+#: tilda.glade:1630
+msgid "Compatibility"
+msgstr "Compatibilitat"
+
+#: tilda.glade:1660
+msgid "Key Binding"
+msgstr "Acorchi"
+
+#: tilda.glade:1683
+msgid "Grab Keybinding"
+msgstr ""
+
+#: tilda.glade:1702
+msgid "<b>Pulldown Key</b>"
+msgstr "<b>Tòca menú desplegable</b>"
+
+#: tilda.glade:1725
+msgid "Keybindings"
+msgstr "Acorchis de clavièr"
+
+#: tilda.glade:1750
+msgid "gtk-close"
+msgstr "gtk-close"
+
+#: src/callback_func.c:53
+msgid "Untitled"
+msgstr "Sens títol"
+
+#: src/callback_func.c:71
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr ""
+
+#: src/configsys.c:128
+msgid "Problem parsing config file\n"
+msgstr "Error en analisant la sintaxi del fichièr de configuracion\n"
+
+#: src/configsys.c:249
+#, fuzzy
+msgid "Unable to sync the config file to disk\n"
+msgstr "Impossible de legir lo fichièr de configuracion %s"
+
+#: src/configsys.c:259
+#, fuzzy
+msgid "Unable to close the config file\n"
+msgstr "Impossible de legir lo fichièr de configuracion %s"
+
+#: src/configsys.c:268
+#, fuzzy, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Impossible de legir lo fichièr de configuracion %s"
+
+#: src/tilda.c:214
+#, fuzzy, c-format
+msgid "Unable to run command: `%s'\n"
+msgstr "incapable d'aviar %s"
+
+#: src/tilda.c:237 src/tilda.c:460
+#, fuzzy, c-format
+msgid "Unable to open lock directory: %s\n"
+msgstr "impossible de dobrir lo repertòri « %s »"
+
+#: src/tilda.c:300
+#, fuzzy
+msgid "Use Antialiased Fonts"
+msgstr ""
+"Utilizar de poliças personalizadas per afichar lo corrièr electronic."
+
+#: src/tilda.c:301
+msgid "Set the background color"
+msgstr "Definir la color de fons"
+
+#: src/tilda.c:302
+msgid "Run a command at startup"
+msgstr "Comanda d'executar al lançament"
+
+#: src/tilda.c:304
+msgid "Set the font to the following string"
+msgstr "Definir la poliça utilizada per representar aquesta cadena de tèxt"
+
+#: src/tilda.c:305
+#, fuzzy
+msgid "Scrollback Lines"
+msgstr ""
+"Nombre de linhas de desfilament de conservar. Podètz remontar dins "
+"l'istoric del desfilament d'aqueste nombre de linhas ; las linhas que "
+"depassan aqueste nombre son escafadas. Se « scrollback-unlimited » es "
+"verai, aquesta valor es ignorada."
+
+#: src/tilda.c:306
+msgid "Use Scrollbar"
+msgstr "Utilizar la barra de desfilament"
+
+#: src/tilda.c:307
+msgid "Opaqueness: 0-100%"
+msgstr "Opacitat : 0-100%"
+
+#: src/tilda.c:308
+msgid "Print the version, then exit"
+msgstr "Imprimir la version e quitar"
+
+#: src/tilda.c:309
+msgid "Set Initial Working Directory"
+msgstr "Definir lo repertòri de trabalh inicial"
+
+#: src/tilda.c:312
+msgid "Set Background Image"
+msgstr "Definir l'imatge de fons"
+
+#: src/tilda.c:313
+msgid "Show Configuration Wizard"
+msgstr "Afichar l'assistent de configuracion"
+
+#: src/tilda.c:329
+#, c-format
+msgid ""
+"Error parsing command-line options. Try \"tilda --help\"\n"
+"to see all possible options.\n"
+"\n"
+"Error message: %s\n"
+msgstr ""
+
+#: src/tilda_terminal.c:386
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Problèma al moment de l'analisi de la comanda personalizada : %s\n"
+
+#: src/tilda_terminal.c:387 src/tilda_terminal.c:404
+#, fuzzy
+msgid "Launching default shell instead\n"
+msgstr "Executar una comanda personalizada a la plaça de mon shell"
+
+#: src/tilda_terminal.c:403
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Impossible d'aviar la comanda personalizada : %s\n"
+
+#: src/tilda_terminal.c:428
+#, fuzzy, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Impossible d'aviar « %s » :"
+
+#: src/tilda_terminal.c:675
+msgid "_New Tab"
+msgstr "_Onglet novèl"
+
+#: src/tilda_terminal.c:679
+msgid "_Close Tab"
+msgstr "_Tampar l'onglet"
+
+#: src/tilda_terminal.c:769
+#, c-format
+msgid "Failed to launch the web browser. The command was `%s'\n"
+msgstr ""
+
+#: src/tilda_window.c:99
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr ""
+
+#: src/tilda_window.c:333
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr ""
+
+#: src/tilda_window.c:480
+msgid "Out of memory, cannot create tab\n"
+msgstr ""
+
+#: src/wizard.c:180
+msgid "The keybinding you chose is invalid. Please choose another."
+msgstr ""
+
+#: src/wizard.c:445
+msgid "Invalid tab position setting, ignoring\n"
+msgstr ""
