@@ -271,22 +271,6 @@ gint config_setnint(const gchar *key, const glong val, const guint idx)
     return 0;
 }
 
-gint config_setdouble (const gchar *key, const gdouble val) {
-    config_mutex_lock ();
-    cfg_setfloat (tc, key, val);
-    config_mutex_unlock ();
-
-    return 0;
-}
-
-gint config_setndouble (const gchar *key, const gdouble val, const guint idx) {
-    config_mutex_lock ();
-    cfg_setnfloat (tc, key, val, idx);
-    config_mutex_unlock ();
-
-    return 0;
-}
-
 gint config_setstr (const gchar *key, const gchar *val)
 {
     config_mutex_lock ();
@@ -322,26 +306,6 @@ glong config_getnint(const gchar *key, const guint idx)
 
     config_mutex_lock ();
     temp = cfg_getnint (tc, key, idx);
-    config_mutex_unlock ();
-
-    return temp;
-}
-
-gdouble config_getdouble (const gchar* key) {
-    gdouble temp;
-
-    config_mutex_lock ();
-    temp = cfg_getfloat (tc, key);
-    config_mutex_unlock ();
-
-    return temp;
-}
-
-gdouble config_getndouble (const gchar* key, const guint idx) {
-    gdouble temp;
-
-    config_mutex_lock ();
-    temp = cfg_getnfloat (tc, key, idx);
     config_mutex_unlock ();
 
     return temp;

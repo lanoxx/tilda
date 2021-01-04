@@ -59,16 +59,12 @@ gint config_setint     (const gchar *key, const glong val);
 gint config_setstr     (const gchar *key, const gchar *val);
 gint config_setbool    (const gchar *key, const gboolean val);
 gint config_setnint    (const gchar *key, const glong val, const guint idx);
-gint config_setdouble  (const gchar *key, const gdouble val);
-gint config_setndouble (const gchar *key, const gdouble vat, const guint idx);
 
 /* Get values from the config system */
 glong    config_getint     (const gchar *key);
 gchar*   config_getstr     (const gchar *key);
 gboolean config_getbool    (const gchar *key);
 glong    config_getnint    (const gchar *key, const guint idx);
-gdouble  config_getdouble  (const gchar *key);
-gdouble  config_getndouble (const gchar *key, const guint idx);
 
 /**
  * This function uses the configured relative ratio of the window size and
