@@ -12,9 +12,13 @@ can also be configured from the command line as documented below.
 Please note that currently command line options override the settings in the configuration file and
 are persisted into the configuration file.
 .PP
-Tilda is currently not officially supported on Wayland. Starting with Tilda 1.5.0 it will be able to start
-under Wayland but the pull hotkey will only work from other X11 windows but not when a native Wayland
-window has the focus.
+Tilda is using an X11 filter function to register its hotkeys. On Wayland this
+method only works while other X11-based programs are active but we cannot send
+hotkeys to tilda while native Wayland applications have the focus. Therefore, on
+Wayland desktops tilda needs to be started with DBus support and a global hotkey
+must be registered using the desktop environment to send a DBus action to show
+or hide the tilda window.
+.PP
 .SS "Usage:"
 .IP
 tilda [OPTION...]
@@ -62,8 +66,44 @@ Show Configuration Wizard
 .TP
 \fB\-\-display\fR=\fIDISPLAY\fR
 X display to use
+.TP
+\fB\-\-dbus\fR
+Enables DBus support (see DBus).
+.SH "DBus"
+Each Tilda process registers its own D-Bus name, so it is possible to
+run multiple tilda processes each with their own config file and control
+them separately via D-Bus.
+.PP
+Each tilda instance registers itself using a dynamically generated
+bus name and object path using its instance number. The first tilda
+instance will be on:
+.TP
+    com.github.lanoxx.tilda.Actions0
+.PP
+with object path:
+.TP
+    /com/github/lanoxx/tilda/Actions0
+.PP
+The interface name is always:
+.TP
+    com.github.lanoxx.tilda.Actions
+.PP
+To toggle the tilda window you can use \fBdbus-send\fR:
+.TP
+.EX
+    dbus-send --session --type=method_call \\
+       --dest=com.github.lanoxx.tilda.Actions0 \\
+       /com/github/lanoxx/tilda/Actions0 \\
+       com.github.lanoxx.tilda.Actions.Toggle
+.EE
+.PP
+You can use the above command to register a global hotkey in your Wayland
+session.
+.PP
+For each additional tilda instance the bus name and object path will
+be incremented by one (e.g. Actions1, Actions2, etc.).
 .SH "COPYRIGHT"
-Copyright \(co 2012,2020 Sebastian Geiger (lanoxx@gmx.net)
+Copyright \(co 2021 Sebastian Geiger (lanoxx@gmx.net)
 .br
 Copyright \(co 2005,2008 Tristan Sloughter (sloutri@iit.edu)
 .br
