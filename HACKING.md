@@ -3,7 +3,7 @@
 ## Dependencies
 
  * Glib >= 2.30 - http://developer.gnome.org/glib/2.30/
- * Gtk+3 >= 3.0 - http://developer.gnome.org/gtk3/3.0/
+ * Gtk+3 >= 3.22 - http://developer.gnome.org/gtk3/3.22/
  * VTE >= 2.91 - http://developer.gnome.org/vte/0.30/
  * libConfuse - http://www.nongnu.org/confuse/
  * libx11-dev - http://www.x.org/wiki/
