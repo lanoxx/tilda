@@ -666,7 +666,12 @@ static gint ccopy (tilda_window *tw)
         list = list->next;
     }
 
+    if ( ! vte_terminal_get_has_selection (VTE_TERMINAL (list->data)) ) {
+        return GDK_EVENT_PROPAGATE;
+    }
+
     vte_terminal_copy_clipboard_format (VTE_TERMINAL(list->data), VTE_FORMAT_TEXT);
+    vte_terminal_unselect_all (VTE_TERMINAL(list->data));
 
     return GDK_EVENT_STOP;
 }
