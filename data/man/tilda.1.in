@@ -1,8 +1,40 @@
-.TH "TILDA" "1" "Feb 2020" "tilda @VERSION@" "User Commands"
+.\" Copyright (c) 2021, Sebastian Geiger (lanoxx@gmx.net)
+.\"
+.\" Copyright (c) 2012, Davide Truffa <davide@catoblepa.org>
+.\"
+.\" %%%LICENSE_START(VERBATIM)
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of
+.\" this manual under the conditions for verbatim copying, provided that
+.\" the entire resulting derived work is distributed under the terms of
+.\" a permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume.
+.\" no responsibility for errors or omissions, or for damages resulting.
+.\" from the use of the information contained herein.  The author(s) may.
+.\" not have taken the same level of care in the production of this.
+.\" manual, which is licensed free of charge, as they might when working.
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" %%%LICENSE_END
+.TH "TILDA" "1" "Nov 2021" "tilda @VERSION@" "User Commands"
 .SH "NAME"
 tilda \- a highly configurable terminal emulator
+.SH "SYNOPSIS"
+tilda [\fB\-b|\-\-background\-color\fR \fIcolor\fR] [\fB\-c|\-\-command\fR \fIcommand\fR] [\fB\-h|\-\-hidden\fR] [\fB\-f|\-\-font\fR \fIfont\fR] [\fB\-g|\-\-config-file\fR \fIfile\fR] [\fB\-l|\-\-lines\fR \fIfile\fR] [\fB\-s|\-\-scrollbar\fR] [\fB\-w|\-\-working\-dir\fR \fIdir\fR] [\fB\-x|\-\-x\-pos\fR \fIx_pos\fR] [\fB\-y|\-\-y\-pos\fR \fIy_pos\fR] [\fB\-t|\-\-background\-alpha\fR \fIalpha\fR] [\fB\-C|\-\-config\fR] [\fB\-\-display\fR \fIdisplay\fR]
+.PP
+tilda \fB--version\fR
+.PP
+tilda \fB--help\fR
 .SH "DESCRIPTION"
-\fBTilda\fR is a terminal emulator which is highly configurable. The main distinguishing feature of tilda is that it
+.BR Tilda
+is a terminal emulator which is highly configurable. The main distinguishing feature of tilda is that it
 uses a configurable shortcut to show and hide the tilda window. This allows users to quickly switch between tilda
 and other windows only through keyboard shortcuts. When tilda is hidden it will move
 outside of the screen until a shortcut is pressed again to show the tilda window. The behaviour of
@@ -19,57 +51,57 @@ Wayland desktops tilda needs to be started with DBus support and a global hotkey
 must be registered using the desktop environment to send a DBus action to show
 or hide the tilda window.
 .PP
-.SS "Usage:"
-.IP
-tilda [OPTION...]
+.SH "OPTIONS"
 .SS "Help Options:"
 .TP
 \fB\-?\fR, \fB\-\-help\fR
 Show help options
 .SS "Application Options:"
 .TP
-\fB\-b\fR, \fB\-\-background\-color\fR
-Set the background color
+\fB\-b\fR, \fB\-\-background\-color\fR \fIcolor\fR
+Set the background \fIcolor\fR. The value can be either a standard color name from X11 or a hexadecimal value (i.e., #rgb, #rrggbb, etc.).
 .TP
-\fB\-c\fR, \fB\-\-command\fR
-Run a command at startup
+\fB\-c\fR, \fB\-\-command\fR \fIcommand\fR
+Run a \fIcommand\fR at startup instead of the default shell.
 .TP
 \fB\-h\fR, \fB\-\-hidden\fR
-Start Tilda hidden
+Start Tilda hidden.
 .TP
-\fB\-f\fR, \fB\-\-font\fR
-Set the font to the following string
+\fB\-f\fR, \fB\-\-font\fR \fIfont\fR
+Set the font to the Pango FontDescription specified in \fIfont\fR. Defaults to "Monospace 11".
 .TP
-\fB\-l\fR, \fB\-\-lines\fR
-Scrollback Lines
+\fB\-l\fR, \fB\-\-lines\fR \fIlines\fR
+The the scrollback buffer size to a maximum of \fIlines\fR.
 .TP
 \fB\-s\fR, \fB\-\-scrollbar\fR
-Use Scrollbar
+Show a scrollbar at the side of the terminal.
 .TP
 \fB\-v\fR, \fB\-\-version\fR
-Print the version, then exit
+Print the version, then exit.
 .TP
-\fB\-w\fR, \fB\-\-working\-dir\fR
-Set Initial Working Directory
+\fB\-w\fR, \fB\-\-working\-dir\fR \fIdir\fR
+Set initial working directory to \fIdir\fR.
 .TP
-\fB\-x\fR, \fB\-\-x\-pos\fR
-X Position
+\fB\-x\fR, \fB\-\-x\-pos\fR \fIx_pos\fR
+Set the X position of the tilda terminal window to \fIx_pos\fR.
 .TP
-\fB\-y\fR, \fB\-\-y\-pos\fR
-Y Position
+\fB\-y\fR, \fB\-\-y\-pos\fR \fIy_pos\fR
+Set the Y position of the tilda terminal window to \fIy_pos\fR.
 .TP
-\fB\-t\fR, \fB\-\-background-alpha\fR
-Opaqueness: 0\-100%
+\fB\-t\fR, \fB\-\-background-alpha\fR \fIalpha\fR
+Set the terminal windows transparency to \fIalpha\fR (i.e., 0\-100%). Higher values
+increase the level of transparency.
 .TP
 \fB\-C\fR, \fB\-\-config\fR
-Show Configuration Wizard
+Show the configuration wizard.
 .TP
 \fB\-\-display\fR=\fIDISPLAY\fR
-X display to use
+Set the X display to use (i.e., :0, :0.0, etc.).
 .TP
 \fB\-\-dbus\fR
-Enables DBus support (see DBus).
-.SH "DBus"
+Enables DBus support (see \fIDBus\fR).
+.SH "NOTES"
+.SS DBus
 Each Tilda process registers its own D-Bus name, so it is possible to
 run multiple tilda processes each with their own config file and control
 them separately via D-Bus.
@@ -102,20 +134,8 @@ session.
 .PP
 For each additional tilda instance the bus name and object path will
 be incremented by one (e.g. Actions1, Actions2, etc.).
-.SH "COPYRIGHT"
-Copyright \(co 2021 Sebastian Geiger (lanoxx@gmx.net)
-.br
-Copyright \(co 2005,2008 Tristan Sloughter (sloutri@iit.edu)
-.br
-Copyright \(co 2005,2008 Ira W. Snyder (tilda@irasnyder.com)
-.br
-Copyright \(co 2007,2008 Ken Dreyer (kdreyer@chicagolug.org)
-.PP
-This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it
-under certain conditions. See the file COPYING for details.
 .SH "BUGS"
 Please report bugs via Github at https://github.com/lanoxx/tilda/issues
-.SH "AUTHOR"
-This man page was originally written by Davide Truffa <davide@catoblepa.org>
-and is currently being maintained by Sebastian Geiger <lanoxx@gmx.net>.
+.SH "SEE ALSO"
+For further information visit the project repository or have a look at the
+wiki: https://github.com/lanoxx/tilda/wiki
