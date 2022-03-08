@@ -4,14 +4,14 @@
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 # micrococo <micrococo@gmx.com>, 2014.
-# jcdepaz <victorhck@mailbox.org>, 2022.
+# victorhck <victorhck@mailbox.org>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2020-02-08 23:45+0100\n"
 "PO-Revision-Date: 2022-03-08 17:14+0100\n"
-"Last-Translator: jcdepaz <victorhck@mailbox.org>\n"
+"Last-Translator: victorhck <victorhck@mailbox.org>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
