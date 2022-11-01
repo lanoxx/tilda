@@ -498,6 +498,14 @@ static void check_start_tilda_hidden_toggled_cb (GtkWidget *w, tilda_window *tw)
     config_setbool ("hidden", status);
 }
 
+static void session_management_enabled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    config_setbool ("session_management_enabled", status);
+}
+
+
 static void check_terminal_bell_toggled_cb (GtkWidget *w, tilda_window *tw)
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
@@ -1832,6 +1840,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_start_tilda_hidden", "hidden");
     CHECK_BUTTON ("check_show_notebook_border", "notebook_border");
     COMBO_BOX ("combo_non_focus_pull_up_behaviour", "non_focus_pull_up_behaviour");
+    CHECK_BUTTON ("session_management_enabled", "session_management_enabled");
 
     CHECK_BUTTON ("check_terminal_bell", "bell");
     CHECK_BUTTON ("check_cursor_blinks", "blinks");
@@ -1998,6 +2007,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_show_notebook_border","toggled",check_show_notebook_border_toggled_cb, tw);
     CONNECT_SIGNAL ("check_always_on_top","toggled",check_always_on_top_toggled_cb, tw);
     CONNECT_SIGNAL ("check_start_tilda_hidden","toggled",check_start_tilda_hidden_toggled_cb, tw);
+    CONNECT_SIGNAL ("session_management_enabled","toggled",session_management_enabled_cb, tw);
     CONNECT_SIGNAL ("combo_non_focus_pull_up_behaviour","changed",combo_non_focus_pull_up_behaviour_cb, tw);
 
     CONNECT_SIGNAL ("check_terminal_bell","toggled",check_terminal_bell_toggled_cb, tw);

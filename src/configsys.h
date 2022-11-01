@@ -50,6 +50,7 @@
 /* Initialize and free the config system's private variables */
 gint config_init (const gchar *config_file);
 gint config_free (const gchar *config_file);
+gint session_init (const gchar *session_file, void (*callback)(void*,char*,char*,char*,char*), void* tw);
 
 /* Write to disk (generally discouraged) */
 gint config_write (const gchar *config_file);

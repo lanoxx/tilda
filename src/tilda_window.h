@@ -107,6 +107,7 @@ enum notebook_tab_positions { NB_TOP, NB_BOTTOM, NB_LEFT, NB_RIGHT, NB_HIDDEN };
  * Success: the new tab's index (>=0)
  * Failure: -1
  */
+gint tilda_window_add_tab_with_params (tilda_window *tw, char* txt, char *dir, char *cmd, char* args);
 gint tilda_window_add_tab (tilda_window *tw);
 
 /**

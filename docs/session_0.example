@@ -1,0 +1,9 @@
+# Labels seem to work ONLY when something else than shell is running. Tilda in dir is not expanded.
+# Tab names/ids shadow previous if they are the same. Order doesn't matter
+# Commands run in the terminal, and when they exit - will not drop back to default shell.
+# Tilda's config so far accepts full path to file and also does not parse '~'.
+# tab 1 { dir = /tmp/   txt = 'foo bar1' cmd = /usr/bin/cat  args = ~/.config/tilda/session_0 }
+# tab 0 { dir = /usr/   txt = "foo bar2" cmd = /usr/bin/echo args = 'foo 1 2 3' }
+tab 0 { dir = /dev      txt = "foo bar3" cmd = /bin/bash }
+tab 2 { dir = /tmp      txt = journal    cmd = journalctl    args = -f }
+tab 1 { dir = /proc     txt = htop_tab   cmd = /usr/bin/htop }

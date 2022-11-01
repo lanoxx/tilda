@@ -38,6 +38,8 @@ static cfg_t *tc;
 static cfg_opt_t config_opts[] = {
 
     /* strings */
+    CFG_STR("session_file", "~/.config/tilda/session_0", CFGF_NONE),
+    CFG_BOOL("session_management_enabled", FALSE, CFGF_NONE),
     CFG_STR("tilda_config_version", PACKAGE_VERSION, CFGF_NONE),
     CFG_STR("command", "", CFGF_NONE),
     CFG_STR("font", "Monospace 11", CFGF_NONE),
@@ -216,6 +218,18 @@ static cfg_opt_t config_opts[] = {
     CFG_END()
 };
 
+static cfg_opt_t tab_opts[] = {
+    CFG_STR("dir", 0, CFGF_NODEFAULT),
+    CFG_STR("txt", 0, CFGF_NONE),
+    CFG_STR("cmd", 0, CFGF_NONE),
+    CFG_STR("args", 0, CFGF_NONE),
+    CFG_END()
+};
+static cfg_opt_t session_opts[] = {
+    CFG_SEC("tab", tab_opts, CFGF_MULTI | CFGF_TITLE),
+    CFG_END()
+};
+
 /* Define these here, so that we can enable a non-threadsafe version
  * without changing the code below. */
 #ifndef NO_THREADSAFE
@@ -389,6 +403,34 @@ gint config_write (const gchar *config_file)
     return ret;
 }
 
+gint session_init (const gchar *session_file, void (*callback)(void*,char*,char*,char*,char*), void *tw)
+{
+    DEBUG_FUNCTION ("session_init");
+    gint ret = 0;
+    cfg_t *sconf  = cfg_init (session_opts, 0); // no need to persist, as save mechanism does not exist
+
+    if (g_file_test (session_file, G_FILE_TEST_IS_REGULAR))
+    {
+        ret = cfg_parse (sconf, session_file);
+        if (ret == CFG_PARSE_ERROR || ret != CFG_SUCCESS || session_file == NULL) {
+            DEBUG_ERROR ("Parsing session file failed.");
+            return ret;
+        } else {
+            DEBUG_ERROR ("Parsing session file OK.");
+        }
+    }
+
+    for (int i = 0; i < cfg_size(sconf, "tab"); i++) {
+        cfg_t *tab = cfg_getnsec(sconf, "tab", i);
+        char *dir = g_strdup(cfg_getstr(tab, "dir"));
+        char *cmd = g_strdup(cfg_getstr(tab, "cmd"));
+        char *txt = g_strdup(cfg_getstr(tab, "txt"));
+        char *args = g_strdup(cfg_getstr(tab, "args"));
+        callback (tw, dir, cmd, txt, args);
+    }
+
+    return ret;
+}
 /**
  * Start up the configuration system, using the configuration file given
  * to get the current values. If the configuration file given does not exist,

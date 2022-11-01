@@ -21,21 +21,22 @@ gboolean tilda_cli_options_parse_options (tilda_cli_options *cli_options,
 
     /* All of the various command-line options */
     GOptionEntry cl_opts[] = {
-            { "background-color",   'b', 0, G_OPTION_ARG_STRING,    &(cli_options->background_color),  N_("Set the background color"), NULL },
-            { "command",            'c', 0, G_OPTION_ARG_STRING,    &(cli_options->command),           N_("Run a command at startup"), NULL },
-            { "hidden",             'h', 0, G_OPTION_ARG_NONE,      &(cli_options->hidden),            N_("Start Tilda hidden"), NULL },
-            { "font",               'f', 0, G_OPTION_ARG_STRING,    &(cli_options->font),              N_("Set the font to the following string"), NULL },
-            { "config-file",        'g', 0, G_OPTION_ARG_STRING,    config_file,                       N_("Configuration file"), NULL },
-            { "lines",              'l', 0, G_OPTION_ARG_INT,       &(cli_options->lines),             N_("Scrollback Lines"), NULL },
-            { "scrollbar",          's', 0, G_OPTION_ARG_NONE,      &(cli_options->scrollbar),         N_("Use Scrollbar"), NULL },
-            { "version",            'v', 0, G_OPTION_ARG_NONE,      &(cli_options->version),           N_("Print the version, then exit"), NULL },
-            { "working-dir",        'w', 0, G_OPTION_ARG_STRING,    &(cli_options->working_dir),       N_("Set Initial Working Directory"), NULL },
-            { "x-pos",              'x', 0, G_OPTION_ARG_INT,       &(cli_options->x_pos),             N_("X Position"), NULL },
-            { "y-pos",              'y', 0, G_OPTION_ARG_INT,       &(cli_options->y_pos),             N_("Y Position"), NULL },
-            { "background-alpha",   't', 0, G_OPTION_ARG_INT,       &(cli_options->back_alpha),        N_("Opaqueness: 0-100%"), NULL },
-            { "config",             'C', 0, G_OPTION_ARG_NONE,      &(cli_options->show_config),       N_("Show Configuration Wizard"), NULL },
-            { "dbus",               0, 0, G_OPTION_ARG_NONE,        &(cli_options->enable_dbus),       N_("Enable D-Bus interface for this instance"), NULL },
-            { NULL }
+        { "background-color",         'b', 0, G_OPTION_ARG_STRING,    &(cli_options->background_color),       N_("Set the background color"), NULL },
+        { "command",                  'c', 0, G_OPTION_ARG_STRING,    &(cli_options->command),                N_("Run a command at startup"), NULL },
+        { "hidden",                   'h', 0, G_OPTION_ARG_NONE,      &(cli_options->hidden),                 N_("Start Tilda hidden"), NULL },
+        { "font",                     'f', 0, G_OPTION_ARG_STRING,    &(cli_options->font),                   N_("Set the font to the following string"), NULL },
+        { "config-file",              'g', 0, G_OPTION_ARG_STRING,    config_file,                            N_("Configuration file"), NULL },
+        { "session-file",             'e', 0, G_OPTION_ARG_STRING,    &(cli_options->session_file),           N_("Session file"), NULL },
+        { "lines",                    'l', 0, G_OPTION_ARG_INT,       &(cli_options->lines),                  N_("Scrollback Lines"), NULL },
+        { "scrollbar",                's', 0, G_OPTION_ARG_NONE,      &(cli_options->scrollbar),              N_("Use Scrollbar"), NULL },
+        { "version",                  'v', 0, G_OPTION_ARG_NONE,      &(cli_options->version),                N_("Print the version, then exit"), NULL },
+        { "working-dir",              'w', 0, G_OPTION_ARG_STRING,    &(cli_options->working_dir),            N_("Set Initial Working Directory"), NULL },
+        { "x-pos",                    'x', 0, G_OPTION_ARG_INT,       &(cli_options->x_pos),                  N_("X Position"), NULL },
+        { "y-pos",                    'y', 0, G_OPTION_ARG_INT,       &(cli_options->y_pos),                  N_("Y Position"), NULL },
+        { "background-alpha",         't', 0, G_OPTION_ARG_INT,       &(cli_options->back_alpha),             N_("Opaqueness: 0-100%"), NULL },
+        { "config",                   'C', 0, G_OPTION_ARG_NONE,      &(cli_options->show_config),            N_("Show Configuration Wizard"), NULL },
+        { "dbus",                     0, 0, G_OPTION_ARG_NONE,        &(cli_options->enable_dbus),            N_("Enable D-Bus interface for this instance"), NULL },
+        { NULL }
     };
 
     /* Set up the command-line parser */

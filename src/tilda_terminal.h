@@ -63,6 +63,7 @@ enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
  *        when you are finished using it, and it has been removed from all GTK
  *        structures, such as the notebook.
  */
+struct tilda_term_ *tilda_term_init_with_params (struct tilda_window_ *tw, char* dir, char* cmd, char* args);
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw);
 
 /**

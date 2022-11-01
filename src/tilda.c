@@ -110,6 +110,11 @@ static void setup_config_from_cli_options(tilda_cli_options *cli_options)
         config_setstr ("working_dir", cli_options->working_dir);
         g_free(cli_options->working_dir);
     }
+    if (cli_options->session_file != NULL
+            && cli_options->session_file != config_getstr ("session_file")) {
+        config_setstr ("session_file", cli_options->session_file);
+        g_free(cli_options->session_file);
+    }
 
     if (cli_options->lines != 0
             && cli_options->lines != config_getint ("lines"))
@@ -213,6 +218,19 @@ static void load_custom_css_file () {
 
     g_object_unref (file);
     g_free (filename);
+}
+
+static void session_cb_handler(void* tw_ptr, char *dir, char *cmd, char *txt, char *args){
+    tilda_window *tw = tw_ptr;
+    int tab = tilda_window_add_tab_with_params (tw, txt, dir, cmd, args);
+    if (tab != 1 )
+    {
+        g_printerr (_("Opening tab with cmd='%s' failed.\n"), cmd);
+    }
+    free(dir);
+    free(cmd);
+    free(txt);
+    free(args);
 }
 
 int main (int argc, char *argv[])
@@ -343,6 +361,12 @@ int main (int argc, char *argv[])
         g_free (bus_name);
 
         bus_identifier = tilda_dbus_actions_init (&tw);
+    }
+
+    if (cli_options->session_file || config_getbool("session_management_enabled")) {
+        g_print ("Loading session file %s.\n", config_getstr("session_file"));
+        // config options are shadowed by cmd params, so this would get proper file
+        gint session_init_result = session_init (config_getstr("session_file"), session_cb_handler, &tw);
     }
 
     g_free(cli_options);

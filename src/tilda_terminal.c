@@ -32,6 +32,7 @@
 #include <vte/vte.h>
 #include <string.h>
 
+static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_command, char *cmd, char *args);
 static void start_shell (tilda_term *tt, gboolean ignore_custom_command);
 static void start_default_shell (tilda_term *tt);
 
@@ -137,6 +138,11 @@ register_match (VteRegex * regex,
 
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 {
+	return tilda_term_init_with_params (tw, NULL, NULL, NULL);
+}
+
+struct tilda_term_ *tilda_term_init_with_params (struct tilda_window_ *tw, char* dir, char *cmd, char* args)
+{
     DEBUG_FUNCTION ("tilda_term_init");
     DEBUG_ASSERT (tw != NULL);
 
@@ -231,13 +237,17 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     /* Get current term's working directory */
     current_tt_index = gtk_notebook_get_current_page (GTK_NOTEBOOK(tw->notebook));
     current_tt = g_list_nth_data (tw->terms, current_tt_index);
-    if (current_tt != NULL)
+    if (dir != NULL)
+    {
+        term->initial_working_dir = g_strdup(dir);
+    }
+    else if (current_tt != NULL)
     {
         term->initial_working_dir = tilda_term_get_cwd (current_tt);
     }
 
     /* Fork the appropriate command into the terminal */
-    start_shell (term, FALSE);
+    start_shell_with_params (term, FALSE, cmd, args);
 
     return term;
 }
@@ -472,11 +482,18 @@ shell_spawned_cb (VteTerminal *terminal,
     tt->pid = pid;
 }
 
+static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
+{
+	start_shell_with_params (tt, ignore_custom_command, NULL, NULL);
+}
+
+
+
 /* Fork a shell into the VTE Terminal
  *
  * @param tt the tilda_term to fork into
  */
-static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
+static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_command, char *session_cmd, char* args)
 {
     DEBUG_FUNCTION ("start_shell");
     DEBUG_ASSERT (tt != NULL);
@@ -485,19 +502,22 @@ static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
     gint argc;
     gchar **argv;
     GError *error = NULL;
+    char *custom_command;
 
-    if (config_getbool ("run_command") && !ignore_custom_command)
+    if ((config_getbool ("run_command") && !ignore_custom_command) || session_cmd != NULL)
     {
-        ret = g_shell_parse_argv (config_getstr ("command"), &argc, &argv, &error);
+        if (session_cmd != NULL)
+            custom_command = session_cmd;
+        else
+            custom_command = config_getstr ("command");
 
-        /* Check for error */
+        ret = g_shell_parse_argv (custom_command, &argc, &argv, &error);
+
         if (ret == FALSE)
         {
             g_printerr (_("Problem parsing custom command: %s\n"), error->message);
             g_printerr (_("Launching default shell instead\n"));
-
             g_error_free (error);
-
             start_default_shell (tt);
         }
 
@@ -529,6 +549,7 @@ static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
         g_strfreev (argv);
         g_free (envv);
         g_free(path_prefixed);
+
     } else {
         start_default_shell (tt);
     }
