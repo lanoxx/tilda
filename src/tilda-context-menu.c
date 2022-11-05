@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "wizard.h"
 #include "tilda-url-spawner.h"
+#include "configsys.h"
 
 #include <vte/vte.h>
 #include <glib/gi18n.h>
@@ -95,6 +96,32 @@ menu_open_match_cb (GSimpleAction * action,
     tilda_url_spawner_spawn_browser_for_match (parent,
                                                context_menu->match,
                                                context_menu->match_entry);
+}
+
+static void
+menu_search_in_searchengine_cb (GSimpleAction *action,
+                    GVariant      *parameter,
+                    gpointer       user_data)
+{
+    DEBUG_FUNCTION ("menu_search_in_searchengine_cb");
+    DEBUG_ASSERT (user_data != NULL);
+
+    tilda_term *tt = TILDA_TERM (user_data);
+    GtkWindow * parent = GTK_WINDOW (tt->tw->window);
+    GError *err = NULL;
+
+    vte_terminal_copy_clipboard_format (VTE_TERMINAL (tt->vte_term), VTE_FORMAT_TEXT);
+    char *clipboard_txt = gtk_clipboard_wait_for_text(gtk_clipboard_get_default(gdk_display_get_default()));
+    char text[256] = {0};
+    gchar *search_engine_query = config_getstr("default_search_engine_query");
+    snprintf(text, 256U, "%s%s", search_engine_query, clipboard_txt);
+    text[255] = 0;
+    g_free (clipboard_txt);
+    if (!gtk_show_uri_on_window (parent, text, GDK_CURRENT_TIME, &err) && err != NULL)
+    {
+        fprintf (stderr, "cannot launch browser:%s\n", err->message);
+        g_error_free (err);
+    }
 }
 
 static void
@@ -203,6 +230,11 @@ create_menu_model (TildaContextMenu * context_menu)
 
     g_menu_append_section (menu, NULL, G_MENU_MODEL (match_section));
 
+    // search section
+    GMenu *search_section = g_menu_new ();
+    g_menu_append (search_section, _("_Search in browser"), "window.search-in-se");
+    g_menu_append_section (menu, NULL, G_MENU_MODEL (search_section));
+
     // toggle section
 
     GMenu *toggle_section = g_menu_new ();
@@ -265,7 +297,8 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char * match, 
 
     GActionEntry entries_for_tilda_terminal[] = {
             { .name="copy", menu_copy_cb},
-            { .name="paste", menu_paste_cb}
+            { .name="paste", menu_paste_cb},
+            { .name="search-in-se", menu_search_in_searchengine_cb }
     };
 
     GActionEntry entries_for_match_copy [] = {
