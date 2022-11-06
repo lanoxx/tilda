@@ -138,7 +138,7 @@ register_match (VteRegex * regex,
 
 struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
 {
-	return tilda_term_init_with_params (tw, NULL, NULL, NULL);
+    return tilda_term_init_with_params (tw, NULL, NULL, NULL);
 }
 
 struct tilda_term_ *tilda_term_init_with_params (struct tilda_window_ *tw, char* dir, char *cmd, char* args)
@@ -205,7 +205,7 @@ struct tilda_term_ *tilda_term_init_with_params (struct tilda_window_ *tw, char*
     g_signal_connect (G_OBJECT(term->vte_term), "button-press-event",
                       G_CALLBACK(button_press_cb), term);
     g_signal_connect (G_OBJECT(term->vte_term), "key-press-event",
-		      G_CALLBACK(key_press_cb), term); //needs GDK_KEY_PRESS_MASK
+              G_CALLBACK(key_press_cb), term); //needs GDK_KEY_PRESS_MASK
 
     /* Connect to application request signals. */
     g_signal_connect (G_OBJECT(term->vte_term), "iconify-window",
@@ -246,7 +246,7 @@ struct tilda_term_ *tilda_term_init_with_params (struct tilda_window_ *tw, char*
         term->initial_working_dir = tilda_term_get_cwd (current_tt);
     }
 
-    /* Fork the appropriate command into the terminal */
+    /* Fork the appropriate command into the trrminal */
     start_shell_with_params (term, FALSE, cmd, args);
 
     return term;
@@ -484,7 +484,7 @@ shell_spawned_cb (VteTerminal *terminal,
 
 static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
 {
-	start_shell_with_params (tt, ignore_custom_command, NULL, NULL);
+    start_shell_with_params (tt, ignore_custom_command, NULL, NULL);
 }
 
 
@@ -493,7 +493,7 @@ static void start_shell (tilda_term *tt, gboolean ignore_custom_command)
  *
  * @param tt the tilda_term to fork into
  */
-static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_command, char *session_cmd, char* args)
+static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_command, char *session_cmd, char* session_args)
 {
     DEBUG_FUNCTION ("start_shell");
     DEBUG_ASSERT (tt != NULL);
@@ -502,14 +502,23 @@ static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_comm
     gint argc;
     gchar **argv;
     GError *error = NULL;
-    char *custom_command;
+    gchar *custom_command;
 
     if ((config_getbool ("run_command") && !ignore_custom_command) || session_cmd != NULL)
     {
-        if (session_cmd != NULL)
-            custom_command = session_cmd;
-        else
-            custom_command = config_getstr ("command");
+        if (session_cmd)
+        {
+            if (session_args)
+            {
+                custom_command = g_strjoin (" ", session_cmd, session_args, NULL);
+                argv = g_strsplit (custom_command, " ", 0);
+                argc = g_strv_length (argv);
+            } else {
+                custom_command = g_strndup (session_cmd, strlen(session_cmd));
+            }
+        } else {
+            custom_command = g_strndup(config_getstr ("command"), strlen(config_getstr ("command")));
+        }
 
         ret = g_shell_parse_argv (custom_command, &argc, &argv, &error);
 
@@ -549,7 +558,7 @@ static void start_shell_with_params (tilda_term *tt, gboolean ignore_custom_comm
         g_strfreev (argv);
         g_free (envv);
         g_free(path_prefixed);
-
+        g_free(custom_command);
     } else {
         start_default_shell (tt);
     }
