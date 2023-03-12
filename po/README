@@ -21,6 +21,10 @@ translation.
 
 How to do a new translation without Launchpad
 ================================================================================
+# If you want to auto generate a pot file template from sources, use xgettext
+# from project root directory
+xgettext --files-from=./po/POTFILES.in --output=po/LANG.pot
+
 cd po
 msginit -l en_US         # (for USA English. Creates en.po)
 

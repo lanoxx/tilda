@@ -1,0 +1,838 @@
+# Ukrainian translations for PACKAGE package.
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# max <max@t480s>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: sloutri@iit.edu\n"
+"POT-Creation-Date: 2023-03-12 01:02+0200\n"
+"PO-Revision-Date: 2023-03-09 21:49+0200\n"
+"Last-Translator: Max Sh <max.sho@protonmail.com>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/tilda.ui:69
+msgid "Close Tilda"
+msgstr "Закрити програму"
+
+#: src/tilda.ui:72
+msgid "Open a new terminal"
+msgstr "Відкрити нову вкладку"
+
+#: src/tilda.ui:75
+msgid "Open a new terminal and hide"
+msgstr "Створити приховану вкладку"
+
+#: src/tilda.ui:86 src/tilda.ui:194
+msgid "Top"
+msgstr "Зверху"
+
+#: src/tilda.ui:89 src/tilda.ui:197
+msgid "Bottom"
+msgstr "Знизу"
+
+#: src/tilda.ui:92 src/tilda.ui:200
+msgid "Left"
+msgstr "Зліва"
+
+#: src/tilda.ui:95 src/tilda.ui:203
+msgid "Right"
+msgstr "Справа"
+
+#: src/tilda.ui:98
+msgid "Hidden"
+msgstr "Приховано"
+
+#: src/tilda.ui:109
+msgid "Focus Terminal"
+msgstr "Переключитись на термінал"
+
+#: src/tilda.ui:112
+msgid "Hide Terminal"
+msgstr "Сховати термінал"
+
+#: src/tilda.ui:123
+msgid "Block Cursor"
+msgstr "Прямокутник"
+
+#: src/tilda.ui:126
+msgid "IBeam Cursor"
+msgstr "Вертикальна риска"
+
+#: src/tilda.ui:129
+msgid "Underline Cursor"
+msgstr "Підкреслення"
+
+#: src/tilda.ui:140
+msgid "Show whole tab title"
+msgstr "Повністю"
+
+#: src/tilda.ui:143
+msgid "Show first n chars of title"
+msgstr "Перші n символів заголвка"
+
+#: src/tilda.ui:146
+msgid "Show last n chars of title"
+msgstr "Останні n символів заголвка"
+
+#: src/tilda.ui:157
+msgid "Isn't displayed"
+msgstr "Не показувати"
+
+#: src/tilda.ui:160
+msgid "Goes after initial title"
+msgstr "Додавати в кінець"
+
+#: src/tilda.ui:163
+msgid "Goes before initial title"
+msgstr "Додавати на початок"
+
+#: src/tilda.ui:166
+msgid "Replace initial title"
+msgstr "Замінити початковий заголовок"
+
+#: src/tilda.ui:177
+msgid "Drop to the default shell"
+msgstr "Запустити стандартну оболонку"
+
+#: src/tilda.ui:180
+msgid "Restart the command"
+msgstr "Перезапустити команду"
+
+#: src/tilda.ui:183
+msgid "Exit the terminal"
+msgstr "Вийти з терміналу"
+
+#: src/tilda.ui:214 src/tilda.ui:246
+msgid "Custom"
+msgstr "Власна"
+
+#: src/tilda.ui:217
+msgid "Green on Black"
+msgstr "Зеленими на Чорному"
+
+#: src/tilda.ui:220
+msgid "Black on White"
+msgstr "Чорними на Білому"
+
+#: src/tilda.ui:223
+msgid "White on Black"
+msgstr "Білими на Чорному"
+
+#: src/tilda.ui:226
+msgid "Zenburn"
+msgstr ""
+
+#: src/tilda.ui:229
+msgid "Solarized Light"
+msgstr ""
+
+#: src/tilda.ui:232
+msgid "Solarized Dark"
+msgstr ""
+
+#: src/tilda.ui:235
+msgid "Snazzy"
+msgstr ""
+
+#: src/tilda.ui:257
+msgid "On the Left"
+msgstr "Зліва"
+
+#: src/tilda.ui:260
+msgid "On the Right"
+msgstr "Справа"
+
+#: src/tilda.ui:263
+msgid "Disabled"
+msgstr "Відключений"
+
+#: src/tilda.ui:274 src/tilda.ui:291
+msgid "ASCII DEL"
+msgstr ""
+
+#: src/tilda.ui:277 src/tilda.ui:294
+msgid "Escape sequence"
+msgstr ""
+
+#: src/tilda.ui:280 src/tilda.ui:297
+msgid "Control-H"
+msgstr ""
+
+#: src/tilda.ui:314
+msgid "Tilda Config"
+msgstr "Налаштування Tilda"
+
+#: src/tilda.ui:395
+msgid "Start Tilda hidden"
+msgstr "Запускати в прихованому режимі"
+
+#: src/tilda.ui:409
+msgid "Always on top"
+msgstr "Завжди поверх інших вікон"
+
+#: src/tilda.ui:423
+msgid "Display on all workspaces"
+msgstr "Показувати на всіх стільницях"
+
+#: src/tilda.ui:437
+msgid "Do not show in taskbar"
+msgstr "Не показувати в панелі завдань"
+
+#: src/tilda.ui:451
+msgid "Show Notebook Border"
+msgstr "Показувати рамку навколо вікна"
+
+#: src/tilda.ui:465
+msgid "Set as Desktop window"
+msgstr "Як віконний додаток"
+
+#: src/tilda.ui:480
+msgid "Start in fullscreen"
+msgstr "Запускати в повноекранному режимі"
+
+#: src/tilda.ui:509
+msgid "Non-focus Pull Up Behaviour:"
+msgstr "Поведінка перемикача якщо Tilda не в фокусі: "
+
+#: src/tilda.ui:560
+msgid "<b>Window Display</b>"
+msgstr "<b>Запуск додатка</b>"
+
+#: src/tilda.ui:598
+msgid "Cursor Blinks"
+msgstr "Блимання курсора"
+
+#: src/tilda.ui:612
+msgid "Audible Terminal Bell"
+msgstr "Звукові сповішення"
+
+#: src/tilda.ui:628
+msgid "Cursor Shape: "
+msgstr "Вигляд курсора:"
+
+#: src/tilda.ui:663
+msgid "<b>Terminal Display</b>"
+msgstr "<b>Вигляд терміналу</b>"
+
+#: src/tilda.ui:703
+msgid "Font:"
+msgstr "Шрифт:"
+
+#: src/tilda.ui:733
+msgid "<b>Font</b>"
+msgstr "<b>Шрифт</b>"
+
+#: src/tilda.ui:782
+msgid "Hide Tilda when mouse leaves it"
+msgstr "Ховати Tilda коли вказівник вийшов за межі вікна"
+
+#: src/tilda.ui:799
+msgid "Auto Hide Delay:"
+msgstr "Автоматично ховати через:"
+
+#: src/tilda.ui:809
+msgid "Hide when Tilda loses focus"
+msgstr "Ховати при втраті фокуса вікном"
+
+#: src/tilda.ui:829
+msgid "<b>Auto Hide</b>"
+msgstr "<b>Автоматичне приховування</b>"
+
+#: src/tilda.ui:868
+msgid "When last terminal is closed:"
+msgstr "При закритті останньої вкладки:"
+
+#: src/tilda.ui:895
+msgid "Always prompt on exit"
+msgstr "Запит підтвердження при виході"
+
+#: src/tilda.ui:918
+msgid "<b>Program Exit</b>"
+msgstr "<b>Закриття додатку</b>"
+
+#: src/tilda.ui:936
+msgid ""
+"<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
+"small>"
+msgstr ""
+"<small><i><b>Зауваження:</b> Деякі параметри потребують перезавантаження "
+"програми.</i></small>"
+
+#: src/tilda.ui:953
+msgid "General"
+msgstr "Основні"
+
+#: src/tilda.ui:998
+msgid "Word Characters:"
+msgstr ""
+
+#: src/tilda.ui:1026
+msgid "<b>Select by Word</b>"
+msgstr "<b>Виділення</b>"
+
+#: src/tilda.ui:1062
+msgid "Match Numbers"
+msgstr "Шукати числа"
+
+#: src/tilda.ui:1077
+msgid "Match Email Addresses"
+msgstr "Шукати електронні адреси"
+
+#: src/tilda.ui:1091
+msgid "Match File URIs"
+msgstr "Шукати посилання на файли"
+
+#: src/tilda.ui:1120
+msgid "Web Browser *:"
+msgstr "Веб-браузер [1]:"
+
+#: src/tilda.ui:1130
+msgid "Press and hold CTRL to activate match"
+msgstr "Затиснути CTRL для переходу за посиланням"
+
+#: src/tilda.ui:1144
+msgid "Use custom web browser command"
+msgstr "Використовувати власну команду веб-браузера"
+
+#: src/tilda.ui:1159
+msgid "Match Web URIs"
+msgstr "Шукати веб посилання"
+
+#: src/tilda.ui:1199
+msgid "<b>Match Handling</b>"
+msgstr "<b>Взаємодія з посиланнями</b>"
+
+#: src/tilda.ui:1234
+msgid "Initial Title:"
+msgstr "Початковий заголовок:"
+
+#: src/tilda.ui:1256
+msgid "Title Max Length:"
+msgstr "Максимальна довжина заголовка:"
+
+#: src/tilda.ui:1297
+msgid "Dynamically-set Title:"
+msgstr "Динамічний заголовок:"
+
+#: src/tilda.ui:1309
+msgid "Title Behaviour:"
+msgstr "Показувати заголовок"
+
+#: src/tilda.ui:1342
+msgid "<b>Title</b>"
+msgstr "<b>Заголовок</b>"
+
+#: src/tilda.ui:1403
+msgid "Run a custom command instead of the shell"
+msgstr "Використовувати власну команду замість стандартної оболонки"
+
+#: src/tilda.ui:1419
+msgid "Custom Command:"
+msgstr "Власна команда:"
+
+#: src/tilda.ui:1431
+msgid "When Command Exits:"
+msgstr "Після закриття власної команди:"
+
+#: src/tilda.ui:1441
+msgid "Use a login shell"
+msgstr "Використовувати каталог запуску для обллонки"
+
+#: src/tilda.ui:1467
+msgid "<b>Command</b>"
+msgstr "<b>Оболонка</b>"
+
+#: src/tilda.ui:1494
+msgid ""
+"* A valid command that can open a browser must be entered here. It is "
+"possible to use the name of a specific browser such as 'firefox' and 'google-"
+"chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The "
+"best command may be different depending on the system."
+msgstr ""
+"[1] Команда яка може опрацьовувати веб посилання. Наприклад, це можуть бути "
+"такі веб-браузери як 'firefox' чи 'google-chrome', або ж  такі додатки "
+"обробки посилань як 'x-www-browser' чи 'xdg-open'. В залежності від тої "
+"операційної системи яку Ви використовуєте."
+
+#: src/tilda.ui:1531
+msgid "Show confirmation dialog when closing tab"
+msgstr "Запит підтвердження при закритті вкладки"
+
+#: src/tilda.ui:1551
+msgid "Close Action"
+msgstr "Обробка команд закриття"
+
+#: src/tilda.ui:1572
+msgid "Title and Command"
+msgstr "Заголовок та команди"
+
+#: src/tilda.ui:1616 src/tilda.ui:1794
+msgid "Percentage"
+msgstr "Відсотків"
+
+#: src/tilda.ui:1640 src/tilda.ui:1806
+msgid "In Pixels"
+msgstr "Пікселів"
+
+#: src/tilda.ui:1667
+msgid "<b>Height</b>"
+msgstr "<b>Висота</b>"
+
+#: src/tilda.ui:1703
+msgid "Monitor:"
+msgstr "Монітор:"
+
+#: src/tilda.ui:1758
+msgid "<b>Select monitor</b>"
+msgstr "<b>Вибір монітору</b>"
+
+#: src/tilda.ui:1845
+msgid "<b>Width</b>"
+msgstr "<b>Ширина</b>"
+
+#: src/tilda.ui:1881
+msgid "Centered Horizontally"
+msgstr "Центрувати по горизонталі"
+
+#: src/tilda.ui:1899
+msgid "Y Position"
+msgstr "Позиція по Y"
+
+#: src/tilda.ui:1933
+msgid "X Position"
+msgstr "Позиція по X"
+
+#: src/tilda.ui:1943
+msgid "Centered Vertically"
+msgstr "Центрувати по вертикалі"
+
+#: src/tilda.ui:1971
+msgid "<b>Position</b>"
+msgstr "<b>Позиція</b>"
+
+#: src/tilda.ui:2009
+msgid "Position of Tabs:"
+msgstr "Позиція вкладок:"
+
+#: src/tilda.ui:2036
+msgid "Expand Tabs"
+msgstr "Рівномірно розприділяти вкладки"
+
+#: src/tilda.ui:2050
+msgid "Show single Tab"
+msgstr "Показувати заголовок навіть з однією вкладкою"
+
+#: src/tilda.ui:2064
+msgid "Display Title in Tooltip"
+msgstr "Показувати заголовок в спливаючій підказці"
+
+#: src/tilda.ui:2087
+msgid "<b>Tabs</b>"
+msgstr "<b>Вкладки</b>"
+
+#: src/tilda.ui:2136
+msgid "Animation Delay (usec)"
+msgstr "Анімація затримки(мікросекунд):"
+
+#: src/tilda.ui:2148
+msgid "Animation Orientation"
+msgstr "Напрямок анімації:"
+
+#: src/tilda.ui:2186
+msgid "Animated Pulldown"
+msgstr "Анімація переключання вікна"
+
+#: src/tilda.ui:2202
+msgid "Level of Transparency"
+msgstr "Рівень прозорості:"
+
+#: src/tilda.ui:2212
+msgid "Enable Transparency"
+msgstr "Прозоріть вікна"
+
+#: src/tilda.ui:2235
+msgid "<b>Extras</b>"
+msgstr "<b>Візуальні ефекти</b>"
+
+#: src/tilda.ui:2254
+msgid "Appearance"
+msgstr "Вигляд"
+
+#: src/tilda.ui:2323
+msgid "Cursor Color"
+msgstr "Колір курсору:"
+
+#: src/tilda.ui:2371
+msgid "Text Color"
+msgstr "Колір тексту:"
+
+#: src/tilda.ui:2383
+msgid "Background Color"
+msgstr "Колір тла:"
+
+#: src/tilda.ui:2395
+msgid "Built-in Schemes"
+msgstr "Кольорова схема:"
+
+#: src/tilda.ui:2409
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>Кольори</b>"
+
+#: src/tilda.ui:2441
+msgid ""
+"<small><i><b>Note:</b> Terminal applications have these colors available to "
+"them.</i></small>"
+msgstr ""
+
+#: src/tilda.ui:2484
+msgid "Choose Color 14"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2497
+msgid "Choose Color 13"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2510
+msgid "Choose Color 15"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2523
+msgid "Choose Color 12"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2536
+msgid "Choose Color 10"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2549
+msgid "Choose Color 11"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2562
+msgid "Choose Color 9"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2575
+msgid "Choose Color 7"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2588
+msgid "Choose Color 6"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2601
+msgid "Choose Color 5"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2614
+msgid "Choose Color 4"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2627
+msgid "Choose Color 3"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2640
+msgid "Choose Color 2"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2653
+msgid "Choose Color 1"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2666
+msgid "Choose Color 0"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2680
+msgid "Choose Color 8"
+msgstr "Виберіть колір"
+
+#: src/tilda.ui:2697
+msgid "Built-in schemes:"
+msgstr "Вбудовані схеми:"
+
+#: src/tilda.ui:2712
+msgid "Color palette:"
+msgstr "Кольорова палітра:"
+
+#: src/tilda.ui:2728
+msgid "<b>Palette</b>"
+msgstr "<b>Кольорова палітра</b>"
+
+#: src/tilda.ui:2747
+msgid "Colors"
+msgstr "Кольори"
+
+#: src/tilda.ui:2804
+msgid "Scrollbar is:"
+msgstr "Смуга прокрутки:"
+
+#: src/tilda.ui:2813
+msgid "Limit scrollback to:"
+msgstr "Обмежувати кількість рядків:"
+
+#: src/tilda.ui:2817
+msgid "Unselect for unlimited scrollback."
+msgstr "Відключити щоб прибрати обмеження."
+
+#: src/tilda.ui:2829
+msgid "Scroll on Output"
+msgstr "Автоматично прокручувати при виводі"
+
+#: src/tilda.ui:2843
+msgid "Scroll on Keystroke"
+msgstr "Автоматично прокручувати при введенні тексту"
+
+#: src/tilda.ui:2865
+msgid "0"
+msgstr ""
+
+#: src/tilda.ui:2877
+msgid "lines"
+msgstr "рядків"
+
+#: src/tilda.ui:2903
+msgid "<b>Scrolling</b>"
+msgstr "<b>Прокручування</b>"
+
+#: src/tilda.ui:2924
+msgid "Scrolling"
+msgstr "Прокручування"
+
+#: src/tilda.ui:2963
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+
+#: src/tilda.ui:2979
+msgid "_Backspace key generates:"
+msgstr ""
+
+#: src/tilda.ui:2993
+msgid "_Delete key generates:"
+msgstr ""
+
+#: src/tilda.ui:3005
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_Скидання налаштувань сумісності до стандартних"
+
+#: src/tilda.ui:3059
+msgid "<b>Compatibility</b>"
+msgstr "<b>Сумісність</b>"
+
+#: src/tilda.ui:3078
+msgid "Compatibility"
+msgstr "Сумісність"
+
+#: src/tilda.ui:3130
+msgid "<b>Keybindings</b>"
+msgstr "<b>Клавіатурні скорочення</b>"
+
+#: src/tilda.ui:3142
+msgid "Clear Keybinding"
+msgstr "Скинути налаштування скорочень"
+
+#: src/tilda.ui:3161
+msgid "Keybindings"
+msgstr "Клавіатурні скорочення"
+
+#: src/configsys.c:362
+msgid "Unable to sync the config file to disk\n"
+msgstr "Немржливо зберегти налаштування на диск\n"
+
+#: src/configsys.c:372
+msgid "Unable to close the config file\n"
+msgstr "Неможливо закрити файл налаштувань\n"
+
+#: src/configsys.c:385
+#, c-format
+msgid "Unable to write the config file to %s\n"
+msgstr "Неможливо записати файл налаштувант в %s\n"
+
+#: src/tilda.c:149
+#, c-format
+msgid "Creating directory:'%s'\n"
+msgstr "Створення каталогу:'%s'\n"
+
+#: src/tilda.c:195
+msgid ""
+"Found style.css in the user config directory, applying user css style.\n"
+msgstr ""
+"Застосування користувацького стилю знайденого в файлі style.css домашнього "
+"каталогу користувача.\n"
+
+#: src/tilda.c:265
+#, c-format
+msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
+msgstr ""
+"Вказаний файл конфігурації '%s' не знайдений. Відновлення шляху за "
+"замовчуванням.\n"
+
+#: src/tilda.c:326 src/tilda-keybinding.c:496
+msgid ""
+"The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
+"choose another."
+msgstr ""
+"Вибрана комбінація клавіш \"Pull Down Terminal\" є некоректною. Будь ласка "
+"виберіть іншу комбінацію клавіш."
+
+#: src/tilda-keybinding.c:170
+msgid "Action"
+msgstr ""
+
+#: src/tilda-keybinding.c:176
+msgid "Shortcut"
+msgstr "Посилання"
+
+#: src/tilda-keybinding.c:364
+msgid "Enter keyboard shortcut"
+msgstr "Введіть комбінацію клавіш"
+
+#: src/tilda-keybinding.c:504
+#, c-format
+msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
+msgstr ""
+"Вибрана комбінація клавіш \"%s\" є некоректною. Будь ласка виберіть іншу "
+"комбінацію клавіш."
+
+#: src/tilda_terminal.c:436
+#, c-format
+msgid "Problem reading link %s: %s\n"
+msgstr "Неможливо опрацювати посилання %s: %s\n"
+
+#: src/tilda_terminal.c:459
+#, fuzzy, c-format
+msgid "Unable to launch default shell: %s\n"
+msgstr "Неможливо запустити стандартну оболонку: %s\n"
+
+#: src/tilda_terminal.c:461
+#, c-format
+msgid "Unable to launch custom command: %s\n"
+msgstr "Неможливо запустити команду користувацької оболонки: %s\n"
+
+#: src/tilda_terminal.c:462
+#, c-format
+msgid "Launching custom command failed with error: %s\n"
+msgstr "Команда користувацької команди повернула: %s\n"
+
+#: src/tilda_terminal.c:463 src/tilda_terminal.c:497
+msgid "Launching default shell instead\n"
+msgstr "Запуск стандартної оболонки\n"
+
+#: src/tilda_terminal.c:496
+#, c-format
+msgid "Problem parsing custom command: %s\n"
+msgstr "Неможливо опрацювати користувацьку команду: %s\n"
+
+#: src/tilda_terminal.c:927
+msgid "Untitled"
+msgstr "Без назви"
+
+#: src/tilda_terminal.c:945
+msgid "Bad value for \"d_set_title\" in config file\n"
+msgstr "Файлі конфігурації містить некоректне значення для \"d_set_title\"\n"
+
+#: src/tilda_window.c:108
+msgid "Are you sure you want to close this tab?"
+msgstr "Ви впевнені що хочете закрити цю вкладку?"
+
+#: src/tilda_window.c:155
+msgid "You have a bad tab_pos in your configuration file\n"
+msgstr "Файл конфігурації містить неправильне значення для tab_pos\n"
+
+#: src/tilda_window.c:788
+#, c-format
+msgid "Unable to set tilda's icon: %s\n"
+msgstr "Неможливо встановити іконку: %s\n"
+
+#: src/tilda_window.c:1111
+msgid "Out of memory, cannot create tab\n"
+msgstr "Неможливо створити вкладку: недостатьно памяті\n"
+
+#: src/tilda_window.c:1231
+msgid "Are you sure you want to Quit?"
+msgstr "Ви дійсно хочете закрити програму?"
+
+#: src/wizard.c:138
+#, fuzzy, c-format
+msgid "Tilda %d Config"
+msgstr "Налаштування Tilda"
+
+#: src/wizard.c:561
+msgid "Invalid Cursor Type, resetting to default\n"
+msgstr "Некоректний тип курсора, зкидання налаштувань\n"
+
+#: src/wizard.c:579
+#, fuzzy
+msgid "Invalid non-focus pull up behaviour, ignoring\n"
+msgstr "Некоректне значення поведінки перемикача буде прогінорована\n"
+
+#: src/wizard.c:1130
+msgid "Invalid tab position setting, ignoring\n"
+msgstr "Некоректне налаштування позиції вкладки, іннорування\n"
+
+#: src/tilda-search-box.ui:15
+msgid ""
+"Search term not found, search again to continue the search at the beginning."
+msgstr "Ключове слово не знайдено, почаати пошук з початку."
+
+#: src/tilda-search-box.ui:49
+msgid "_Next"
+msgstr "_Наступний"
+
+#: src/tilda-search-box.ui:64
+msgid "_Prev"
+msgstr "_Попередній"
+
+#: src/tilda-search-box.ui:79
+msgid "_Match Case"
+msgstr "_Враховувати регістр"
+
+#: src/tilda-search-box.ui:96
+msgid "_Regex"
+msgstr "_Регулярний вираз"
+
+#: src/tilda-context-menu.c:174
+msgid "_New Tab"
+msgstr "_Нова валадка"
+
+#: src/tilda-context-menu.c:175
+#, fuzzy
+msgid "_Close Tab"
+msgstr "_Закрити вкладку"
+
+#: src/tilda-context-menu.c:181
+msgid "_Copy"
+msgstr "_Копіювати"
+
+#: src/tilda-context-menu.c:182
+msgid "_Paste"
+msgstr "_Вставити"
+
+#: src/tilda-context-menu.c:209
+msgid "_Toggle Fullscreen"
+msgstr "_Переключити повноекранний режим"
+
+#: src/tilda-context-menu.c:210
+msgid "_Toggle Searchbar"
+msgstr "_Переключили панель пошуку"
+
+#: src/tilda-context-menu.c:216
+msgid "_Preferences"
+msgstr "_Налаштування"
+
+#: src/tilda-context-menu.c:222
+msgid "_Quit"
+msgstr "_Закрити програму"
