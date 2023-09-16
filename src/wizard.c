@@ -1567,6 +1567,20 @@ static void colorbutton_palette_n_set_cb (GtkWidget *w, tilda_window *tw)
     }
 }
 
+static void check_bold_is_bright_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+    guint i;
+    tilda_term *tt;
+
+    config_setbool ("bold_is_bright", status);
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        vte_terminal_set_bold_is_bright (VTE_TERMINAL(tt->vte_term), status);
+    }
+}
+
 static void combo_scrollbar_position_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
@@ -1932,6 +1946,8 @@ static void set_wizard_state_from_config (tilda_window *tw) {
         update_palette_color_button(i);
     }
 
+    CHECK_BUTTON ("check_bold_is_bright", "bold_is_bright");
+
     /* Scrolling Tab */
     initialize_scrollback_settings();
 
@@ -2075,6 +2091,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
         CONNECT_SIGNAL (s,"color-set",colorbutton_palette_n_set_cb, tw);
         g_free (s);
     }
+    CONNECT_SIGNAL ("check_bold_is_bright","toggled",check_bold_is_bright_toggled_cb, tw);
 
     /* Scrolling Tab */
     CONNECT_SIGNAL ("combo_scrollbar_position","changed",combo_scrollbar_position_changed_cb, tw);
