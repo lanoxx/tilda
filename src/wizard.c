@@ -853,6 +853,13 @@ static void check_show_title_tooltip_toggled_cb (GtkWidget *w, tilda_window *tw)
     window_title_change_all (tw);
 }
 
+static void check_insert_tab_after_current_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean insert_tab_after_current = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+
+    config_setbool("insert_tab_after_current", insert_tab_after_current);
+}
+
 static void entry_web_browser_changed (GtkWidget *w, tilda_window *tw) {
     const gchar *web_browser = gtk_entry_get_text (GTK_ENTRY(w));
 
@@ -1908,6 +1915,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     CHECK_BUTTON ("check_expand_tabs", "expand_tabs");
     CHECK_BUTTON ("check_show_single_tab", "show_single_tab");
     CHECK_BUTTON ("check_show_title_tooltip", "show_title_tooltip");
+    CHECK_BUTTON ("check_insert_tab_after_current", "insert_tab_after_current");
 
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_level_of_transparency","enable_transparency");
     SET_SENSITIVE_BY_CONFIG_BOOL ("spin_level_of_transparency","enable_transparency");
@@ -2073,6 +2081,7 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("check_expand_tabs","toggled",check_expand_tabs_toggled_cb, tw);
     CONNECT_SIGNAL ("check_show_single_tab","toggled",check_show_single_tab_toggled_cb, tw);
     CONNECT_SIGNAL ("check_show_title_tooltip","toggled",check_show_title_tooltip_toggled_cb, tw);
+    CONNECT_SIGNAL ("check_insert_tab_after_current","toggled",check_insert_tab_after_current_toggled_cb, tw);
 
     CONNECT_SIGNAL ("check_enable_transparency","toggled",check_enable_transparency_toggled_cb, tw);
     CONNECT_SIGNAL ("check_animated_pulldown","toggled",check_animated_pulldown_toggled_cb, tw);
