@@ -135,7 +135,7 @@ register_match (VteRegex * regex,
     return tag;
 }
 
-struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
+struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw, gint index)
 {
     DEBUG_FUNCTION ("tilda_term_init");
     DEBUG_ASSERT (tw != NULL);
@@ -147,7 +147,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     term = g_new0 (tilda_term, 1);
 
     /* Add to GList list of tilda_term structures in tilda_window structure */
-    tw->terms = g_list_append (tw->terms, term);
+    tw->terms = g_list_insert (tw->terms, term, index);
 
     /* Check for a failed allocation */
     if (!term)
