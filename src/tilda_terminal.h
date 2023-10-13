@@ -56,6 +56,10 @@ enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
  *
  * @param tw The main tilda window, which must be initialized.
  *
+ * @param index The location to insert the terminal. If this is negative, or is
+ * larger than the current number of terminals, the new terminal is added on to
+ * the end of the list.
+ *
  * Success: return a non-NULL struct tilda_term_ *.
  * Failure: return NULL.
  *
@@ -63,7 +67,7 @@ enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
  *        when you are finished using it, and it has been removed from all GTK
  *        structures, such as the notebook.
  */
-struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw);
+struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw, gint position);
 
 /**
  * tilda_term_free ()

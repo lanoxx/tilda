@@ -1103,7 +1103,14 @@ gint tilda_window_add_tab (tilda_window *tw)
     GtkWidget *label;
     gint index;
 
-    tt = tilda_term_init (tw);
+    /* Determine where to insert the new terminal */
+    index = -1;
+    if (config_getbool ("insert_tab_after_current")) {
+        index = 1 + gtk_notebook_get_current_page (GTK_NOTEBOOK(tw->notebook));
+    }
+
+    /* Initialize the terminal */
+    tt = tilda_term_init (tw, index);
 
     if (tt == NULL)
     {
@@ -1112,10 +1119,9 @@ gint tilda_window_add_tab (tilda_window *tw)
         return FALSE;
     }
 
-    /* Create page and append to notebook */
+    /* Create page and insert it into the notebook */
     label = gtk_label_new (config_getstr("title"));
-    /* Strangely enough, prepend puts pages on the end */
-    index = gtk_notebook_append_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label);
+    index = gtk_notebook_insert_page (GTK_NOTEBOOK(tw->notebook), tt->hbox, label, index);
     gtk_notebook_set_current_page (GTK_NOTEBOOK(tw->notebook), index);
     gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK(tw->notebook), tt->hbox, TRUE);
 
