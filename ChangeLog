@@ -1,3 +1,7 @@
+version 1.5.5 (2023-11-12):
+	* Fixed an out-of-bounds error that could cause a segmentation
+	  fault. Fixes #504 #481 (xtkoba).
+
 version 1.5.4 (2020-12-24):
 	* Fixed an issue that occurs with newer tilda versions which prevents
 	  custom commands from working correctly in newer VTE versions.
