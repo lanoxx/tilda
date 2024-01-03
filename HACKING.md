@@ -41,6 +41,16 @@ be possible to compile with:
 Changing to `build/` and calling `autogen.sh` relative from there makes sure
 that we perform an out-of-tree build and all generated files are stored inside
 `build/`. This way build artifacts will not clutter the source directory.
+For debugging, we can use the `--enable-maintainer-flags` option, which enables
+additional debug flags and runtime debug messages as well as more compile-time
+warnings:
+
+    ../autogen.sh --enable-maintainer-flags
+
+Alternatively, you can enable these separately by adding
+`--debug-functions` or `--enable-debug` to the autogen call:
+
+    ../autogen.sh --enable-debug-functions --enable-debug
 
 If you get the following error message, then you are missing the `autopoint`
 binary which is part of the autotools suite. On Ubuntu the `dh-autoreconf`
