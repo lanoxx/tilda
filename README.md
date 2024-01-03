@@ -33,15 +33,17 @@ a new list based layout that is easier to use.
 ![Keybindings](images/tilda_keybindings-16-9.png)
 
 ## Supported Platforms
-Tilda currently works only on Xorg-based desktops. Previously that
+Tilda works only on Xorg-based desktops. Previously that
 meant that virtually all Linux distributions and some BSD's would be supported.
 Recently however, some Linux distributions
-(such as Ubuntu 17.10) have started to use Wayland as their
-default display server. Tilda currently does not support Wayland and will not
-work on such desktops. As a result it will fail to start.
-Patches that introduce wayland support for tilda are very welcome. Please
-look into the issue section or write me a mail if you would like to contribute
-to tilda.
+(such as Ubuntu 17.10 and later) have started to use Wayland as their
+default display server. Tilda can run on Wayland via the Xwayland plugin and
+the most recent version of Tilda has implemented a D-Bus interface, that
+allows to toggle the Tilda window via a D-Bus action. To enable this, users
+needs to start Tilda with the `--dbus` argument, and configure a (global)
+shortcut key within desktop-environment, passing `-T 0` argument to toggle
+the first instance. If additional tilda processes are running, then each
+process increments this value by one (i.e., `-T 1` for the second instance).
 
 # Installing Tilda
 
