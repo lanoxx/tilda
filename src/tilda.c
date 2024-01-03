@@ -230,18 +230,9 @@ int main (int argc, char *argv[])
     DEBUG_FUNCTION_MESSAGE ("main", "Using libvte version: %i.%i.%i",
                             VTE_MAJOR_VERSION, VTE_MINOR_VERSION, VTE_MICRO_VERSION);
 
-    /* Set supported backend to X11 */
-    gdk_set_allowed_backends ("x11");
-
-    tilda_window tw;
-    /* NULL set the tw pointers so we can get a clean exit on initialization failure */
-    memset(&tw, 0, sizeof(tilda_window));
-
     struct lock_info lock;
     gboolean need_wizard = FALSE;
     gchar *config_file;
-
-    tilda_lock_files_obtain_instance_lock (&lock);
 
 #if ENABLE_NLS
     /* Gettext Initialization */
@@ -260,6 +251,17 @@ int main (int argc, char *argv[])
     tilda_cli_options *cli_options = tilda_cli_options_new ();
     need_wizard = tilda_cli_options_parse_options (cli_options, argc, argv, &config_file);
 
+    if (cli_options->toggle_window > -1)
+    {
+        tilda_dbus_actions_toggle (cli_options->toggle_window);
+
+        g_free(cli_options);
+
+        return EXIT_SUCCESS;
+    }
+
+    tilda_lock_files_obtain_instance_lock (&lock);
+
     if (config_file) {	  // if there was a config file specified via cli
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {
             g_printerr (_("Specified config file '%s' does not exist. Reverting to default path.\n"),
@@ -270,16 +272,23 @@ int main (int argc, char *argv[])
         config_file = get_config_file_name (lock.instance);
     }
 
-    /* Initialize GTK. Any code that interacts with GTK (e.g. creating a widget)
-     * should come after this call. Gtk initialization should happen before we
-     * initialize the config file. */
-    gtk_init (&argc, &argv);
-
     /* Start up the configuration system and load from file */
     gint config_init_result = config_init (config_file);
 
     /* Set up possible overridden config options */
-    setup_config_from_cli_options(cli_options);
+    setup_config_from_cli_options (cli_options);
+
+    /* Set supported backend to X11 */
+    gdk_set_allowed_backends ("x11");
+
+    tilda_window tw;
+    /* NULL set the tw pointers so we can get a clean exit on initialization failure */
+    memset(&tw, 0, sizeof(tilda_window));
+
+    /* Initialize GTK. Any code that interacts with GTK (e.g. creating a widget)
+     * should come after this call. Gtk initialization should happen before we
+     * initialize the config file. */
+    gtk_init (&argc, &argv);
 
     if (config_init_result > 0) {
         show_startup_dialog (config_init_result);

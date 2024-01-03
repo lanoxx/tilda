@@ -10,6 +10,7 @@ struct tilda_cli_options {
     gchar *command;
     gchar *font;
     gchar *working_dir;
+    gint toggle_window;
     gint back_alpha;
     gint lines;
     gint x_pos;

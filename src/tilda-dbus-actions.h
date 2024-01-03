@@ -5,6 +5,8 @@
 
 guint  tilda_dbus_actions_init (tilda_window *window);
 
+void tilda_dbus_actions_toggle(gint instance_id);
+
 gchar *tilda_dbus_actions_get_bus_name (tilda_window *window);
 
 void   tilda_dbus_actions_finish (guint bus_identifier);
