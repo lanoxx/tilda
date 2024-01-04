@@ -1,4 +1,4 @@
-.\" Copyright (c) 2021, Sebastian Geiger (lanoxx@gmx.net)
+.\" Copyright (c) 2023, Sebastian Geiger (lanoxx@gmx.net)
 .\"
 .\" Copyright (c) 2012, Davide Truffa <davide@catoblepa.org>
 .\"
@@ -23,39 +23,49 @@
 .\" Formatted or processed versions of this manual, if unaccompanied by
 .\" the source, must acknowledge the copyright and authors of this work.
 .\" %%%LICENSE_END
-.TH "TILDA" "1" "Nov 2021" "tilda @VERSION@" "User Commands"
+.TH "TILDA" "1" "Jan 2024" "tilda @VERSION@" "User Commands"
 .SH "NAME"
 tilda \- a highly configurable terminal emulator
 .SH "SYNOPSIS"
 tilda [\fB\-b|\-\-background\-color\fR \fIcolor\fR] [\fB\-c|\-\-command\fR \fIcommand\fR] [\fB\-h|\-\-hidden\fR] [\fB\-f|\-\-font\fR \fIfont\fR] [\fB\-g|\-\-config-file\fR \fIfile\fR] [\fB\-l|\-\-lines\fR \fIfile\fR] [\fB\-s|\-\-scrollbar\fR] [\fB\-w|\-\-working\-dir\fR \fIdir\fR] [\fB\-x|\-\-x\-pos\fR \fIx_pos\fR] [\fB\-y|\-\-y\-pos\fR \fIy_pos\fR] [\fB\-t|\-\-background\-alpha\fR \fIalpha\fR] [\fB\-C|\-\-config\fR] [\fB\-\-display\fR \fIdisplay\fR]
 .PP
-tilda \fB--version\fR
+tilda \fB\-\-dbus\fR
 .PP
-tilda \fB--help\fR
+tilda \fB\-T|\-\-toggle\-window [instance_id]
+.PP
+tilda \fB\-\-version\fR
+.PP
+tilda \fB\-\-help\fR
+.PP
+tilda \fB\-\-help-all\fR
 .SH "DESCRIPTION"
 .BR Tilda
 is a terminal emulator which is highly configurable. The main distinguishing feature of tilda is that it
 uses a configurable shortcut to show and hide the tilda window. This allows users to quickly switch between tilda
 and other windows only through keyboard shortcuts. When tilda is hidden it will move
-outside of the screen until a shortcut is pressed again to show the tilda window. The behaviour of
+outside of the screen until the pull/toggle shortcut is pressed again to show the tilda window. The behaviour of
 tilda can be configured using the preferences dialog that is available via the context menu. A subset of the options
 can also be configured from the command line as documented below.
 .PP
 Please note that currently command line options override the settings in the configuration file and
 are persisted into the configuration file.
 .PP
-Tilda is using an X11 filter function to register its hotkeys. On Wayland this
-method only works while other X11-based programs are active but we cannot send
-hotkeys to tilda while native Wayland applications have the focus. Therefore, on
-Wayland desktops tilda needs to be started with DBus support and a global hotkey
-must be registered using the desktop environment to send a DBus action to show
-or hide the tilda window.
+On Xorg-based desktops, Tilda is using an X11 filter function to register its
+hotkeys. On Wayland, this method only works while other X11-based programs are
+active but we cannot send hotkeys to tilda while native Wayland applications
+have the focus. Therefore, on Wayland desktops tilda needs to be started with
+D-Bus support (i.e., with \fB\-\-dbus\fR) and a global shortcut key must be
+registered using the desktop environment settings to send a D-Bus action to
+show or hide the Tilda window.
 .PP
 .SH "OPTIONS"
 .SS "Help Options:"
 .TP
 \fB\-?\fR, \fB\-\-help\fR
 Show help options
+.TP
+\fB\-\-help-all\fR
+Show all help options, including D-Bus and GTK options.
 .SS "Application Options:"
 .TP
 \fB\-b\fR, \fB\-\-background\-color\fR \fIcolor\fR
@@ -97,18 +107,33 @@ Show the configuration wizard.
 .TP
 \fB\-\-display\fR=\fIDISPLAY\fR
 Set the X display to use (i.e., :0, :0.0, etc.).
+.SS "D-Bus Options:"
 .TP
 \fB\-\-dbus\fR
-Enables DBus support (see \fIDBus\fR).
+Enables D-Bus support (see \fID-Bus\fR).
+.TP
+\fB\-T\fR, \fB\-\-toggle\-window\fR \fI[instance_id]\fR
+Toggle a Tilda window with \fIinstance_id\fR and exit. If \fIinstance_id\fR is
+not specified it will default to instance 0. This option provides a convenient
+way to toggle tilda windows on Wayland environments and is equivalent to the
+longer \fIdbus-send\fR command documented below. It can be used to setup a
+Keyboard shortcut on a Wayland-based desktop environment which will then toggle
+the Tilda window. Note, that this option is affected by the
+"Non-Focus Pull Up Behaviour" setting.
 .SH "NOTES"
-.SS DBus
+.SS D-Bus
+If D-Bus is enabled, then Tilda offers a method on D-Bus to toggle the Tilda Window.
 Each Tilda process registers its own D-Bus name, so it is possible to
 run multiple tilda processes each with their own config file and control
-them separately via D-Bus.
+them separately via D-Bus. When D-Bus is enabled, then the pull down
+shortcut is not registered as an Xorg filter function, and a suitable
+global shortcut needs to be configured in the desktop environment (see
+\-\-toggle\-window). You may optionally clear the pull shortcut in the settings,
+if D-Bus support is enabled.
 .PP
-Each tilda instance registers itself using a dynamically generated
-bus name and object path using its instance number. The first tilda
-instance will be on:
+Each Tilda instance registers itself using a dynamically generated
+bus name and object path using its instance number. The first Tilda
+instance will be on the bus name:
 .TP
     com.github.lanoxx.tilda.Actions0
 .PP
@@ -120,7 +145,18 @@ The interface name is always:
 .TP
     com.github.lanoxx.tilda.Actions
 .PP
-To toggle the tilda window you can use \fBdbus-send\fR:
+To toggle the tilda window you can use the \fB\-T|\-\-toggle\-window\fR option
+of tilda:
+.TP
+.EX
+    tilda -T    # toggle default instance (i.e., 0)
+.EE
+.TP
+.EX
+    tilda -T 0  # explicity toggle the specified instance (i.e., 0)
+.EE
+.PP
+Alternatively, you can also use the \fBdbus-send\fR command.
 .TP
 .EX
     dbus-send --session --type=method_call \\
@@ -129,11 +165,12 @@ To toggle the tilda window you can use \fBdbus-send\fR:
        com.github.lanoxx.tilda.Actions.Toggle
 .EE
 .PP
-You can use the above command to register a global hotkey in your Wayland
-session.
-.PP
 For each additional tilda instance the bus name and object path will
 be incremented by one (e.g. Actions1, Actions2, etc.).
+.PP
+You can use one of the above commands to register a global hotkey in your Wayland
+session. Under Gnome, this can be done under Settings -> Keyboard
+-> Keyboard Shortcuts.
 .SH "BUGS"
 Please report bugs via Github at https://github.com/lanoxx/tilda/issues
 .SH "SEE ALSO"
