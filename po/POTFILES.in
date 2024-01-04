@@ -9,3 +9,4 @@ src/tilda_window.c
 src/wizard.c
 src/tilda-search-box.ui
 src/tilda-context-menu.c
+src/tilda-match-registry.c
