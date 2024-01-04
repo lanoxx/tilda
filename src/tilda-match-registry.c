@@ -15,6 +15,7 @@
 
 #include "tilda-match-registry.h"
 #include "tilda-regex.h"
+#include <glib/gi18n.h>
 
 /**
  * The TildaMatchRegistry acts as a central class for all types of matches that
@@ -50,11 +51,11 @@ static const PatternItem hyperlink_pattern = {
 };
 
 static const PatternItem pattern_items[] = {
-        { REGEX_URL_AS_IS, TILDA_MATCH_FLAVOR_URL,             "_Copy Link",   "_Open Link",  default_match_to_uri, TRUE },
-        { REGEX_URL_HTTP,  TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP, "_Copy Link",   "_Open Link",  http_match_to_uri, TRUE },
-        { REGEX_URL_FILE,  TILDA_MATCH_FLAVOR_FILE,            "_Copy File",   "_Open File",  default_match_to_uri, TRUE },
-        { REGEX_EMAIL,     TILDA_MATCH_FLAVOR_EMAIL,           "_Copy Email",  "_Send Email", email_match_to_uri, TRUE },
-        { REGEX_NUMBER,    TILDA_MATCH_FLAVOR_NUMBER,          "_Copy Number", NULL,          NULL, FALSE }
+        { REGEX_URL_AS_IS, TILDA_MATCH_FLAVOR_URL,             N_("Copy Link"),   N_("Open Link"),  default_match_to_uri, TRUE },
+        { REGEX_URL_HTTP,  TILDA_MATCH_FLAVOR_DEFAULT_TO_HTTP, N_("Copy Link"),   N_("Open Link"),  http_match_to_uri, TRUE },
+        { REGEX_URL_FILE,  TILDA_MATCH_FLAVOR_FILE,            N_("Copy File"),   N_("Open File"),  default_match_to_uri, TRUE },
+        { REGEX_EMAIL,     TILDA_MATCH_FLAVOR_EMAIL,           N_("Copy Email"),  N_("Send Email"), email_match_to_uri, TRUE },
+        { REGEX_NUMBER,    TILDA_MATCH_FLAVOR_NUMBER,          N_("Copy Number"), NULL,          NULL, FALSE }
 };
 
 struct TildaMatchRegistry_ {
