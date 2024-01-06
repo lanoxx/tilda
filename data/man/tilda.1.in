@@ -171,6 +171,19 @@ be incremented by one (e.g. Actions1, Actions2, etc.).
 You can use one of the above commands to register a global hotkey in your Wayland
 session. Under Gnome, this can be done under Settings -> Keyboard
 -> Keyboard Shortcuts.
+.SS "FILES"
+.PP
+Tilda creates its configuration files under \fB~/.config/tilda/\fR. For each instance
+it will create a config file named \fBconfig_<N>\fR, where \fB<N>\fR starts at 0 and is
+incremented for each additional process that is started.
+.PP
+Tilda also creates a cache directory under \fB~/.cache/tilda/locks\fR, where it will create
+a global lock file named \fBlock_0_0\fR and additional instance specific lock files
+named \fBlock_<PID>_<N>\fR, where \fB<PID>\fR is the process id and \fB<N>\fR is the
+instance id.
+.PP
+You may optionally create a file named \fBstyle.css\fR and place it into the
+tilda config directory if you want to customize the look of tilda.
 .SH "BUGS"
 Please report bugs via Github at https://github.com/lanoxx/tilda/issues
 .SH "SEE ALSO"
