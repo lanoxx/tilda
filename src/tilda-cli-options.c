@@ -103,7 +103,7 @@ gboolean tilda_cli_options_parse_options (tilda_cli_options *cli_options,
         exit (EXIT_SUCCESS);
     }
 
-    /* TRUE if we should show the config wizard, FALSE otherwize */
+    /* TRUE if we should show the config wizard, FALSE otherwise */
     return cli_options->show_config;
 }
 

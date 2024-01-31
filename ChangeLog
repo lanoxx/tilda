@@ -83,7 +83,7 @@ version 1.3.1 (2015-12-16):
 	  there was a regression that broke it again. With this version
 	  it should finally be fixed (again).
 	* Images in the appdata file and Readme.md have been updated.
-	* Fixed an issue that would the background transparancy to be
+	* Fixed an issue that would the background transparency to be
 	  reset on a color palette change (Sergey Zolotarev).
 
 version 1.3.0 (2015-11-17):
@@ -145,10 +145,10 @@ version 1.2.3 (2015-06-20):
 	* Fix move-tab key-binding behavior
 	* The wizard window will now in front of the terminal and now behind it
 	* An invalid custom command no longer makes tilda hang
-	* Fix an issue with the scrollback limit, infinit scrollback now works correctly
+	* Fix an issue with the scrollback limit, infinite scrollback now works correctly
 	* Increase the default scrollback length to 5000 lines
 	* Fix an issue with copy and paste when the scrollbar was configured to appear on the left
-	* Fixed an issue with config file being trunkated when tilda was closed or the process killed
+	* Fixed an issue with config file being truncated when tilda was closed or the process killed
 	  forcibly and tilda did not have enough time to write the whole config file to disk.
 
 version 1.2.2 (2014-10-28):
@@ -163,7 +163,7 @@ version 1.2.0 (2014-10-15):
 	* Fixed background option
 	* Updated README, HACKING and TODO files
 	* Fixed bug in focus/pull-up selection
-	* Made tilda icon themable
+	* Made tilda icon themeable
 
 version 1.2~rc1 (2014-09-25):
 	* Fixed an issue with drop-to-default shell option
@@ -285,7 +285,7 @@ version 1.1.0 (2013-02-17):
 	   - Open new terminal and hide
 	* Tabs are movable now with a hotkey
 	* New color scheme 'zenburn'
-	* Added CSS selectors for the termial
+	* Added CSS selectors for the terminal
 	  window and the wizard, which makes
 	  it possible to a styles to the tilda
 	  tabs without affecting the wizard.
@@ -304,7 +304,7 @@ version 1.1.0 (2013-02-17):
 	  made some other clean ups so the wizard
 	  looks more consistent.
 
-verson 1.0.2 (2012-10-01):
+version 1.0.2 (2012-10-01):
 	* Fixed next/prev tab hotkey
 	* Fix scrolling in terminal
 	* Fixed a border issue once more
@@ -318,7 +318,7 @@ version 1.0.0 (2012-09-16):
 	* Use Modern Autotools
 	* Fixed compilation warnings und runtime errors
 	* Use glib i18n functions instead of separate libarary
-	* Removed some very old migrarion code for the config file
+	* Removed some very old migration code for the config file
 	* Fixed a bug with the border
 
 version 0.9.6 (2008-4-28):
@@ -440,7 +440,7 @@ version 0.07 (2005-06-15):
 version 0.06 (2005-05-24):
 	* New configuration wizard. Still ugly, and it still does not auto-update
 	  yet, but I'm saving that for when you can have each tilda instance
-	  configured seperately.
+	  configured separately.
 	* Fixed LOTS of possible (and real) buffer overflows. This fixes some GTK
 	  crashes that we were having due to overwriting memory.
 	* Changed the config file code around, it's much less hackish now.

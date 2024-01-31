@@ -153,7 +153,7 @@ of tilda:
 .EE
 .TP
 .EX
-    tilda -T 0  # explicity toggle the specified instance (i.e., 0)
+    tilda -T 0  # explicitly toggle the specified instance (i.e., 0)
 .EE
 .PP
 Alternatively, you can also use the \fBdbus-send\fR command.

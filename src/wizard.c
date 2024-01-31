@@ -1816,7 +1816,7 @@ static void initialize_geometry_spinners(tilda_window *tw) {
     gint screen_width, screen_height;
     screen_size_get_dimensions (&screen_width, &screen_height);
     SPIN_BUTTON_SET_RANGE("spin_x_position", 0, screen_width);
-    SPIN_BUTTON_SET_VALUE("spin_x_position", xpos); /* TODO: Consider x in rectange.x for monitor displacement */
+    SPIN_BUTTON_SET_VALUE("spin_x_position", xpos); /* TODO: Consider x in rectangle.x for monitor displacement */
 
     gint ypos = config_getint("y_pos");
     if(ypos < rectangle.y) {

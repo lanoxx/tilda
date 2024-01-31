@@ -734,7 +734,7 @@ gboolean tilda_window_update_keyboard_accelerators (const gchar* path, const gch
     return gtk_accel_map_change_entry(path, accel_key, accel_mods, FALSE);
 }
 
-/* This function does the setup of the keyboard acceleratos. It should only be called once when the tilda window is
+/* This function does the setup of the keyboard accelerators. It should only be called once when the tilda window is
  * initialized. Use tilda_window_update_keyboard_accelerators to update keybindings that have been changed by the user.
  */
 static gint tilda_window_setup_keyboard_accelerators (tilda_window *tw)

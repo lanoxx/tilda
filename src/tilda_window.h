@@ -146,7 +146,7 @@ gint tilda_window_prev_tab (tilda_window *tw);
  * tilda_window_init ()
  *
  * Initializes an already allocated tilda_window *. It will also initialize and set up
- * as much of the window as possible using the values in the configuation system.
+ * as much of the window as possible using the values in the configuration system.
  *
  * @param instance the instance number of this tilda_window
  *
