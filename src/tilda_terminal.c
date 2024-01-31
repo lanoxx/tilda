@@ -159,7 +159,7 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw)
     /* Add the parent window reference */
     term->tw = tw;
 
-    /* Create a non-homogenous hbox, with 0px spacing between members */
+    /* Create a non-homogeneous hbox, with 0px spacing between members */
     term->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     g_object_ref (term->hbox);
 
