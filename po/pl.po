@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2024-01-05 19:49+0100\n"
+"POT-Creation-Date: 2024-02-03 12:43+0100\n"
 "PO-Revision-Date: 2024-01-03 12:40+0100\n"
 "Last-Translator: Krzysztof Królczyk <Krzysztof.Krolczyk@o2.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -170,10 +170,6 @@ msgstr "Control-H"
 #: src/tilda.ui:314
 msgid "Tilda Config"
 msgstr "Konfiguracja aplikacji Tilda"
-
-#: src/tilda.ui:339
-msgid "gtk-close"
-msgstr "Zamknij"
 
 #: src/tilda.ui:395
 msgid "Start Tilda hidden"
@@ -439,186 +435,190 @@ msgstr "Pokazuj pojedynczą kartę"
 msgid "Display Title in Tooltip"
 msgstr "Wyświetlaj tytuł w chmurce podpowiedzi"
 
-#: src/tilda.ui:2087
+#: src/tilda.ui:2078
+msgid "Insert New Tabs after Current Tab"
+msgstr ""
+
+#: src/tilda.ui:2098
 msgid "<b>Tabs</b>"
 msgstr "<b>Karty</b>"
 
-#: src/tilda.ui:2136
+#: src/tilda.ui:2147
 msgid "Animation Delay (usec)"
 msgstr "Opóźnienie animacji (milisekundy)"
 
-#: src/tilda.ui:2148
+#: src/tilda.ui:2159
 msgid "Animation Orientation"
 msgstr "Orientacja animacji"
 
-#: src/tilda.ui:2186
+#: src/tilda.ui:2197
 msgid "Animated Pulldown"
 msgstr "Animowane rozwijanie"
 
-#: src/tilda.ui:2202
+#: src/tilda.ui:2213
 msgid "Level of Transparency"
 msgstr "Poziom przezroczystości"
 
-#: src/tilda.ui:2212
+#: src/tilda.ui:2223
 msgid "Enable Transparency"
 msgstr "Włącz przezroczystość"
 
-#: src/tilda.ui:2235
+#: src/tilda.ui:2246
 msgid "<b>Extras</b>"
 msgstr "<b>Dodatkowe</b>"
 
-#: src/tilda.ui:2254
+#: src/tilda.ui:2265
 msgid "Appearance"
 msgstr "Wygląd"
 
-#: src/tilda.ui:2323
+#: src/tilda.ui:2334
 msgid "Cursor Color"
 msgstr "Kolor kursora"
 
-#: src/tilda.ui:2371
+#: src/tilda.ui:2382
 msgid "Text Color"
 msgstr "Kolor tekstu"
 
-#: src/tilda.ui:2383
+#: src/tilda.ui:2394
 msgid "Background Color"
 msgstr "Kolor tła"
 
-#: src/tilda.ui:2395
+#: src/tilda.ui:2406
 msgid "Built-in Schemes"
 msgstr "Wbudowane schematy"
 
-#: src/tilda.ui:2409
+#: src/tilda.ui:2420
 msgid "<b>Foreground and Background Colors</b>"
 msgstr "<b>Kolory - główne i kolory tła</b>"
 
-#: src/tilda.ui:2441
+#: src/tilda.ui:2452
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
 "<small><i><b>Uwaga:</b> Kolory dostępne dla aplikacji konsolowych</i></small>"
 
-#: src/tilda.ui:2484
+#: src/tilda.ui:2495
 msgid "Choose Color 14"
 msgstr "Użyj koloru 14"
 
-#: src/tilda.ui:2497
+#: src/tilda.ui:2508
 msgid "Choose Color 13"
 msgstr "Użyj koloru 13"
 
-#: src/tilda.ui:2510
+#: src/tilda.ui:2521
 msgid "Choose Color 15"
 msgstr "Użyj koloru 15"
 
-#: src/tilda.ui:2523
+#: src/tilda.ui:2534
 msgid "Choose Color 12"
 msgstr "Użyj koloru 12"
 
-#: src/tilda.ui:2536
+#: src/tilda.ui:2547
 msgid "Choose Color 10"
 msgstr "Użyj koloru 10"
 
-#: src/tilda.ui:2549
+#: src/tilda.ui:2560
 msgid "Choose Color 11"
 msgstr "Użyj koloru 11"
 
-#: src/tilda.ui:2562
+#: src/tilda.ui:2573
 msgid "Choose Color 9"
 msgstr "Użyj koloru 8"
 
-#: src/tilda.ui:2575
+#: src/tilda.ui:2586
 msgid "Choose Color 7"
 msgstr "Użyj koloru 7"
 
-#: src/tilda.ui:2588
+#: src/tilda.ui:2599
 msgid "Choose Color 6"
 msgstr "Użyj koloru 6"
 
-#: src/tilda.ui:2601
+#: src/tilda.ui:2612
 msgid "Choose Color 5"
 msgstr "Użyj koloru 5"
 
-#: src/tilda.ui:2614
+#: src/tilda.ui:2625
 msgid "Choose Color 4"
 msgstr "Użyj koloru 4"
 
-#: src/tilda.ui:2627
+#: src/tilda.ui:2638
 msgid "Choose Color 3"
 msgstr "Użyj koloru 3"
 
-#: src/tilda.ui:2640
+#: src/tilda.ui:2651
 msgid "Choose Color 2"
 msgstr "Użyj koloru 2"
 
-#: src/tilda.ui:2653
+#: src/tilda.ui:2664
 msgid "Choose Color 1"
 msgstr "Użyj koloru 1"
 
-#: src/tilda.ui:2666
+#: src/tilda.ui:2677
 msgid "Choose Color 0"
 msgstr "Użyj koloru 0"
 
-#: src/tilda.ui:2680
+#: src/tilda.ui:2691
 msgid "Choose Color 8"
 msgstr "Użyj koloru 8"
 
-#: src/tilda.ui:2697
+#: src/tilda.ui:2708
 msgid "Built-in schemes:"
 msgstr "Wbudowane schematy:"
 
-#: src/tilda.ui:2712
+#: src/tilda.ui:2723
 msgid "Color palette:"
 msgstr "Paleta kolorów:"
 
-#: src/tilda.ui:2737
+#: src/tilda.ui:2748
 msgid "Show bold text in bright colors"
 msgstr "Podkreśl pogrubiony tekst jasnym kolorem"
 
-#: src/tilda.ui:2755
+#: src/tilda.ui:2766
 msgid "<b>Palette</b>"
 msgstr "<b>Paleta</b>"
 
-#: src/tilda.ui:2774
+#: src/tilda.ui:2785
 msgid "Colors"
 msgstr "Kolory"
 
-#: src/tilda.ui:2831
+#: src/tilda.ui:2842
 msgid "Scrollbar is:"
 msgstr "Pasek przewijania jest:"
 
-#: src/tilda.ui:2840
+#: src/tilda.ui:2851
 msgid "Limit scrollback to:"
 msgstr "Ogranicz pokazywaną historię do:"
 
-#: src/tilda.ui:2844
+#: src/tilda.ui:2855
 msgid "Unselect for unlimited scrollback."
 msgstr "Odznacz, by pokazywać nielimitowaną historię."
 
-#: src/tilda.ui:2856
+#: src/tilda.ui:2867
 msgid "Scroll on Output"
 msgstr "Przewijaj, gdy pojawią się nowe dane"
 
-#: src/tilda.ui:2870
+#: src/tilda.ui:2881
 msgid "Scroll on Keystroke"
 msgstr "Przewijaj po naciśnięciu klawisza"
 
-#: src/tilda.ui:2892
+#: src/tilda.ui:2903
 msgid "0"
 msgstr "0"
 
-#: src/tilda.ui:2904
+#: src/tilda.ui:2915
 msgid "lines"
 msgstr "wierszy"
 
-#: src/tilda.ui:2930
+#: src/tilda.ui:2941
 msgid "<b>Scrolling</b>"
 msgstr "<b>Przewijanie</b>"
 
-#: src/tilda.ui:2951
+#: src/tilda.ui:2962
 msgid "Scrolling"
 msgstr "Przewijanie"
 
-#: src/tilda.ui:2990
+#: src/tilda.ui:3001
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
@@ -630,47 +630,47 @@ msgstr ""
 "z pewnymi aplikacjami i systemami operacyjnymi, które oczekują innego "
 "zachowania terminala.</i></small>"
 
-#: src/tilda.ui:3006
+#: src/tilda.ui:3017
 msgid "_Backspace key generates:"
 msgstr "Klawisz _Backspace generuje:"
 
-#: src/tilda.ui:3020
+#: src/tilda.ui:3031
 msgid "_Delete key generates:"
 msgstr "Klawisz _Delete generuje:"
 
-#: src/tilda.ui:3032
+#: src/tilda.ui:3043
 msgid "_Reset Compatibility Options to Defaults"
 msgstr "Przywróć _domyślne wartości opcji zgodności"
 
-#: src/tilda.ui:3086
+#: src/tilda.ui:3097
 msgid "<b>Compatibility</b>"
 msgstr "<b>Kompatybilność</b>"
 
-#: src/tilda.ui:3105
+#: src/tilda.ui:3116
 msgid "Compatibility"
 msgstr "Kompatybilność"
 
-#: src/tilda.ui:3157
+#: src/tilda.ui:3168
 msgid "<b>Keybindings</b>"
 msgstr "<b>Skróty klawiszowe</b>"
 
-#: src/tilda.ui:3169
+#: src/tilda.ui:3180
 msgid "Clear Keybinding"
 msgstr "Usuń skrót klawiszowy"
 
-#: src/tilda.ui:3188
+#: src/tilda.ui:3199
 msgid "Keybindings"
 msgstr "Skróty klawiszowe"
 
-#: src/configsys.c:365
+#: src/configsys.c:366
 msgid "Unable to sync the config file to disk\n"
 msgstr "Zapisanie pliku konfiguracji na dysk - nie powiodło się\n"
 
-#: src/configsys.c:375
+#: src/configsys.c:376
 msgid "Unable to close the config file\n"
 msgstr "Nie można zamknąć pliku konfiguracyjnego\n"
 
-#: src/configsys.c:388
+#: src/configsys.c:389
 #, c-format
 msgid "Unable to write the config file to %s\n"
 msgstr "Nie można zapisać pliku konfiguracyjnego do %s\n"
@@ -687,12 +687,12 @@ msgstr ""
 "Znaleziono plik \"style.css\"w katalogu ustawień użytkownika, aplikowanie "
 "styli.\n"
 
-#: src/tilda.c:265
+#: src/tilda.c:272
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
 msgstr "Plik konfiguracji '%s' nie istnieje. Ustawiam domyślną ścieżkę\n"
 
-#: src/tilda.c:326 src/tilda-keybinding.c:496
+#: src/tilda.c:357 src/tilda-keybinding.c:503
 #, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
@@ -701,19 +701,19 @@ msgstr ""
 "Przypisanie ustawionych skrótów klawiszowych, jest nieprawidłowe. Proszę "
 "wybrać inne."
 
-#: src/tilda-keybinding.c:170
+#: src/tilda-keybinding.c:175
 msgid "Action"
 msgstr "Akcja"
 
-#: src/tilda-keybinding.c:176
+#: src/tilda-keybinding.c:181
 msgid "Shortcut"
 msgstr "Skrót"
 
-#: src/tilda-keybinding.c:364
+#: src/tilda-keybinding.c:369
 msgid "Enter keyboard shortcut"
 msgstr "Wprowadź klawisz skrótu"
 
-#: src/tilda-keybinding.c:504
+#: src/tilda-keybinding.c:510
 #, c-format
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
 msgstr "Przypisanie skrótu dla \"%s\" jest niemożliwe. Proszę wybrać inne."
@@ -763,33 +763,33 @@ msgstr "Czy jesteś pewny/a, że chcesz zamknąć tą kartę?"
 msgid "You have a bad tab_pos in your configuration file\n"
 msgstr "Powinieneś mieć złą wartość tab_pos w swoim pliku konfiguracyjnym\n"
 
-#: src/tilda_window.c:793
+#: src/tilda_window.c:803
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
 msgstr "Nie można ustawić ikony Tildy: %s\n"
 
-#: src/tilda_window.c:1116
+#: src/tilda_window.c:1133
 msgid "Out of memory, cannot create tab\n"
 msgstr "Zbyt mało pamięci do utworzenia nowej zakładki\n"
 
-#: src/tilda_window.c:1236
+#: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
 msgstr "Czy na pewno zakończyć aplikację?"
 
-#: src/wizard.c:138
+#: src/wizard.c:139
 #, c-format
 msgid "Tilda %d Config"
 msgstr "Konfiguracja (plik config_%d)"
 
-#: src/wizard.c:561
+#: src/wizard.c:562
 msgid "Invalid Cursor Type, resetting to default\n"
 msgstr "Nieprawidłowy typ kursora, ustawiam domyślny\n"
 
-#: src/wizard.c:579
+#: src/wizard.c:580
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
 msgstr "Nieprawidłowe ustawienie widoczności / zwijania - ignoruję\n"
 
-#: src/wizard.c:1130
+#: src/wizard.c:1138
 msgid "Invalid tab position setting, ignoring\n"
 msgstr "Nieprawidłowe ustawienie pozycji karty, ignorowanie\n"
 
@@ -875,6 +875,9 @@ msgstr "Wyślij e-mail"
 #: src/tilda-match-registry.c:58
 msgid "Copy Number"
 msgstr "Skopiuj numer"
+
+#~ msgid "gtk-close"
+#~ msgstr "Zamknij"
 
 #, c-format
 #~ msgid "Unable to run command: `%s'\n"
