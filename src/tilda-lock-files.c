@@ -151,7 +151,7 @@ static struct lock_info *islockfile (const gchar *filename)
 
     struct lock_info *lock;
 
-    lock = g_malloc (sizeof (struct lock_info));
+    lock = g_malloc0 (sizeof (struct lock_info));
 
     if (lock == NULL)
         return NULL;
