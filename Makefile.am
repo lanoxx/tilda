@@ -3,7 +3,7 @@
 
 SUBDIRS = po
 
-CLEANFILES = tilda.desktop
+CLEANFILES = tilda.desktop tilda-dbus.desktop
 
 MAINTAINERCLEANFILES = \
 		ABOUT-NLS \
