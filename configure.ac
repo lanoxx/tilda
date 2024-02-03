@@ -9,7 +9,7 @@ m4_define ([tilda_issues],
 m4_define ([tilda_repository],
            [https://github.com/lanoxx/tilda])
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.71])
 
 AC_INIT([Tilda],
         [1.6-alpha],
@@ -160,7 +160,6 @@ PKG_CHECK_MODULES([LIBCONFUSE], [libconfuse])
 PKG_CHECK_MODULES([X11], [x11])
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h strings.h sys/ioctl.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
