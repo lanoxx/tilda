@@ -67,7 +67,6 @@ tilda_lock_files_obtain_instance_lock (struct lock_info * lock_info)
     /* End of atomic section */
 
     flock(global_lock.file_descriptor, LOCK_UN);
-    remove (global_lock_file);
     close(lock_info->file_descriptor);
 
     g_free(global_lock_file);
