@@ -45,7 +45,7 @@ Appdata_DATA = tilda.appdata.xml
 Pixmapsdir = ${datadir}/pixmaps
 Pixmaps_DATA = tilda.png
 
-EXTRA_DIST = tilda.desktop.in tilda.png tilda.appdata.xml README.md
+EXTRA_DIST = tilda.desktop.in tilda-dbus.desktop.in tilda.png tilda.appdata.xml README.md
 
 %.desktop: %.desktop.in
 	sed -e 's|\@BINDIR\@|$(bindir)|' \
