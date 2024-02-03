@@ -37,7 +37,7 @@ tilda_lock_files_obtain_instance_lock (struct lock_info * lock_info)
     /* Remove stale lock files */
     remove_stale_lock_files ();
 
-    /* The global lock file is used to synchronize the start up of multiple simultaneously starting tilda processes.
+    /* The global lock file is used to synchronize the start-up of multiple simultaneously starting tilda processes.
      * The processes will synchronize on a lock file named lock_0_0, such that the part of determining the instance
      * number and creating the per process lock file (lock_<pid>_<instance>) is atomic. Without this it could
      * happen, that a second tilda instance was trying to determine its instance number before the first instance
