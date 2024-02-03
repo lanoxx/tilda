@@ -118,6 +118,8 @@ static gchar *create_lock_file (struct lock_info *lock)
 
     lock->file_descriptor = ret;
 
+    DEBUG_FUNCTION_MESSAGE("create_lock_file", "created lock file at '%s'.", lock_file_full);
+
     g_free (lock_file);
     g_free (lock_dir);
 
@@ -346,6 +348,8 @@ static gint get_instance_number ()
     }
 
     g_sequence_free(seq);
+
+    DEBUG_FUNCTION_MESSAGE("get_instance_number", "assigned instance: %d", lowest_lock_instance);
 
     return lowest_lock_instance;
 }
