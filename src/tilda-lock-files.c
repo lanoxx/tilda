@@ -136,15 +136,22 @@ static gchar *create_lock_file (struct lock_info *lock)
 }
 
 /**
- * Check if a filename corresponds to a valid lockfile. Note that this
- * routine does NOT check whether it is a stale lock, however. This
- * will return the lock file's corresponding pid, if it is a valid lock.
+ * Check if a filename corresponds to a valid lockfile created by tilda. Note,
+ * that this function does NOT check whether it is a stale lock file. This
+ * function will return a lock_info that corresponds to the lock file, if the
+ * file uses a valid tilda lock file name. The caller needs to check if the
+ * lock_info points to a stale lock file or if its a currently valid lock file
+ * that belongs to an active tilda process.
  *
- * @param filename the filename to check
- * @return a new struct lock_info
+ * @param filename the filename to check, should point to a file with the format
+ * <code>lock_&lt;pid&gt;_&lt;instance&gt;</code> in the tilda lock directory
+ * (i.e., <code>${XDG_CACHE_DIR}/tilda/locks</code>).
+ * @return a new struct lock_info, which must be freed by the caller.
  *
- * Success: struct lock_info will be filled in and non-NULL
- * Failure: return NULL
+ * Success: struct lock_info will be returned, with the pid and instance members
+ * set to match the the fields encoded in filename. The file_descriptor and
+ * lock_file members will not be set.
+ * Failure: returns NULL
  */
 static struct lock_info *islockfile (const gchar *filename)
 {
