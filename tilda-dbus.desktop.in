@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Tilda (D-Bus)
-Comment=Start Tilda with D-Bus support enabled, recommended on Wayland desktops.
+Comment=Terminal Emulator (with D-Bus support enabled, recommended on Wayland desktops).
 Exec=@BINDIR@/tilda --dbus
 Icon=tilda
 Terminal=false

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Tilda
+Comment=Terminal Emulator
 Exec=@BINDIR@/tilda
 Icon=tilda
 Terminal=false
