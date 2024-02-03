@@ -260,7 +260,12 @@ int main (int argc, char *argv[])
         return EXIT_SUCCESS;
     }
 
-    tilda_lock_files_obtain_instance_lock (&lock);
+    if (!tilda_lock_files_obtain_instance_lock (&lock)) {
+
+        g_free(cli_options);
+
+        return EXIT_FAILURE;
+    }
 
     if (config_file) {	  // if there was a config file specified via cli
         if (!g_file_test (config_file, G_FILE_TEST_EXISTS)) {

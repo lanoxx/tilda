@@ -54,11 +54,18 @@ tilda_lock_files_obtain_instance_lock (struct lock_info * lock_info)
     gchar *global_lock_file = NULL;
 
     global_lock_file = create_lock_file(&global_lock);
+
     if(global_lock_file == NULL) {
-        perror("Error creating global lock file");
+        perror("Error creating global lock file.");
         return FALSE;
     }
-    flock(global_lock.file_descriptor, LOCK_EX);
+
+    int lockResult = flock(global_lock.file_descriptor, LOCK_EX);
+
+    if (lockResult == -1) {
+        perror("Could not acquire global tilda lock file lock.");
+        return FALSE;
+    }
 
     /* Start of atomic section. */
     lock_info->pid = getpid ();
