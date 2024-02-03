@@ -115,7 +115,7 @@ src_tilda_LDADD = \
 
 EXTRA_DIST += \
 		src/glade-resources.gresource.xml \
-		src/tilda-dbus.xml \
+		src/tilda-dbus-actions.xml \
 		src/tilda-search-box.ui \
 		src/tilda.ui \
 		src/tilda-enum-types.h.template \
