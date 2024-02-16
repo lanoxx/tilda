@@ -309,6 +309,7 @@
     </columns>
   </object>
   <object class="GtkDialog" id="wizard_window">
+    <property name="width-request">1200</property>
     <property name="can-focus">False</property>
     <property name="border-width">5</property>
     <property name="title" translatable="yes">Tilda Config</property>
@@ -354,20 +355,21 @@
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkNotebook" id="wizard_notebook">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="shadow-type">in</property>
             <child>
-              <object class="GtkViewport">
+              <object class="GtkScrolledWindow" id="scrolled_window_general">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
                 <child>
-                  <object class="GtkNotebook" id="wizard_notebook">
+                  <object class="GtkViewport">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=6 -->
+                      <!-- n-columns=1 n-rows=6 -->
                       <object class="GtkGrid" id="grid_general">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -383,7 +385,7 @@
                             <property name="hexpand">True</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=7 -->
+                              <!-- n-columns=2 n-rows=7 -->
                               <object class="GtkGrid" id="grid_window_display">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -550,27 +552,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -598,7 +579,7 @@
                             <property name="hexpand">True</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=2 -->
                               <object class="GtkGrid" id="grid_terminal_display">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -666,21 +647,6 @@
                                     <property name="top-attach">1</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -708,7 +674,7 @@
                             <property name="hexpand">True</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=1 -->
                               <object class="GtkGrid" id="grid_font">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -743,27 +709,6 @@
                                     <property name="top-attach">0</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -791,7 +736,7 @@
                             <property name="hexpand">True</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=2 -->
                               <object class="GtkGrid" id="grid_audo_hide">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -804,6 +749,7 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="invisible-char">●</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment1</property>
                                   </object>
                                   <packing>
@@ -852,21 +798,6 @@
                                     <property name="top-attach">1</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -894,7 +825,7 @@
                             <property name="hexpand">True</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=2 -->
                               <object class="GtkGrid" id="grid_program_exit">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -948,21 +879,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -983,6 +899,7 @@
                           <object class="GtkLabel" id="label_restart notice">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="valign">start</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <property name="xpad">5</property>
@@ -998,56 +915,34 @@
                             <property name="top-attach">5</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_general">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">General</property>
-                      </object>
-                      <packing>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_general">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">General</property>
+              </object>
+              <packing>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_title_and_command">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=6 -->
+                      <!-- n-columns=1 n-rows=6 -->
                       <object class="GtkGrid" id="grid_title_and_command">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -1064,7 +959,7 @@
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=1 -->
                               <object class="GtkGrid" id="grid_select_by_word">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1100,27 +995,6 @@
                                     <property name="top-attach">0</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -1145,7 +1019,7 @@
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=7 -->
+                              <!-- n-columns=2 n-rows=7 -->
                               <object class="GtkGrid" id="grid_url_handling">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1287,27 +1161,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -1331,7 +1184,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=4 -->
+                              <!-- n-columns=2 n-rows=4 -->
                               <object class="GtkGrid" id="grid_title">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1381,6 +1234,7 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="invisible-char">●</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment11</property>
                                   </object>
                                   <packing>
@@ -1391,7 +1245,7 @@
                                 <child>
                                   <object class="GtkComboBox" id="combo_dynamically_set_title">
                                     <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">model2</property>
                                     <child>
                                       <object class="GtkCellRendererText" id="renderer2"/>
@@ -1446,18 +1300,6 @@
                                     <property name="top-attach">2</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -1480,7 +1322,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=4 -->
+                              <!-- n-columns=2 n-rows=4 -->
                               <object class="GtkGrid" id="grid_command">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1495,7 +1337,7 @@
                                 <child>
                                   <object class="GtkComboBox" id="combo_command_exit">
                                     <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="can-focus">False</property>
                                     <property name="model">model3</property>
                                     <child>
                                       <object class="GtkCellRendererText" id="renderer3"/>
@@ -1523,7 +1365,7 @@
                                   <object class="GtkCheckButton" id="check_run_custom_command">
                                     <property name="label" translatable="yes">Run a custom command instead of the shell</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -1570,18 +1412,6 @@
                                     <property name="left-attach">0</property>
                                     <property name="top-attach">3</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>
@@ -1642,7 +1472,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=1 n-rows=1 -->
                               <object class="GtkGrid" id="grid_close_tab">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1667,30 +1497,6 @@
                                     <property name="top-attach">0</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -1709,60 +1515,38 @@
                             <property name="top-attach">4</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_title_and_command">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Title and Command</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_title_and_command">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Title and Command</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_appearance">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=6 -->
+                      <!-- n-columns=1 n-rows=6 -->
                       <object class="GtkGrid" id="grid_appearance">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -1779,7 +1563,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=4 n-rows=3 -->
+                              <!-- n-columns=4 n-rows=1 -->
                               <object class="GtkGrid" id="grid_height">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1807,6 +1591,7 @@
                                   <object class="GtkSpinButton" id="spin_height_percentage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0.00</property>
                                     <property name="adjustment">adjustment2</property>
                                     <property name="digits">2</property>
                                   </object>
@@ -1831,36 +1616,13 @@
                                   <object class="GtkSpinButton" id="spin_height_pixels">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment3</property>
                                   </object>
                                   <packing>
                                     <property name="left-attach">3</property>
                                     <property name="top-attach">0</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                             </child>
@@ -1884,7 +1646,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=4 n-rows=3 -->
+                              <!-- n-columns=4 n-rows=1 -->
                               <object class="GtkGrid" id="grid2">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -1947,30 +1709,6 @@
                                     <property name="top-attach">0</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -1993,7 +1731,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=4 n-rows=3 -->
+                              <!-- n-columns=4 n-rows=1 -->
                               <object class="GtkGrid" id="grid_width">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -2033,6 +1771,7 @@
                                   <object class="GtkSpinButton" id="spin_width_percentage">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0.00</property>
                                     <property name="adjustment">adjustment4</property>
                                     <property name="digits">2</property>
                                   </object>
@@ -2045,36 +1784,13 @@
                                   <object class="GtkSpinButton" id="spin_width_pixels">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment5</property>
                                   </object>
                                   <packing>
                                     <property name="left-attach">3</property>
                                     <property name="top-attach">0</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                             </child>
@@ -2098,7 +1814,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=4 n-rows=3 -->
+                              <!-- n-columns=4 n-rows=2 -->
                               <object class="GtkGrid" id="grid_position">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -2116,7 +1832,7 @@
                                   <object class="GtkCheckButton" id="check_centered_horizontally">
                                     <property name="label" translatable="yes">Centered Horizontally</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="active">True</property>
@@ -2144,6 +1860,7 @@
                                   <object class="GtkSpinButton" id="spin_x_position">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment6</property>
                                   </object>
                                   <packing>
@@ -2155,6 +1872,7 @@
                                   <object class="GtkSpinButton" id="spin_y_position">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment7</property>
                                   </object>
                                   <packing>
@@ -2178,7 +1896,7 @@
                                   <object class="GtkCheckButton" id="check_centered_vertically">
                                     <property name="label" translatable="yes">Centered Vertically</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="active">True</property>
@@ -2189,18 +1907,6 @@
                                     <property name="left-attach">2</property>
                                     <property name="top-attach">0</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                                 <child>
                                   <placeholder/>
@@ -2230,7 +1936,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=3 -->
+                              <!-- n-columns=2 n-rows=3 -->
                               <object class="GtkGrid" id="grid_tabs">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -2277,7 +1983,7 @@
                                   <object class="GtkCheckButton" id="check_expand_tabs">
                                     <property name="label" translatable="yes">Expand Tabs</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -2291,7 +1997,7 @@
                                   <object class="GtkCheckButton" id="check_show_single_tab">
                                     <property name="label" translatable="yes">Show single Tab</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -2328,15 +2034,6 @@
                                     <property name="left-attach">1</property>
                                     <property name="top-attach">2</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                             </child>
@@ -2378,6 +2075,7 @@
                                   <object class="GtkSpinButton" id="spin_level_of_transparency">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">0</property>
                                     <property name="adjustment">adjustment8</property>
                                   </object>
                                   <packing>
@@ -2413,7 +2111,9 @@
                                   <object class="GtkSpinButton" id="spin_animation_delay">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="text" translatable="yes">1</property>
                                     <property name="adjustment">adjustment9</property>
+                                    <property name="value">1</property>
                                   </object>
                                   <packing>
                                     <property name="left-attach">2</property>
@@ -2441,7 +2141,7 @@
                                   <object class="GtkCheckButton" id="check_animated_pulldown">
                                     <property name="label" translatable="yes">Animated Pulldown</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -2467,7 +2167,7 @@
                                   <object class="GtkCheckButton" id="check_enable_transparency">
                                     <property name="label" translatable="yes">Enable Transparency</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -2496,60 +2196,38 @@
                             <property name="top-attach">5</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_appearance">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Appearance</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_appearance">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Appearance</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_colors">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=3 -->
+                      <!-- n-columns=1 n-rows=2 -->
                       <object class="GtkGrid" id="grid_colors">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -2557,7 +2235,6 @@
                         <property name="margin-end">4</property>
                         <property name="margin-top">4</property>
                         <property name="margin-bottom">4</property>
-                        <property name="vexpand">False</property>
                         <property name="row-spacing">4</property>
                         <property name="column-spacing">4</property>
                         <property name="column-homogeneous">True</property>
@@ -2567,7 +2244,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=5 -->
+                              <!-- n-columns=2 n-rows=5 -->
                               <object class="GtkGrid" id="grid_fb_colors">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -2692,21 +2369,6 @@
                                     <property name="top-attach">0</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -2729,7 +2391,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=4 -->
+                              <!-- n-columns=2 n-rows=4 -->
                               <object class="GtkGrid" id="grid_palette">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -2737,11 +2399,10 @@
                                 <property name="margin-end">4</property>
                                 <property name="margin-top">4</property>
                                 <property name="margin-bottom">4</property>
-                                <property name="vexpand">False</property>
                                 <property name="row-spacing">4</property>
                                 <property name="column-spacing">4</property>
                                 <child>
-                                  <object class="GtkLabel" id="label44">
+                                  <object class="GtkLabel" id="note_palette">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="hexpand">False</property>
@@ -2775,12 +2436,13 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <!-- n-columns=8 n-rows=3 -->
+                                  <!-- n-columns=8 n-rows=2 -->
                                   <object class="GtkGrid" id="grid_palette_colors">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="margin-top">4</property>
                                     <property name="margin-bottom">4</property>
+                                    <property name="hexpand">True</property>
                                     <property name="row-spacing">4</property>
                                     <property name="column-spacing">4</property>
                                     <property name="column-homogeneous">True</property>
@@ -2993,30 +2655,6 @@
                                         <property name="top-attach">1</property>
                                       </packing>
                                     </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -3027,6 +2665,7 @@
                                   <object class="GtkLabel" id="palette-optionmenu-label">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
                                     <property name="label" translatable="yes">Built-in schemes:</property>
                                     <property name="use-underline">True</property>
                                     <property name="justify">center</property>
@@ -3042,6 +2681,7 @@
                                   <object class="GtkLabel" id="label43">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
                                     <property name="label" translatable="yes">Color palette:</property>
                                     <property name="use-underline">True</property>
                                     <property name="justify">center</property>
@@ -3069,18 +2709,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -3097,45 +2725,38 @@
                             <property name="top-attach">1</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">3</property>
-                      </packing>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_colors">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Colors</property>
-                      </object>
-                      <packing>
-                        <property name="position">3</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_colors">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Colors</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_scrolling">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=1 n-rows=3 -->
+                      <!-- n-columns=1 n-rows=1 -->
                       <object class="GtkGrid" id="grid_scrolling">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -3212,7 +2833,7 @@
                                   <object class="GtkCheckButton" id="check_scroll_on_output">
                                     <property name="label" translatable="yes">Scroll on Output</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -3226,7 +2847,7 @@
                                   <object class="GtkCheckButton" id="check_scroll_on_keystroke">
                                     <property name="label" translatable="yes">Scroll on Keystroke</property>
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
+                                    <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="halign">start</property>
                                     <property name="draw-indicator">True</property>
@@ -3238,7 +2859,7 @@
                                 </child>
                                 <child>
                                   <!-- n-columns=2 n-rows=1 -->
-                                  <object class="GtkGrid" id="grid5">
+                                  <object class="GtkGrid" id="grid_limit_scrollback">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="column-spacing">4</property>
@@ -3296,31 +2917,38 @@
                             <property name="top-attach">0</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">4</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_scrolling">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Scrolling</property>
-                      </object>
-                      <packing>
-                        <property name="position">4</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_scrolling">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Scrolling</property>
+              </object>
+              <packing>
+                <property name="position">4</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_compatibility">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=3 -->
+                      <!-- n-columns=1 n-rows=1 -->
                       <object class="GtkGrid" id="grid_compatibility">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -3337,7 +2965,7 @@
                             <property name="can-focus">False</property>
                             <property name="label-xalign">0</property>
                             <child>
-                              <!-- n-columns=3 n-rows=4 -->
+                              <!-- n-columns=2 n-rows=4 -->
                               <object class="GtkGrid" id="grid_compatibility_options">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -3443,18 +3071,6 @@
                                 <child>
                                   <placeholder/>
                                 </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                             <child type="label">
@@ -3471,49 +3087,39 @@
                             <property name="top-attach">0</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">5</property>
-                      </packing>
                     </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_compatibility">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Compatibility</property>
-                      </object>
-                      <packing>
-                        <property name="position">5</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
-                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_compatibility">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Compatibility</property>
+              </object>
+              <packing>
+                <property name="position">5</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolled_window_keybinding">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <property name="propagate-natural-height">True</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                     <child>
-                      <!-- n-columns=3 n-rows=3 -->
-                      <object class="GtkGrid" id="grid3">
+                      <!-- n-columns=1 n-rows=2 -->
+                      <object class="GtkGrid" id="grid_keybindings">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="row-spacing">4</property>
@@ -3566,50 +3172,29 @@
                             <property name="top-attach">1</property>
                           </packing>
                         </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
                       </object>
-                      <packing>
-                        <property name="position">6</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="nb_label_keybindings">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Keybindings</property>
-                      </object>
-                      <packing>
-                        <property name="position">6</property>
-                        <property name="tab-fill">False</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="nb_label_keybindings">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Keybindings</property>
+              </object>
+              <packing>
+                <property name="position">6</property>
+                <property name="tab-fill">False</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
