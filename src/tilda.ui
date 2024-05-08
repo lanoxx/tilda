@@ -279,6 +279,9 @@
       <row>
         <col id="0" translatable="yes">Control-H</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">Auto</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="model9">
@@ -295,6 +298,9 @@
       </row>
       <row>
         <col id="0" translatable="yes">Control-H</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Auto</col>
       </row>
     </data>
   </object>
