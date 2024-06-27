@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
 "POT-Creation-Date: 2024-02-03 14:02+0100\n"
-"PO-Revision-Date: 2017-07-18 00:31+0800\n"
-"Last-Translator: Kuang-Lin Pan <andypan@ntuosc.org>\n"
+"PO-Revision-Date: 2024-06-28 00:31+0800\n"
+"Last-Translator: Peter Dave Hello <hsu@peterdavehello.org>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -32,11 +32,11 @@ msgstr "開啟新的終端機並隱藏"
 
 #: src/tilda.ui:86 src/tilda.ui:194
 msgid "Top"
-msgstr "頂部"
+msgstr "頂端"
 
 #: src/tilda.ui:89 src/tilda.ui:197
 msgid "Bottom"
-msgstr "底部"
+msgstr "底端"
 
 #: src/tilda.ui:92 src/tilda.ui:200
 msgid "Left"
@@ -72,15 +72,15 @@ msgstr "底線狀游標"
 
 #: src/tilda.ui:140
 msgid "Show whole tab title"
-msgstr ""
+msgstr "顯示整個分頁標題"
 
 #: src/tilda.ui:143
 msgid "Show first n chars of title"
-msgstr ""
+msgstr "顯示標題的前 n 個字元"
 
 #: src/tilda.ui:146
 msgid "Show last n chars of title"
-msgstr ""
+msgstr "顯示標題的後 n 個字元"
 
 #: src/tilda.ui:157
 msgid "Isn't displayed"
@@ -100,7 +100,7 @@ msgstr "取代初始標題"
 
 #: src/tilda.ui:177
 msgid "Drop to the default shell"
-msgstr "啟動預設的命令解釋器"
+msgstr "啟動預設的命令直譯器"
 
 #: src/tilda.ui:180
 msgid "Restart the command"
@@ -140,7 +140,7 @@ msgstr "Solarized Dark"
 
 #: src/tilda.ui:235
 msgid "Snazzy"
-msgstr ""
+msgstr "Snazzy"
 
 #: src/tilda.ui:257
 msgid "On the Left"
@@ -251,9 +251,8 @@ msgid "When last terminal is closed:"
 msgstr "當最後一個終端機被關閉："
 
 #: src/tilda.ui:895
-#, fuzzy
 msgid "Always prompt on exit"
-msgstr "永遠顯示在最上層"
+msgstr "離開時總是提示"
 
 #: src/tilda.ui:918
 msgid "<b>Program Exit</b>"
@@ -263,7 +262,7 @@ msgstr "<b>程式離開</b>"
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
-msgstr "<small><i><b>注意：</b>有些選項需要重新啟動 tilda。</i></small>"
+msgstr "<small><i><b>注意：</b>有些選項需要重新啟動 Tilda。</i></small>"
 
 #: src/tilda.ui:953
 msgid "General"
@@ -279,15 +278,15 @@ msgstr "<b>以單字為單位選取</b>"
 
 #: src/tilda.ui:1062
 msgid "Match Numbers"
-msgstr ""
+msgstr "比對數字"
 
 #: src/tilda.ui:1077
 msgid "Match Email Addresses"
-msgstr ""
+msgstr "比對電子郵件地址"
 
 #: src/tilda.ui:1091
 msgid "Match File URIs"
-msgstr ""
+msgstr "比對檔案 URI"
 
 #: src/tilda.ui:1120
 msgid "Web Browser *:"
@@ -295,20 +294,19 @@ msgstr "網頁瀏覽器 *："
 
 #: src/tilda.ui:1130
 msgid "Press and hold CTRL to activate match"
-msgstr ""
+msgstr "按住 CTRL 以啟用比對"
 
 #: src/tilda.ui:1144
 msgid "Use custom web browser command"
-msgstr ""
+msgstr "使用自訂的網頁瀏覽器指令"
 
 #: src/tilda.ui:1159
 msgid "Match Web URIs"
-msgstr ""
+msgstr "比對網頁 URI"
 
 #: src/tilda.ui:1199
-#, fuzzy
 msgid "<b>Match Handling</b>"
-msgstr "<b>URL 處理方式</b>"
+msgstr "<b>比對處理</b>"
 
 #: src/tilda.ui:1234
 msgid "Initial Title:"
@@ -316,7 +314,7 @@ msgstr "初始標題："
 
 #: src/tilda.ui:1256
 msgid "Title Max Length:"
-msgstr ""
+msgstr "標題最大長度："
 
 #: src/tilda.ui:1297
 msgid "Dynamically-set Title:"
@@ -324,7 +322,7 @@ msgstr "動態設定標題："
 
 #: src/tilda.ui:1309
 msgid "Title Behaviour:"
-msgstr ""
+msgstr "標題行為："
 
 #: src/tilda.ui:1342
 msgid "<b>Title</b>"
@@ -332,7 +330,7 @@ msgstr "<b>標題</b>"
 
 #: src/tilda.ui:1403
 msgid "Run a custom command instead of the shell"
-msgstr "執行自訂的指令而不是執行命令解釋器"
+msgstr "執行自訂的指令而不是執行命令直譯器"
 
 #: src/tilda.ui:1419
 msgid "Custom Command:"
@@ -344,7 +342,7 @@ msgstr "當指令結束後："
 
 #: src/tilda.ui:1441
 msgid "Use a login shell"
-msgstr "使用登入的命令解釋器"
+msgstr "使用登入的命令直譯器"
 
 #: src/tilda.ui:1467
 msgid "<b>Command</b>"
@@ -363,12 +361,11 @@ msgstr ""
 
 #: src/tilda.ui:1531
 msgid "Show confirmation dialog when closing tab"
-msgstr ""
+msgstr "關閉分頁時顯示確認對話框"
 
 #: src/tilda.ui:1551
-#, fuzzy
 msgid "Close Action"
-msgstr "關閉 Tilda"
+msgstr "關閉動作"
 
 #: src/tilda.ui:1572
 msgid "Title and Command"
@@ -420,28 +417,27 @@ msgstr "<b>位置</b>"
 
 #: src/tilda.ui:2009
 msgid "Position of Tabs:"
-msgstr "頁籤位置："
+msgstr "分頁位置："
 
 #: src/tilda.ui:2036
 msgid "Expand Tabs"
-msgstr ""
+msgstr "展開分頁"
 
 #: src/tilda.ui:2050
 msgid "Show single Tab"
-msgstr ""
+msgstr "顯示單一分頁"
 
 #: src/tilda.ui:2064
 msgid "Display Title in Tooltip"
-msgstr ""
+msgstr "在工具提示中顯示標題"
 
 #: src/tilda.ui:2078
 msgid "Insert New Tabs after Current Tab"
-msgstr ""
+msgstr "在當目前分頁後插入新分頁"
 
 #: src/tilda.ui:2098
-#, fuzzy
 msgid "<b>Tabs</b>"
-msgstr "<b>額外選項</b>"
+msgstr "<b>分頁</b>"
 
 #: src/tilda.ui:2147
 msgid "Animation Delay (usec)"
@@ -453,7 +449,7 @@ msgstr "動畫起始點"
 
 #: src/tilda.ui:2197
 msgid "Animated Pulldown"
-msgstr "動畫"
+msgstr "動畫下拉"
 
 #: src/tilda.ui:2213
 msgid "Level of Transparency"
@@ -556,11 +552,11 @@ msgstr "選擇顏色 1"
 
 #: src/tilda.ui:2677
 msgid "Choose Color 0"
-msgstr "Choose Color 0"
+msgstr "選擇顏色 0"
 
 #: src/tilda.ui:2691
 msgid "Choose Color 8"
-msgstr "Choose Color 8"
+msgstr "選擇顏色 8"
 
 #: src/tilda.ui:2708
 msgid "Built-in schemes:"
@@ -572,7 +568,7 @@ msgstr "調色盤："
 
 #: src/tilda.ui:2748
 msgid "Show bold text in bright colors"
-msgstr ""
+msgstr "以亮色顯示粗體文字"
 
 #: src/tilda.ui:2766
 msgid "<b>Palette</b>"
@@ -654,9 +650,8 @@ msgid "<b>Keybindings</b>"
 msgstr "<b>按鍵對應</b>"
 
 #: src/tilda.ui:3180
-#, fuzzy
 msgid "Clear Keybinding"
-msgstr "捕捉按鍵"
+msgstr "清除按鍵對應"
 
 #: src/tilda.ui:3199
 msgid "Keybindings"
@@ -694,35 +689,34 @@ msgstr "指定的設定檔 '%s' 不存在。改採用預設的路徑。\n"
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
-msgstr "你選擇的「拉下終端機」快捷鍵無效。請選擇別的。"
+msgstr "你選擇的「拉下終端機」快捷鍵無效。請選擇別的快捷鍵。"
 
 #: src/tilda-keybinding.c:175
-#, fuzzy
 msgid "Action"
-msgstr "關閉 Tilda"
+msgstr "動作"
 
 #: src/tilda-keybinding.c:181
 msgid "Shortcut"
-msgstr ""
+msgstr "快捷鍵"
 
 #: src/tilda-keybinding.c:369
 msgid "Enter keyboard shortcut"
-msgstr ""
+msgstr "輸入鍵盤快捷鍵"
 
 #: src/tilda-keybinding.c:510
-#, fuzzy, c-format
+#, c-format
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
-msgstr "你選擇的「拉下終端機」快捷鍵無效。請選擇別的。"
+msgstr "你選擇的「%s」快捷鍵無效。請選擇別的快捷鍵。"
 
 #: src/tilda_terminal.c:436
 #, c-format
 msgid "Problem reading link %s: %s\n"
-msgstr "跟隨符號連結 %s 失敗：%s\n"
+msgstr "讀取連結 %s 時出現問題：%s\n"
 
 #: src/tilda_terminal.c:459
 #, c-format
 msgid "Unable to launch default shell: %s\n"
-msgstr "無法啟動預設的命令解釋器：%s\n"
+msgstr "無法啟動預設的命令直譯器：%s\n"
 
 #: src/tilda_terminal.c:461
 #, c-format
@@ -730,13 +724,13 @@ msgid "Unable to launch custom command: %s\n"
 msgstr "無法啟動自訂指令：%s\n"
 
 #: src/tilda_terminal.c:462
-#, fuzzy, c-format
+#, c-format
 msgid "Launching custom command failed with error: %s\n"
-msgstr "執行自訂的指令而不是執行命令解釋器"
+msgstr "執行自訂指令失敗，錯誤：%s\n"
 
 #: src/tilda_terminal.c:463 src/tilda_terminal.c:497
 msgid "Launching default shell instead\n"
-msgstr "作為替代，啟動預設的命令解釋器\n"
+msgstr "改為啟動預設的命令直譯器\n"
 
 #: src/tilda_terminal.c:496
 #, c-format
@@ -753,24 +747,24 @@ msgstr "設定檔裡 \"d_set_title\" 的值不正確\n"
 
 #: src/tilda_window.c:108
 msgid "Are you sure you want to close this tab?"
-msgstr ""
+msgstr "確定要關閉這個分頁嗎？"
 
 #: src/tilda_window.c:155
 msgid "You have a bad tab_pos in your configuration file\n"
-msgstr "設定檔裡有個錯的定位點\n"
+msgstr "設定檔裡有個錯誤的分頁位置\n"
 
 #: src/tilda_window.c:803
 #, c-format
 msgid "Unable to set tilda's icon: %s\n"
-msgstr "無法設定 Tilda 的圖示為：%s\n"
+msgstr "無法設定 Tilda 的圖示：%s\n"
 
 #: src/tilda_window.c:1133
 msgid "Out of memory, cannot create tab\n"
-msgstr "記憶體不足。無法建立分頁\n"
+msgstr "記憶體不足，無法建立分頁\n"
 
 #: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
-msgstr ""
+msgstr "確定要退出嗎？"
 
 #: src/wizard.c:139
 #, c-format
@@ -778,9 +772,8 @@ msgid "Tilda %d Config"
 msgstr "Tilda %d 設定值"
 
 #: src/wizard.c:562
-#, fuzzy
 msgid "Invalid Cursor Type, resetting to default\n"
-msgstr "無效的游標類型，已重設為預設\n"
+msgstr "無效的游標類型，已重設為預設值\n"
 
 #: src/wizard.c:580
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
@@ -788,7 +781,7 @@ msgstr "無效的未取得焦點拉起行為，已忽略\n"
 
 #: src/wizard.c:1138
 msgid "Invalid tab position setting, ignoring\n"
-msgstr "無效的 Tab 順序，已忽略\n"
+msgstr "無效的分頁位置設定，已忽略\n"
 
 #: src/tilda-search-box.ui:15
 msgid ""
@@ -816,61 +809,60 @@ msgid "_New Tab"
 msgstr "新分頁(_N)"
 
 #: src/tilda-context-menu.c:175
-#, fuzzy
 msgid "_Close Tab"
-msgstr "關閉 Tilda"
+msgstr "關閉分頁(_C)"
 
 #: src/tilda-context-menu.c:181
 msgid "_Copy"
-msgstr ""
+msgstr "複製(_C)"
 
 #: src/tilda-context-menu.c:182
 msgid "_Paste"
-msgstr ""
+msgstr "貼上(_P)"
 
 #: src/tilda-context-menu.c:209
 msgid "_Toggle Fullscreen"
-msgstr ""
+msgstr "切換全螢幕(_F)"
 
 #: src/tilda-context-menu.c:210
 msgid "_Toggle Searchbar"
-msgstr ""
+msgstr "切換搜尋列(_S)"
 
 #: src/tilda-context-menu.c:216
 msgid "_Preferences"
-msgstr ""
+msgstr "偏好設定(_P)"
 
 #: src/tilda-context-menu.c:222
 msgid "_Quit"
-msgstr ""
+msgstr "退出(_Q)"
 
 #: src/tilda-match-registry.c:54 src/tilda-match-registry.c:55
 msgid "Copy Link"
-msgstr ""
+msgstr "複製連結"
 
 #: src/tilda-match-registry.c:54 src/tilda-match-registry.c:55
 msgid "Open Link"
-msgstr ""
+msgstr "開啟連結"
 
 #: src/tilda-match-registry.c:56
 msgid "Copy File"
-msgstr ""
+msgstr "複製檔案"
 
 #: src/tilda-match-registry.c:56
 msgid "Open File"
-msgstr ""
+msgstr "開啟檔案"
 
 #: src/tilda-match-registry.c:57
 msgid "Copy Email"
-msgstr ""
+msgstr "複製電子郵件"
 
 #: src/tilda-match-registry.c:57
 msgid "Send Email"
-msgstr ""
+msgstr "傳送電子郵件"
 
 #: src/tilda-match-registry.c:58
 msgid "Copy Number"
-msgstr ""
+msgstr "複製號碼"
 
 #, c-format
 #~ msgid "Unable to run command: `%s'\n"
