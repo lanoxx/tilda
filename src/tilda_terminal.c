@@ -753,6 +753,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     /** Keys **/
     switch (config_getint ("backspace_key"))
     {
+        case TTY:
+            vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_TTY);
+            break;
         case ASCII_DELETE:
             vte_terminal_set_backspace_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
             break;
@@ -770,6 +773,9 @@ static gint tilda_term_config_defaults (tilda_term *tt)
 
     switch (config_getint ("delete_key"))
     {
+        case TTY:
+            vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_TTY);
+            break;
         case ASCII_DELETE:
             vte_terminal_set_delete_binding (VTE_TERMINAL(tt->vte_term), VTE_ERASE_ASCII_DELETE);
             break;
