@@ -22,10 +22,15 @@ G_BEGIN_DECLS
 
 void pull (struct tilda_window_ *tw, enum pull_action action, gboolean force_hide);
 
+void set_pinned (gboolean value, struct tilda_window_ *tw);
+
 extern void generate_animation_positions (tilda_window *tw);
 
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw);
 void tilda_keygrabber_unbind (const gchar *keystr);
+
+gboolean tilda_keygrabber_bind_pin (const gchar *keystr, tilda_window *tw);
+void tilda_keygrabber_unbind_pin (const gchar *keystr);
 
 /**
  * This function will make the tilda window active after it starts

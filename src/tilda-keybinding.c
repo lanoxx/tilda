@@ -39,6 +39,7 @@ const Keybinding common_bindings[] = {
          {"Toggle Fullscreen",   "fullscreen_key"},
          {"Toggle Transparency", "toggle_transparency_key"},
          {"Toggle Searchbar",    "toggle_searchbar_key"},
+         {"Toggle Pin",          "pin_key"},
          {NULL, NULL}
  };
 
@@ -124,6 +125,11 @@ validate_pulldown_keybinding (const gchar* accel,
                               tilda_window* tw,
                               const gchar* message,
                               gboolean allow_empty_pull_shortcut);
+
+static gboolean
+validate_pin_keybinding (const gchar* accel,
+                         tilda_window* tw,
+                         const gchar* message);
 
 static gboolean
 validate_keybinding (const gchar* accel,
@@ -505,6 +511,12 @@ validate_keybindings (TildaKeybindingTreeView *keybindings,
             if (!validate_pulldown_keybinding (shortcut, tw, message, allow_empty_pull_shortcut))
                 return FALSE;
         }
+        else if (0 == g_strcmp0 ("pin_key", config_name)) {
+            const char *message = _ ("The keybinding you chose for \"Toggle Pin\" is invalid. Please choose another.");
+
+            if (!validate_pin_keybinding (shortcut, tw, message))
+                return FALSE;
+        }
         else {
             gchar * message = g_strdup_printf (
                     _ ("The keybinding you chose for \"%s\" is invalid. Please choose another."),
@@ -543,6 +555,28 @@ validate_pulldown_keybinding (const gchar* accel,
 
     /* Try to grab the key. This is a good way to validate it :) */
     gboolean key_is_valid = tilda_keygrabber_bind (accel, tw);
+
+    if (key_is_valid)
+        return TRUE;
+    else
+    {
+        GtkWindow *window = GTK_WINDOW(tw->wizard_window);
+
+        tilda_keybinding_show_invalid_keybinding_dialog (window, message);
+
+        return FALSE;
+    }
+}
+
+static gboolean
+validate_pin_keybinding (const gchar* accel,
+                         tilda_window* tw,
+                         const gchar* message)
+{
+    if (strcmp(accel, "NULL") == 0) return TRUE;
+
+    /* Try to grab the key. This is a good way to validate it :) */
+    gboolean key_is_valid = tilda_keygrabber_bind_pin (accel, tw);
 
     if (key_is_valid)
         return TRUE;

@@ -120,6 +120,17 @@ menu_searchbar_cb (GSimpleAction *action,
 }
 
 static void
+menu_pin_cb (GSimpleAction *action,
+             GVariant      *parameter,
+             gpointer       user_data)
+{
+    DEBUG_FUNCTION ("menu_pin_cb");
+    DEBUG_ASSERT (user_data != NULL);
+
+    tilda_window_toggle_pin (TILDA_WINDOW (user_data));
+}
+
+static void
 menu_preferences_cb (GSimpleAction *action,
                      GVariant      *parameter,
                      gpointer       user_data)
@@ -208,6 +219,7 @@ create_menu_model (TildaContextMenu * context_menu)
     GMenu *toggle_section = g_menu_new ();
     g_menu_append (toggle_section, _("_Toggle Fullscreen"), "window.fullscreen");
     g_menu_append (toggle_section, _("_Toggle Searchbar"), "window.searchbar");
+    g_menu_append (toggle_section, _("_Toggle Pinned Mode"), "window.pin");
     g_menu_append_section (menu, NULL, G_MENU_MODEL (toggle_section));
 
     // preferences section
@@ -259,6 +271,7 @@ tilda_context_menu_popup (tilda_window *tw, tilda_term *tt, const char * match, 
             { .name="close-tab", menu_close_tab_cb },
             { .name="fullscreen", menu_fullscreen_cb },
             { .name="searchbar", menu_searchbar_cb },
+            { .name="pin", menu_pin_cb },
             { .name="preferences", menu_preferences_cb },
             { .name="quit", menu_quit_cb }
     };

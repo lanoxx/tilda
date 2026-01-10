@@ -45,6 +45,7 @@ struct tilda_window_
     GtkWidget *window;
     GtkWidget *notebook;
     GtkWidget *search;
+    GtkWidget *pin_icon;      /* Pin status icon in dedicated panel at top */
 
     GList *terms;
     GtkAccelGroup * accel_group;
@@ -59,6 +60,8 @@ struct tilda_window_
 
     /* Temporarily disable auto hiding */
     gboolean disable_auto_hide;
+    /* Pin state - when TRUE, prevents auto-hide on focus lost */
+    gboolean is_pinned;
     /* Auto hide tick-function handler */
     guint auto_hide_tick_handler;
     /* Auto hide current time */
@@ -215,6 +218,21 @@ void tilda_window_refresh_transparency(tilda_window *tw);
  * Toggles the search bar of the tilda window.
  */
 void tilda_window_toggle_searchbar (tilda_window *tw);
+
+/**
+ * Toggles the pinned state of the tilda window.
+ */
+void tilda_window_toggle_pin (tilda_window *tw);
+
+/**
+ * Start the auto-hide timer
+ */
+void tilda_window_start_auto_hide (tilda_window *tw);
+
+/**
+ * Stop the auto-hide timer
+ */
+void tilda_window_stop_auto_hide (tilda_window *tw);
 
 /**
  * Show confirm dialog before quitting (if enabled)

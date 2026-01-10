@@ -212,6 +212,14 @@ static void process_all_pending_gtk_events ()
     gdk_display_flush (display);
 }
 
+void set_pinned (gboolean value, struct tilda_window_ *tw)
+{
+    tw->is_pinned = value;
+    if (tw->pin_icon != NULL) {
+        gtk_widget_set_visible (tw->pin_icon, tw->is_pinned);
+    }
+}
+
 /**
 * @force_hide: This option is used by the auto hide feature, so we can ignore the checks to focus tilda instead
 * of pulling up.
@@ -346,7 +354,7 @@ static void pull_down (struct tilda_window_ *tw) {
      *
      * Note that the "Always on top" property doesn't seem to go away, only this
      * property (Show on all desktops) does... */
-    if (config_getbool ("pinned"))
+    if (config_getbool ("display_on_all_workspaces"))
             gtk_window_stick (GTK_WINDOW (tw->window));
 
     if (config_getbool ("animation") && !tw->fullscreen) {
@@ -414,7 +422,26 @@ static void onKeybindingPull (G_GNUC_UNUSED const char *keystring, gpointer user
 {
     DEBUG_FUNCTION("onKeybindingPull");
     tilda_window *tw = TILDA_WINDOW(user_data);
+
+    /* Only unpin if we're actually going to pull up (hide) the window,
+     * not if we're just going to focus it */
+    gboolean needsFocus = !tw->focus_loss_on_keypress
+            && !gtk_window_is_active(GTK_WINDOW(tw->window))
+            && !tw->hide_non_focused;
+
+    if ((tw->current_state == STATE_DOWN) && !needsFocus) {
+        set_pinned (FALSE, tw); /* Unpin when hiding window */
+    }
+
     pull (tw, PULL_TOGGLE, FALSE);
+}
+
+static void onKeybindingPin (G_GNUC_UNUSED const char *keystring, gpointer user_data)
+{
+    DEBUG_FUNCTION("onKeybindingPin");
+    tilda_window *tw = TILDA_WINDOW(user_data);
+
+    tilda_window_toggle_pin(tw);
 }
 
 gboolean tilda_keygrabber_bind (const gchar *keystr, tilda_window *tw)
@@ -431,6 +458,19 @@ void tilda_keygrabber_unbind (const gchar *keystr)
     tomboy_keybinder_unbind (keystr, (TomboyBindkeyHandler)onKeybindingPull);
 }
 
+gboolean tilda_keygrabber_bind_pin (const gchar *keystr, tilda_window *tw)
+{
+    /* Empty strings are no good */
+    if (keystr == NULL || strcmp ("", keystr) == 0)
+        return FALSE;
+
+    return tomboy_keybinder_bind (keystr, (TomboyBindkeyHandler)onKeybindingPin, tw);
+}
+
+void tilda_keygrabber_unbind_pin (const gchar *keystr)
+{
+    tomboy_keybinder_unbind (keystr, (TomboyBindkeyHandler)onKeybindingPin);
+}
 
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */

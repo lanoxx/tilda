@@ -360,6 +360,9 @@ int main (int argc, char *argv[])
                                                                  message);
                 wizard (&tw);
             }
+
+            /* Bind the pin key globally */
+            tilda_keygrabber_bind_pin (config_getstr ("pin_key"), &tw);
         }
     }
 

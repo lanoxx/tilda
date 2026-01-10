@@ -127,6 +127,9 @@ gint wizard (tilda_window *tw)
      * validation easier. */
     tilda_keygrabber_unbind (config_getstr ("key"));
 
+    /* Unbind the pin key as well */
+    tilda_keygrabber_unbind_pin (config_getstr ("pin_key"));
+
     /* Adding widget title for CSS selection */
     gtk_widget_set_name (GTK_WIDGET(tw->wizard_window), "Wizard");
 
@@ -437,7 +440,7 @@ static void check_display_on_all_workspaces_toggled_cb (GtkWidget *w, tilda_wind
 {
     const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
 
-    config_setbool ("pinned", status);
+    config_setbool ("display_on_all_workspaces", status);
 
     if (status)
         gtk_window_stick (GTK_WINDOW (tw->window));
@@ -452,7 +455,7 @@ static void check_set_as_desktop_toggled_cb (GtkWidget *widget, tilda_window *tw
     config_setbool ("set_as_desktop", status);
 
     g_signal_handlers_block_by_func (check_display_on_all_workspaces, check_display_on_all_workspaces_toggled_cb, NULL);
-    gboolean status_display_on_all_workspaces = config_getbool ("pinned");
+    gboolean status_display_on_all_workspaces = config_getbool ("display_on_all_workspaces");
     if (status) {
 
         gtk_widget_set_sensitive (check_display_on_all_workspaces, FALSE);
@@ -1853,7 +1856,7 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     GdkRGBA *current_palette;
 
     /* General Tab */
-    CHECK_BUTTON ("check_display_on_all_workspaces", "pinned");
+    CHECK_BUTTON ("check_display_on_all_workspaces", "display_on_all_workspaces");
     initialize_set_as_desktop_checkbox ();
     CHECK_BUTTON ("check_always_on_top", "above");
     CHECK_BUTTON ("check_do_not_show_in_taskbar", "notaskbar");
@@ -2002,7 +2005,7 @@ static void initialize_set_as_desktop_checkbox (void) {
     GtkWidget *check_display_on_all_workspaces = GTK_WIDGET(gtk_builder_get_object (xml, "check_display_on_all_workspaces"));
 
     gboolean status = config_getbool("set_as_desktop");
-    gboolean status_display_on_all_workspaces = config_getbool ("pinned");
+    gboolean status_display_on_all_workspaces = config_getbool ("display_on_all_workspaces");
     if (status) {
         gtk_widget_set_sensitive (check_display_on_all_workspaces, FALSE);
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_display_on_all_workspaces), TRUE);
