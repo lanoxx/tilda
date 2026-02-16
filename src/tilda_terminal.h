@@ -47,7 +47,7 @@ struct tilda_term_
 };
 
 enum tilda_term_scrollbar_positions { RIGHT, LEFT, DISABLED };
-enum delete_keys { ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
+enum delete_keys { TTY, ASCII_DELETE, DELETE_SEQUENCE, ASCII_BACKSPACE, AUTO };
 
 /**
  * tilda_term_init ()
@@ -101,4 +101,3 @@ G_END_DECLS
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
 
 #endif /* TILDA_TERMINALN_H */
-

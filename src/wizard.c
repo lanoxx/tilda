@@ -1448,7 +1448,7 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
                                            &gdk_back_color);
-        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term), 
+        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term),
                                                   &gdk_back_color);
     }
 }
@@ -1683,7 +1683,8 @@ static void check_copy_on_selection_toggled_cb (GtkWidget *w, tilda_window *tw)
 static void combo_backspace_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    const gint keys[] = { VTE_ERASE_ASCII_DELETE,
+    const gint keys[] = { VTE_ERASE_TTY,
+                          VTE_ERASE_ASCII_DELETE,
                           VTE_ERASE_DELETE_SEQUENCE,
                           VTE_ERASE_ASCII_BACKSPACE,
                           VTE_ERASE_AUTO };
@@ -1701,7 +1702,8 @@ static void combo_backspace_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 static void combo_delete_binding_changed_cb (GtkWidget *w, tilda_window *tw)
 {
     const gint status = gtk_combo_box_get_active (GTK_COMBO_BOX(w));
-    const gint keys[] = { VTE_ERASE_ASCII_DELETE,
+    const gint keys[] = { VTE_ERASE_TTY,
+                          VTE_ERASE_ASCII_DELETE,
                           VTE_ERASE_DELETE_SEQUENCE,
                           VTE_ERASE_ASCII_BACKSPACE,
                           VTE_ERASE_AUTO };

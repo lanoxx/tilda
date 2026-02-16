@@ -271,6 +271,9 @@
     </columns>
     <data>
       <row>
+        <col id="0" translatable="yes">Terminal's erase setting</col>
+      </row>
+      <row>
         <col id="0" translatable="yes">ASCII DEL</col>
       </row>
       <row>
@@ -278,6 +281,9 @@
       </row>
       <row>
         <col id="0" translatable="yes">Control-H</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Auto</col>
       </row>
     </data>
   </object>
@@ -288,6 +294,9 @@
     </columns>
     <data>
       <row>
+        <col id="0" translatable="yes">Terminal's erase setting</col>
+      </row>
+      <row>
         <col id="0" translatable="yes">ASCII DEL</col>
       </row>
       <row>
@@ -295,6 +304,9 @@
       </row>
       <row>
         <col id="0" translatable="yes">Control-H</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Auto</col>
       </row>
     </data>
   </object>
