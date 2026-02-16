@@ -196,6 +196,11 @@ void tilda_window_set_active (tilda_window *tw)
         XRaiseWindow (x11_display, x11_window);
         gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
     }
+    /* The window loses its size when called from a different monitor in XMonad */
+    GdkRectangle rectangle;
+    config_get_configured_window_size(&rectangle);
+    XResizeWindow(x11_display, x11_window, rectangle.width, rectangle.height);
+    XFlush(x11_display);
 }
 
 /* Process all pending GTK events, without returning to the GTK mainloop */
