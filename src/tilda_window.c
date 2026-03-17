@@ -236,7 +236,10 @@ static void tilda_window_apply_transparency (tilda_window *tw, gboolean status)
     bg.red   =    GUINT16_TO_FLOAT(config_getint ("back_red"));
     bg.green =    GUINT16_TO_FLOAT(config_getint ("back_green"));
     bg.blue  =    GUINT16_TO_FLOAT(config_getint ("back_blue"));
-    bg.alpha =    (status ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
+    if (config_getbool ("use_background_image"))
+        bg.alpha = 0.0;
+    else
+        bg.alpha = (status ? GUINT16_TO_FLOAT(config_getint ("back_alpha")) : 1.0);
 
     for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);

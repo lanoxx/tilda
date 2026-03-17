@@ -32,6 +32,8 @@ struct tilda_term_
     GtkWidget *vte_term;
     GtkWidget *hbox;
     GtkWidget *scrollbar;
+    GtkWidget *background_image;
+    GdkPixbuf *background_pixbuf;
     GRegex *http_regexp;
     VteRegex *vte_regexp;
     TildaMatchRegistry * registry;
@@ -93,6 +95,7 @@ gchar * tilda_terminal_get_full_title (tilda_term *tt);
 gchar * tilda_terminal_get_title (tilda_term *tt);
 
 void tilda_terminal_update_matches (tilda_term *tt);
+void tilda_term_set_background_image (tilda_term *tt, const gchar *path);
 
 #define TILDA_TERM(tt) ((tilda_term *)(tt))
 

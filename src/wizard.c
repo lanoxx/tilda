@@ -1210,6 +1210,10 @@ static void spin_level_of_transparency_value_changed_cb (GtkWidget *w, tilda_win
     bg.alpha =    1.0 - (status / 100.0);
 
     config_setint ("back_alpha", GUINT16_FROM_FLOAT (bg.alpha));
+
+    if (config_getbool ("use_background_image"))
+        bg.alpha = 0.0;
+
     for (i=0; i<g_list_length (tw->terms); i++) {
             tt = g_list_nth_data (tw->terms, i);
             vte_terminal_set_color_background(VTE_TERMINAL(tt->vte_term), &bg);
@@ -1273,6 +1277,83 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w, tilda_window *tw)
         /* I don't know why, but width=0, height=0 doesn't work. Width=1, height=1 works
          * exactly as expected, so I'm leaving it that way. */
         gtk_window_resize (GTK_WINDOW(tw->window), 1, 1);
+    }
+}
+
+static void check_use_background_image_toggled_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gboolean status = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(w));
+
+    GtkWidget *button_background_image =
+        GTK_WIDGET (gtk_builder_get_object (xml, "button_background_image"));
+
+    GtkWidget *spin_background_image_darken =
+        GTK_WIDGET (gtk_builder_get_object (xml, "spin_background_image_darken"));
+    GtkWidget *label_background_image_darken =
+        GTK_WIDGET (gtk_builder_get_object (xml, "label_background_image_darken"));
+
+    gtk_widget_set_sensitive (button_background_image, status);
+    gtk_widget_set_sensitive (spin_background_image_darken, status);
+    gtk_widget_set_sensitive (label_background_image_darken, status);
+    config_setbool ("use_background_image", status);
+
+    guint i;
+    tilda_term *tt;
+
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        if (status) {
+            tilda_term_set_background_image (tt, config_getstr ("background_image_path"));
+            GdkRGBA bg;
+            bg.red   = GUINT16_TO_FLOAT(config_getint ("back_red"));
+            bg.green = GUINT16_TO_FLOAT(config_getint ("back_green"));
+            bg.blue  = GUINT16_TO_FLOAT(config_getint ("back_blue"));
+            bg.alpha = 0.0;
+            vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term), &bg);
+        } else {
+            tilda_term_set_background_image (tt, NULL);
+            GdkRGBA bg;
+            bg.red   = GUINT16_TO_FLOAT(config_getint ("back_red"));
+            bg.green = GUINT16_TO_FLOAT(config_getint ("back_green"));
+            bg.blue  = GUINT16_TO_FLOAT(config_getint ("back_blue"));
+            bg.alpha = config_getbool("enable_transparency")
+                       ? GUINT16_TO_FLOAT(config_getint ("back_alpha"))
+                       : 1.0;
+            vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term), &bg);
+        }
+    }
+}
+
+static void button_background_image_file_set_cb (GtkWidget *w, tilda_window *tw)
+{
+    gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (w));
+
+    if (filename) {
+        config_setstr ("background_image_path", filename);
+
+        if (config_getbool ("use_background_image")) {
+            guint i;
+            tilda_term *tt;
+            for (i=0; i<g_list_length (tw->terms); i++) {
+                tt = g_list_nth_data (tw->terms, i);
+                tilda_term_set_background_image (tt, filename);
+            }
+        }
+
+        g_free (filename);
+    }
+}
+
+static void spin_background_image_darken_value_changed_cb (GtkWidget *w, tilda_window *tw)
+{
+    const gint value = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(w));
+    config_setint ("background_image_darken", value);
+
+    guint i;
+    tilda_term *tt;
+    for (i=0; i<g_list_length (tw->terms); i++) {
+        tt = g_list_nth_data (tw->terms, i);
+        gtk_widget_queue_draw (tt->vte_term);
     }
 }
 
@@ -1444,11 +1525,18 @@ static void colorbutton_back_color_set_cb (GtkWidget *w, tilda_window *tw)
     config_setint ("back_green", GUINT16_FROM_FLOAT(gdk_back_color.green));
     config_setint ("back_blue",  GUINT16_FROM_FLOAT(gdk_back_color.blue));
 
+    if (config_getbool ("use_background_image"))
+        gdk_back_color.alpha = 0.0;
+    else if (config_getbool ("enable_transparency"))
+        gdk_back_color.alpha = GUINT16_TO_FLOAT(config_getint ("back_alpha"));
+    else
+        gdk_back_color.alpha = 1.0;
+
     for (i=0; i<g_list_length (tw->terms); i++) {
         tt = g_list_nth_data (tw->terms, i);
         vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term),
                                            &gdk_back_color);
-        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term), 
+        vte_terminal_set_color_cursor_foreground (VTE_TERMINAL(tt->vte_term),
                                                   &gdk_back_color);
     }
 }
@@ -1930,6 +2018,17 @@ static void set_wizard_state_from_config (tilda_window *tw) {
     SET_SENSITIVE_BY_CONFIG_BOOL ("label_animation_orientation","animation");
     SET_SENSITIVE_BY_CONFIG_BOOL ("combo_animation_orientation","animation");
 
+    CHECK_BUTTON ("check_use_background_image", "use_background_image");
+    {
+        const gchar *bg_img_path = config_getstr("background_image_path");
+        if (bg_img_path != NULL && bg_img_path[0] != '\0')
+            FILE_BUTTON ("button_background_image", bg_img_path);
+    }
+    SET_SENSITIVE_BY_CONFIG_BOOL ("button_background_image", "use_background_image");
+    SPIN_BUTTON ("spin_background_image_darken", "background_image_darken");
+    SET_SENSITIVE_BY_CONFIG_BOOL ("spin_background_image_darken", "use_background_image");
+    SET_SENSITIVE_BY_CONFIG_BOOL ("label_background_image_darken", "use_background_image");
+
     /* Colors Tab */
     COMBO_BOX ("combo_colorschemes", "scheme");
     text_color.red =   GUINT16_TO_FLOAT(config_getint ("text_red"));
@@ -2095,6 +2194,10 @@ static void connect_wizard_signals (TildaWizard *wizard)
     CONNECT_SIGNAL ("spin_level_of_transparency","value-changed",spin_level_of_transparency_value_changed_cb, tw);
     CONNECT_SIGNAL ("spin_animation_delay","value-changed",spin_animation_delay_value_changed_cb, tw);
     CONNECT_SIGNAL ("combo_animation_orientation","changed",combo_animation_orientation_changed_cb, tw);
+
+    CONNECT_SIGNAL ("check_use_background_image","toggled",check_use_background_image_toggled_cb, tw);
+    CONNECT_SIGNAL ("button_background_image","file-set",button_background_image_file_set_cb, tw);
+    CONNECT_SIGNAL ("spin_background_image_darken","value-changed",spin_background_image_darken_value_changed_cb, tw);
 
     /* Colors Tab */
     CONNECT_SIGNAL ("combo_colorschemes","changed",combo_colorschemes_changed_cb, tw);

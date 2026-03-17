@@ -62,6 +62,62 @@ static void handle_gdk_event (G_GNUC_UNUSED GtkWidget *widget,
                               GdkEvent *event,
                               tilda_term *tt);
 
+static gboolean background_draw_cb (GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+    tilda_term *tt = TILDA_TERM(data);
+
+    if (tt->background_pixbuf == NULL)
+        return FALSE;
+
+    GtkAllocation alloc;
+    gtk_widget_get_allocation (widget, &alloc);
+
+    GdkPixbuf *scaled = gdk_pixbuf_scale_simple (tt->background_pixbuf,
+                                                  alloc.width, alloc.height,
+                                                  GDK_INTERP_BILINEAR);
+    if (scaled) {
+        cairo_save (cr);
+        cairo_set_operator (cr, CAIRO_OPERATOR_DEST_OVER);
+
+        /* Paint darken layer first (DEST_OVER reverses order: last painted = furthest back) */
+        gint darken = config_getint ("background_image_darken");
+        if (darken > 0) {
+            cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, darken / 100.0);
+            cairo_paint (cr);
+        }
+
+        /* Paint the background image behind the darken layer */
+        gdk_cairo_set_source_pixbuf (cr, scaled, 0, 0);
+        cairo_paint (cr);
+
+        cairo_restore (cr);
+        g_object_unref (scaled);
+    }
+
+    return FALSE;
+}
+
+void tilda_term_set_background_image (tilda_term *tt, const gchar *path)
+{
+    if (tt->background_pixbuf) {
+        g_object_unref (tt->background_pixbuf);
+        tt->background_pixbuf = NULL;
+    }
+
+    if (path != NULL && path[0] != '\0') {
+        GError *error = NULL;
+        tt->background_pixbuf = gdk_pixbuf_new_from_file (path, &error);
+        if (error) {
+            g_printerr (_("Failed to load background image '%s': %s\n"),
+                        path, error->message);
+            g_error_free (error);
+        }
+    }
+
+    if (tt->vte_term)
+        gtk_widget_queue_draw (tt->vte_term);
+}
+
 gint tilda_term_free (tilda_term *term)
 {
     DEBUG_FUNCTION ("tilda_term_free");
@@ -70,6 +126,11 @@ gint tilda_term_free (tilda_term *term)
     g_free (term->initial_working_dir);
 
     g_signal_handlers_disconnect_by_func (term->vte_term, child_exited_cb, term);
+
+    if (term->background_pixbuf) {
+        g_object_unref (term->background_pixbuf);
+        term->background_pixbuf = NULL;
+    }
 
     g_clear_object (&term->hbox);
     g_clear_object (&term->scrollbar);
@@ -183,6 +244,10 @@ struct tilda_term_ *tilda_term_init (struct tilda_window_ *tw, gint index)
 
     /* Update the font scale because the newly created terminal uses the default font size */
     tilda_term_adjust_font_scale(term, tw->current_scale_factor);
+
+    /* Connect background image draw handler (draws behind VTE content) */
+    g_signal_connect_after (G_OBJECT(term->vte_term), "draw",
+                            G_CALLBACK(background_draw_cb), term);
 
     /* Pack everything into the hbox */
     gtk_box_pack_end (GTK_BOX(term->hbox), term->scrollbar, FALSE, FALSE, 0);
@@ -795,6 +860,14 @@ static gint tilda_term_config_defaults (tilda_term *tt)
     }
 
     vte_terminal_set_word_char_exceptions (VTE_TERMINAL (tt->vte_term), word_chars);
+
+    /** Background Image **/
+    if (config_getbool ("use_background_image")) {
+        tilda_term_set_background_image (tt, config_getstr ("background_image_path"));
+        /* Make VTE background transparent so the image shows through */
+        bg.alpha = 0.0;
+        vte_terminal_set_color_background (VTE_TERMINAL(tt->vte_term), &bg);
+    }
 
     return 0;
 }

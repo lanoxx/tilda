@@ -192,6 +192,11 @@ static cfg_opt_t config_opts[] = {
     /* Whether to automatically copy selected text to clipboard */
     CFG_BOOL("copy_on_selection", FALSE, CFGF_NONE),
 
+    /* Background image settings */
+    CFG_STR("background_image_path", "", CFGF_NONE),
+    CFG_BOOL("use_background_image", FALSE, CFGF_NONE),
+    CFG_INT("background_image_darken", 0, CFGF_NONE),
+
     /* if set to TRUE, tilda will fall back to open
      * URIs with the 'web_browser' option. */
     CFG_BOOL("use_custom_web_browser", FALSE, CFGF_NONE),
