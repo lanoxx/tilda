@@ -1,0 +1,704 @@
+# Georgian translation for tilda.
+# Copyright (C) 2026 tilda's authors.
+# This file is distributed under the same license as the tilda package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tilda\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-10 15:55+0100\n"
+"PO-Revision-Date: 2026-04-14 06:09+0200\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: src/tilda.ui:69
+msgid "Close Tilda"
+msgstr "Tilda-ის დახურვა"
+
+#: src/tilda.ui:72
+msgid "Open a new terminal"
+msgstr "ახალი ტერმინალის გახსნა"
+
+#: src/tilda.ui:75
+msgid "Open a new terminal and hide"
+msgstr "ახალი ტერმინალის გახსნა და დამალვა"
+
+#: src/tilda.ui:86 src/tilda.ui:194
+msgid "Top"
+msgstr "ზედა"
+
+#: src/tilda.ui:89 src/tilda.ui:197
+msgid "Bottom"
+msgstr "ქვემო"
+
+#: src/tilda.ui:92 src/tilda.ui:200
+msgid "Left"
+msgstr "მარცხენა"
+
+#: src/tilda.ui:95 src/tilda.ui:203
+msgid "Right"
+msgstr "მარჯვენა"
+
+#: src/tilda.ui:98
+msgid "Hidden"
+msgstr "დამალული"
+
+#: src/tilda.ui:109
+msgid "Focus Terminal"
+msgstr "ტერმინალის ფოკუსი"
+
+#: src/tilda.ui:112
+msgid "Hide Terminal"
+msgstr "ტერმინალის დამალვა"
+
+#: src/tilda.ui:123
+msgid "Block Cursor"
+msgstr "ოთხკუთხედი კურსორი"
+
+#: src/tilda.ui:126
+msgid "IBeam Cursor"
+msgstr "IBeam კურსორი"
+
+#: src/tilda.ui:129
+msgid "Underline Cursor"
+msgstr "ხაზგასმის კურსორი"
+
+#: src/tilda.ui:140
+msgid "Show whole tab title"
+msgstr "ჩანართის სრული სახელის ჩვენება"
+
+#: src/tilda.ui:143
+msgid "Show first n chars of title"
+msgstr "სათაურის პირველი n სიმბოლოს ჩვენება"
+
+#: src/tilda.ui:146
+msgid "Show last n chars of title"
+msgstr "სათაურის ბოლო n სიმბოლოს ჩვენება"
+
+#: src/tilda.ui:157
+msgid "Isn't displayed"
+msgstr "ნაჩვენები არაა"
+
+#: src/tilda.ui:160
+msgid "Goes after initial title"
+msgstr "საწყისი სახელის შემდეგ"
+
+#: src/tilda.ui:163
+msgid "Goes before initial title"
+msgstr "საწყის სახელამდე"
+
+#: src/tilda.ui:166
+msgid "Replace initial title"
+msgstr "საწყისი სათაურის შეცვლა"
+
+#: src/tilda.ui:177
+msgid "Drop to the default shell"
+msgstr "გადასვლა ნაგულისხმევ გარსზე"
+
+#: src/tilda.ui:180
+msgid "Restart the command"
+msgstr "ბრძანების თავიდან გაშვება"
+
+#: src/tilda.ui:183
+msgid "Exit the terminal"
+msgstr "ტერმინალიდან გასვლა"
+
+#: src/tilda.ui:214 src/tilda.ui:246
+msgid "Custom"
+msgstr "ხელით"
+
+#: src/tilda.ui:217
+msgid "Green on Black"
+msgstr "მწვანე შავ ფონზე"
+
+#: src/tilda.ui:220
+msgid "Black on White"
+msgstr "ლურჯი თეთრ ფონზე"
+
+#: src/tilda.ui:223
+msgid "White on Black"
+msgstr "თეთრი შავ ფონზე"
+
+#: src/tilda.ui:226
+msgid "Zenburn"
+msgstr "Zenburn"
+
+#: src/tilda.ui:229
+msgid "Solarized Light"
+msgstr "Solarized ღია"
+
+#: src/tilda.ui:232
+msgid "Solarized Dark"
+msgstr "Solarized მუქი"
+
+#: src/tilda.ui:235
+msgid "Snazzy"
+msgstr "Snazzy"
+
+#: src/tilda.ui:257
+msgid "On the Left"
+msgstr "მარცხნიდან"
+
+#: src/tilda.ui:260
+msgid "On the Right"
+msgstr "მარჯვნიდან"
+
+#: src/tilda.ui:263
+msgid "Disabled"
+msgstr "გამორთულია"
+
+#: src/tilda.ui:274 src/tilda.ui:291
+msgid "ASCII DEL"
+msgstr "ASCII DEL"
+
+#: src/tilda.ui:277 src/tilda.ui:294
+msgid "Escape sequence"
+msgstr "გადატანის არასწორი მიმდევრობა"
+
+#: src/tilda.ui:280 src/tilda.ui:297
+msgid "Control-H"
+msgstr "Control-H"
+
+#: src/tilda.ui:315
+msgid "Tilda Config"
+msgstr "Tilda-ის მორგება"
+
+#: src/tilda.ui:337
+msgid "Close"
+msgstr "დახურვა"
+
+#: src/tilda.ui:398
+msgid "Start Tilda hidden"
+msgstr "Tilda-ის დამალულად გაშვება"
+
+#: src/tilda.ui:412
+msgid "Always on top"
+msgstr "ყოველთვის ყველა ფანჯარაზე ზემოდან"
+
+#: src/tilda.ui:426
+msgid "Display on all workspaces"
+msgstr "ჩვენება ყველა სამუშაო სივრცეზე"
+
+#: src/tilda.ui:440
+msgid "Do not show in taskbar"
+msgstr "ამოცანების პანელზე ნაჩვენები არ იქნება"
+
+#: src/tilda.ui:454
+msgid "Show Notebook Border"
+msgstr "ბლოკნოტის საზღვრის ჩვენება"
+
+#: src/tilda.ui:468
+msgid "Set as Desktop window"
+msgstr "დაყენება სამუშაო მაგიდის ფანჯრად"
+
+#: src/tilda.ui:483
+msgid "Start in fullscreen"
+msgstr "სრულ ეკრანზე გაშვება"
+
+#: src/tilda.ui:512
+msgid "Non-focus Pull Up Behaviour:"
+msgstr "არა ფოკუსის დროს აქაჩვის ქცევა:"
+
+#: src/tilda.ui:561
+msgid "<b>Window Display</b>"
+msgstr "<b>ფანჯრის ჩვენება</b>"
+
+#: src/tilda.ui:593
+msgid "Cursor Blinks"
+msgstr "კურსორის ციმციმი"
+
+#: src/tilda.ui:607
+msgid "Audible Terminal Bell"
+msgstr "ტერმინალის გასაგონი ზარი"
+
+#: src/tilda.ui:623
+msgid "Cursor Shape: "
+msgstr "კურსორის ფორმა: "
+
+#: src/tilda.ui:656
+msgid "<b>Terminal Display</b>"
+msgstr "<b>ტერმინალის ჩვენება</b>"
+
+#: src/tilda.ui:690
+msgid "Font:"
+msgstr "ფონტი:"
+
+#: src/tilda.ui:718
+msgid "<b>Font</b>"
+msgstr "<b>ფონტი</b>"
+
+#: src/tilda.ui:752 src/tilda.ui:1259 src/tilda.ui:1610 src/tilda.ui:1778
+#: src/tilda.ui:1854 src/tilda.ui:1866 src/tilda.ui:2069 src/tilda.ui:2862
+msgid "0"
+msgstr "0"
+
+#: src/tilda.ui:762
+msgid "Hide Tilda when mouse leaves it"
+msgstr "Tilda-ის დამალვა, როცა თაგუნას მას დატოვებს"
+
+#: src/tilda.ui:779
+msgid "Auto Hide Delay:"
+msgstr "ავტოდამალვის დაყოვნება:"
+
+#: src/tilda.ui:789
+msgid "Hide when Tilda loses focus"
+msgstr "დამალვა, როცა Tilda ფოკუსს დაკარგავს"
+
+#: src/tilda.ui:807
+msgid "<b>Auto Hide</b>"
+msgstr "<b>ავტოდამალვა</b>"
+
+#: src/tilda.ui:840
+msgid "When last terminal is closed:"
+msgstr "როცა ბოლო ტერმინალი დაიხურება:"
+
+#: src/tilda.ui:867
+msgid "Always prompt on exit"
+msgstr "დადასტურების მოთხოვნა გასვლისას"
+
+#: src/tilda.ui:888
+msgid "<b>Program Exit</b>"
+msgstr "<b>პროგრამიდან გასვლა</b>"
+
+#: src/tilda.ui:907
+msgid ""
+"<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
+"small>"
+msgstr ""
+"<small><i><b>შენიშვნა:</b> ზოგიერთ პარამეტრს tilda-ის გადატვირთვა სჭირდება.</"
+"i></small>"
+
+#: src/tilda.ui:928
+msgid "General"
+msgstr "ზოგადი"
+
+#: src/tilda.ui:979
+msgid "Select by Word Characters:"
+msgstr "სიტყვის სიმბოლოებით ამორჩევა:"
+
+#: src/tilda.ui:1000
+msgid "Copy on Selection"
+msgstr "მონიშნულის კოპირება"
+
+#: src/tilda.ui:1004
+msgid "Automatically copy selected text to clipboard"
+msgstr "მონიშნული ტექსტის ავტომატური კოპირება ბუფერში"
+
+#: src/tilda.ui:1021
+msgid "<b>Selection</b>"
+msgstr "<b>მონიშვნა</b>"
+
+#: src/tilda.ui:1052
+msgid "Match Numbers"
+msgstr "რიცხვების დამთხვევა"
+
+#: src/tilda.ui:1067
+msgid "Match Email Addresses"
+msgstr "ელფოსტის მისამართების დამთხვევა"
+
+#: src/tilda.ui:1081
+msgid "Match File URIs"
+msgstr "ფაილის URI-ების დამთხვევა"
+
+#: src/tilda.ui:1110
+msgid "Web Browser *:"
+msgstr "ბრაუზერი *:"
+
+#: src/tilda.ui:1120
+msgid "Press and hold CTRL to activate match"
+msgstr "დამთხვევის გასააქტიურებლად დააჭირეთ და გეჭიროთ ღილაკზე Ctrl"
+
+#: src/tilda.ui:1134
+msgid "Use custom web browser command"
+msgstr "ბრაუზერის ხელით მითითებული ბრძანების გამოყენება"
+
+#: src/tilda.ui:1149
+msgid "Match Web URIs"
+msgstr "ვების URI-ების დამთხვევა"
+
+#: src/tilda.ui:1166
+msgid ""
+"* A valid command that can open a browser must be entered here. It is "
+"possible to use the name of a specific browser such as 'firefox' and 'google-"
+"chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The "
+"best command may be different depending on the system."
+msgstr ""
+"* აქ უნდა შეიყვანოთ სწორი ბრძანება, რომელსაც ბრაუზერის გაშვება შეუძლია. "
+"შესაძლებელია, შეიყვანოთ სპეციფიკური ბრაუზერის სახელი, როგორიცაა 'firefox'და "
+"'google-chrome', ან გამოიყენოთ ზოგადი ბრძანებები 'x-www-browser' და 'xdg-"
+"open'. საუკეთესო ბრძანება იცვლება სისტემიდან სისტემამდე."
+
+#: src/tilda.ui:1193
+msgid "<b>Match Handling</b>"
+msgstr "<b>დამთხვევის დამუშავება</b>"
+
+#: src/tilda.ui:1224
+msgid "Initial Title:"
+msgstr "საწყისი სათაური:"
+
+#: src/tilda.ui:1246
+msgid "Title Max Length:"
+msgstr "სათაურის მაქს. სიგრძე:"
+
+#: src/tilda.ui:1288
+msgid "Dynamically-set Title:"
+msgstr "სათაურის დინამიკურად დაყენება:"
+
+#: src/tilda.ui:1300
+msgid "Title Behaviour:"
+msgstr "სათაურის ქცევა:"
+
+#: src/tilda.ui:1331
+msgid "<b>Title</b>"
+msgstr "<b>სათაური</b>"
+
+#: src/tilda.ui:1388
+msgid "Run a custom command instead of the shell"
+msgstr "მორგებული ბრძანების გაშვება გარსის მაგიერ"
+
+#: src/tilda.ui:1404
+msgid "Custom Command:"
+msgstr "მორგებული ბრძანება:"
+
+#: src/tilda.ui:1416
+msgid "When Command Exits:"
+msgstr "როცა ბრძანება გამოვა:"
+
+#: src/tilda.ui:1426
+msgid "Use a login shell"
+msgstr "შესვლის გარსის გამოყენება"
+
+#: src/tilda.ui:1450
+msgid "<b>Command</b>"
+msgstr "<b>ბრძანება</b>"
+
+#: src/tilda.ui:1479
+msgid "Show confirmation dialog when closing tab"
+msgstr "დადასტურების დიალოგის ჩვენება ჩანართის დახურვისას"
+
+#: src/tilda.ui:1497
+msgid "Close Action"
+msgstr "ქმედების დახურვა"
+
+#: src/tilda.ui:1522
+msgid "Title and Command"
+msgstr "სათაური და ბრძანება"
+
+#: src/tilda.ui:1573 src/tilda.ui:1741
+msgid "Percentage"
+msgstr "პროცენტი"
+
+#: src/tilda.ui:1585 src/tilda.ui:1765
+msgid "0.00"
+msgstr "0.00"
+
+#: src/tilda.ui:1598 src/tilda.ui:1753
+msgid "In Pixels"
+msgstr "პიქსელებში"
+
+#: src/tilda.ui:1624
+msgid "<b>Height</b>"
+msgstr "<b>სიმაღლე</b>"
+
+#: src/tilda.ui:1656
+msgid "Monitor:"
+msgstr "ეკრანი:"
+
+#: src/tilda.ui:1709
+msgid "<b>Select monitor</b>"
+msgstr "<b>აირჩიეთ ეკრანი</b>"
+
+#: src/tilda.ui:1792
+msgid "<b>Width</b>"
+msgstr "<b>სიგანე</b>"
+
+#: src/tilda.ui:1824
+msgid "Centered Horizontally"
+msgstr "ჰორიზონტალურად დაცენტრებული"
+
+#: src/tilda.ui:1842
+msgid "Y Position"
+msgstr "Y მდებარეობა"
+
+#: src/tilda.ui:1878
+msgid "X Position"
+msgstr "X მდებარეობა"
+
+#: src/tilda.ui:1888
+msgid "Centered Vertically"
+msgstr "ვერტიკალურად დაცენტრებული"
+
+#: src/tilda.ui:1914
+msgid "<b>Position</b>"
+msgstr "<b>მდებარეობა</b>"
+
+#: src/tilda.ui:1948
+msgid "Position of Tabs:"
+msgstr "ჩანართების მდებარეობა"
+
+#: src/tilda.ui:1975
+msgid "Expand Tabs"
+msgstr "ჩანართების გაფართოება"
+
+#: src/tilda.ui:1989
+msgid "Show single Tab"
+msgstr "ერთი ჩანართის ჩვენება"
+
+#: src/tilda.ui:2003
+msgid "Display Title in Tooltip"
+msgstr "სათაურის ჩვენება მინიშნებაში"
+
+#: src/tilda.ui:2017
+msgid "Insert New Tabs after Current Tab"
+msgstr "ახალი ჩანართების მიმდინარე ჩანართის შემდეგ ჩასმა"
+
+#: src/tilda.ui:2035
+msgid "<b>Tabs</b>"
+msgstr "<b>ჩანართები</b>"
+
+#: src/tilda.ui:2081
+msgid "Animation Delay (usec)"
+msgstr "ანიმაციის დაყოვნება (მკწმ)"
+
+#: src/tilda.ui:2093
+msgid "Animation Orientation"
+msgstr "ანიმაციის ორიენტაცია"
+
+#: src/tilda.ui:2105
+msgid "1"
+msgstr "1"
+
+#: src/tilda.ui:2133
+msgid "Animated Pulldown"
+msgstr "ანიმირებული გადახვევა"
+
+#: src/tilda.ui:2149
+msgid "Level of Transparency"
+msgstr "გამჭვირვალობის დონე"
+
+#: src/tilda.ui:2159
+msgid "Enable Transparency"
+msgstr "გამჭვირვალობის ჩართვა"
+
+#: src/tilda.ui:2180
+msgid "<b>Extras</b>"
+msgstr "<b>დამატებები</b>"
+
+#: src/tilda.ui:2203
+msgid "Appearance"
+msgstr "გარეგნობა"
+
+#: src/tilda.ui:2283
+msgid "Cursor Color"
+msgstr "კურსორის ფერი"
+
+#: src/tilda.ui:2331
+msgid "Text Color"
+msgstr "ტექსტის ფერი"
+
+#: src/tilda.ui:2343
+msgid "Background Color"
+msgstr "ფონის ფერი"
+
+#: src/tilda.ui:2355
+msgid "Built-in Schemes"
+msgstr "ჩაშენებული სქემები"
+
+#: src/tilda.ui:2369
+msgid "<b>Foreground and Background Colors</b>"
+msgstr "<b>წინა პლანის და ფონის ფერები</b>"
+
+#: src/tilda.ui:2401
+msgid ""
+"<small><i><b>Note:</b> Terminal applications have these colors available to "
+"them.</i></small>"
+msgstr ""
+"<small><i><b> შენიშვნა</b> ტერმინალის აპლიკაციები ფერადი იქნება</i></small>"
+
+#: src/tilda.ui:2446
+msgid "Choose Color 14"
+msgstr "XIV ფერის არჩევა"
+
+#: src/tilda.ui:2459
+msgid "Choose Color 13"
+msgstr "XIII ფერის არჩევა"
+
+#: src/tilda.ui:2472
+msgid "Choose Color 15"
+msgstr "XV ფერის არჩევა"
+
+#: src/tilda.ui:2485
+msgid "Choose Color 12"
+msgstr "XII ფერის არჩევა"
+
+#: src/tilda.ui:2498
+msgid "Choose Color 10"
+msgstr "X ფერის არჩევა"
+
+#: src/tilda.ui:2511
+msgid "Choose Color 11"
+msgstr "XI ფერის არჩევა"
+
+#: src/tilda.ui:2524
+msgid "Choose Color 9"
+msgstr "IX ფერის არჩევა"
+
+#: src/tilda.ui:2537
+msgid "Choose Color 7"
+msgstr "VII ფერის არჩევა"
+
+#: src/tilda.ui:2550
+msgid "Choose Color 6"
+msgstr "VI ფერის არჩევა"
+
+#: src/tilda.ui:2563
+msgid "Choose Color 5"
+msgstr "V ფერის არჩევა"
+
+#: src/tilda.ui:2576
+msgid "Choose Color 4"
+msgstr "IV ფერის არჩევა"
+
+#: src/tilda.ui:2589
+msgid "Choose Color 3"
+msgstr "III ფერის არჩევა"
+
+#: src/tilda.ui:2602
+msgid "Choose Color 2"
+msgstr "II ფერის არჩევა"
+
+#: src/tilda.ui:2615
+msgid "Choose Color 1"
+msgstr "I ფერის არჩევა"
+
+#: src/tilda.ui:2628
+msgid "Choose Color 0"
+msgstr "0-ე ფერის არჩევა"
+
+#: src/tilda.ui:2642
+msgid "Choose Color 8"
+msgstr "VIII ფერის არჩევა"
+
+#: src/tilda.ui:2660
+msgid "Built-in schemes:"
+msgstr "ჩაშენებული სქემები:"
+
+#: src/tilda.ui:2676
+msgid "Color palette:"
+msgstr "ფერთა პალიტრა:"
+
+#: src/tilda.ui:2688
+msgid "Show bold text in bright colors"
+msgstr "სქელი ტექსტის კაშკაშა ფერებში ჩვენება"
+
+#: src/tilda.ui:2709
+msgid "<b>Palette</b>"
+msgstr "<b>პალიტრა</b>"
+
+#: src/tilda.ui:2732
+msgid "Colors"
+msgstr "ფერები"
+
+#: src/tilda.ui:2801
+msgid "Scrollbar is:"
+msgstr "ჩოჩია:"
+
+#: src/tilda.ui:2810
+msgid "Limit scrollback to:"
+msgstr "აჩოჩების ლიმიტი:"
+
+#: src/tilda.ui:2814
+msgid "Unselect for unlimited scrollback."
+msgstr "გამორთეთ შეუზღუდავი გადახვევისთვის."
+
+#: src/tilda.ui:2825
+msgid "Scroll on Output"
+msgstr "გამოტანისას აჩოჩება"
+
+#: src/tilda.ui:2839
+msgid "Scroll on Keystroke"
+msgstr "აჩოჩება ღილაკის დაჭერისას"
+
+#: src/tilda.ui:2874
+msgid "lines"
+msgstr "ხაზი"
+
+#: src/tilda.ui:2900
+msgid "<b>Scrolling</b>"
+msgstr "<b> აწევ/ჩამოწევა</b>"
+
+#: src/tilda.ui:2924
+msgid "Scrolling"
+msgstr "აჩოჩება"
+
+#: src/tilda.ui:2975
+msgid ""
+"<small><i><b>Note:</b> These options may cause some applications to behave "
+"incorrectly.  They are only here to allow you to work around certain "
+"applications and operating systems that expect different terminal behavior.</"
+"i></small>"
+msgstr ""
+"<small><i><b> შენიშვნა</b> ამ პარამეტრს შეუძლია ზოგიერთი პროგრამის გაშვებაზე "
+"მოახდინოს გავლენა  ზოგიერთი პროგრამებისა და ოპერაციული სისტემების ლიმიტების "
+"გადალახვა მხოლოდ აქ შეგიძლიათ</i></small>"
+
+#: src/tilda.ui:2991
+msgid "_Backspace key generates:"
+msgstr "Backspace ღილაკის ეფექტი:"
+
+#: src/tilda.ui:3005
+msgid "_Delete key generates:"
+msgstr "Delete ღილაკის ეფექტი:"
+
+#: src/tilda.ui:3017
+msgid "_Reset Compatibility Options to Defaults"
+msgstr "_თავსებადობის პარამეტრების საწყის მნიშვნელობებზე დაბრუნება"
+
+#: src/tilda.ui:3071
+msgid "<b>Compatibility</b>"
+msgstr "<b>თავსებადობა</b>"
+
+#: src/tilda.ui:3094
+msgid "Compatibility"
+msgstr "თავსებადობა"
+
+#: src/tilda.ui:3144
+msgid "<b>Keybindings</b>"
+msgstr "<b>კლავიატურის მალსახმობები</b>"
+
+#: src/tilda.ui:3156
+msgid "Clear Keybinding"
+msgstr "კლავიატურის მალსახმობების გასუფთავება"
+
+#: src/tilda.ui:3179
+msgid "Keybindings"
+msgstr "კლავიატურის მალსახმობები"
+
+#: src/tilda-search-box.ui:15
+msgid ""
+"Search term not found, search again to continue the search at the beginning."
+msgstr ""
+"საძიებო სტრიქონი აღმოჩენილი არაა. მოძებნეთ თავიდან ძებნის დასაწყისიდან "
+"გასაგრძელებლად."
+
+#: src/tilda-search-box.ui:49
+msgid "_Next"
+msgstr "_შემდეგი"
+
+#: src/tilda-search-box.ui:64
+msgid "_Prev"
+msgstr "_წინა"
+
+#: src/tilda-search-box.ui:79
+msgid "_Match Case"
+msgstr "დიდი და პატარა ასოების და_მთხვევა"
+
+#: src/tilda-search-box.ui:96
+msgid "_Regex"
+msgstr "_რეგგამოსი"
