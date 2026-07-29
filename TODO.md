@@ -12,7 +12,7 @@
    This will make Tilda more of a long-running daemon than a terminal. What I
    envision is one Tilda process per user, with one config file, managing all of
    the Tilda windows (individual terminals) that the user wants. Also, expose all
-   of the terminal's properties over DBus, so a completely seperate config
+   of the terminal's properties over DBus, so a completely separate config
    program can be written. Also, things like "open a new tab in terminal 3, and
    launch XYZ in it" should be possible, and easy.
 
