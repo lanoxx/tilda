@@ -137,7 +137,7 @@ separate folder such as `tilda-releases`:
  2. Copy the release tarball to the current location and extract it:
     `tar -xf tilda_1.2.#.orig.tar.gz`
  3. `cd tilda-1.#.#`
- 4. Checkout the `tilda-debian` [repository][1] from Github and copy the
+ 4. Checkout the `tilda-debian` [repository][1] from GitHub and copy the
     `debian/` folder to `tilda-1.#.#/`.
  5. To build the source package you need to run **debuild**. You can use one of
     the following two methods to do this:
