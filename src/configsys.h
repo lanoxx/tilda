@@ -75,5 +75,10 @@ glong    config_getnint    (const gchar *key, const guint idx);
  */
 void config_get_configured_window_size (GdkRectangle *rectangle);
 
-#endif /* CONFIGSYS_H */
+/**
+ * Returns the workarea used as the origin and maximum size for Tilda's
+ * configured geometry.
+ */
+void config_get_configured_geometry_bounds (GdkRectangle *rectangle);
 
+#endif /* CONFIGSYS_H */

@@ -27,6 +27,7 @@
 #include <unistd.h> /* fsync */
 
 #include "configsys.h"
+#include "screen-size.h"
 #include <vte/vte.h>
 
 static cfg_t *tc;
@@ -168,6 +169,7 @@ static cfg_opt_t config_opts[] = {
     CFG_BOOL("inherit_working_dir", TRUE, CFGF_NONE),
     CFG_BOOL("command_login_shell", FALSE, CFGF_NONE),
     CFG_BOOL("start_fullscreen", FALSE, CFGF_NONE),
+    CFG_BOOL("span_monitors", FALSE, CFGF_NONE),
     /* Whether closing a tab shows a confirmation dialog. */
     CFG_BOOL("confirm_close_tab", TRUE, CFGF_NONE),
 
@@ -469,15 +471,46 @@ static GdkMonitor *config_get_configured_monitor ()
                                              y_pos);
 }
 
+void config_get_configured_geometry_bounds (GdkRectangle *rectangle)
+{
+    if (!config_getbool ("span_monitors")) {
+        GdkMonitor *monitor = config_get_configured_monitor ();
+        gdk_monitor_get_workarea (monitor, rectangle);
+        return;
+    }
+
+    GdkDisplay *display = gdk_display_get_default ();
+    gint n_monitors = gdk_display_get_n_monitors (display);
+
+    if (n_monitors == 0) {
+        rectangle->x = 0;
+        rectangle->y = 0;
+        screen_size_get_dimensions (&rectangle->width, &rectangle->height);
+        return;
+    }
+
+    for (gint i = 0; i < n_monitors; i++) {
+        GdkRectangle workarea;
+        GdkMonitor *monitor = gdk_display_get_monitor (display, i);
+
+        gdk_monitor_get_workarea (monitor, &workarea);
+        if (i == 0) {
+            *rectangle = workarea;
+        } else {
+            GdkRectangle bounds;
+            gdk_rectangle_union (rectangle, &workarea, &bounds);
+            *rectangle = bounds;
+        }
+    }
+}
+
 void config_get_configured_window_size (GdkRectangle *rectangle)
 {
     gdouble relative_width = GLONG_TO_DOUBLE (config_getint ("width_percentage"));
     gdouble relative_height = GLONG_TO_DOUBLE (config_getint ("height_percentage"));
 
-    GdkMonitor *monitor = config_get_configured_monitor ();
-
     GdkRectangle workarea;
-    gdk_monitor_get_workarea (monitor, &workarea);
+    config_get_configured_geometry_bounds (&workarea);
 
     rectangle->width = pixels_ratio_to_absolute (relative_width, workarea.width);
     rectangle->height = pixels_ratio_to_absolute (relative_height, workarea.height);

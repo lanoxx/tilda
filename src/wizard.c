@@ -280,15 +280,6 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
 {
     DEBUG_FUNCTION ("combo_monitor_selection_changed_cb");
 
-    GdkDisplay *display          = gdk_display_get_default ();
-    GdkMonitor *original_monitor = tilda_window_find_monitor_number (tw);
-    GdkMonitor *new_monitor;
-
-    GdkRectangle original_monitor_rectangle;
-    GdkRectangle selected_monitor_rectangle;
-
-    gdk_monitor_get_workarea (original_monitor, &original_monitor_rectangle);
-
     GtkTreeIter active_iter;
 
     GtkComboBox* combo_choose_monitor = GTK_COMBO_BOX(widget);
@@ -298,7 +289,7 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
         return FALSE;
     }
 
-    gchar* new_monitor_name = NULL;
+    gchar *new_monitor_name = NULL;
     gint new_monitor_number;
 
     gtk_tree_model_get(gtk_combo_box_get_model(combo_choose_monitor), &active_iter,
@@ -306,53 +297,32 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
                        1, &new_monitor_number,
                        -1);
 
-    new_monitor = gdk_display_get_monitor (display, new_monitor_number);
-    gdk_monitor_get_workarea (new_monitor, &selected_monitor_rectangle);
+    config_setbool ("span_monitors", new_monitor_number < 0);
+    if (new_monitor_number >= 0) {
+        GdkDisplay *display = gdk_display_get_default ();
+        GdkMonitor *monitor = gdk_display_get_monitor (display, new_monitor_number);
+        GdkRectangle monitor_workarea;
 
-    //Save the new monitor value
-    config_setstr("show_on_monitor", new_monitor_name);
+        config_setstr ("show_on_monitor", new_monitor_name);
+        gdk_monitor_get_workarea (monitor, &monitor_workarea);
+        config_setint ("x_pos", monitor_workarea.x);
+        config_setint ("y_pos", monitor_workarea.y);
+    }
 
-    /* The dimensions of the monitor might have changed,
-     * so we need to update the spinner widgets for height,
-     * width, and their percentages as well as their ranges.
-     * Keep in mind that we use the max range of the pixel spinners
-     * to store the size of the screen.
-     */
+    GdkRectangle geometry_bounds;
+    config_get_configured_geometry_bounds (&geometry_bounds);
+    if (new_monitor_number < 0) {
+        config_setint ("x_pos", geometry_bounds.x);
+        config_setint ("y_pos", geometry_bounds.y);
+    }
+    initialize_geometry_spinners (tw);
+
     GdkRectangle rectangle;
     config_get_configured_window_size (&rectangle);
-
-    if(selected_monitor_rectangle.width != original_monitor_rectangle.width)
-    {
-        gint new_max_width = selected_monitor_rectangle.width;
-
-        SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
-        SPIN_BUTTON_SET_VALUE ("spin_width_pixels", rectangle.width);
-
-        gtk_window_resize (GTK_WINDOW(tw->window),
-                           rectangle.width,
-                           rectangle.height);
-    }
-
-    if(selected_monitor_rectangle.height != original_monitor_rectangle.height)
-    {
-        int new_max_height = selected_monitor_rectangle.height;
-
-        SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
-        SPIN_BUTTON_SET_VALUE ("spin_height_pixels", rectangle.height);
-
-        gtk_window_resize (GTK_WINDOW(tw->window),
-                           rectangle.width,
-                           rectangle.height);
-    }
-
-    gint screen_width, screen_height;
-    screen_size_get_dimensions (&screen_width, &screen_height);
-    SPIN_BUTTON_SET_RANGE ("spin_x_position", 0, screen_width);
-    SPIN_BUTTON_SET_VALUE("spin_x_position", selected_monitor_rectangle.x);
-    SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, screen_height);
-    SPIN_BUTTON_SET_VALUE("spin_y_position", selected_monitor_rectangle.y);
+    gtk_window_resize (GTK_WINDOW (tw->window), rectangle.width, rectangle.height);
 
     tilda_window_update_window_position (tw);
+    g_free (new_monitor_name);
 
     return GDK_EVENT_STOP;
 }
@@ -1752,6 +1722,15 @@ initialize_combo_choose_monitor(tilda_window *tw)
 
     gtk_list_store_clear(monitor_model);
 
+    gtk_list_store_append(monitor_model, &iter);
+    gtk_list_store_set(monitor_model, &iter,
+                       0, "",
+                       1, -1,
+                       2, _("All monitors"),
+                       -1);
+    if (config_getbool ("span_monitors"))
+        gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
+
     for (i = 0; i < num_monitors; i++) {
         GdkMonitor *monitor;
 
@@ -1767,7 +1746,7 @@ initialize_combo_choose_monitor(tilda_window *tw)
                            2, display_name,
                            -1);
 
-        if(monitor == active_monitor) {
+        if(!config_getbool ("span_monitors") && monitor == active_monitor) {
           gtk_combo_box_set_active_iter(combo_choose_monitor, &iter);
         }
 
@@ -1785,12 +1764,11 @@ initialize_combo_choose_monitor(tilda_window *tw)
 static void initialize_geometry_spinners(tilda_window *tw) {
     DEBUG_FUNCTION ("initialize_geometry_spinners");
 
-    GdkMonitor *monitor = tilda_window_find_monitor_number(tw);
     GdkRectangle rectangle;
 
-    gdk_monitor_get_workarea (monitor, &rectangle);
-    int monitor_height = rectangle.height;
-    int monitor_width = rectangle.width;
+    config_get_configured_geometry_bounds (&rectangle);
+    int geometry_height = rectangle.height;
+    int geometry_width = rectangle.width;
 
     /* Update range and value of height spinners */
     GdkRectangle tilda_rectangle;
@@ -1807,13 +1785,13 @@ static void initialize_geometry_spinners(tilda_window *tw) {
 
     SPIN_BUTTON_SET_RANGE("spin_height_percentage", 0, 100);
     SPIN_BUTTON_SET_VALUE ("spin_height_percentage", height_percentage);
-    SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, monitor_height);
+    SPIN_BUTTON_SET_RANGE("spin_height_pixels", 0, geometry_height);
     SPIN_BUTTON_SET_VALUE("spin_height_pixels", height);
 
     /* Update range and value of width spinners */
     SPIN_BUTTON_SET_RANGE("spin_width_percentage", 0, 100);
     SPIN_BUTTON_SET_VALUE ("spin_width_percentage", width_percentage);
-    SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, monitor_width);
+    SPIN_BUTTON_SET_RANGE("spin_width_pixels", 0, geometry_width);
     SPIN_BUTTON_SET_VALUE("spin_width_pixels", width);
 
     CHECK_BUTTON("check_centered_horizontally", "centered_horizontally");

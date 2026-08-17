@@ -1285,12 +1285,12 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw,
                                              enum dimensions dimension)
 {
     DEBUG_FUNCTION ("tilda_window_find_centering_coordinate");
+    DEBUG_ASSERT (tw != NULL);
 
     gdouble monitor_dimension = 0;
     gdouble tilda_dimension = 0;
-    GdkMonitor *monitor = tilda_window_find_monitor_number (tw);
     GdkRectangle rectangle;
-    gdk_monitor_get_workarea (monitor, &rectangle);
+    config_get_configured_geometry_bounds (&rectangle);
 
     GdkRectangle tilda_rectangle;
     config_get_configured_window_size (&tilda_rectangle);
@@ -1352,19 +1352,28 @@ static gboolean update_tilda_window_size (gpointer user_data)
     int windowHeight = gtk_widget_get_allocated_height (GTK_WIDGET (tw->window));
     int windowWidth = gtk_widget_get_allocated_width (GTK_WIDGET (tw->window));
 
-    gint newWidth = windowWidth;
-    gint newHeight = windowHeight;
-
     /* 2. Get the desired size and update the tilda window size if necessary. */
     GdkRectangle configured_geometry;
     config_get_configured_window_size (&configured_geometry);
 
-    if (configured_geometry.width - windowWidth >= 1) {
-        newWidth = configured_geometry.width;
-    }
+    gint newWidth = windowWidth;
+    gint newHeight = windowHeight;
+    if (config_getbool ("span_monitors")) {
+        GdkRectangle geometry_bounds;
 
-    if (configured_geometry.height - windowHeight >= 1) {
+        config_get_configured_geometry_bounds (&geometry_bounds);
+        config_setint ("x_pos", geometry_bounds.x);
+        config_setint ("y_pos", geometry_bounds.y);
+        newWidth = configured_geometry.width;
         newHeight = configured_geometry.height;
+    } else {
+        if (configured_geometry.width - windowWidth >= 1) {
+            newWidth = configured_geometry.width;
+        }
+
+        if (configured_geometry.height - windowHeight >= 1) {
+            newHeight = configured_geometry.height;
+        }
     }
 
     gtk_window_resize (GTK_WINDOW (tw->window),
@@ -1372,6 +1381,12 @@ static gboolean update_tilda_window_size (gpointer user_data)
                        newHeight);
 
     tilda_window_update_window_position (tw);
+    if (config_getbool ("span_monitors")) {
+        gtk_window_move (GTK_WINDOW (tw->window),
+                         config_getint ("x_pos"),
+                         config_getint ("y_pos"));
+    }
+    generate_animation_positions (tw);
 
     /* 3. Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
      * Thus, we need to reset the ID such that a new event source can be
