@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tilda\n"
 "Report-Msgid-Bugs-To: sloutri@iit.edu\n"
-"POT-Creation-Date: 2024-02-03 14:02+0100\n"
-"PO-Revision-Date: 2008-02-14 07:57+0000\n"
-"Last-Translator: Vojtěch Trefný <vojtech.trefny@gmail.com>\n"
+"POT-Creation-Date: 2026-01-10 15:55+0100\n"
+"PO-Revision-Date: 2026-08-17 12:18+0200\n"
+"Last-Translator: Lukáš Lipinský <6032558+Mr-Tao@users.noreply.github.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -19,618 +19,626 @@ msgstr ""
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: src/tilda.ui:69
-#, fuzzy
 msgid "Close Tilda"
-msgstr "_Zavřít kartu"
+msgstr "Zavřít Tildu"
 
 #: src/tilda.ui:72
 msgid "Open a new terminal"
-msgstr ""
+msgstr "Otevřít nový terminál"
 
 #: src/tilda.ui:75
 msgid "Open a new terminal and hide"
-msgstr ""
+msgstr "Otevřít nový terminál a skrýt"
 
 #: src/tilda.ui:86 src/tilda.ui:194
 msgid "Top"
-msgstr ""
+msgstr "Nahoře"
 
 #: src/tilda.ui:89 src/tilda.ui:197
 msgid "Bottom"
-msgstr ""
+msgstr "Dole"
 
 #: src/tilda.ui:92 src/tilda.ui:200
 msgid "Left"
-msgstr ""
+msgstr "Vlevo"
 
 #: src/tilda.ui:95 src/tilda.ui:203
 msgid "Right"
-msgstr ""
+msgstr "Vpravo"
 
 #: src/tilda.ui:98
 msgid "Hidden"
-msgstr ""
+msgstr "Skrytý"
 
 #: src/tilda.ui:109
 msgid "Focus Terminal"
-msgstr ""
+msgstr "Zaměřit terminál"
 
 #: src/tilda.ui:112
-#, fuzzy
 msgid "Hide Terminal"
-msgstr "Terminálové pípání"
+msgstr "Skrýt terminál"
 
 #: src/tilda.ui:123
 msgid "Block Cursor"
-msgstr ""
+msgstr "Blokový kurzor"
 
 #: src/tilda.ui:126
 msgid "IBeam Cursor"
-msgstr ""
+msgstr "Kurzor ve tvaru I"
 
 #: src/tilda.ui:129
 msgid "Underline Cursor"
-msgstr ""
+msgstr "Podtržítkový kurzor"
 
 #: src/tilda.ui:140
 msgid "Show whole tab title"
-msgstr ""
+msgstr "Zobrazit celý titulek karty"
 
 #: src/tilda.ui:143
 msgid "Show first n chars of title"
-msgstr ""
+msgstr "Zobrazit prvních n znaků titulku"
 
 #: src/tilda.ui:146
 msgid "Show last n chars of title"
-msgstr ""
+msgstr "Zobrazit posledních n znaků titulku"
 
 #: src/tilda.ui:157
 msgid "Isn't displayed"
-msgstr ""
+msgstr "Nezobrazuje se"
 
 #: src/tilda.ui:160
 msgid "Goes after initial title"
-msgstr ""
+msgstr "Připojí se za počáteční titulek"
 
 #: src/tilda.ui:163
 msgid "Goes before initial title"
-msgstr ""
+msgstr "Připojí se před počáteční titulek"
 
 #: src/tilda.ui:166
-#, fuzzy
 msgid "Replace initial title"
-msgstr "Výchozí titulek"
+msgstr "Nahradit počáteční titulek"
 
 #: src/tilda.ui:177
-#, fuzzy
 msgid "Drop to the default shell"
-msgstr "Nemohu spustit výchozí shell: %s\n"
+msgstr "Přejít do výchozího shellu"
 
 #: src/tilda.ui:180
 msgid "Restart the command"
-msgstr ""
+msgstr "Restartovat příkaz"
 
 #: src/tilda.ui:183
 msgid "Exit the terminal"
-msgstr ""
+msgstr "Ukončit terminál"
 
 #: src/tilda.ui:214 src/tilda.ui:246
 msgid "Custom"
-msgstr ""
+msgstr "Vlastní"
 
 #: src/tilda.ui:217
 msgid "Green on Black"
-msgstr ""
+msgstr "Zelená na černé"
 
 #: src/tilda.ui:220
 msgid "Black on White"
-msgstr ""
+msgstr "Černá na bílé"
 
 #: src/tilda.ui:223
 msgid "White on Black"
-msgstr ""
+msgstr "Bílá na černé"
 
 #: src/tilda.ui:226
 msgid "Zenburn"
-msgstr ""
+msgstr "Zenburn"
 
 #: src/tilda.ui:229
 msgid "Solarized Light"
-msgstr ""
+msgstr "Světlé Solarized"
 
 #: src/tilda.ui:232
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Tmavé Solarized"
 
 #: src/tilda.ui:235
 msgid "Snazzy"
-msgstr ""
+msgstr "Snazzy"
 
 #: src/tilda.ui:257
 msgid "On the Left"
-msgstr ""
+msgstr "Vlevo"
 
 #: src/tilda.ui:260
 msgid "On the Right"
-msgstr ""
+msgstr "Vpravo"
 
 #: src/tilda.ui:263
 msgid "Disabled"
-msgstr ""
+msgstr "Vypnuto"
 
 #: src/tilda.ui:274 src/tilda.ui:291
 msgid "ASCII DEL"
-msgstr ""
+msgstr "ASCII DEL"
 
 #: src/tilda.ui:277 src/tilda.ui:294
-#, fuzzy
 msgid "Escape sequence"
-msgstr ""
-"ASCII DEL\n"
-"Escape sekvenci\n"
-"Control-H"
+msgstr "Escape sekvence"
 
 #: src/tilda.ui:280 src/tilda.ui:297
 msgid "Control-H"
-msgstr ""
+msgstr "Control-H"
 
-#: src/tilda.ui:314
+#: src/tilda.ui:315
 msgid "Tilda Config"
 msgstr "Konfigurace"
 
-#: src/tilda.ui:395
+#: src/tilda.ui:337
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/tilda.ui:398
 msgid "Start Tilda hidden"
 msgstr "Spustit Tildu skrytou"
 
-#: src/tilda.ui:409
+#: src/tilda.ui:412
 msgid "Always on top"
 msgstr "Vždy navrchu"
 
-#: src/tilda.ui:423
+#: src/tilda.ui:426
 msgid "Display on all workspaces"
 msgstr "Zobrazovat na všech plochách"
 
-#: src/tilda.ui:437
+#: src/tilda.ui:440
 msgid "Do not show in taskbar"
 msgstr "Nezobrazovat na panelu úloh"
 
-#: src/tilda.ui:451
+#: src/tilda.ui:454
 msgid "Show Notebook Border"
 msgstr "Zobrazovat rámeček"
 
-#: src/tilda.ui:465
+#: src/tilda.ui:468
 msgid "Set as Desktop window"
-msgstr ""
+msgstr "Nastavit jako okno plochy"
 
-#: src/tilda.ui:480
+#: src/tilda.ui:483
 msgid "Start in fullscreen"
-msgstr ""
+msgstr "Spustit na celé obrazovce"
 
-#: src/tilda.ui:509
+#: src/tilda.ui:512
 msgid "Non-focus Pull Up Behaviour:"
-msgstr ""
+msgstr "Chování při vysunutí bez fokusu:"
 
-#: src/tilda.ui:560
+#: src/tilda.ui:561
 msgid "<b>Window Display</b>"
 msgstr "Zobrazení okna"
 
-#: src/tilda.ui:598
+#: src/tilda.ui:593
 msgid "Cursor Blinks"
 msgstr "Kurzor bliká"
 
-#: src/tilda.ui:612
+#: src/tilda.ui:607
 msgid "Audible Terminal Bell"
 msgstr "Terminálové pípání"
 
-#: src/tilda.ui:628
+#: src/tilda.ui:623
 msgid "Cursor Shape: "
-msgstr ""
+msgstr "Tvar kurzoru: "
 
-#: src/tilda.ui:663
+#: src/tilda.ui:656
 msgid "<b>Terminal Display</b>"
 msgstr "<b>Zobrazení Terminálu</b>"
 
-#: src/tilda.ui:703
+#: src/tilda.ui:690
 msgid "Font:"
 msgstr "Písmo:"
 
-#: src/tilda.ui:733
+#: src/tilda.ui:718
 msgid "<b>Font</b>"
 msgstr "<b>Písmo</b>"
 
-#: src/tilda.ui:782
+#: src/tilda.ui:752 src/tilda.ui:1259 src/tilda.ui:1610 src/tilda.ui:1778
+#: src/tilda.ui:1854 src/tilda.ui:1866 src/tilda.ui:2069 src/tilda.ui:2862
+msgid "0"
+msgstr "0"
+
+#: src/tilda.ui:762
 msgid "Hide Tilda when mouse leaves it"
-msgstr ""
+msgstr "Skrýt Tildu při opuštění myší"
 
-#: src/tilda.ui:799
+#: src/tilda.ui:779
 msgid "Auto Hide Delay:"
-msgstr ""
+msgstr "Prodleva automatického skrytí:"
 
-#: src/tilda.ui:809
+#: src/tilda.ui:789
 msgid "Hide when Tilda loses focus"
-msgstr ""
+msgstr "Skrýt při ztrátě fokusu Tildy"
 
-#: src/tilda.ui:829
-#, fuzzy
+#: src/tilda.ui:807
 msgid "<b>Auto Hide</b>"
-msgstr "<b>Titulek</b>"
+msgstr "<b>Automatické skrytí</b>"
 
-#: src/tilda.ui:868
+#: src/tilda.ui:840
 msgid "When last terminal is closed:"
-msgstr ""
+msgstr "Po zavření posledního terminálu:"
 
-#: src/tilda.ui:895
-#, fuzzy
+#: src/tilda.ui:867
 msgid "Always prompt on exit"
-msgstr "Vždy navrchu"
+msgstr "Při ukončení se vždy zeptat"
 
-#: src/tilda.ui:918
-#, fuzzy
+#: src/tilda.ui:888
 msgid "<b>Program Exit</b>"
-msgstr "<b>Umístění</b>"
+msgstr "<b>Ukončení programu</b>"
 
-#: src/tilda.ui:936
+#: src/tilda.ui:907
 msgid ""
 "<small><i><b>Note:</b> Some options require that tilda is restarted.</i></"
 "small>"
 msgstr ""
+"<small><i><b>Poznámka:</b> Některé volby vyžadují restart Tildy.</i></small>"
 
-#: src/tilda.ui:953
+#: src/tilda.ui:928
 msgid "General"
 msgstr "Obecné"
 
-#: src/tilda.ui:998
-msgid "Word Characters:"
-msgstr ""
+#: src/tilda.ui:979
+msgid "Select by Word Characters:"
+msgstr "Znaky pro výběr slov:"
 
-#: src/tilda.ui:1026
-msgid "<b>Select by Word</b>"
-msgstr ""
+#: src/tilda.ui:1000
+msgid "Copy on Selection"
+msgstr "Kopírovat při označení"
 
-#: src/tilda.ui:1062
+#: src/tilda.ui:1004
+msgid "Automatically copy selected text to clipboard"
+msgstr "Automaticky kopírovat označený text do schránky"
+
+#: src/tilda.ui:1021
+msgid "<b>Selection</b>"
+msgstr "<b>Výběr</b>"
+
+#: src/tilda.ui:1052
 msgid "Match Numbers"
-msgstr ""
+msgstr "Rozpoznávat čísla"
 
-#: src/tilda.ui:1077
+#: src/tilda.ui:1067
 msgid "Match Email Addresses"
-msgstr ""
+msgstr "Rozpoznávat e-mailové adresy"
 
-#: src/tilda.ui:1091
+#: src/tilda.ui:1081
 msgid "Match File URIs"
-msgstr ""
+msgstr "Rozpoznávat URI souborů"
+
+#: src/tilda.ui:1110
+msgid "Web Browser *:"
+msgstr "Webový prohlížeč *:"
 
 #: src/tilda.ui:1120
-#, fuzzy
-msgid "Web Browser *:"
-msgstr "Webový prohlížeč"
-
-#: src/tilda.ui:1130
 msgid "Press and hold CTRL to activate match"
-msgstr ""
+msgstr "Pro aktivaci rozpoznaného odkazu podržte Ctrl"
 
-#: src/tilda.ui:1144
+#: src/tilda.ui:1134
 msgid "Use custom web browser command"
-msgstr ""
+msgstr "Použít vlastní příkaz pro webový prohlížeč"
 
-#: src/tilda.ui:1159
+#: src/tilda.ui:1149
 msgid "Match Web URIs"
-msgstr ""
+msgstr "Rozpoznávat webová URI"
 
-#: src/tilda.ui:1199
-#, fuzzy
-msgid "<b>Match Handling</b>"
-msgstr "URL"
-
-#: src/tilda.ui:1234
-msgid "Initial Title:"
-msgstr "Výchozí titulek"
-
-#: src/tilda.ui:1256
-msgid "Title Max Length:"
-msgstr ""
-
-#: src/tilda.ui:1297
-msgid "Dynamically-set Title:"
-msgstr "Dynamický titulek"
-
-#: src/tilda.ui:1309
-msgid "Title Behaviour:"
-msgstr ""
-
-#: src/tilda.ui:1342
-msgid "<b>Title</b>"
-msgstr "<b>Titulek</b>"
-
-#: src/tilda.ui:1403
-msgid "Run a custom command instead of the shell"
-msgstr "Místo shellu spustit vlastní příkaz"
-
-#: src/tilda.ui:1419
-msgid "Custom Command:"
-msgstr "Vlastní příkaz"
-
-#: src/tilda.ui:1431
-msgid "When Command Exits:"
-msgstr "Když příkaz skončí"
-
-#: src/tilda.ui:1441
-msgid "Use a login shell"
-msgstr ""
-
-#: src/tilda.ui:1467
-msgid "<b>Command</b>"
-msgstr "<b>Příkaz</b>"
-
-#: src/tilda.ui:1494
+#: src/tilda.ui:1166
 msgid ""
 "* A valid command that can open a browser must be entered here. It is "
 "possible to use the name of a specific browser such as 'firefox' and 'google-"
 "chrome' or to use the generic commands 'x-www-browser' and 'xdg-open'. The "
 "best command may be different depending on the system."
 msgstr ""
+"* Zadejte platný příkaz, který dokáže otevřít prohlížeč. Lze použít název "
+"konkrétního prohlížeče, například „firefox“ nebo „google-chrome“, případně "
+"obecné příkazy „x-www-browser“ a „xdg-open“. Nejvhodnější příkaz se může "
+"lišit podle systému."
 
-#: src/tilda.ui:1531
+#: src/tilda.ui:1193
+msgid "<b>Match Handling</b>"
+msgstr "<b>Zpracování odkazů</b>"
+
+#: src/tilda.ui:1224
+msgid "Initial Title:"
+msgstr "Výchozí titulek"
+
+#: src/tilda.ui:1246
+msgid "Title Max Length:"
+msgstr "Maximální délka titulku:"
+
+#: src/tilda.ui:1288
+msgid "Dynamically-set Title:"
+msgstr "Dynamický titulek"
+
+#: src/tilda.ui:1300
+msgid "Title Behaviour:"
+msgstr "Chování titulku:"
+
+#: src/tilda.ui:1331
+msgid "<b>Title</b>"
+msgstr "<b>Titulek</b>"
+
+#: src/tilda.ui:1388
+msgid "Run a custom command instead of the shell"
+msgstr "Místo shellu spustit vlastní příkaz"
+
+#: src/tilda.ui:1404
+msgid "Custom Command:"
+msgstr "Vlastní příkaz"
+
+#: src/tilda.ui:1416
+msgid "When Command Exits:"
+msgstr "Když příkaz skončí"
+
+#: src/tilda.ui:1426
+msgid "Use a login shell"
+msgstr "Použít přihlašovací shell"
+
+#: src/tilda.ui:1450
+msgid "<b>Command</b>"
+msgstr "<b>Příkaz</b>"
+
+#: src/tilda.ui:1479
 msgid "Show confirmation dialog when closing tab"
-msgstr ""
+msgstr "Při zavírání karty zobrazit potvrzovací dialog"
 
-#: src/tilda.ui:1551
-#, fuzzy
+#: src/tilda.ui:1497
 msgid "Close Action"
-msgstr "_Zavřít kartu"
+msgstr "Akce při zavření"
 
-#: src/tilda.ui:1572
+#: src/tilda.ui:1522
 msgid "Title and Command"
 msgstr "Titulek a příkaz"
 
-#: src/tilda.ui:1616 src/tilda.ui:1794
+#: src/tilda.ui:1573 src/tilda.ui:1741
 msgid "Percentage"
 msgstr "Procenta"
 
-#: src/tilda.ui:1640 src/tilda.ui:1806
+#: src/tilda.ui:1585 src/tilda.ui:1765
+msgid "0.00"
+msgstr "0,00"
+
+#: src/tilda.ui:1598 src/tilda.ui:1753
 msgid "In Pixels"
 msgstr "V pixelech"
 
-#: src/tilda.ui:1667
+#: src/tilda.ui:1624
 msgid "<b>Height</b>"
 msgstr "<b>Výška</b>"
 
-#: src/tilda.ui:1703
+#: src/tilda.ui:1656
 msgid "Monitor:"
-msgstr ""
+msgstr "Monitor:"
 
-#: src/tilda.ui:1758
-#, fuzzy
+#: src/tilda.ui:1709
 msgid "<b>Select monitor</b>"
-msgstr "<b>Titulek</b>"
+msgstr "<b>Vybrat monitor</b>"
 
-#: src/tilda.ui:1845
+#: src/tilda.ui:1792
 msgid "<b>Width</b>"
 msgstr "<b>Šířka</b>"
 
-#: src/tilda.ui:1881
+#: src/tilda.ui:1824
 msgid "Centered Horizontally"
 msgstr "Vycentrováno vodorovně"
 
-#: src/tilda.ui:1899
+#: src/tilda.ui:1842
 msgid "Y Position"
 msgstr "Pozice Y"
 
-#: src/tilda.ui:1933
+#: src/tilda.ui:1878
 msgid "X Position"
 msgstr "Pozice X"
 
-#: src/tilda.ui:1943
+#: src/tilda.ui:1888
 msgid "Centered Vertically"
 msgstr "Vycentrováno svisle"
 
-#: src/tilda.ui:1971
+#: src/tilda.ui:1914
 msgid "<b>Position</b>"
 msgstr "<b>Umístění</b>"
 
-#: src/tilda.ui:2009
+#: src/tilda.ui:1948
 msgid "Position of Tabs:"
 msgstr "Pozice panelů"
 
-#: src/tilda.ui:2036
+#: src/tilda.ui:1975
 msgid "Expand Tabs"
-msgstr ""
+msgstr "Roztáhnout karty"
 
-#: src/tilda.ui:2050
+#: src/tilda.ui:1989
 msgid "Show single Tab"
-msgstr ""
+msgstr "Zobrazit jednu kartu"
 
-#: src/tilda.ui:2064
+#: src/tilda.ui:2003
 msgid "Display Title in Tooltip"
-msgstr ""
+msgstr "Zobrazit titulek v bublinové nápovědě"
 
-#: src/tilda.ui:2078
+#: src/tilda.ui:2017
 msgid "Insert New Tabs after Current Tab"
-msgstr ""
+msgstr "Vkládat nové karty za aktuální kartu"
 
-#: src/tilda.ui:2098
-#, fuzzy
+#: src/tilda.ui:2035
 msgid "<b>Tabs</b>"
-msgstr "<b>Titulek</b>"
+msgstr "<b>Karty</b>"
 
-#: src/tilda.ui:2147
+#: src/tilda.ui:2081
 msgid "Animation Delay (usec)"
 msgstr "Délka animace (mikrosekundy)"
 
-#: src/tilda.ui:2159
+#: src/tilda.ui:2093
 msgid "Animation Orientation"
 msgstr "Směr animace"
 
-#: src/tilda.ui:2197
+#: src/tilda.ui:2105
+msgid "1"
+msgstr "1"
+
+#: src/tilda.ui:2133
 msgid "Animated Pulldown"
 msgstr "Animované vysouvání"
 
-#: src/tilda.ui:2213
+#: src/tilda.ui:2149
 msgid "Level of Transparency"
 msgstr "Úroveň průhlednosti"
 
-#: src/tilda.ui:2223
+#: src/tilda.ui:2159
 msgid "Enable Transparency"
 msgstr "Povolit průhlednost"
 
-#: src/tilda.ui:2246
+#: src/tilda.ui:2180
 msgid "<b>Extras</b>"
 msgstr "<b>Doplňky</b>"
 
-#: src/tilda.ui:2265
+#: src/tilda.ui:2203
 msgid "Appearance"
 msgstr "Vzhled"
 
-#: src/tilda.ui:2334
-#, fuzzy
+#: src/tilda.ui:2283
 msgid "Cursor Color"
-msgstr "Kurzor bliká"
+msgstr "Barva kurzoru"
 
-#: src/tilda.ui:2382
+#: src/tilda.ui:2331
 msgid "Text Color"
 msgstr "Barva textu"
 
-#: src/tilda.ui:2394
+#: src/tilda.ui:2343
 msgid "Background Color"
 msgstr "Barva pozadí"
 
-#: src/tilda.ui:2406
+#: src/tilda.ui:2355
 msgid "Built-in Schemes"
 msgstr "Vestavěná témata"
 
-#: src/tilda.ui:2420
+#: src/tilda.ui:2369
 msgid "<b>Foreground and Background Colors</b>"
-msgstr "Barva pozadí a popředí"
+msgstr "<b>Barvy popředí a pozadí</b>"
 
-#: src/tilda.ui:2452
+#: src/tilda.ui:2401
 msgid ""
 "<small><i><b>Note:</b> Terminal applications have these colors available to "
 "them.</i></small>"
 msgstr ""
+"<small><i><b>Poznámka:</b> Tyto barvy jsou k dispozici terminálovým "
+"aplikacím.</i></small>"
 
-#: src/tilda.ui:2495
+#: src/tilda.ui:2446
 msgid "Choose Color 14"
-msgstr ""
+msgstr "Vybrat barvu 14"
 
-#: src/tilda.ui:2508
+#: src/tilda.ui:2459
 msgid "Choose Color 13"
-msgstr ""
+msgstr "Vybrat barvu 13"
 
-#: src/tilda.ui:2521
+#: src/tilda.ui:2472
 msgid "Choose Color 15"
-msgstr ""
+msgstr "Vybrat barvu 15"
 
-#: src/tilda.ui:2534
+#: src/tilda.ui:2485
 msgid "Choose Color 12"
-msgstr ""
+msgstr "Vybrat barvu 12"
 
-#: src/tilda.ui:2547
+#: src/tilda.ui:2498
 msgid "Choose Color 10"
-msgstr ""
+msgstr "Vybrat barvu 10"
 
-#: src/tilda.ui:2560
+#: src/tilda.ui:2511
 msgid "Choose Color 11"
-msgstr ""
+msgstr "Vybrat barvu 11"
 
-#: src/tilda.ui:2573
+#: src/tilda.ui:2524
 msgid "Choose Color 9"
-msgstr ""
+msgstr "Vybrat barvu 9"
 
-#: src/tilda.ui:2586
+#: src/tilda.ui:2537
 msgid "Choose Color 7"
-msgstr ""
+msgstr "Vybrat barvu 7"
 
-#: src/tilda.ui:2599
+#: src/tilda.ui:2550
 msgid "Choose Color 6"
-msgstr ""
+msgstr "Vybrat barvu 6"
 
-#: src/tilda.ui:2612
+#: src/tilda.ui:2563
 msgid "Choose Color 5"
-msgstr ""
+msgstr "Vybrat barvu 5"
 
-#: src/tilda.ui:2625
+#: src/tilda.ui:2576
 msgid "Choose Color 4"
-msgstr ""
+msgstr "Vybrat barvu 4"
 
-#: src/tilda.ui:2638
+#: src/tilda.ui:2589
 msgid "Choose Color 3"
-msgstr ""
+msgstr "Vybrat barvu 3"
 
-#: src/tilda.ui:2651
+#: src/tilda.ui:2602
 msgid "Choose Color 2"
-msgstr ""
+msgstr "Vybrat barvu 2"
 
-#: src/tilda.ui:2664
+#: src/tilda.ui:2615
 msgid "Choose Color 1"
-msgstr ""
+msgstr "Vybrat barvu 1"
 
-#: src/tilda.ui:2677
+#: src/tilda.ui:2628
 msgid "Choose Color 0"
-msgstr ""
+msgstr "Vybrat barvu 0"
 
-#: src/tilda.ui:2691
+#: src/tilda.ui:2642
 msgid "Choose Color 8"
-msgstr ""
+msgstr "Vybrat barvu 8"
 
-#: src/tilda.ui:2708
-#, fuzzy
+#: src/tilda.ui:2660
 msgid "Built-in schemes:"
-msgstr "Vestavěná témata"
+msgstr "Vestavěná témata:"
 
-#: src/tilda.ui:2723
+#: src/tilda.ui:2676
 msgid "Color palette:"
-msgstr ""
+msgstr "Paleta barev:"
 
-#: src/tilda.ui:2748
+#: src/tilda.ui:2688
 msgid "Show bold text in bright colors"
-msgstr ""
+msgstr "Zobrazovat tučný text jasnými barvami"
 
-#: src/tilda.ui:2766
-#, fuzzy
+#: src/tilda.ui:2709
 msgid "<b>Palette</b>"
-msgstr "<b>Titulek</b>"
+msgstr "<b>Paleta</b>"
 
-#: src/tilda.ui:2785
+#: src/tilda.ui:2732
 msgid "Colors"
 msgstr "Barvy"
 
-#: src/tilda.ui:2842
+#: src/tilda.ui:2801
 msgid "Scrollbar is:"
 msgstr "Posuvník je:"
 
-#: src/tilda.ui:2851
-#, fuzzy
+#: src/tilda.ui:2810
 msgid "Limit scrollback to:"
-msgstr "Odskrolováno:"
+msgstr "Omezit historii na:"
 
-#: src/tilda.ui:2855
+#: src/tilda.ui:2814
 msgid "Unselect for unlimited scrollback."
-msgstr ""
+msgstr "Zrušením výběru nastavíte neomezenou historii."
 
-#: src/tilda.ui:2867
+#: src/tilda.ui:2825
 msgid "Scroll on Output"
 msgstr "Posouvat při výstupu"
 
-#: src/tilda.ui:2881
+#: src/tilda.ui:2839
 msgid "Scroll on Keystroke"
 msgstr "Posouvat stiskem klávesy"
 
-#: src/tilda.ui:2903
-msgid "0"
-msgstr ""
-
-#: src/tilda.ui:2915
+#: src/tilda.ui:2874
 msgid "lines"
 msgstr "řádky"
 
-#: src/tilda.ui:2941
+#: src/tilda.ui:2900
 msgid "<b>Scrolling</b>"
 msgstr "<b>Posun</b>"
 
-#: src/tilda.ui:2962
+#: src/tilda.ui:2924
 msgid "Scrolling"
 msgstr "Posouvání"
 
-#: src/tilda.ui:3001
+#: src/tilda.ui:2975
 msgid ""
 "<small><i><b>Note:</b> These options may cause some applications to behave "
 "incorrectly.  They are only here to allow you to work around certain "
@@ -642,49 +650,47 @@ msgstr ""
 "některé aplikace a operační systémy očekávají jiné chování terminálu.</i></"
 "small>"
 
-#: src/tilda.ui:3017
+#: src/tilda.ui:2991
 msgid "_Backspace key generates:"
 msgstr "Klávesa _Backspace generuje:"
 
-#: src/tilda.ui:3031
+#: src/tilda.ui:3005
 msgid "_Delete key generates:"
 msgstr "Klávesa _Delete generuje:"
 
-#: src/tilda.ui:3043
+#: src/tilda.ui:3017
 msgid "_Reset Compatibility Options to Defaults"
 msgstr "Obnovit standardní nastavení pro _kompatibilitu"
 
-#: src/tilda.ui:3097
+#: src/tilda.ui:3071
 msgid "<b>Compatibility</b>"
 msgstr "<b>Kompatibilita</b>"
 
-#: src/tilda.ui:3116
+#: src/tilda.ui:3094
 msgid "Compatibility"
 msgstr "Kompatibilita"
 
-#: src/tilda.ui:3168
-#, fuzzy
+#: src/tilda.ui:3144
 msgid "<b>Keybindings</b>"
-msgstr "Klávesové zkratky"
+msgstr "<b>Klávesové zkratky</b>"
 
-#: src/tilda.ui:3180
-#, fuzzy
+#: src/tilda.ui:3156
 msgid "Clear Keybinding"
-msgstr "Zabrat klávesové zkratky"
+msgstr "Vymazat klávesovou zkratku"
 
-#: src/tilda.ui:3199
+#: src/tilda.ui:3179
 msgid "Keybindings"
 msgstr "Klávesové zkratky"
 
-#: src/configsys.c:366
+#: src/configsys.c:369
 msgid "Unable to sync the config file to disk\n"
 msgstr "Nemohu synchronizovat konfigurační soubor na disk\n"
 
-#: src/configsys.c:376
+#: src/configsys.c:379
 msgid "Unable to close the config file\n"
 msgstr "Nemohu zavřít konfigurační soubor\n"
 
-#: src/configsys.c:389
+#: src/configsys.c:392
 #, c-format
 msgid "Unable to write the config file to %s\n"
 msgstr "Nemohu zapsat konfigurační soubor do %s\n"
@@ -692,83 +698,83 @@ msgstr "Nemohu zapsat konfigurační soubor do %s\n"
 #: src/tilda.c:149
 #, c-format
 msgid "Creating directory:'%s'\n"
-msgstr ""
+msgstr "Vytvářím adresář: „%s“\n"
 
 #: src/tilda.c:195
 msgid ""
 "Found style.css in the user config directory, applying user css style.\n"
 msgstr ""
+"Nalezen soubor style.css v uživatelském konfiguračním adresáři; použije se "
+"uživatelský styl CSS.\n"
 
 #: src/tilda.c:272
 #, c-format
 msgid "Specified config file '%s' does not exist. Reverting to default path.\n"
-msgstr ""
+msgstr "Zadaný konfigurační soubor „%s“ neexistuje. Vrací se výchozí cesta.\n"
 
 #: src/tilda.c:357 src/tilda-keybinding.c:503
-#, fuzzy
 msgid ""
 "The keybinding you chose for \"Pull Down Terminal\" is invalid. Please "
 "choose another."
-msgstr "Vámi zvolená klávesová zkratka je neplatná. Prosím zvolte jinou."
+msgstr "Zvolená klávesová zkratka pro „Vysunout terminál“ je neplatná. Zvolte jinou."
 
 #: src/tilda-keybinding.c:175
-#, fuzzy
 msgid "Action"
-msgstr "_Zavřít kartu"
+msgstr "Akce"
 
 #: src/tilda-keybinding.c:181
 msgid "Shortcut"
-msgstr ""
+msgstr "Zkratka"
 
 #: src/tilda-keybinding.c:369
 msgid "Enter keyboard shortcut"
-msgstr ""
+msgstr "Zadejte klávesovou zkratku"
 
 #: src/tilda-keybinding.c:510
-#, fuzzy, c-format
+#, c-format
 msgid "The keybinding you chose for \"%s\" is invalid. Please choose another."
-msgstr "Vámi zvolená klávesová zkratka je neplatná. Prosím zvolte jinou."
+msgstr "Zvolená klávesová zkratka pro „%s“ je neplatná. Zvolte jinou."
 
-#: src/tilda_terminal.c:436
+#: src/tilda_terminal.c:439
 #, c-format
 msgid "Problem reading link %s: %s\n"
-msgstr ""
+msgstr "Problém při čtení odkazu %s: %s\n"
 
-#: src/tilda_terminal.c:459
+#: src/tilda_terminal.c:462
 #, c-format
 msgid "Unable to launch default shell: %s\n"
 msgstr "Nemohu spustit výchozí shell: %s\n"
 
-#: src/tilda_terminal.c:461
+#: src/tilda_terminal.c:464
 #, c-format
 msgid "Unable to launch custom command: %s\n"
 msgstr "Nemohu spustit příkaz: %s\n"
 
-#: src/tilda_terminal.c:462
-#, fuzzy, c-format
+#: src/tilda_terminal.c:465
+#, c-format
 msgid "Launching custom command failed with error: %s\n"
-msgstr "Místo shellu spustit vlastní příkaz"
+msgstr "Spuštění vlastního příkazu selhalo s chybou: %s\n"
 
-#: src/tilda_terminal.c:463 src/tilda_terminal.c:497
+#: src/tilda_terminal.c:466 src/tilda_terminal.c:500
 msgid "Launching default shell instead\n"
 msgstr "Spouštím výchozí shell.\n"
 
-#: src/tilda_terminal.c:496
+#: src/tilda_terminal.c:499
 #, c-format
 msgid "Problem parsing custom command: %s\n"
-msgstr ""
+msgstr "Problém při zpracování vlastního příkazu: %s\n"
 
-#: src/tilda_terminal.c:929
+#: src/tilda_terminal.c:948
 msgid "Untitled"
 msgstr "Bez názvu"
 
-#: src/tilda_terminal.c:947
+#: src/tilda_terminal.c:966
 msgid "Bad value for \"d_set_title\" in config file\n"
 msgstr "Špatná hodnota \"d_set_title\" v konfiguračním souboru.\n"
 
 #: src/tilda_window.c:108
 msgid "Are you sure you want to close this tab?"
-msgstr ""
+msgstr "Opravdu chcete zavřít tuto kartu?"
 
 #: src/tilda_window.c:155
 msgid "You have a bad tab_pos in your configuration file\n"
@@ -785,20 +791,20 @@ msgstr "Nedostatek paměti, nemohu vytvořit panel\n"
 
 #: src/tilda_window.c:1252
 msgid "Are you sure you want to Quit?"
-msgstr ""
+msgstr "Opravdu chcete Tildu ukončit?"
 
 #: src/wizard.c:139
-#, fuzzy, c-format
+#, c-format
 msgid "Tilda %d Config"
-msgstr "Konfigurace"
+msgstr "Konfigurace Tildy %d"
 
 #: src/wizard.c:562
 msgid "Invalid Cursor Type, resetting to default\n"
-msgstr ""
+msgstr "Neplatný typ kurzoru, obnovuje se výchozí hodnota\n"
 
 #: src/wizard.c:580
 msgid "Invalid non-focus pull up behaviour, ignoring\n"
-msgstr ""
+msgstr "Neplatné chování při vysunutí bez fokusu, ignoruje se\n"
 
 #: src/wizard.c:1138
 msgid "Invalid tab position setting, ignoring\n"
@@ -807,23 +813,23 @@ msgstr "Neplatné nastavení pozice panelu. Ignoruji.\n"
 #: src/tilda-search-box.ui:15
 msgid ""
 "Search term not found, search again to continue the search at the beginning."
-msgstr ""
+msgstr "Hledaný výraz nebyl nalezen; dalším hledáním budete pokračovat od začátku."
 
 #: src/tilda-search-box.ui:49
 msgid "_Next"
-msgstr ""
+msgstr "_Další"
 
 #: src/tilda-search-box.ui:64
 msgid "_Prev"
-msgstr ""
+msgstr "_Předchozí"
 
 #: src/tilda-search-box.ui:79
 msgid "_Match Case"
-msgstr ""
+msgstr "Rozlišovat _velikost písmen"
 
 #: src/tilda-search-box.ui:96
 msgid "_Regex"
-msgstr ""
+msgstr "_Regulární výraz"
 
 #: src/tilda-context-menu.c:174
 msgid "_New Tab"
@@ -835,55 +841,55 @@ msgstr "_Zavřít kartu"
 
 #: src/tilda-context-menu.c:181
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopírovat"
 
 #: src/tilda-context-menu.c:182
 msgid "_Paste"
-msgstr ""
+msgstr "_Vložit"
 
 #: src/tilda-context-menu.c:209
 msgid "_Toggle Fullscreen"
-msgstr ""
+msgstr "Přepnout režim _celé obrazovky"
 
 #: src/tilda-context-menu.c:210
 msgid "_Toggle Searchbar"
-msgstr ""
+msgstr "Přepnout _vyhledávací lištu"
 
 #: src/tilda-context-menu.c:216
 msgid "_Preferences"
-msgstr ""
+msgstr "_Předvolby"
 
 #: src/tilda-context-menu.c:222
 msgid "_Quit"
-msgstr ""
+msgstr "_Ukončit"
 
 #: src/tilda-match-registry.c:54 src/tilda-match-registry.c:55
 msgid "Copy Link"
-msgstr ""
+msgstr "Kopírovat odkaz"
 
 #: src/tilda-match-registry.c:54 src/tilda-match-registry.c:55
 msgid "Open Link"
-msgstr ""
+msgstr "Otevřít odkaz"
 
 #: src/tilda-match-registry.c:56
 msgid "Copy File"
-msgstr ""
+msgstr "Kopírovat soubor"
 
 #: src/tilda-match-registry.c:56
 msgid "Open File"
-msgstr ""
+msgstr "Otevřít soubor"
 
 #: src/tilda-match-registry.c:57
 msgid "Copy Email"
-msgstr ""
+msgstr "Kopírovat e-mailovou adresu"
 
 #: src/tilda-match-registry.c:57
 msgid "Send Email"
-msgstr ""
+msgstr "Odeslat e-mail"
 
 #: src/tilda-match-registry.c:58
 msgid "Copy Number"
-msgstr ""
+msgstr "Kopírovat číslo"
 
 #, c-format
 #~ msgid "Unable to run command: `%s'\n"
