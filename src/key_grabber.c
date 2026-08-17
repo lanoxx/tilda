@@ -87,9 +87,14 @@ void generate_animation_positions (struct tilda_window_ *tw)
 
     gint last_width = rectangle.width;
     gint last_height = rectangle.height;
-    gint screen_width;
-    gint screen_height;
-    screen_size_get_dimensions (&screen_width, &screen_height);
+    GdkRectangle geometry_bounds;
+    if (config_getbool ("span_monitors")) {
+        config_get_configured_geometry_bounds (&geometry_bounds);
+    } else {
+        screen_size_get_dimensions (&geometry_bounds.width, &geometry_bounds.height);
+        geometry_bounds.x = 0;
+        geometry_bounds.y = 0;
+    }
 
     for (i=0; i<32; i++)
     {
@@ -98,34 +103,50 @@ void generate_animation_positions (struct tilda_window_ *tw)
         case 3: /* right->left RIGHT */
             animation_coordinates[ANIMATION_UP][ANIMATION_Y][i] = last_pos_y;
             animation_coordinates[ANIMATION_UP][ANIMATION_X][i] =
-                    (gint)(screen_width + (last_pos_x - screen_width) * animation_ease_function_up(i, 32));
+                    (gint)(geometry_bounds.x + geometry_bounds.width
+                           + (last_pos_x - geometry_bounds.x - geometry_bounds.width)
+                           * animation_ease_function_up(i, 32));
             animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i] = last_pos_y;
             animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i] =
-                    (gint)(screen_width + (last_pos_x - screen_width) * animation_ease_function_down(i, 32));
+                    (gint)(geometry_bounds.x + geometry_bounds.width
+                           + (last_pos_x - geometry_bounds.x - geometry_bounds.width)
+                           * animation_ease_function_down(i, 32));
             break;
         case 2: /* left->right LEFT */
             animation_coordinates[ANIMATION_UP][ANIMATION_Y][i] = last_pos_y;
             animation_coordinates[ANIMATION_UP][ANIMATION_X][i] =
-                    (gint)(-last_width + (last_pos_x - -last_width) * animation_ease_function_up(i, 32));
+                    (gint)(geometry_bounds.x - last_width
+                           + (last_pos_x - geometry_bounds.x + last_width)
+                           * animation_ease_function_up(i, 32));
             animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i] = last_pos_y;
             animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i] =
-                    (gint)(-last_width + (last_pos_x - -last_width) * animation_ease_function_down(i, 32));
+                    (gint)(geometry_bounds.x - last_width
+                           + (last_pos_x - geometry_bounds.x + last_width)
+                           * animation_ease_function_down(i, 32));
             break;
         case 1: /* bottom->top BOTTOM */
             animation_coordinates[ANIMATION_UP][ANIMATION_Y][i] =
-                    (gint)(screen_height + (last_pos_y - screen_height) * animation_ease_function_up(i, 32));
+                    (gint)(geometry_bounds.y + geometry_bounds.height
+                           + (last_pos_y - geometry_bounds.y - geometry_bounds.height)
+                           * animation_ease_function_up(i, 32));
             animation_coordinates[ANIMATION_UP][ANIMATION_X][i] = last_pos_x;
             animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i] =
-                    (gint)(screen_height + (last_pos_y - screen_height) * animation_ease_function_down(i, 32));
+                    (gint)(geometry_bounds.y + geometry_bounds.height
+                           + (last_pos_y - geometry_bounds.y - geometry_bounds.height)
+                           * animation_ease_function_down(i, 32));
             animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i] = last_pos_x;
             break;
         case 0: /* top->bottom TOP */
         default:
             animation_coordinates[ANIMATION_UP][ANIMATION_Y][i] =
-                    (gint)(-last_height + (last_pos_y - -last_height) * animation_ease_function_up(i, 32));
+                    (gint)(geometry_bounds.y - last_height
+                           + (last_pos_y - geometry_bounds.y + last_height)
+                           * animation_ease_function_up(i, 32));
             animation_coordinates[ANIMATION_UP][ANIMATION_X][i] = last_pos_x;
             animation_coordinates[ANIMATION_DOWN][ANIMATION_Y][i] =
-                    (gint)(-last_height + (last_pos_y - -last_height) * animation_ease_function_down(i, 32));
+                    (gint)(geometry_bounds.y - last_height
+                           + (last_pos_y - geometry_bounds.y + last_height)
+                           * animation_ease_function_down(i, 32));
             animation_coordinates[ANIMATION_DOWN][ANIMATION_X][i] = last_pos_x;
             break;
         }
@@ -434,4 +455,3 @@ void tilda_keygrabber_unbind (const gchar *keystr)
 
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
-
