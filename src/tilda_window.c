@@ -1384,29 +1384,12 @@ static gboolean update_tilda_window_size (gpointer user_data)
     g_debug ("Updating tilda window size in idle handler to "
              "match new size of workarea.");
 
-    /* 1. Get current tilda window size */
-    int windowHeight = gtk_widget_get_allocated_height (GTK_WIDGET (tw->window));
-    int windowWidth = gtk_widget_get_allocated_width (GTK_WIDGET (tw->window));
-
-    gint newWidth = windowWidth;
-    gint newHeight = windowHeight;
-
-    /* 2. Get the desired size and update the tilda window size if necessary. */
-    GdkRectangle configured_geometry;
-    tilda_window_get_effective_geometry (tw, 0, 0, &configured_geometry);
-
-    if (configured_geometry.width - windowWidth >= 1) {
-        newWidth = configured_geometry.width;
-    }
-
-    if (configured_geometry.height - windowHeight >= 1) {
-        newHeight = configured_geometry.height;
-    }
-
-    tilda_window_update_window_geometry (tw, newWidth, newHeight);
+    /* Reapply both configured dimensions so the window also shrinks when the
+     * workarea becomes smaller. */
+    tilda_window_update_window_geometry (tw, 0, 0);
     generate_animation_positions (tw);
 
-    /* 3. Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
+    /* Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
      * Thus, we need to reset the ID such that a new event source can be
      * registered if the workarea changes again. */
     tw->size_update_event_source = 0;
