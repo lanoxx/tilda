@@ -319,7 +319,7 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
      * to store the size of the screen.
      */
     GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
+    tilda_window_get_effective_geometry (tw, 0, 0, &rectangle);
 
     if(selected_monitor_rectangle.width != original_monitor_rectangle.width)
     {
@@ -327,10 +327,6 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
 
         SPIN_BUTTON_SET_RANGE ("spin_width_pixels", 0, new_max_width);
         SPIN_BUTTON_SET_VALUE ("spin_width_pixels", rectangle.width);
-
-        gtk_window_resize (GTK_WINDOW(tw->window),
-                           rectangle.width,
-                           rectangle.height);
     }
 
     if(selected_monitor_rectangle.height != original_monitor_rectangle.height)
@@ -339,10 +335,6 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
 
         SPIN_BUTTON_SET_RANGE ("spin_height_pixels", 0, new_max_height);
         SPIN_BUTTON_SET_VALUE ("spin_height_pixels", rectangle.height);
-
-        gtk_window_resize (GTK_WINDOW(tw->window),
-                           rectangle.width,
-                           rectangle.height);
     }
 
     gint screen_width, screen_height;
@@ -352,7 +344,10 @@ combo_monitor_selection_changed_cb (GtkWidget* widget, tilda_window *tw)
     SPIN_BUTTON_SET_RANGE ("spin_y_position", 0, screen_height);
     SPIN_BUTTON_SET_VALUE("spin_y_position", selected_monitor_rectangle.y);
 
-    tilda_window_update_window_position (tw);
+    tilda_window_update_window_geometry (tw,
+                                         rectangle.width,
+                                         rectangle.height);
+    generate_animation_positions (tw);
 
     return GDK_EVENT_STOP;
 }
@@ -914,19 +909,7 @@ static void spin_height_percentage_value_changed_cb (GtkWidget *spin_height_perc
                                             &spin_height_pixels_value_changed_cb,
                                             height_pixels, tw);
 
-    GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
-
-    gtk_window_resize (GTK_WINDOW(tw->window), rectangle.width, height_pixels);
-
-    if (config_getbool ("centered_vertically"))
-    {
-        config_setint ("y_pos", tilda_window_find_centering_coordinate (tw, HEIGHT));
-
-        gtk_window_move (GTK_WINDOW(tw->window),
-                         config_getint ("x_pos"),
-                         config_getint ("y_pos"));
-    }
+    tilda_window_update_window_geometry (tw, 0, height_pixels);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -950,19 +933,7 @@ static void spin_height_pixels_value_changed_cb (GtkWidget *spin_height_pixels,
                                             &spin_height_percentage_value_changed_cb,
                                             height_percentage * 100, tw);
 
-    GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
-
-    gtk_window_resize (GTK_WINDOW(tw->window), rectangle.width, height_pixels);
-
-    if (config_getbool ("centered_vertically"))
-    {
-        config_setint ("y_pos", tilda_window_find_centering_coordinate (tw, HEIGHT));
-
-        gtk_window_move (GTK_WINDOW(tw->window),
-                         config_getint ("x_pos"),
-                         config_getint ("y_pos"));
-    }
+    tilda_window_update_window_geometry (tw, 0, height_pixels);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -986,19 +957,7 @@ static void spin_width_percentage_value_changed_cb (GtkWidget *spin_width_percen
                                             &spin_width_pixels_value_changed_cb,
                                             width_pixels, tw);
 
-    GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
-
-    gtk_window_resize (GTK_WINDOW(tw->window), width_pixels, rectangle.height);
-
-    if (config_getbool ("centered_horizontally"))
-    {
-        config_setint ("x_pos", tilda_window_find_centering_coordinate (tw, WIDTH));
-
-        gtk_window_move (GTK_WINDOW(tw->window),
-                         config_getint ("x_pos"),
-                         config_getint ("y_pos"));
-    }
+    tilda_window_update_window_geometry (tw, width_pixels, 0);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1021,19 +980,7 @@ static void spin_width_pixels_value_changed_cb (GtkWidget *spin_width_pixels, ti
                                             &spin_width_percentage_value_changed_cb,
                                             width_percentage * 100, tw);
 
-    GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
-
-    gtk_window_resize (GTK_WINDOW(tw->window), width_pixels, rectangle.height);
-
-    if (config_getbool ("centered_horizontally"))
-    {
-        config_setint ("x_pos", tilda_window_find_centering_coordinate (tw, WIDTH));
-
-        gtk_window_move (GTK_WINDOW(tw->window),
-                         config_getint ("x_pos"),
-                         config_getint ("y_pos"));
-    }
+    tilda_window_update_window_geometry (tw, width_pixels, 0);
 
     /* Always regenerate animation positions when changing x or y position!
      * Otherwise you get VERY strange things going on :) */
@@ -1255,14 +1202,8 @@ static void check_animated_pulldown_toggled_cb (GtkWidget *w, tilda_window *tw)
      * than show and place the window. */
     if (!status)
     {
-        GdkRectangle rectangle;
-        config_get_configured_window_size (&rectangle);
-
-        guint width = rectangle.width;
-        guint height = rectangle.height;
-
-        gtk_window_resize (GTK_WINDOW(tw->window), width, height);
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+        tilda_window_update_window_geometry (tw, 0, 0);
+        generate_animation_positions (tw);
     }
 
     /* Avoids a nasty looking glitch if you switch on animation while the window is
@@ -1794,7 +1735,7 @@ static void initialize_geometry_spinners(tilda_window *tw) {
 
     /* Update range and value of height spinners */
     GdkRectangle tilda_rectangle;
-    config_get_configured_window_size (&tilda_rectangle);
+    tilda_window_get_effective_geometry (tw, 0, 0, &tilda_rectangle);
 
     gint width = tilda_rectangle.width;
     gint height = tilda_rectangle.height;

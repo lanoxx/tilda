@@ -79,14 +79,13 @@ void generate_animation_positions (struct tilda_window_ *tw)
     DEBUG_ASSERT (tw != NULL);
 
     gint i;
-    gint last_pos_x = config_getint ("x_pos");
-    gint last_pos_y = config_getint ("y_pos");
+    GdkRectangle geometry;
+    tilda_window_get_effective_geometry (tw, 0, 0, &geometry);
 
-    GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
-
-    gint last_width = rectangle.width;
-    gint last_height = rectangle.height;
+    gint last_pos_x = geometry.x;
+    gint last_pos_y = geometry.y;
+    gint last_width = geometry.width;
+    gint last_height = geometry.height;
     gint screen_width;
     gint screen_height;
     screen_size_get_dimensions (&screen_width, &screen_height);
@@ -160,7 +159,7 @@ void tilda_window_set_active (tilda_window *tw)
 
     XEvent event;
     long mask = SubstructureRedirectMask | SubstructureNotifyMask;
-    gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
+    tilda_window_update_window_position (tw);
     if (gdk_x11_screen_supports_net_wm_hint (screen,
                                              gdk_atom_intern_static_string ("_NET_ACTIVE_WINDOW")))
     {
@@ -392,8 +391,6 @@ static void pull_down (struct tilda_window_ *tw) {
                              (guchar *) &atom, 1);
             gdk_x11_display_error_trap_pop_ignored(gdk_display_get_default());
         }
-    } else {
-        gtk_window_move (GTK_WINDOW(tw->window), config_getint ("x_pos"), config_getint ("y_pos"));
     }
 
     /* Nasty code to make metacity behave. Starting at metacity-2.22 they "fixed" the
@@ -434,4 +431,3 @@ void tilda_keygrabber_unbind (const gchar *keystr)
 
 
 /* vim: set ts=4 sts=4 sw=4 expandtab: */
-

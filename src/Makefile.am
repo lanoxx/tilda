@@ -78,6 +78,7 @@ src_tilda_SOURCES = \
 		src/tilda_terminal.h src/tilda_terminal.c \
 		src/tilda-url-spawner.h src/tilda-url-spawner.c \
 		src/tilda_window.h src/tilda_window.c \
+		src/window-position.h src/window-position.c \
 		src/tomboykeybinder.h src/tomboykeybinder.c \
 		src/wizard.h src/wizard.c \
 		$(NULL)
@@ -111,6 +112,29 @@ src_tilda_LDADD = \
 		$(LTLIBINTL) \
 		$(LEXLIB) \
 		-lm \
+		$(NULL)
+
+check_PROGRAMS = tests/test-window-position
+TESTS = $(check_PROGRAMS)
+
+tests_test_window_position_SOURCES = \
+		tests/test-window-position.c \
+		src/window-position.c \
+		$(NULL)
+
+tests_test_window_position_CPPFLAGS = \
+		$(AM_CPPFLAGS) \
+		-I$(top_srcdir)/src \
+		$(NULL)
+
+tests_test_window_position_CFLAGS = \
+		$(AM_CFLAGS) \
+		$(GTK_CFLAGS) \
+		$(NULL)
+
+tests_test_window_position_LDADD = \
+		$(AM_LDADD) \
+		$(GTK_LIBS) \
 		$(NULL)
 
 EXTRA_DIST += \

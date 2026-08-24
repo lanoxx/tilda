@@ -21,6 +21,7 @@
 #include "tilda_window.h"
 #include "tilda_terminal.h"
 #include "key_grabber.h"
+#include "window-position.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -1046,7 +1047,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
     tw->current_state = STATE_UP;
 
     GdkRectangle rectangle;
-    config_get_configured_window_size (&rectangle);
+    tilda_window_get_effective_geometry (tw, 0, 0, &rectangle);
 
     gint width = rectangle.width;
     gint height = rectangle.height;
@@ -1059,6 +1060,7 @@ gboolean tilda_window_init (const gchar *config_file, const gint instance, tilda
 
     /* Create GDK resources now, to prevent crashes later on */
     gtk_widget_realize (tw->window);
+    tilda_window_update_window_position (tw);
     generate_animation_positions (tw);
 
     /* Initialize wizard window reference to NULL */
@@ -1286,59 +1288,93 @@ gint tilda_window_find_centering_coordinate (tilda_window *tw,
 {
     DEBUG_FUNCTION ("tilda_window_find_centering_coordinate");
 
-    gdouble monitor_dimension = 0;
-    gdouble tilda_dimension = 0;
+    GdkRectangle geometry;
+    tilda_window_get_effective_geometry (tw, 0, 0, &geometry);
+
+    return dimension == HEIGHT ? geometry.y : geometry.x;
+}
+
+void
+tilda_window_get_effective_geometry (tilda_window *tw,
+                                     gint width,
+                                     gint height,
+                                     GdkRectangle *geometry)
+{
+    DEBUG_FUNCTION ("tilda_window_get_effective_geometry");
+    DEBUG_ASSERT (tw != NULL);
+    g_return_if_fail (geometry != NULL);
+
     GdkMonitor *monitor = tilda_window_find_monitor_number (tw);
-    GdkRectangle rectangle;
-    gdk_monitor_get_workarea (monitor, &rectangle);
+    GdkRectangle workarea;
+    gdk_monitor_get_workarea (monitor, &workarea);
 
-    GdkRectangle tilda_rectangle;
-    config_get_configured_window_size (&tilda_rectangle);
-
-    if (dimension == HEIGHT) {
-        monitor_dimension = rectangle.height;
-        tilda_dimension = tilda_rectangle.height;
-    } else if (dimension == WIDTH) {
-        monitor_dimension = rectangle.width;
-        tilda_dimension = tilda_rectangle.width;
+    if (width <= 0) {
+        const gdouble relative_width =
+            GLONG_TO_DOUBLE (config_getint ("width_percentage"));
+        width = pixels_ratio_to_absolute (relative_width, workarea.width);
     }
-    const gdouble screen_center = monitor_dimension / 2.0;
-    const gdouble tilda_center  = tilda_dimension  / 2.0;
-    gint center = (int) (screen_center - tilda_center);
 
-    if(dimension == HEIGHT) {
-        center += rectangle.y;
-    } else if (dimension == WIDTH) {
-        center += rectangle.x;
+    if (height <= 0) {
+        const gdouble relative_height =
+            GLONG_TO_DOUBLE (config_getint ("height_percentage"));
+        height = pixels_ratio_to_absolute (relative_height, workarea.height);
     }
-    return center;
+
+    gint x = (gint) config_getint ("x_pos");
+    gint y = (gint) config_getint ("y_pos");
+
+    if (config_getbool ("centered_horizontally"))
+        x = workarea.x + (workarea.width - width) / 2;
+
+    if (config_getbool ("centered_vertically"))
+        y = workarea.y + (workarea.height - height) / 2;
+
+    tilda_window_constrain_position (&workarea, width, height, &x, &y);
+
+    geometry->x = x;
+    geometry->y = y;
+    geometry->width = width;
+    geometry->height = height;
+}
+
+static void
+tilda_window_apply_position (tilda_window *tw,
+                             const GdkRectangle *geometry)
+{
+    if (config_getbool ("centered_horizontally"))
+        config_setint ("x_pos", geometry->x);
+
+    if (config_getbool ("centered_vertically"))
+        config_setint ("y_pos", geometry->y);
+
+    gtk_window_move (GTK_WINDOW (tw->window), geometry->x, geometry->y);
+}
+
+void
+tilda_window_update_window_geometry (tilda_window *tw,
+                                     gint width,
+                                     gint height)
+{
+    DEBUG_FUNCTION ("tilda_window_update_window_geometry");
+
+    GdkRectangle geometry;
+    tilda_window_get_effective_geometry (tw, width, height, &geometry);
+
+    gtk_window_resize (GTK_WINDOW (tw->window),
+                       geometry.width,
+                       geometry.height);
+    tilda_window_apply_position (tw, &geometry);
 }
 
 void
 tilda_window_update_window_position (tilda_window *tw)
 {
     DEBUG_FUNCTION ("tilda_window_update_window_position");
-    /**
-     * If the screen size changed we might also need to recenter the
-     * tilda window.
-     */
-    gint pos_x, pos_y;
-    gboolean centered_horizontally = config_getbool ("centered_horizontally");
-    gboolean centered_vertically = config_getbool ("centered_vertically");
 
-    if (centered_horizontally) {
-        pos_x = tilda_window_find_centering_coordinate (tw, WIDTH);
-        config_setint ("x_pos", pos_x);
-        pos_y = (gint) config_getint ("y_pos");
-        gtk_window_move (GTK_WINDOW (tw->window), pos_x, pos_y);
-    }
+    GdkRectangle geometry;
+    tilda_window_get_effective_geometry (tw, 0, 0, &geometry);
 
-    if (centered_vertically) {
-        pos_y = tilda_window_find_centering_coordinate (tw, HEIGHT);
-        config_setint ("y_pos", pos_y);
-        pos_x = (gint) config_getint ("x_pos");
-        gtk_window_move (GTK_WINDOW (tw->window), pos_x, pos_y);
-    }
+    tilda_window_apply_position (tw, &geometry);
 }
 
 static gboolean update_tilda_window_size (gpointer user_data)
@@ -1357,7 +1393,7 @@ static gboolean update_tilda_window_size (gpointer user_data)
 
     /* 2. Get the desired size and update the tilda window size if necessary. */
     GdkRectangle configured_geometry;
-    config_get_configured_window_size (&configured_geometry);
+    tilda_window_get_effective_geometry (tw, 0, 0, &configured_geometry);
 
     if (configured_geometry.width - windowWidth >= 1) {
         newWidth = configured_geometry.width;
@@ -1367,11 +1403,8 @@ static gboolean update_tilda_window_size (gpointer user_data)
         newHeight = configured_geometry.height;
     }
 
-    gtk_window_resize (GTK_WINDOW (tw->window),
-                       newWidth,
-                       newHeight);
-
-    tilda_window_update_window_position (tw);
+    tilda_window_update_window_geometry (tw, newWidth, newHeight);
+    generate_animation_positions (tw);
 
     /* 3. Returning G_SOURCE_REMOVE below will clear the event source in Gtk.
      * Thus, we need to reset the ID such that a new event source can be

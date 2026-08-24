@@ -236,6 +236,25 @@ GdkMonitor* tilda_window_find_monitor_number(tilda_window *tw);
  */
 gint tilda_window_find_centering_coordinate (tilda_window *tw, enum dimensions dimension);
 
+/**
+ * Gets the configured window geometry constrained to the selected monitor's
+ * workarea. A non-positive width or height is derived from the corresponding
+ * configured percentage.
+ */
+void tilda_window_get_effective_geometry (tilda_window *tw,
+                                          gint width,
+                                          gint height,
+                                          GdkRectangle *geometry);
+
+/**
+ * Resizes the window and moves it to its effective configured position.
+ * A non-positive width or height is derived from the corresponding configured
+ * percentage.
+ */
+void tilda_window_update_window_geometry (tilda_window *tw,
+                                          gint width,
+                                          gint height);
+
 void tilda_window_update_window_position (tilda_window *tw);
 
 #define TILDA_WINDOW(data) ((tilda_window *)(data))
